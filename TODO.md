@@ -106,12 +106,12 @@
 ---
 
 ## 1.5 Cost Aggregation
-- [ ] Calculate total monthly cost
-- [ ] Calculate total yearly cost
-- [ ] Convert yearly to monthly equivalent
-- [ ] Group subscriptions by category
-- [ ] Implement `/dashboard/summary` endpoint
-- [ ] Implement `/dashboard/forecast?months=12` endpoint
+- [x] Calculate total monthly cost
+- [x] Calculate total yearly cost
+- [x] Convert yearly to monthly equivalent
+- [x] Group subscriptions by category
+- [x] Implement `/dashboard/summary` endpoint
+- [x] Implement `/dashboard/forecast?months=12` endpoint
 
 ---
 
