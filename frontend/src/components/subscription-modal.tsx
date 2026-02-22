@@ -1,0 +1,233 @@
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Switch } from "./ui/switch";
+
+export interface Subscription {
+  id: string;
+  name: string;
+  amount: number;
+  currency: string;
+  billingCycle: string;
+  nextBillingDate?: string;
+  category: string;
+  isActive?: boolean;
+}
+
+interface SubscriptionModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  subscription: Subscription | null;
+  onSave: (subscription: Partial<Subscription>) => void;
+}
+
+const categories = [
+  "Entertainment",
+  "Productivity",
+  "Cloud Services",
+  "Development",
+  "Professional",
+  "Health & Fitness",
+  "Education",
+  "Other",
+];
+
+const billingCycles = [
+  { label: "Monthly", value: "MONTHLY" },
+  { label: "Yearly", value: "YEARLY" },
+  { label: "Weekly", value: "WEEKLY" },
+];
+const currencies = ["USD", "EUR", "GBP"];
+
+export function SubscriptionModal({
+  open,
+  onOpenChange,
+  subscription,
+  onSave,
+}: SubscriptionModalProps) {
+  const [formData, setFormData] = useState({
+    name: "",
+    amount: "",
+    currency: "USD",
+    billingCycle: "MONTHLY",
+    category: "Other",
+  });
+
+  useEffect(() => {
+    if (subscription && open) {
+      setFormData({
+        name: subscription.name,
+        amount: subscription.amount.toString(),
+        currency: subscription.currency,
+        billingCycle: subscription.billingCycle,
+        category: subscription.category,
+      });
+    } else if (!subscription && open) {
+      setFormData({
+        name: "",
+        amount: "",
+        currency: "USD",
+        billingCycle: "MONTHLY",
+        category: "Other",
+      });
+    }
+  }, [subscription, open]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave({
+      ...(subscription?.id ? { id: subscription.id } : {}),
+      name: formData.name,
+      amount: parseFloat(formData.amount),
+      currency: formData.currency,
+      billingCycle: formData.billingCycle,
+      category: formData.category,
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>
+            {subscription ? "Edit Subscription" : "Add Subscription"}
+          </DialogTitle>
+          <DialogDescription>
+            {subscription
+              ? "Update your subscription details"
+              : "Add a new subscription to track"}
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Service Name</Label>
+              <Input
+                id="name"
+                placeholder="e.g. Netflix, Spotify"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount">Amount</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                  value={formData.amount}
+                  onChange={(e) =>
+                    setFormData({ ...formData, amount: e.target.value })
+                  }
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="currency">Currency</Label>
+                <Select
+                  value={formData.currency}
+                  onValueChange={(value) =>
+                     setFormData({ ...formData, currency: value })
+                  }
+                >
+                  <SelectTrigger id="currency">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currencies.map((currency) => (
+                      <SelectItem key={currency} value={currency}>
+                        {currency}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="billingCycle">Billing Cycle</Label>
+                <Select
+                  value={formData.billingCycle}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, billingCycle: value })
+                  }
+                >
+                  <SelectTrigger id="billingCycle">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {billingCycles.map((cycle) => (
+                      <SelectItem key={cycle.value} value={cycle.value}>
+                        {cycle.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Select
+                  value={formData.category}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, category: value })
+                  }
+                >
+                  <SelectTrigger id="category">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">
+              {subscription ? "Update" : "Add"} Subscription
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
