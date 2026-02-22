@@ -15,12 +15,12 @@
 # 1. Backend (NestJS)
 
 ## 1.1 Bootstrap Application
-- [ ] Create NestJS project
-- [ ] Configure global validation pipe
-- [ ] Setup environment config module
-- [ ] Configure CORS
-- [ ] Setup global error filter
-- [ ] Setup structured logging
+- [x] Create NestJS project
+- [x] Configure global validation pipe
+- [x] Setup environment config module
+- [x] Configure CORS
+- [x] Setup global error filter
+- [x] Setup structured logging
 
 ---
 
