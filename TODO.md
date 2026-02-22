@@ -81,7 +81,7 @@
 - [x] Generate JWT access tokens
 - [x] Implement refresh tokens
 - [x] Create auth guard
-- [ ] Protect subscription endpoints
+- [x] Protect subscription endpoints
 - [x] Implement logout logic
 
 ---
@@ -89,19 +89,19 @@
 ## 1.4 Subscription Module
 
 ### 1.4.1 CRUD
-- [ ] Create subscription
-- [ ] Get all subscriptions (scoped per user)
-- [ ] Get subscription by ID
-- [ ] Update subscription
-- [ ] Delete or deactivate subscription
+- [x] Create subscription
+- [x] Get all subscriptions (scoped per user)
+- [x] Get subscription by ID
+- [x] Update subscription
+- [x] Delete or deactivate subscription
 
 ### 1.4.2 Business Logic
-- [ ] Calculate next billing date
-- [ ] Handle monthly rollover correctly
-- [ ] Handle yearly rollover correctly
-- [ ] Handle custom intervals
-- [ ] Validate positive amounts
-- [ ] Validate ISO currency codes
+- [x] Calculate next billing date
+- [x] Handle monthly rollover correctly
+- [x] Handle yearly rollover correctly
+- [x] Handle custom intervals
+- [x] Validate positive amounts
+- [x] Validate ISO currency codes
 
 ---
 
