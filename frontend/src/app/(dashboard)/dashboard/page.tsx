@@ -201,7 +201,7 @@ export default function DashboardPage() {
                     border: "1px solid #e2e8f0",
                     borderRadius: "8px",
                   }}
-                  formatter={(value: number) => [`$${value.toFixed(2)}`, "Amount"]}
+                  formatter={(value: any) => [`$${Number(value).toFixed(2)}`, "Amount"]}
                 />
                 <Line
                   type="monotone"
@@ -262,7 +262,7 @@ export default function DashboardPage() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
+                  <Tooltip formatter={(value: any) => `$${Number(value).toFixed(2)}`} />
                 </PieChart>
               ) : (
                 <BarChart data={categoryData}>
@@ -275,7 +275,7 @@ export default function DashboardPage() {
                       border: "1px solid #e2e8f0",
                       borderRadius: "8px",
                     }}
-                    formatter={(value: number) => [`$${value.toFixed(2)}`, "Amount"]}
+                    formatter={(value: any) => [`$${Number(value).toFixed(2)}`, "Amount"]}
                   />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                     {categoryData.map((entry, index) => (
