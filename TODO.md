@@ -155,12 +155,12 @@
 ---
 
 ## 1.9 Testing
-- [ ] Unit tests for billing date logic
-- [ ] Unit tests for cost aggregation
-- [ ] Unit tests for alert threshold logic
-- [ ] Integration tests for auth + subscriptions
-- [ ] Test cron logic
-- [ ] Test queue worker behavior
+- [x] Unit tests for billing date logic
+- [x] Unit tests for cost aggregation
+- [x] Unit tests for alert threshold logic
+- [x] Integration tests for auth + subscriptions
+- [x] Test cron logic
+- [x] Test queue worker behavior
 
 ---
 
