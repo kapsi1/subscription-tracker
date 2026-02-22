@@ -75,14 +75,14 @@
 ---
 
 ## 1.3 Authentication
-- [ ] Implement registration endpoint
-- [ ] Implement login endpoint
-- [ ] Hash passwords (bcrypt)
-- [ ] Generate JWT access tokens
-- [ ] Implement refresh tokens
-- [ ] Create auth guard
+- [x] Implement registration endpoint
+- [x] Implement login endpoint
+- [x] Hash passwords (bcrypt)
+- [x] Generate JWT access tokens
+- [x] Implement refresh tokens
+- [x] Create auth guard
 - [ ] Protect subscription endpoints
-- [ ] Implement logout logic
+- [x] Implement logout logic
 
 ---
 
