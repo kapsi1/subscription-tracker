@@ -27,47 +27,47 @@
 ## 1.2 Database (PostgreSQL + Prisma)
 
 ### 1.2.1 Prisma Setup
-- [ ] Install Prisma
-- [ ] Configure `schema.prisma`
-- [ ] Setup migrations
-- [ ] Enable strict null checks
+- [x] Install Prisma
+- [x] Configure `schema.prisma`
+- [x] Setup migrations
+- [x] Enable strict null checks
 
 ### 1.2.2 Database Models
 
-- [ ] Create `User` model
-  - [ ] id (uuid)
-  - [ ] email (unique)
-  - [ ] passwordHash
-  - [ ] createdAt
-  - [ ] updatedAt
+- [x] Create `User` model
+  - [x] id (uuid)
+  - [x] email (unique)
+  - [x] passwordHash
+  - [x] createdAt
+  - [x] updatedAt
 
-- [ ] Create `Subscription` model
-  - [ ] id (uuid)
-  - [ ] userId (relation)
-  - [ ] name
-  - [ ] amount (decimal)
-  - [ ] currency (ISO 4217 string)
-  - [ ] billingCycle (enum: monthly, yearly, custom)
-  - [ ] intervalDays (optional)
-  - [ ] nextBillingDate
-  - [ ] category
-  - [ ] isActive
-  - [ ] createdAt
-  - [ ] updatedAt
+- [x] Create `Subscription` model
+  - [x] id (uuid)
+  - [x] userId (relation)
+  - [x] name
+  - [x] amount (decimal)
+  - [x] currency (ISO 4217 string)
+  - [x] billingCycle (enum: monthly, yearly, custom)
+  - [x] intervalDays (optional)
+  - [x] nextBillingDate
+  - [x] category
+  - [x] isActive
+  - [x] createdAt
+  - [x] updatedAt
 
-- [ ] Create `Alert` model
-  - [ ] id
-  - [ ] subscriptionId (relation)
-  - [ ] type (enum: email, webhook)
-  - [ ] daysBefore
-  - [ ] isEnabled
+- [x] Create `Alert` model
+  - [x] id
+  - [x] subscriptionId (relation)
+  - [x] type (enum: email, webhook)
+  - [x] daysBefore
+  - [x] isEnabled
 
-- [ ] Create `PaymentHistory` model (optional)
-  - [ ] id
-  - [ ] subscriptionId
-  - [ ] amount
-  - [ ] currency
-  - [ ] paidAt
+- [x] Create `PaymentHistory` model (optional)
+  - [x] id
+  - [x] subscriptionId
+  - [x] amount
+  - [x] currency
+  - [x] paidAt
 
 - [ ] Run initial migration
 - [ ] Seed development data

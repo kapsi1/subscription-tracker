@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  passwordHash String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  subscriptions Subscription[]
+}
+
+enum BillingCycle {
+  monthly
+  yearly
+  custom
+}
+
+model Subscription {
+  id              String         @id @default(uuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id])
+  name            String
+  amount          Decimal
+  currency        String
+  billingCycle    BillingCycle
+  intervalDays    Int?
+  nextBillingDate DateTime
+  category        String
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  alerts          Alert[]
+  payments        PaymentHistory[]
+}
+
+enum AlertType {
+  email
+  webhook
+}
+
+model Alert {
+  id             String       @id @default(uuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  type           AlertType
+  daysBefore     Int
+  isEnabled      Boolean      @default(true)
+}
+
+model PaymentHistory {
+  id             String       @id @default(uuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  amount         Decimal
+  currency       String
+  paidAt         DateTime     @default(now())
+}
