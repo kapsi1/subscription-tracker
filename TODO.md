@@ -69,8 +69,8 @@
   - [x] currency
   - [x] paidAt
 
-- [ ] Run initial migration
-- [ ] Seed development data
+- [x] Run initial migration
+- [x] Seed development data
 
 ---
 
