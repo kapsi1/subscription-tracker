@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
@@ -27,6 +28,16 @@ async function bootstrap() {
 
   // Global error filter
   app.useGlobalFilters(new AllExceptionsFilter());
+
+  // Swagger OpenAPI Setup
+  const config = new DocumentBuilder()
+    .setTitle('Subscription Tracker API')
+    .setDescription('The API documentation for the Subscription Tracker application')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, documentFactory);
 
   const port = process.env.PORT || 3001;
   await app.listen(port);

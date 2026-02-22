@@ -147,10 +147,10 @@
 ---
 
 ## 1.8 API Documentation
-- [ ] Setup Swagger/OpenAPI
-- [ ] Document endpoints
-- [ ] Add DTO validation
-- [ ] Provide example payloads
+- [x] Setup Swagger/OpenAPI
+- [x] Document endpoints
+- [x] Add DTO validation
+- [x] Provide example payloads
 
 ---
 
