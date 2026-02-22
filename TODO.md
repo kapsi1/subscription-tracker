@@ -118,31 +118,31 @@
 ## 1.6 Alert System (BullMQ + Redis)
 
 ### 1.6.1 Queue Setup
-- [ ] Install BullMQ
-- [ ] Connect to Redis
-- [ ] Create `alertQueue`
-- [ ] Configure retry strategy
-- [ ] Configure exponential backoff
+- [x] Install BullMQ
+- [x] Connect to Redis
+- [x] Create `alertQueue`
+- [x] Configure retry strategy
+- [x] Configure exponential backoff
 
 ### 1.6.2 Scheduler (Cron)
-- [ ] Add cron job (e.g., hourly)
-- [ ] Query upcoming billing events
-- [ ] Compare against alert thresholds
-- [ ] Push alert jobs to queue
+- [x] Add cron job (e.g., hourly)
+- [x] Query upcoming billing events
+- [x] Compare against alert thresholds
+- [x] Push alert jobs to queue
 
 ### 1.6.3 Worker
-- [ ] Create queue processor
-- [ ] Implement email sender service
-- [ ] Implement webhook sender
-- [ ] Log failed jobs
-- [ ] Add idempotency protection (prevent duplicates)
+- [x] Create queue processor
+- [x] Implement email sender service
+- [x] Implement webhook sender
+- [x] Log failed jobs
+- [x] Add idempotency protection (prevent duplicates)
 
 ---
 
 ## 1.7 Email Service
-- [ ] Configure SMTP (dev + prod)
-- [ ] Create HTML email template
-- [ ] Handle send failures gracefully
+- [x] Configure SMTP (dev + prod)
+- [x] Create HTML email template
+- [x] Handle send failures gracefully
 
 ---
 
