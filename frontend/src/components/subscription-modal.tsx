@@ -67,6 +67,7 @@ export function SubscriptionModal({
     currency: "USD",
     billingCycle: "monthly",
     category: "Other",
+    nextBillingDate: new Date().toISOString().split("T")[0],
   });
 
   useEffect(() => {
@@ -77,6 +78,9 @@ export function SubscriptionModal({
         currency: subscription.currency,
         billingCycle: subscription.billingCycle,
         category: subscription.category,
+        nextBillingDate: subscription.nextBillingDate 
+          ? new Date(subscription.nextBillingDate).toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0],
       });
     } else if (!subscription && open) {
       setFormData({
@@ -85,6 +89,7 @@ export function SubscriptionModal({
         currency: "USD",
         billingCycle: "monthly",
         category: "Other",
+        nextBillingDate: new Date().toISOString().split("T")[0],
       });
     }
   }, [subscription, open]);
@@ -98,6 +103,7 @@ export function SubscriptionModal({
       currency: formData.currency,
       billingCycle: formData.billingCycle,
       category: formData.category,
+      nextBillingDate: formData.nextBillingDate,
     });
   };
 
@@ -210,6 +216,19 @@ export function SubscriptionModal({
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="nextBillingDate">Next Billing Date</Label>
+              <Input
+                id="nextBillingDate"
+                type="date"
+                value={formData.nextBillingDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, nextBillingDate: e.target.value })
+                }
+                required
+              />
             </div>
 
           </div>

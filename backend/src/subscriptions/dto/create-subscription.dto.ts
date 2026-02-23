@@ -22,4 +22,8 @@ export class CreateSubscriptionDto {
 
   @IsString()
   category!: string;
+
+  @IsOptional()
+  @IsString()
+  nextBillingDate?: string;
 }

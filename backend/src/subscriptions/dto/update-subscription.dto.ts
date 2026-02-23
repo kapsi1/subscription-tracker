@@ -32,4 +32,8 @@ export class UpdateSubscriptionDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsString()
+  nextBillingDate?: string;
 }

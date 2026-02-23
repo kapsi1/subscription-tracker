@@ -104,6 +104,26 @@ describe('SubscriptionsService', () => {
         }),
       });
     });
+
+    it('should create a subscription with manual next billing date', async () => {
+      const manualDate = '2025-12-25';
+      const dto = {
+        name: 'Netflix',
+        amount: 15,
+        currency: 'USD',
+        billingCycle: BillingCycle.monthly,
+        category: 'Entertainment',
+        nextBillingDate: manualDate,
+      };
+
+      await service.create(userId, dto);
+
+      expect(prismaMock.subscription.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          nextBillingDate: new Date(manualDate),
+        }),
+      });
+    });
   });
 
   describe('findAll', () => {
@@ -157,6 +177,19 @@ describe('SubscriptionsService', () => {
         data: expect.objectContaining({
           billingCycle: BillingCycle.yearly,
           nextBillingDate: expect.any(Date),
+        }),
+      });
+    });
+
+    it('should use manual next billing date when provided in update', async () => {
+      const manualDate = '2026-01-01';
+      const updateDto = { nextBillingDate: manualDate };
+      await service.update(userId, 'sub-1', updateDto);
+
+      expect(prismaMock.subscription.update).toHaveBeenCalledWith({
+        where: { id: 'sub-1' },
+        data: expect.objectContaining({
+          nextBillingDate: new Date(manualDate),
         }),
       });
     });

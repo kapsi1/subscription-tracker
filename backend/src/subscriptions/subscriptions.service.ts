@@ -14,11 +14,13 @@ export class SubscriptionsService {
       throw new BadRequestException('intervalDays is required for custom billing cycle');
     }
 
-    const nextBillingDate = calculateNextBillingDate(
-      createDto.billingCycle, 
-      new Date(), 
-      createDto.intervalDays
-    );
+    const nextBillingDate = createDto.nextBillingDate 
+      ? new Date(createDto.nextBillingDate)
+      : calculateNextBillingDate(
+          createDto.billingCycle, 
+          new Date(), 
+          createDto.intervalDays
+        );
 
     return this.prisma.subscription.create({
       data: {
@@ -62,12 +64,15 @@ export class SubscriptionsService {
       throw new BadRequestException('intervalDays is required for custom billing cycle');
     }
 
-    // If billing cycle or interval changes, recalculate next billing date
+    // If nextBillingDate is provided in DTO, use it.
+    // Otherwise, if billing cycle or interval changes, recalculate next billing date
     let nextBillingDate = existing.nextBillingDate;
-    if (updateDto.billingCycle || updateDto.intervalDays) {
+    if (updateDto.nextBillingDate) {
+      nextBillingDate = new Date(updateDto.nextBillingDate);
+    } else if (updateDto.billingCycle || updateDto.intervalDays) {
       nextBillingDate = calculateNextBillingDate(
         billingCycle,
-        new Date(), // we use current date as basis or existing start date? Usually recalculate from today if changed.
+        new Date(), 
         intervalDays
       );
     }
