@@ -49,9 +49,9 @@ const categories = [
 ];
 
 const billingCycles = [
-  { label: "Monthly", value: "MONTHLY" },
-  { label: "Yearly", value: "YEARLY" },
-  { label: "Weekly", value: "WEEKLY" },
+  { label: "Monthly", value: "monthly" },
+  { label: "Yearly", value: "yearly" },
+  { label: "Custom", value: "custom" },
 ];
 const currencies = ["USD", "EUR", "GBP"];
 
@@ -65,7 +65,7 @@ export function SubscriptionModal({
     name: "",
     amount: "",
     currency: "USD",
-    billingCycle: "MONTHLY",
+    billingCycle: "monthly",
     category: "Other",
   });
 
@@ -83,7 +83,7 @@ export function SubscriptionModal({
         name: "",
         amount: "",
         currency: "USD",
-        billingCycle: "MONTHLY",
+        billingCycle: "monthly",
         category: "Other",
       });
     }
