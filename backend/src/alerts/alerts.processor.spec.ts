@@ -3,6 +3,7 @@ import { AlertsProcessor } from './alerts.processor';
 import { EmailService } from '../notifications/email/email.service';
 import { WebhookService } from '../notifications/webhook/webhook.service';
 import { AlertType } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 
 describe('AlertsProcessor', () => {
   let processor: AlertsProcessor;
@@ -18,6 +19,10 @@ describe('AlertsProcessor', () => {
         AlertsProcessor,
         { provide: EmailService, useValue: emailMock },
         { provide: WebhookService, useValue: webhookMock },
+        {
+          provide: ConfigService,
+          useValue: { get: jest.fn().mockReturnValue('mock-secret') },
+        },
       ],
     }).compile();
 

@@ -39,6 +39,7 @@ describe('AuthService', () => {
 
     configServiceMock = {
       get: jest.fn().mockReturnValue('test-secret'),
+      getOrThrow: jest.fn().mockReturnValue('test-secret'),
     };
 
     const module: TestingModule = await Test.createTestingModule({
