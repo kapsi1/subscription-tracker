@@ -16,7 +16,11 @@ export class AlertsService {
   // Run every hour
   @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
-    this.logger.debug('Running scheduled check for upcoming subscriptions.');
+    this.logger.log({
+      msg: 'Alert scheduler started',
+      event: 'alert_scheduler_start',
+    });
+
     const now = new Date();
     
     // We check all active subscriptions with enabled alerts
@@ -35,6 +39,15 @@ export class AlertsService {
         }
       }
     });
+
+    this.logger.log({
+      msg: `Found ${alerts.length} enabled alerts to evaluate`,
+      event: 'alert_scheduler_query',
+      alertCount: alerts.length,
+    });
+
+    let enqueued = 0;
+    let skipped = 0;
 
     for (const alert of alerts) {
       const sub = alert.subscription;
@@ -68,8 +81,31 @@ export class AlertsService {
             removeOnFail: false,
           }
         );
-        this.logger.debug(`Enqueued alert job ${jobId} for subscription ${sub.name}`);
+
+        this.logger.log({
+          msg: `Alert job enqueued`,
+          event: 'alert_job_enqueued',
+          jobId,
+          alertId: alert.id,
+          alertType: alert.type,
+          subscriptionId: sub.id,
+          subscriptionName: sub.name,
+          daysBefore: alert.daysBefore,
+          nextBillingDate: sub.nextBillingDate.toISOString(),
+        });
+
+        enqueued++;
+      } else {
+        skipped++;
       }
     }
+
+    this.logger.log({
+      msg: `Alert scheduler completed`,
+      event: 'alert_scheduler_complete',
+      totalAlerts: alerts.length,
+      enqueued,
+      skipped,
+    });
   }
 }

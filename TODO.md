@@ -231,14 +231,14 @@
 # 3. Observability & DevOps
 
 ## 3.1 Logging
-- [ ] Structured logs
-- [ ] Include request ID
-- [ ] Log alert executions
+- [x] Structured logs
+- [x] Include request ID
+- [x] Log alert executions
 
 ## 3.2 Monitoring
-- [ ] Health check endpoint
-- [ ] Redis health check
-- [ ] Database health check
+- [x] Health check endpoint
+- [x] Redis health check
+- [x] Database health check
 
 ## 3.3 Deployment
 - [ ] Dockerize backend
