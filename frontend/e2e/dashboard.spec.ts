@@ -63,6 +63,7 @@ test.describe('Dashboard Flow', () => {
 
     // Verify Upcoming Payments list has the subscriptions
     await expect(page.getByText('Sub 1')).toBeVisible();
-    await expect(page.getByText('Sub 2 Yearly')).toBeVisible();
+    // Sub 2 Yearly is > 30 days away so it shouldn't show in Upcoming Payments
+    await expect(page.getByText('Sub 2 Yearly')).not.toBeVisible();
   });
 });
