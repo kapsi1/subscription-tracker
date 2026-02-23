@@ -6,6 +6,7 @@ import api from '@/lib/api';
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (data: any) => Promise<void>;
   register: (data: any) => Promise<void>;
   logout: () => void;
@@ -13,6 +14,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
+  isLoading: true,
   login: async () => {},
   register: async () => {},
   logout: () => {},
@@ -21,10 +23,12 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) setIsAuthenticated(true);
+    setIsLoading(false);
 
     const handleUnauthorized = () => {
       setIsAuthenticated(false);
@@ -59,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
