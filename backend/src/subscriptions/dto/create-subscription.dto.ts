@@ -24,6 +24,15 @@ export class CreateSubscriptionDto {
   category!: string;
 
   @IsOptional()
+  @IsBoolean()
+  reminderEnabled?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  reminderDays?: number;
+
+  @IsOptional()
   @IsString()
   nextBillingDate?: string;
 }

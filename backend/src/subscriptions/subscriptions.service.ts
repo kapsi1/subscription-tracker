@@ -14,6 +14,9 @@ export class SubscriptionsService {
       throw new BadRequestException('intervalDays is required for custom billing cycle');
     }
 
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+
     const nextBillingDate = createDto.nextBillingDate 
       ? new Date(createDto.nextBillingDate)
       : calculateNextBillingDate(
@@ -32,6 +35,8 @@ export class SubscriptionsService {
         intervalDays: createDto.intervalDays || null,
         category: createDto.category,
         nextBillingDate,
+        reminderEnabled: createDto.reminderEnabled ?? user.defaultReminderEnabled,
+        reminderDays: createDto.reminderDays ?? user.defaultReminderDays,
       },
     });
   }
@@ -85,6 +90,8 @@ export class SubscriptionsService {
         ...(updateDto.currency && { currency: updateDto.currency }),
         ...(updateDto.category && { category: updateDto.category }),
         ...(updateDto.isActive !== undefined && { isActive: updateDto.isActive }),
+        ...(updateDto.reminderEnabled !== undefined && { reminderEnabled: updateDto.reminderEnabled }),
+        ...(updateDto.reminderDays !== undefined && { reminderDays: updateDto.reminderDays }),
         billingCycle,
         intervalDays,
         nextBillingDate,

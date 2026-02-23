@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Switch } from "./ui/switch";
+import api from "@/lib/api";
 
 export interface Subscription {
   id: string;
@@ -28,6 +29,8 @@ export interface Subscription {
   nextBillingDate?: string;
   category: string;
   isActive?: boolean;
+  reminderEnabled?: boolean;
+  reminderDays?: number;
 }
 
 interface SubscriptionModalProps {
@@ -68,9 +71,24 @@ export function SubscriptionModal({
     billingCycle: "monthly",
     category: "Other",
     nextBillingDate: new Date().toISOString().split("T")[0],
+    reminderEnabled: true,
+    reminderDays: "3",
   });
 
   useEffect(() => {
+    const fetchDefaults = async () => {
+      try {
+        const response = await api.get("/users/me");
+        setFormData(prev => ({
+          ...prev,
+          reminderEnabled: response.data.defaultReminderEnabled,
+          reminderDays: response.data.defaultReminderDays.toString(),
+        }));
+      } catch (error) {
+        console.error("Failed to fetch user defaults", error);
+      }
+    };
+
     if (subscription && open) {
       setFormData({
         name: subscription.name,
@@ -81,6 +99,8 @@ export function SubscriptionModal({
         nextBillingDate: subscription.nextBillingDate 
           ? new Date(subscription.nextBillingDate).toISOString().split("T")[0]
           : new Date().toISOString().split("T")[0],
+        reminderEnabled: subscription.reminderEnabled ?? true,
+        reminderDays: (subscription.reminderDays ?? 3).toString(),
       });
     } else if (!subscription && open) {
       setFormData({
@@ -90,7 +110,10 @@ export function SubscriptionModal({
         billingCycle: "monthly",
         category: "Other",
         nextBillingDate: new Date().toISOString().split("T")[0],
+        reminderEnabled: true,
+        reminderDays: "3",
       });
+      fetchDefaults();
     }
   }, [subscription, open]);
 
@@ -104,6 +127,8 @@ export function SubscriptionModal({
       billingCycle: formData.billingCycle,
       category: formData.category,
       nextBillingDate: formData.nextBillingDate,
+      reminderEnabled: formData.reminderEnabled,
+      reminderDays: parseInt(formData.reminderDays),
     });
   };
 
@@ -230,6 +255,39 @@ export function SubscriptionModal({
                 required
               />
             </div>
+
+            <div className="flex items-center justify-between border-t pt-4">
+              <div className="space-y-0.5">
+                <Label htmlFor="reminderEnabled">Payment Reminders</Label>
+                <p className="text-sm text-muted-foreground">
+                  Get notified before payment is due
+                </p>
+              </div>
+              <Switch
+                id="reminderEnabled"
+                checked={formData.reminderEnabled}
+                onCheckedChange={(checked) =>
+                  setFormData({ ...formData, reminderEnabled: checked })
+                }
+              />
+            </div>
+
+            {formData.reminderEnabled && (
+              <div className="space-y-2">
+                <Label htmlFor="reminderDays">Days Before Reminder</Label>
+                <Input
+                  id="reminderDays"
+                  type="number"
+                  min="0"
+                  max="30"
+                  value={formData.reminderDays}
+                  onChange={(e) =>
+                    setFormData({ ...formData, reminderDays: e.target.value })
+                  }
+                  required
+                />
+              </div>
+            )}
 
           </div>
 

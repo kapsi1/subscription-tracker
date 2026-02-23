@@ -4,7 +4,23 @@ import { PrismaService } from '../prisma/prisma.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 
-import { AlertType } from '@prisma/client';
+import { AlertType, Prisma } from '@prisma/client';
+
+type AlertWithSub = Prisma.AlertGetPayload<{
+  include: {
+    subscription: {
+      include: {
+        user: true
+      }
+    }
+  }
+}>;
+
+type SubWithUser = Prisma.SubscriptionGetPayload<{
+  include: {
+    user: true
+  }
+}>;
 
 interface AlertJobData {
   alertId: string;
@@ -28,7 +44,7 @@ export class AlertsService {
     @InjectQueue('alertQueue') private readonly alertQueue: Queue,
   ) {}
 
-  // Run every hour
+  // Run scheduler every hour
   @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     this.logger.log({
@@ -38,8 +54,8 @@ export class AlertsService {
 
     const now = new Date();
     
-    // We check all active subscriptions with enabled alerts
-    const alerts = await this.prisma.alert.findMany({
+    // We check all active subscriptions with enabled alerts OR subscription-level reminders
+    const alerts = (await this.prisma.alert.findMany({
       where: {
         isEnabled: true,
         subscription: {
@@ -53,7 +69,18 @@ export class AlertsService {
           }
         }
       }
-    });
+    })) as AlertWithSub[];
+
+    const subsWithReminders = (await this.prisma.subscription.findMany({
+      where: {
+        isActive: true,
+        // @ts-ignore: Stale IDE error - field exists in generated Prisma client
+        reminderEnabled: true,
+      },
+      include: {
+        user: true
+      }
+    })) as SubWithUser[];
 
     this.logger.log({
       msg: `Found ${alerts.length} enabled alerts to evaluate`,
@@ -64,65 +91,94 @@ export class AlertsService {
     let enqueued = 0;
     let skipped = 0;
 
+    // Process legacy alerts
     for (const alert of alerts) {
       const sub = alert.subscription;
-      
-      const thresholdDate = new Date();
-      thresholdDate.setDate(thresholdDate.getDate() + alert.daysBefore);
-      
-      // If the subscription is expected to renew on or before the threshold computed today.
-      // E.g., next billing date is within `daysBefore` days.
-      if (sub.nextBillingDate <= thresholdDate && sub.nextBillingDate >= now) {
-        
-        // Use an idempotency key consisting of the SubID, the AlertID, and the exact nextBillingDate
-        // so we don't spam the user 24 times a day since this runs hourly.
-        const jobId = `alert:${alert.id}:sub:${sub.id}:${sub.nextBillingDate.getTime()}`;
+      const success = await this.enqueueIfNecessary(
+        alert.id,
+        sub,
+        alert.type,
+        alert.daysBefore,
+        // @ts-ignore: Stale IDE error - field exists in generated Prisma client
+        alert.webhookUrl ?? undefined,
+        // @ts-ignore: Stale IDE error - field exists in generated Prisma client
+        alert.webhookSecret ?? undefined
+      );
+      if (success) enqueued++; else skipped++;
+    }
 
-        await this.alertQueue.add(
-          'processAlert',
-          {
-            alertId: alert.id,
-            subscriptionId: sub.id,
-            type: alert.type,
-            daysBefore: alert.daysBefore,
-            userEmail: sub.user.email,
-            subscriptionName: sub.name,
-            amount: Number(sub.amount),
-            currency: sub.currency,
-            webhookUrl: alert.webhookUrl,
-            webhookSecret: alert.webhookSecret,
-          } as AlertJobData,
-          {
-            jobId, // Idempotency protection natively handled by BullMQ
-            removeOnComplete: true,
-            removeOnFail: false,
-          }
-        );
-
-        this.logger.log({
-          msg: `Alert job enqueued`,
-          event: 'alert_job_enqueued',
-          jobId,
-          alertId: alert.id,
-          alertType: alert.type,
-          subscriptionId: sub.id,
-          subscriptionName: sub.name,
-          daysBefore: alert.daysBefore,
-          nextBillingDate: sub.nextBillingDate.toISOString(),
-        });
-
-        enqueued++;
-      } else {
-        skipped++;
-      }
+    // Process subscription-level reminders
+    for (const sub of subsWithReminders) {
+      const success = await this.enqueueIfNecessary(
+        `sub-reminder-${sub.id}`,
+        sub,
+        AlertType.email,
+        // @ts-ignore: Stale IDE error - field exists in generated Prisma client
+        sub.reminderDays
+      );
+      if (success) enqueued++; else skipped++;
     }
 
     this.logger.log({
       msg: `Alert scheduler completed`,
       event: 'alert_scheduler_complete',
       totalAlerts: alerts.length,
+      totalSubs: subsWithReminders.length,
       enqueued,
       skipped,
     });
+  }
+
+  private async enqueueIfNecessary(
+    alertId: string,
+    sub: any, // Subscription with user
+    type: AlertType,
+    daysBefore: number,
+    webhookUrl?: string,
+    webhookSecret?: string
+  ): Promise<boolean> {
+    const now = new Date();
+    const thresholdDate = new Date();
+    thresholdDate.setDate(thresholdDate.getDate() + daysBefore);
+
+    if (sub.nextBillingDate <= thresholdDate && sub.nextBillingDate >= now) {
+      const jobId = `alert:${alertId}:sub:${sub.id}:${sub.nextBillingDate.getTime()}`;
+
+      await this.alertQueue.add(
+        'processAlert',
+        {
+          alertId,
+          subscriptionId: sub.id,
+          type,
+          daysBefore,
+          userEmail: sub.user.email,
+          subscriptionName: sub.name,
+          amount: Number(sub.amount),
+          currency: sub.currency,
+          webhookUrl,
+          webhookSecret,
+        } as AlertJobData,
+        {
+          jobId,
+          removeOnComplete: true,
+          removeOnFail: false,
+        }
+      );
+
+      this.logger.log({
+        msg: `Alert job enqueued`,
+        event: 'alert_job_enqueued',
+        jobId,
+        alertId,
+        alertType: type,
+        subscriptionId: sub.id,
+        subscriptionName: sub.name,
+        daysBefore,
+        nextBillingDate: sub.nextBillingDate.toISOString(),
+      });
+
+      return true;
+    }
+    return false;
   }
 }

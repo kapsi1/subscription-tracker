@@ -8,30 +8,47 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Bell, Mail, Webhook, Save } from "lucide-react";
+import api from "@/lib/api";
 
 export default function AlertsSettingsPage() {
   const [settings, setSettings] = useState({
+    defaultReminderEnabled: true,
+    defaultReminderDays: "3",
     emailNotifications: true,
     emailAddress: "",
     webhookEnabled: false,
     webhookUrl: "",
-    defaultReminderDays: "3",
     dailyDigest: false,
     weeklyReport: true,
   });
 
   useEffect(() => {
-    // Load from local storage acting as a mock backend for global settings
-    const saved = localStorage.getItem("subtracker_alert_settings");
-    if (saved) {
-      setSettings(JSON.parse(saved));
-    }
+    const fetchSettings = async () => {
+      try {
+        const response = await api.get("/users/me");
+        setSettings({
+          ...settings,
+          defaultReminderEnabled: response.data.defaultReminderEnabled,
+          defaultReminderDays: response.data.defaultReminderDays.toString(),
+          emailAddress: response.data.email,
+        });
+      } catch (error) {
+        toast.error("Failed to load settings");
+      }
+    };
+    fetchSettings();
   }, []);
 
-  const handleSave = () => {
-    // Persist to local storage
-    localStorage.setItem("subtracker_alert_settings", JSON.stringify(settings));
-    toast.success("Settings saved successfully");
+  const handleSave = async () => {
+    try {
+      await api.patch("/users/settings", {
+        defaultReminderEnabled: settings.defaultReminderEnabled,
+        defaultReminderDays: parseInt(settings.defaultReminderDays),
+      });
+      toast.success("Settings saved successfully");
+    } catch (error) {
+      toast.error("Failed to save settings");
+    }
   };
 
   return (
@@ -191,6 +208,22 @@ export default function AlertsSettingsPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="defaultEnabled">Default Payment Reminders</Label>
+              <p className="text-sm text-muted-foreground">
+                Enable reminders by default for new subscriptions
+              </p>
+            </div>
+            <Switch
+              id="defaultEnabled"
+              checked={settings.defaultReminderEnabled}
+              onCheckedChange={(checked) =>
+                setSettings({ ...settings, defaultReminderEnabled: checked })
+              }
+            />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="defaultDays">Default Reminder Days</Label>
             <div className="flex gap-2 items-center">

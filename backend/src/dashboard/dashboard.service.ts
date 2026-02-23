@@ -62,14 +62,16 @@ export class DashboardService {
     const forecast = [];
     const now = new Date();
     
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
     // Create bucket for each upcoming month
     for (let i = 0; i < months; i++) {
       const targetDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
       
       forecast.push({
-        month: targetDate.toLocaleString('default', { month: 'short' }),
+        month: monthNames[targetDate.getMonth()],
         year: targetDate.getFullYear(),
-        cost: 0,
+        amount: 0,
         currency: 'USD', // simplistic assumption for multi-currency
       });
     }
@@ -96,7 +98,7 @@ export class DashboardService {
 
         // Ensure it falls within our forecast window, including the current partial month.
         if (index >= 0 && index < months) {
-          forecast[index].cost += amount;
+          forecast[index].amount += amount;
         }
 
         // Stepping to next billing date exactly like Subscriptions module logic

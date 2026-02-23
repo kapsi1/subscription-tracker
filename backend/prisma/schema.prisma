@@ -14,6 +14,8 @@ model User {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   subscriptions Subscription[]
+  defaultReminderEnabled Boolean @default(true)
+  defaultReminderDays    Int     @default(3)
 }
 
 enum BillingCycle {
@@ -34,6 +36,8 @@ model Subscription {
   nextBillingDate DateTime
   category        String
   isActive        Boolean        @default(true)
+  reminderEnabled Boolean        @default(true)
+  reminderDays    Int            @default(3)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   alerts          Alert[]

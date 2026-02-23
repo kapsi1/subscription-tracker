@@ -16,7 +16,7 @@ describe('DashboardController', () => {
   };
 
   const mockForecast = [
-    { month: 'Jan', year: 2025, cost: 25, currency: 'USD' },
+    { month: 'Jan', year: 2025, amount: 25, currency: 'USD' },
   ];
 
   beforeEach(async () => {
