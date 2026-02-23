@@ -264,12 +264,12 @@
 
 # 5. Security Checklist
 
-- [ ] Rate limiting
-- [ ] Security headers (Helmet)
-- [ ] CSRF protection (if needed)
-- [ ] Input sanitization
-- [ ] Secure JWT handling
-- [ ] Encrypt webhook secrets
+- [x] Rate limiting
+- [x] Security headers (Helmet)
+- [x] CSRF protection (if needed)
+- [x] Input sanitization
+- [x] Secure JWT handling
+- [x] Encrypt webhook secrets
 
 ---
 

@@ -4,6 +4,8 @@ import { Job } from 'bullmq';
 import { EmailService } from '../notifications/email/email.service';
 import { WebhookService } from '../notifications/webhook/webhook.service';
 import { AlertType } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
+import { EncryptionUtil } from '../common/utils/encryption.util';
 
 interface AlertJobData {
   alertId: string;
@@ -14,6 +16,8 @@ interface AlertJobData {
   subscriptionName: string;
   amount: number;
   currency: string;
+  webhookUrl?: string;
+  webhookSecret?: string;
 }
 
 @Processor('alertQueue')
@@ -23,6 +27,7 @@ export class AlertsProcessor extends WorkerHost {
   constructor(
     private readonly emailService: EmailService,
     private readonly webhookService: WebhookService,
+    private readonly configService: ConfigService,
   ) {
     super();
   }
@@ -37,7 +42,15 @@ export class AlertsProcessor extends WorkerHost {
       daysBefore,
       amount,
       currency,
+      webhookUrl,
+      webhookSecret: encryptedSecret,
     } = job.data;
+
+    let webhookSecret: string | undefined;
+    if (encryptedSecret) {
+      const encryptionSecret = this.configService.get<string>('WEBHOOK_SECRET_KEY') || 'default-webhook-encryption-key';
+      webhookSecret = EncryptionUtil.decrypt(encryptedSecret, encryptionSecret);
+    }
 
     this.logger.log({
       msg: 'Processing alert job',
@@ -61,8 +74,15 @@ export class AlertsProcessor extends WorkerHost {
           subscriptionId,
           recipient: userEmail,
         });
-      } else if (type === AlertType.webhook) {
-        await this.webhookService.sendAlert(subscriptionName, daysBefore, amount, currency);
+      } else if (type === AlertType.webhook && webhookUrl) {
+        await this.webhookService.sendAlert(
+          webhookUrl,
+          webhookSecret,
+          subscriptionName,
+          daysBefore,
+          amount,
+          currency
+        );
         this.logger.log({
           msg: 'Webhook alert sent successfully',
           event: 'alert_webhook_sent',

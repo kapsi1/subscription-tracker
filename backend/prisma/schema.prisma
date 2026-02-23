@@ -52,6 +52,8 @@ model Alert {
   type           AlertType
   daysBefore     Int
   isEnabled      Boolean      @default(true)
+  webhookUrl     String?
+  webhookSecret  String?
 }
 
 model PaymentHistory {

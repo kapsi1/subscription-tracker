@@ -4,6 +4,21 @@ import { PrismaService } from '../prisma/prisma.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 
+import { AlertType } from '@prisma/client';
+
+interface AlertJobData {
+  alertId: string;
+  subscriptionId: string;
+  type: AlertType;
+  daysBefore: number;
+  userEmail: string;
+  subscriptionName: string;
+  amount: number;
+  currency: string;
+  webhookUrl?: string;
+  webhookSecret?: string;
+}
+
 @Injectable()
 export class AlertsService {
   private readonly logger = new Logger(AlertsService.name);
@@ -74,7 +89,9 @@ export class AlertsService {
             subscriptionName: sub.name,
             amount: Number(sub.amount),
             currency: sub.currency,
-          },
+            webhookUrl: alert.webhookUrl,
+            webhookSecret: alert.webhookSecret,
+          } as AlertJobData,
           {
             jobId, // Idempotency protection natively handled by BullMQ
             removeOnComplete: true,
