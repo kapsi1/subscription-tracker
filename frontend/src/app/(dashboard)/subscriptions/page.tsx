@@ -71,7 +71,8 @@ export default function SubscriptionsPage() {
     try {
       if (subscription.id) {
         // Edit existing
-        const res = await api.patch(`/subscriptions/${subscription.id}`, subscription);
+        const { id, ...updateData } = subscription;
+        const res = await api.patch(`/subscriptions/${id}`, updateData);
         setSubscriptions(
           subscriptions.map((sub) =>
             sub.id === subscription.id ? res.data : sub
