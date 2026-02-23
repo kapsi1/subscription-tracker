@@ -167,59 +167,64 @@
 # 2. Frontend (Next.js)
 
 ## 2.1 Setup
-- [ ] Create Next.js app (App Router)
-- [ ] Setup Tailwind CSS
-- [ ] Configure API client (Axios or Fetch wrapper)
-- [ ] Setup environment variables
-- [ ] Setup ESLint + Prettier
+- [x] Create Next.js app (App Router)
+- [x] Setup Tailwind CSS
+- [x] Configure API client (Axios with JWT interceptors)
+- [x] Setup environment variables (`.env.local`)
+- [x] Setup ESLint + Prettier
 
 ---
 
 ## 2.2 Authentication UI
-- [ ] Registration page
-- [ ] Login page
-- [ ] Store access token securely
-- [ ] Implement refresh logic
-- [ ] Protect routes
-- [ ] Logout functionality
+- [x] Registration page
+- [x] Login page
+- [x] Store access token securely
+- [x] Implement refresh logic
+- [x] Protect routes
+- [x] Logout functionality
 
 ---
 
 ## 2.3 Dashboard
-- [ ] Display total monthly cost
-- [ ] Display total yearly cost
-- [ ] Show upcoming payments (next 30 days)
-- [ ] Show cost by category
-- [ ] Display 12-month forecast chart
+- [x] Display total monthly cost
+- [x] Display total yearly cost
+- [x] Show upcoming payments (next 30 days)
+- [x] Show cost by category (pie + bar chart)
+- [x] Display 12-month forecast chart
 
 ---
 
 ## 2.4 Subscription Management UI
-- [ ] List subscriptions
-- [ ] Create subscription form
-- [ ] Edit subscription form
-- [ ] Delete confirmation modal
-- [ ] Date picker component
-- [ ] Currency selector
-- [ ] Billing cycle selector
+- [x] List subscriptions (with search/filter)
+- [x] Create subscription form (modal)
+- [x] Edit subscription form (modal)
+- [x] Delete confirmation modal
+- [x] Date picker component
+- [x] Currency selector
+- [x] Billing cycle selector
 
 ---
 
 ## 2.5 Alert Management UI
-- [ ] Add alert configuration
-- [ ] Enable/disable alerts
-- [ ] Set daysBefore value
-- [ ] Configure webhook URL
+- [x] Add alert configuration
+- [x] Enable/disable alerts (email + webhook toggles)
+- [x] Set daysBefore value
+- [x] Configure webhook URL
 
 ---
 
 ## 2.6 UX Enhancements
-- [ ] Loading states
-- [ ] Error states
-- [ ] Form validation messages
-- [ ] Toast notifications
-- [ ] Responsive layout
-- [ ] Optional dark mode
+- [x] Loading states
+- [x] Error states
+- [x] Form validation messages
+- [x] Toast notifications (sonner)
+- [x] Responsive layout
+- [x] Optional dark mode (next-themes)
+
+## 2.7 Frontend E2E Testing
+- [x] Initialize Playwright
+- [x] Write auth flow tests
+- [x] Write dashboard + subscriptions flow tests
 
 ---
 

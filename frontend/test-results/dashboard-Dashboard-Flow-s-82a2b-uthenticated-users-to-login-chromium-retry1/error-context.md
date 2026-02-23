@@ -1,0 +1,115 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "SubTracker" [ref=e5] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e7]
+          - generic [ref=e9]: SubTracker
+        - navigation [ref=e10]:
+          - link "Dashboard" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - button "Dashboard" [ref=e12]:
+              - img
+              - text: Dashboard
+          - link "Subscriptions" [ref=e13] [cursor=pointer]:
+            - /url: /subscriptions
+            - button "Subscriptions" [ref=e14]:
+              - img
+              - text: Subscriptions
+          - link "Settings" [ref=e15] [cursor=pointer]:
+            - /url: /alerts
+            - button "Settings" [ref=e16]:
+              - img
+              - text: Settings
+        - generic [ref=e17]:
+          - button "Switch to dark mode" [ref=e18]:
+            - img
+          - button "US" [ref=e19]:
+            - generic [ref=e21]: US
+    - generic [ref=e22]:
+      - complementary [ref=e23]:
+        - navigation [ref=e24]:
+          - link "Overview" [ref=e25] [cursor=pointer]:
+            - /url: /dashboard
+            - button "Overview" [ref=e26]:
+              - img
+              - text: Overview
+          - link "All Subscriptions" [ref=e27] [cursor=pointer]:
+            - /url: /subscriptions
+            - button "All Subscriptions" [ref=e28]:
+              - img
+              - text: All Subscriptions
+          - link "Alerts" [ref=e29] [cursor=pointer]:
+            - /url: /alerts
+            - button "Alerts" [ref=e30]:
+              - img
+              - text: Alerts
+      - main [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - heading "Dashboard" [level=1] [ref=e35]
+              - paragraph [ref=e36]: Track and manage your subscription costs
+            - link "Manage Subscriptions" [ref=e37] [cursor=pointer]:
+              - /url: /subscriptions
+              - button "Manage Subscriptions" [ref=e38]:
+                - img
+                - text: Manage Subscriptions
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - generic [ref=e41]:
+                - heading "Total Monthly Cost" [level=4] [ref=e42]
+                - img [ref=e44]
+              - generic [ref=e46]:
+                - generic [ref=e47]: $0.00
+                - paragraph [ref=e48]: Currently tracked
+            - generic [ref=e49]:
+              - generic [ref=e50]:
+                - heading "Total Yearly Cost" [level=4] [ref=e51]
+                - img [ref=e53]
+              - generic [ref=e56]:
+                - generic [ref=e57]: $0.00
+                - paragraph [ref=e58]: Projected annual spend
+            - generic [ref=e59]:
+              - generic [ref=e60]:
+                - heading "Upcoming Payments" [level=4] [ref=e61]
+                - img [ref=e63]
+              - generic [ref=e65]:
+                - generic [ref=e66]: "0"
+                - paragraph [ref=e67]: Next 30 days
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - heading "Active Subscriptions" [level=4] [ref=e70]
+                - img [ref=e72]
+              - generic [ref=e74]:
+                - generic [ref=e75]: "0"
+                - paragraph [ref=e76]: Currently tracked
+          - generic [ref=e77]:
+            - generic [ref=e78]:
+              - generic [ref=e79]:
+                - heading "12-Month Forecast" [level=4] [ref=e80]
+                - paragraph [ref=e81]: Projected monthly spending
+              - application [ref=e85]
+            - generic [ref=e91]:
+              - generic [ref=e93]:
+                - generic [ref=e94]:
+                  - heading "Cost by Category" [level=4] [ref=e95]
+                  - paragraph [ref=e96]: Monthly breakdown
+                - generic [ref=e97]:
+                  - button "Pie" [ref=e98]
+                  - button "Bar" [ref=e99]
+              - application [ref=e103]
+          - generic [ref=e104]:
+            - generic [ref=e105]:
+              - heading "Upcoming Payments" [level=4] [ref=e106]
+              - paragraph [ref=e107]: Your next billing dates
+            - generic [ref=e109]: No upcoming payments in the next 30 days.
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e115] [cursor=pointer]:
+    - img [ref=e116]
+  - alert [ref=e119]
+```
