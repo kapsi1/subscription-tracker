@@ -80,7 +80,7 @@ test.describe('Subscriptions Flow', () => {
 
     // 6. Test Export
     // First let's add two simple ones to export
-    await page.getByRole('button', { name: 'Add Subscription' }).click();
+    await page.getByRole('button', { name: 'Add Subscription' }).first().click();
     await page.getByLabel('Service Name').fill('Spotify');
     await page.getByLabel('Amount').fill('10.99');
     await page.getByRole('combobox', { name: /Category/i }).click();

@@ -22,7 +22,7 @@ export class UsersController {
 
   @Get('me')
   async getMe(@Req() req: any) {
-    const user = await this.usersService.findById(req.user.id);
+    const user = await this.usersService.findById(req.user.userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -36,7 +36,7 @@ export class UsersController {
     @Req() req: any,
     @Body() updateSettingsDto: UpdateSettingsDto,
   ) {
-    return this.usersService.update(req.user.id, updateSettingsDto);
+    return this.usersService.update(req.user.userId, updateSettingsDto);
   }
 
   @Post('push-subscription')
@@ -45,7 +45,7 @@ export class UsersController {
     @Body() subDto: PushSubscriptionDto,
   ) {
     return this.usersService.savePushSubscription(
-      req.user.id,
+      req.user.userId,
       subDto.endpoint,
       subDto.keys.p256dh,
       subDto.keys.auth,
@@ -57,6 +57,6 @@ export class UsersController {
     @Req() req: any,
     @Query('endpoint') endpoint: string,
   ) {
-    return this.usersService.deletePushSubscription(req.user.id, endpoint);
+    return this.usersService.deletePushSubscription(req.user.userId, endpoint);
   }
 }

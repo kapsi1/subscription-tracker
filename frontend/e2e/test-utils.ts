@@ -41,7 +41,10 @@ export async function cleanupUser(email: string) {
       await client.query('DELETE FROM "Subscription" WHERE "userId" = $1', [userId]);
     }
 
-    // 3. Delete the user
+    // 3. Delete push subscriptions
+    await client.query('DELETE FROM "PushSubscription" WHERE "userId" = $1', [userId]);
+
+    // 4. Delete the user
     await client.query('DELETE FROM "User" WHERE id = $1', [userId]);
     
     await client.query('COMMIT');
