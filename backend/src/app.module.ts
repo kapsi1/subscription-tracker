@@ -39,20 +39,24 @@ import { ThrottlerGuard } from '@nestjs/throttler';
       isGlobal: true,
       envFilePath: '../.env', // using the root .env or overriding it if needed
     }),
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 100,
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     LoggerModule.forRoot({
       pinoHttp: {
         // Re-use X-Request-Id set by the RequestIdMiddleware, or generate one.
         genReqId: (req: IncomingMessage) =>
-          (req as unknown as Record<string, unknown>)['id'] as string ?? randomUUID(),
+          ((req as unknown as Record<string, unknown>)['id'] as string) ??
+          randomUUID(),
 
         // Attach request ID to every log line under the `requestId` key.
         customProps: (req: IncomingMessage) => ({
-          requestId:
-            (req as unknown as Record<string, unknown>)['id'] as string | undefined,
+          requestId: (req as unknown as Record<string, unknown>)['id'] as
+            | string
+            | undefined,
         }),
 
         // Redact sensitive headers from logged requests.

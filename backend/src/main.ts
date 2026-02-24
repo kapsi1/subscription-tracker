@@ -9,7 +9,7 @@ import { SanitizePipe } from './common/pipes/sanitize.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
-  
+
   // Security headers
   app.use(helmet());
 
@@ -38,7 +38,9 @@ async function bootstrap() {
   // Swagger OpenAPI Setup
   const config = new DocumentBuilder()
     .setTitle('Subscription Tracker API')
-    .setDescription('The API documentation for the Subscription Tracker application')
+    .setDescription(
+      'The API documentation for the Subscription Tracker application',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();

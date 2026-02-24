@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Bell, Mail, Webhook, Save } from "lucide-react";
+import { Bell, Mail, Webhook, Save, PiggyBank, Smartphone } from "lucide-react";
 import api from "@/lib/api";
+import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from "@/lib/push";
 
 export default function AlertsSettingsPage() {
   const [settings, setSettings] = useState({
@@ -20,6 +21,8 @@ export default function AlertsSettingsPage() {
     webhookUrl: "",
     dailyDigest: false,
     weeklyReport: true,
+    monthlyBudget: "",
+    pushEnabled: false,
   });
 
   useEffect(() => {
@@ -31,12 +34,31 @@ export default function AlertsSettingsPage() {
           defaultReminderEnabled: response.data.defaultReminderEnabled,
           defaultReminderDays: response.data.defaultReminderDays.toString(),
           emailAddress: response.data.email,
+          monthlyBudget: response.data.monthlyBudget?.toString() || "",
         });
       } catch (error) {
         toast.error("Failed to load settings");
       }
     };
+
+    const checkPushSubscription = async () => {
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
+        try {
+          const registration = await navigator.serviceWorker.getRegistration('/sw.js');
+          if (registration) {
+            const subscription = await registration.pushManager.getSubscription();
+            if (subscription) {
+              setSettings(s => ({ ...s, pushEnabled: true }));
+            }
+          }
+        } catch (e) {
+          console.error("Failed to check push subscription", e);
+        }
+      }
+    };
+
     fetchSettings();
+    checkPushSubscription();
   }, []);
 
   const handleSave = async () => {
@@ -44,10 +66,37 @@ export default function AlertsSettingsPage() {
       await api.patch("/users/settings", {
         defaultReminderEnabled: settings.defaultReminderEnabled,
         defaultReminderDays: parseInt(settings.defaultReminderDays),
+        monthlyBudget: settings.monthlyBudget ? parseFloat(settings.monthlyBudget) : null,
       });
       toast.success("Settings saved successfully");
     } catch (error) {
       toast.error("Failed to save settings");
+    }
+  };
+
+  const handlePushToggle = async (checked: boolean) => {
+    try {
+      if (checked) {
+        await registerServiceWorker();
+        const sub = await subscribeToPush();
+        await api.post("/users/push-subscription", sub.toJSON());
+        setSettings({ ...settings, pushEnabled: true });
+        toast.success("Push notifications enabled");
+      } else {
+        const registration = await navigator.serviceWorker.getRegistration('/sw.js');
+        if (registration) {
+          const sub = await registration.pushManager.getSubscription();
+          if (sub) {
+            await api.delete(`/users/push-subscription?endpoint=${encodeURIComponent(sub.endpoint)}`);
+          }
+        }
+        await unsubscribeFromPush();
+        setSettings({ ...settings, pushEnabled: false });
+        toast.success("Push notifications disabled");
+      }
+    } catch (error: any) {
+      toast.error("Failed to toggle push notifications: " + (error.message || "Unknown error"));
+      setSettings({ ...settings, pushEnabled: false });
     }
   };
 
@@ -139,6 +188,36 @@ export default function AlertsSettingsPage() {
               </div>
             </>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Push Notifications */}
+      <Card className="shadow-sm">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+              <Smartphone className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <CardTitle>Browser Push Notifications</CardTitle>
+              <CardDescription>Receive alerts directly in your browser</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="pushEnabled">Enable Browser Push</Label>
+              <p className="text-sm text-muted-foreground">
+                Get notified even when you're not on the app
+              </p>
+            </div>
+            <Switch
+              id="pushEnabled"
+              checked={settings.pushEnabled}
+              onCheckedChange={handlePushToggle}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -244,6 +323,46 @@ export default function AlertsSettingsPage() {
             </div>
             <p className="text-xs text-muted-foreground">
               New subscriptions will be set to remind you this many days before the payment is due
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Budget Settings */}
+      <Card className="shadow-sm">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+              <PiggyBank className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <CardTitle>Budget Limits</CardTitle>
+              <CardDescription>
+                Set a monthly budget to get notified if you exceed it
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="monthlyBudget">Monthly Budget</Label>
+            <div className="flex gap-2 items-center">
+              <span className="text-muted-foreground">$</span>
+              <Input
+                id="monthlyBudget"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="e.g. 50.00"
+                className="max-w-32"
+                value={settings.monthlyBudget}
+                onChange={(e) =>
+                  setSettings({ ...settings, monthlyBudget: e.target.value })
+                }
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Leave blank if you don't want budget alerts
             </p>
           </div>
         </CardContent>

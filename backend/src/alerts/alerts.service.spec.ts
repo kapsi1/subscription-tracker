@@ -1,17 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AlertsService } from './alerts.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { DashboardService } from '../dashboard/dashboard.service';
 import { getQueueToken } from '@nestjs/bullmq';
 
 describe('AlertsService', () => {
   let service: AlertsService;
   let prismaMock: any;
   let queueMock: any;
+  let dashboardMock: any;
 
   beforeEach(async () => {
     prismaMock = {
       alert: {
         findMany: jest.fn(),
+      },
+      user: {
+        findMany: jest.fn().mockResolvedValue([]),
+        update: jest.fn(),
+      },
+      subscription: {
+        findMany: jest.fn().mockResolvedValue([]),
       },
     };
 
@@ -19,10 +28,16 @@ describe('AlertsService', () => {
       add: jest.fn(),
     };
 
+    dashboardMock = {
+      getMonthlyTotal: jest.fn().mockResolvedValue(100),
+      getSummary: jest.fn().mockResolvedValue({ totalMonthlyCost: 100 }),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AlertsService,
         { provide: PrismaService, useValue: prismaMock },
+        { provide: DashboardService, useValue: dashboardMock },
         { provide: getQueueToken('alertQueue'), useValue: queueMock },
       ],
     }).compile();
@@ -45,9 +60,9 @@ describe('AlertsService', () => {
           amount: 10,
           currency: 'USD',
           nextBillingDate: thresholdTrigger,
-          user: { email: 'test@example.com' }
-        }
-      }
+          user: { email: 'test@example.com' },
+        },
+      },
     ]);
 
     await service.handleCron();
@@ -55,7 +70,9 @@ describe('AlertsService', () => {
     expect(queueMock.add).toHaveBeenCalledWith(
       'processAlert',
       expect.objectContaining({ alertId: 'a1', subscriptionName: 'Netflix' }),
-      expect.objectContaining({ jobId: expect.stringContaining('alert:a1:sub:s1') })
+      expect.objectContaining({
+        jobId: expect.stringContaining('alert:a1:sub:s1'),
+      }),
     );
   });
 
@@ -71,9 +88,9 @@ describe('AlertsService', () => {
         subscription: {
           id: 's2',
           nextBillingDate: futureTrigger,
-          user: { email: 'test@example.com' }
-        }
-      }
+          user: { email: 'test@example.com' },
+        },
+      },
     ]);
 
     await service.handleCron();

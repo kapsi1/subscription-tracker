@@ -4,22 +4,23 @@ import { PrismaService } from '../prisma/prisma.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 
-import { AlertType, Prisma } from '@prisma/client';
+import { AlertType, Prisma, BillingCycle } from '@prisma/client';
+import { DashboardService } from '../dashboard/dashboard.service';
 
 type AlertWithSub = Prisma.AlertGetPayload<{
   include: {
     subscription: {
       include: {
-        user: true
-      }
-    }
-  }
+        user: true;
+      };
+    };
+  };
 }>;
 
 type SubWithUser = Prisma.SubscriptionGetPayload<{
   include: {
-    user: true
-  }
+    user: true;
+  };
 }>;
 
 interface AlertJobData {
@@ -41,6 +42,7 @@ export class AlertsService {
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly dashboardService: DashboardService,
     @InjectQueue('alertQueue') private readonly alertQueue: Queue,
   ) {}
 
@@ -53,22 +55,22 @@ export class AlertsService {
     });
 
     const now = new Date();
-    
+
     // We check all active subscriptions with enabled alerts OR subscription-level reminders
     const alerts = (await this.prisma.alert.findMany({
       where: {
         isEnabled: true,
         subscription: {
-          isActive: true
-        }
+          isActive: true,
+        },
       },
       include: {
         subscription: {
           include: {
-            user: true
-          }
-        }
-      }
+            user: true,
+          },
+        },
+      },
     })) as AlertWithSub[];
 
     const subsWithReminders = (await this.prisma.subscription.findMany({
@@ -78,8 +80,8 @@ export class AlertsService {
         reminderEnabled: true,
       },
       include: {
-        user: true
-      }
+        user: true,
+      },
     })) as SubWithUser[];
 
     this.logger.log({
@@ -102,9 +104,10 @@ export class AlertsService {
         // @ts-ignore: Stale IDE error - field exists in generated Prisma client
         alert.webhookUrl ?? undefined,
         // @ts-ignore: Stale IDE error - field exists in generated Prisma client
-        alert.webhookSecret ?? undefined
+        alert.webhookSecret ?? undefined,
       );
-      if (success) enqueued++; else skipped++;
+      if (success) enqueued++;
+      else skipped++;
     }
 
     // Process subscription-level reminders
@@ -114,9 +117,10 @@ export class AlertsService {
         sub,
         AlertType.email,
         // @ts-ignore: Stale IDE error - field exists in generated Prisma client
-        sub.reminderDays
+        sub.reminderDays,
       );
-      if (success) enqueued++; else skipped++;
+      if (success) enqueued++;
+      else skipped++;
     }
 
     this.logger.log({
@@ -135,7 +139,7 @@ export class AlertsService {
     type: AlertType,
     daysBefore: number,
     webhookUrl?: string,
-    webhookSecret?: string
+    webhookSecret?: string,
   ): Promise<boolean> {
     const now = new Date();
     const thresholdDate = new Date();
@@ -162,7 +166,7 @@ export class AlertsService {
           jobId,
           removeOnComplete: true,
           removeOnFail: false,
-        }
+        },
       );
 
       this.logger.log({
@@ -180,5 +184,78 @@ export class AlertsService {
       return true;
     }
     return false;
+  }
+
+  // Run budget check daily at midnight
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleBudgetAlertsCron() {
+    this.logger.log({
+      msg: 'Budget alert scheduler started',
+      event: 'budget_scheduler_start',
+    });
+
+    const now = new Date();
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    // Find users with a monthly budget defined
+    const usersWithBudget = await this.prisma.user.findMany({
+      where: {
+        monthlyBudget: { not: null },
+      },
+    });
+
+    let countSent = 0;
+
+    for (const user of usersWithBudget) {
+      // @ts-ignore
+      if (!user.monthlyBudget) continue; // safety check
+      // @ts-ignore
+      const monthlyBudget = Number(user.monthlyBudget);
+
+      // Check if already sent an alert this month
+      if (
+        // @ts-ignore
+        user.lastBudgetAlertSentAt &&
+        // @ts-ignore
+        user.lastBudgetAlertSentAt >= currentMonthStart
+      ) {
+        continue; // Alert already sent this month
+      }
+
+      // Calculate the user's total monthly cost
+      const summary = await this.dashboardService.getSummary(user.id);
+
+      if (summary.totalMonthlyCost > monthlyBudget) {
+        // Enqueue budget alert email
+        await this.alertQueue.add(
+          'processBudgetAlert',
+          {
+            userEmail: user.email,
+            amount: summary.totalMonthlyCost,
+            budget: monthlyBudget,
+            currency: 'USD',
+          },
+          {
+            jobId: `budget-alert:${user.id}:${currentMonthStart.getTime()}`,
+            removeOnComplete: true,
+          }
+        );
+
+        // Update the last sent date
+        await this.prisma.user.update({
+          where: { id: user.id },
+          data: { lastBudgetAlertSentAt: now },
+        });
+
+        countSent++;
+      }
+    }
+
+    this.logger.log({
+      msg: 'Budget alert scheduler completed',
+      event: 'budget_scheduler_complete',
+      totalUsersChecked: usersWithBudget.length,
+      alertsEnqueued: countSent,
+    });
   }
 }

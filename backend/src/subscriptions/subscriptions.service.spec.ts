@@ -8,6 +8,7 @@ describe('SubscriptionsService', () => {
   let service: SubscriptionsService;
   let prismaMock: {
     subscription: Record<string, jest.Mock>;
+    user: Record<string, jest.Mock>;
   };
 
   const userId = 'user-1';
@@ -29,6 +30,13 @@ describe('SubscriptionsService', () => {
 
   beforeEach(async () => {
     prismaMock = {
+      user: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: userId,
+          defaultReminderEnabled: true,
+          defaultReminderDays: 3,
+        }),
+      },
       subscription: {
         create: jest.fn().mockResolvedValue(mockSubscription),
         findMany: jest.fn().mockResolvedValue([mockSubscription]),
@@ -82,7 +90,9 @@ describe('SubscriptionsService', () => {
         // intervalDays intentionally omitted
       };
 
-      await expect(service.create(userId, dto)).rejects.toThrow(BadRequestException);
+      await expect(service.create(userId, dto)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should accept custom cycle with intervalDays', async () => {
@@ -135,6 +145,81 @@ describe('SubscriptionsService', () => {
         orderBy: { nextBillingDate: 'asc' },
       });
       expect(result).toEqual([mockSubscription]);
+    });
+  });
+
+  describe('export', () => {
+    it('should export user subscriptions', async () => {
+      const result = await service.export(userId);
+
+      expect(prismaMock.subscription.findMany).toHaveBeenCalledWith({
+        where: { userId },
+        select: expect.any(Object),
+      });
+      expect(result).toEqual({ subscriptions: [mockSubscription] });
+    });
+  });
+
+  describe('import', () => {
+    beforeEach(() => {
+      (prismaMock as any).user = {
+        findUnique: jest.fn().mockResolvedValue({
+          id: userId,
+          defaultReminderEnabled: true,
+          defaultReminderDays: 3,
+        }),
+      };
+    });
+
+    it('should import subscriptions and calculate next billing dates', async () => {
+      const importDto = {
+        subscriptions: [
+          {
+            name: 'Spotify',
+            amount: 10,
+            currency: 'USD',
+            billingCycle: BillingCycle.monthly,
+            category: 'Entertainment',
+          },
+        ],
+      } as any;
+
+      const result = await service.import(userId, importDto);
+
+      expect((prismaMock as any).user.findUnique).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
+      expect(prismaMock.subscription.create).toHaveBeenCalled();
+      expect(result.count).toBe(1);
+      expect(result.message).toContain('1 subscriptions');
+    });
+
+    it('should throw NotFoundException if user not found during import', async () => {
+      (prismaMock as any).user.findUnique.mockResolvedValue(null);
+
+      const importDto = { subscriptions: [] };
+
+      await expect(service.import(userId, importDto)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should throw BadRequestException if custom cycle lacks intervalDays', async () => {
+      const importDto = {
+        subscriptions: [
+          {
+            name: 'Spotify',
+            amount: 10,
+            currency: 'USD',
+            billingCycle: BillingCycle.custom,
+            category: 'Entertainment',
+          },
+        ],
+      } as any;
+
+      await expect(service.import(userId, importDto)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 

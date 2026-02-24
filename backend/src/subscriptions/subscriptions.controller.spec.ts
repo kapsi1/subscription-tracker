@@ -26,6 +26,8 @@ describe('SubscriptionsController', () => {
       findOne: jest.fn().mockResolvedValue(mockSubscription),
       update: jest.fn().mockResolvedValue(mockSubscription),
       remove: jest.fn().mockResolvedValue(mockSubscription),
+      export: jest.fn().mockResolvedValue({ subscriptions: [mockSubscription] }),
+      import: jest.fn().mockResolvedValue({ message: 'Successfully imported 1 subscriptions', count: 1 }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -77,5 +79,20 @@ describe('SubscriptionsController', () => {
 
     expect(serviceMock.remove).toHaveBeenCalledWith('user-1', 'sub-1');
     expect(result).toEqual(mockSubscription);
+  });
+
+  it('should export subscriptions', async () => {
+    const result = await controller.export(mockReq);
+
+    expect(serviceMock.export).toHaveBeenCalledWith('user-1');
+    expect(result).toEqual({ subscriptions: [mockSubscription] });
+  });
+
+  it('should import subscriptions', async () => {
+    const dto = { subscriptions: [{ name: 'Test', amount: 10, currency: 'USD', billingCycle: BillingCycle.monthly, category: 'Other' }] };
+    const result = await controller.import(mockReq, dto as any);
+
+    expect(serviceMock.import).toHaveBeenCalledWith('user-1', dto);
+    expect(result).toEqual({ message: 'Successfully imported 1 subscriptions', count: 1 });
   });
 });

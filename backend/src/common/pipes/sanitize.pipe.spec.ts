@@ -18,16 +18,16 @@ describe('SanitizePipe', () => {
       name: '<b>John</b>',
       bio: '<a href="javascript:void(0)">Bio</a>',
       nested: {
-        text: '<i>Italic</i>'
-      }
+        text: '<i>Italic</i>',
+      },
     };
     const output = pipe.transform(input, {} as any);
     expect(output).toEqual({
       name: 'John',
       bio: 'Bio',
       nested: {
-        text: 'Italic'
-      }
+        text: 'Italic',
+      },
     });
   });
 

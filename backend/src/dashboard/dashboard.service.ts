@@ -61,13 +61,26 @@ export class DashboardService {
 
     const forecast = [];
     const now = new Date();
-    
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
+
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
     // Create bucket for each upcoming month
     for (let i = 0; i < months; i++) {
       const targetDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
-      
+
       forecast.push({
         month: monthNames[targetDate.getMonth()],
         year: targetDate.getFullYear(),
@@ -80,17 +93,17 @@ export class DashboardService {
     // to slot them into the correct forecast bucket.
     for (const sub of subscriptions) {
       const amount = Number(sub.amount);
-      let currentBillingDate = new Date(sub.nextBillingDate);
-      
+      const currentBillingDate = new Date(sub.nextBillingDate);
+
       // Upper bound date
       const maxDate = new Date(now.getFullYear(), now.getMonth() + months, 1);
-      
+
       // Prevent infinite loops internally on malformed custom intervals
-      let loops = 0; 
-      
+      let loops = 0;
+
       while (currentBillingDate < maxDate && loops < 1000) {
         loops++;
-        
+
         // Find which bucket this billing date belongs to
         const yearDiff = currentBillingDate.getFullYear() - now.getFullYear();
         const monthDiff = currentBillingDate.getMonth() - now.getMonth();
@@ -116,8 +129,13 @@ export class DashboardService {
           if (m === 1 && d === 29 && currentBillingDate.getMonth() !== 1) {
             currentBillingDate.setDate(0);
           }
-        } else if (sub.billingCycle === BillingCycle.custom && sub.intervalDays) {
-          currentBillingDate.setDate(currentBillingDate.getDate() + sub.intervalDays);
+        } else if (
+          sub.billingCycle === BillingCycle.custom &&
+          sub.intervalDays
+        ) {
+          currentBillingDate.setDate(
+            currentBillingDate.getDate() + sub.intervalDays,
+          );
         } else {
           // Fallback to prevent infinite loops if no clear cycle
           break;

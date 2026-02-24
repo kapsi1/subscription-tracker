@@ -45,7 +45,9 @@ describe('AuthController', () => {
   it('should refresh tokens', async () => {
     const result = await controller.refresh('some-refresh-token');
 
-    expect(authServiceMock.refreshTokens).toHaveBeenCalledWith('some-refresh-token');
+    expect(authServiceMock.refreshTokens).toHaveBeenCalledWith(
+      'some-refresh-token',
+    );
     expect(result).toEqual(mockTokens);
   });
 

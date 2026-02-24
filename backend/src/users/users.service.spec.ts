@@ -6,6 +6,7 @@ describe('UsersService', () => {
   let service: UsersService;
   let prismaMock: {
     user: Record<string, jest.Mock>;
+    pushSubscription: Record<string, jest.Mock>;
   };
 
   const mockUser = {
@@ -21,6 +22,11 @@ describe('UsersService', () => {
       user: {
         findUnique: jest.fn(),
         create: jest.fn(),
+        update: jest.fn(),
+      },
+      pushSubscription: {
+        upsert: jest.fn(),
+        deleteMany: jest.fn(),
       },
     };
 
@@ -85,6 +91,47 @@ describe('UsersService', () => {
 
       expect(prismaMock.user.create).toHaveBeenCalledWith({ data });
       expect(result).toEqual(mockUser);
+    });
+  });
+
+  describe('update', () => {
+    it('should update and return user', async () => {
+      prismaMock.user.update.mockResolvedValue({ ...mockUser, email: 'updated@example.com' });
+
+      const result = await service.update('user-1', { email: 'updated@example.com' });
+
+      expect(prismaMock.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { email: 'updated@example.com' },
+      });
+      expect(result.email).toBe('updated@example.com');
+    });
+  });
+
+  describe('pushSubscription', () => {
+    it('should save push subscription', async () => {
+      const mockSub = { id: 1, userId: 'user-1', endpoint: 'http://test', p256dh: 'p256dh', auth: 'auth' };
+      prismaMock.pushSubscription.upsert.mockResolvedValue(mockSub);
+
+      const result = await service.savePushSubscription('user-1', 'http://test', 'p256dh', 'auth');
+
+      expect(prismaMock.pushSubscription.upsert).toHaveBeenCalledWith({
+        where: { endpoint: 'http://test' },
+        update: { userId: 'user-1', p256dh: 'p256dh', auth: 'auth' },
+        create: { userId: 'user-1', endpoint: 'http://test', p256dh: 'p256dh', auth: 'auth' },
+      });
+      expect(result).toEqual(mockSub);
+    });
+
+    it('should delete push subscription', async () => {
+      prismaMock.pushSubscription.deleteMany.mockResolvedValue({ count: 1 });
+
+      const result = await service.deletePushSubscription('user-1', 'http://test');
+
+      expect(prismaMock.pushSubscription.deleteMany).toHaveBeenCalledWith({
+        where: { userId: 'user-1', endpoint: 'http://test' },
+      });
+      expect(result).toEqual({ count: 1 });
     });
   });
 });

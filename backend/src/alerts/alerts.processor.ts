@@ -3,6 +3,8 @@ import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { EmailService } from '../notifications/email/email.service';
 import { WebhookService } from '../notifications/webhook/webhook.service';
+import { WebPushService } from '../notifications/webpush/webpush.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { AlertType } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { EncryptionUtil } from '../common/utils/encryption.util';
@@ -20,6 +22,13 @@ interface AlertJobData {
   webhookSecret?: string;
 }
 
+interface BudgetAlertJobData {
+  userEmail: string;
+  amount: number;
+  budget: number;
+  currency: string;
+}
+
 @Processor('alertQueue')
 export class AlertsProcessor extends WorkerHost {
   private readonly logger = new Logger(AlertsProcessor.name);
@@ -27,12 +36,19 @@ export class AlertsProcessor extends WorkerHost {
   constructor(
     private readonly emailService: EmailService,
     private readonly webhookService: WebhookService,
+    private readonly webPushService: WebPushService,
     private readonly configService: ConfigService,
+    private readonly prisma: PrismaService,
   ) {
     super();
   }
 
-  async process(job: Job<AlertJobData, unknown, string>): Promise<{ success: boolean }> {
+  async process(
+    job: Job<any, unknown, string>,
+  ): Promise<{ success: boolean }> {
+    if (job.name === 'processBudgetAlert') {
+      return this.processBudgetAlert(job as Job<BudgetAlertJobData, unknown, string>);
+    }
     const {
       type,
       alertId,
@@ -48,7 +64,9 @@ export class AlertsProcessor extends WorkerHost {
 
     let webhookSecret: string | undefined;
     if (encryptedSecret) {
-      const encryptionSecret = this.configService.get<string>('WEBHOOK_SECRET_KEY') || 'default-webhook-encryption-key';
+      const encryptionSecret =
+        this.configService.get<string>('WEBHOOK_SECRET_KEY') ||
+        'default-webhook-encryption-key';
       webhookSecret = EncryptionUtil.decrypt(encryptedSecret, encryptionSecret);
     }
 
@@ -65,7 +83,13 @@ export class AlertsProcessor extends WorkerHost {
 
     try {
       if (type === AlertType.email) {
-        await this.emailService.sendAlert(userEmail, subscriptionName, daysBefore, amount, currency);
+        await this.emailService.sendAlert(
+          userEmail,
+          subscriptionName,
+          daysBefore,
+          amount,
+          currency,
+        );
         this.logger.log({
           msg: 'Email alert sent successfully',
           event: 'alert_email_sent',
@@ -81,7 +105,7 @@ export class AlertsProcessor extends WorkerHost {
           subscriptionName,
           daysBefore,
           amount,
-          currency
+          currency,
         );
         this.logger.log({
           msg: 'Webhook alert sent successfully',
@@ -90,9 +114,51 @@ export class AlertsProcessor extends WorkerHost {
           alertId,
           subscriptionId,
         });
+      } else if (type === AlertType.webpush) {
+        // Fetch push subscriptions for the user
+        const user = await this.prisma.user.findUnique({
+          where: { email: userEmail },
+          include: { pushSubscriptions: true },
+        });
+
+        if (user && user.pushSubscriptions.length > 0) {
+          const payload = {
+            title: `Subscription Alert: ${subscriptionName}`,
+            body: `Amount: ${amount} ${currency}\nRenewing in: ${daysBefore} days`,
+            data: { subscriptionId },
+          };
+
+          const pushPromises = user.pushSubscriptions.map(sub =>
+            this.webPushService.sendNotification(
+              {
+                endpoint: sub.endpoint,
+                keys: { p256dh: sub.p256dh, auth: sub.auth },
+              },
+              payload
+            ).catch(err => {
+              // If subscription is invalid (e.g. 410 Gone), remove it
+              if (err.statusCode === 410 || err.statusCode === 404) {
+                this.logger.warn(`Push subscription expired. Removing ${sub.endpoint}`);
+                return this.prisma.pushSubscription.delete({ where: { id: sub.id } });
+              }
+              throw err;
+            })
+          );
+
+          await Promise.allSettled(pushPromises);
+          
+          this.logger.log({
+            msg: 'Web Push alerts sent successfully',
+            event: 'alert_webpush_sent',
+            jobId: job.id,
+            alertId,
+            subscriptionId,
+          });
+        }
       }
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       const errorStack = error instanceof Error ? error.stack : undefined;
 
       this.logger.error({
@@ -120,5 +186,21 @@ export class AlertsProcessor extends WorkerHost {
     });
 
     return { success: true };
+  }
+
+  private async processBudgetAlert(job: Job<BudgetAlertJobData, unknown, string>) {
+    const { userEmail, amount, budget, currency } = job.data;
+    try {
+      await this.emailService.sendBudgetAlert(userEmail, amount, budget, currency);
+      return { success: true };
+    } catch (error: any) {
+      this.logger.error({
+        msg: 'Failed to process budget alert',
+        jobId: job.id,
+        userEmail,
+        error: error.message,
+      });
+      throw error;
+    }
   }
 }

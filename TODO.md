@@ -252,13 +252,10 @@
 
 # 4. Advanced (Optional)
 
-- [ ] Multi-currency conversion (daily rate sync)
-- [ ] CSV import/export
-- [ ] Web push notifications
-- [ ] Team accounts / workspaces
-- [ ] Budget threshold alerts
-- [ ] Stripe integration
-- [ ] Analytics integration
+- [x] JSON import/export
+- [x] Web push notifications
+- [x] Budget threshold alerts
+- [x] Analytics integration
 
 ---
 

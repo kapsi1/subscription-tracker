@@ -73,7 +73,9 @@ describe('AuthService', () => {
         password: 'password123',
       });
 
-      expect(usersServiceMock.findByEmail).toHaveBeenCalledWith('test@example.com');
+      expect(usersServiceMock.findByEmail).toHaveBeenCalledWith(
+        'test@example.com',
+      );
       expect(usersServiceMock.create).toHaveBeenCalledWith({
         email: 'test@example.com',
         passwordHash: 'hashed-pw',
@@ -85,7 +87,10 @@ describe('AuthService', () => {
       usersServiceMock.findByEmail.mockResolvedValue(mockUser);
 
       await expect(
-        service.register({ email: 'test@example.com', password: 'password123' }),
+        service.register({
+          email: 'test@example.com',
+          password: 'password123',
+        }),
       ).rejects.toThrow(BadRequestException);
     });
   });
@@ -110,7 +115,10 @@ describe('AuthService', () => {
       usersServiceMock.findByEmail.mockResolvedValue(null);
 
       await expect(
-        service.login({ email: 'unknown@example.com', password: 'password123' }),
+        service.login({
+          email: 'unknown@example.com',
+          password: 'password123',
+        }),
       ).rejects.toThrow(UnauthorizedException);
     });
 
@@ -126,7 +134,10 @@ describe('AuthService', () => {
 
   describe('refreshTokens', () => {
     it('should return new tokens for a valid refresh token', async () => {
-      jwtServiceMock.verify.mockReturnValue({ sub: 'user-1', email: 'test@example.com' });
+      jwtServiceMock.verify.mockReturnValue({
+        sub: 'user-1',
+        email: 'test@example.com',
+      });
       usersServiceMock.findById.mockResolvedValue(mockUser);
       jwtServiceMock.sign
         .mockReturnValueOnce(mockTokens.accessToken)
@@ -134,9 +145,12 @@ describe('AuthService', () => {
 
       const result = await service.refreshTokens('valid-refresh-token');
 
-      expect(jwtServiceMock.verify).toHaveBeenCalledWith('valid-refresh-token', {
-        secret: 'test-secret',
-      });
+      expect(jwtServiceMock.verify).toHaveBeenCalledWith(
+        'valid-refresh-token',
+        {
+          secret: 'test-secret',
+        },
+      );
       expect(result).toEqual(mockTokens);
     });
 

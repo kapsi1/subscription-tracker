@@ -40,7 +40,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message:
         typeof message === 'string'
           ? message
-          : (message as Record<string, unknown>)?.['message'] ?? message,
+          : ((message as Record<string, unknown>)?.['message'] ?? message),
       stack: exception instanceof Error ? exception.stack : undefined,
     });
 
@@ -52,7 +52,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message:
         typeof message === 'string'
           ? message
-          : (message as Record<string, unknown>)?.['message'] ?? message,
+          : ((message as Record<string, unknown>)?.['message'] ?? message),
     });
   }
 }

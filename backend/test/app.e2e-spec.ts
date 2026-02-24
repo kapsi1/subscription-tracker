@@ -19,7 +19,7 @@ describe('Auth & Subscriptions (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-    
+
     prisma = app.get(PrismaService);
 
     // Clean DB before logic
@@ -42,7 +42,7 @@ describe('Auth & Subscriptions (e2e)', () => {
       .send({ email: 'e2e@example.com', password: 'password123' });
     if (res.status === 500) console.log(res.body);
     expect(res.status).toBe(201);
-    
+
     expect(res.body.accessToken).toBeDefined();
     expect(res.body.refreshToken).toBeDefined();
   });
@@ -52,15 +52,13 @@ describe('Auth & Subscriptions (e2e)', () => {
       .post('/auth/login')
       .send({ email: 'e2e@example.com', password: 'password123' })
       .expect(200);
-    
+
     expect(res.body.accessToken).toBeDefined();
     jwtToken = res.body.accessToken;
   });
 
   it('/subscriptions (GET) - unauthorized', () => {
-    return request(app.getHttpServer())
-      .get('/subscriptions')
-      .expect(401);
+    return request(app.getHttpServer()).get('/subscriptions').expect(401);
   });
 
   it('/subscriptions (POST) - authorized', async () => {
@@ -72,10 +70,10 @@ describe('Auth & Subscriptions (e2e)', () => {
         amount: 9.99,
         currency: 'USD',
         billingCycle: 'monthly',
-        category: 'Music'
+        category: 'Music',
       })
       .expect(201);
-    
+
     expect(res.body.name).toBe('Spotify');
     expect(res.body.id).toBeDefined();
   });
@@ -85,7 +83,7 @@ describe('Auth & Subscriptions (e2e)', () => {
       .get('/subscriptions')
       .set('Authorization', `Bearer ${jwtToken}`)
       .expect(200);
-    
+
     expect(Array.isArray(res.body)).toBeTruthy();
     expect(res.body.length).toBe(1);
     expect(res.body[0].name).toBe('Spotify');

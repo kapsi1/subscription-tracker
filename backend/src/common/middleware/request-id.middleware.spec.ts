@@ -35,7 +35,10 @@ describe('RequestIdMiddleware', () => {
   it('should set X-Request-Id on the response', () => {
     middleware.use(mockReq as any, mockRes as any, mockNext);
 
-    expect(mockRes.setHeader).toHaveBeenCalledWith('X-Request-Id', mockReq['id']);
+    expect(mockRes.setHeader).toHaveBeenCalledWith(
+      'X-Request-Id',
+      mockReq['id'],
+    );
   });
 
   it('should call next()', () => {

@@ -7,7 +7,7 @@ describe('EncryptionUtil', () => {
   it('should encrypt and decrypt correctly', () => {
     const encrypted = EncryptionUtil.encrypt(text, secret);
     expect(encrypted).toContain(':');
-    
+
     const decrypted = EncryptionUtil.decrypt(encrypted, secret);
     expect(decrypted).toBe(text);
   });
@@ -15,7 +15,7 @@ describe('EncryptionUtil', () => {
   it('should fail to decrypt with wrong secret', () => {
     const encrypted = EncryptionUtil.encrypt(text, secret);
     const wrongSecret = 'wrong-secret-key-12345678901234567890123456789012';
-    
+
     expect(() => {
       EncryptionUtil.decrypt(encrypted, wrongSecret);
     }).toThrow();

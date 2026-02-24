@@ -3,6 +3,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { AlertsService } from './alerts.service';
 import { AlertsProcessor } from './alerts.processor';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { DashboardModule } from '../dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
       },
     }),
     NotificationsModule,
+    DashboardModule,
   ],
   providers: [AlertsService, AlertsProcessor],
 })

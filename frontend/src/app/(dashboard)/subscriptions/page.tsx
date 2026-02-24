@@ -12,12 +12,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Upload, Download, Plus, Pencil, Trash2, Search, Filter, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/empty-state";
 import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
 import { toast } from "sonner";
 import api from "@/lib/api";
+import { useRef } from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function SubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -25,6 +27,7 @@ export default function SubscriptionsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchSubscriptions();
@@ -84,11 +87,64 @@ export default function SubscriptionsPage() {
         const res = await api.post("/subscriptions", subscription);
         setSubscriptions([...subscriptions, res.data]);
         toast.success("Subscription added successfully");
+        sendGAEvent({ event: "add_subscription", value: "success" });
       }
       setModalOpen(false);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Failed to save subscription");
+      sendGAEvent({ event: "add_subscription", value: "failed" });
     }
+  };
+
+  const handleExport = async () => {
+    try {
+      const res = await api.get("/subscriptions/export");
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res.data.subscriptions, null, 2));
+      const downloadAnchorNode = document.createElement("a");
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", "subscriptions.json");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+      toast.success("Export successful");
+      sendGAEvent({ event: "export_subscriptions", value: "success" });
+    } catch (err: any) {
+      toast.error("Failed to export subscriptions");
+      sendGAEvent({ event: "export_subscriptions", value: "failed" });
+    }
+  };
+
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const content = e.target?.result as string;
+        const json = JSON.parse(content);
+        
+        // Ensure it's an array
+        const subscriptionsToImport = Array.isArray(json) ? json : json.subscriptions || [json];
+        
+        await api.post("/subscriptions/import", { subscriptions: subscriptionsToImport });
+        toast.success(`Successfully imported subscriptions`);
+        sendGAEvent({ event: "import_subscriptions", value: "success" });
+        
+        // Refresh list
+        setIsLoading(true);
+        fetchSubscriptions();
+      } catch (err: any) {
+        toast.error(err.response?.data?.message || "Failed to parse or import JSON file");
+        sendGAEvent({ event: "import_subscriptions", value: "failed" });
+      }
+      
+      // Reset input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    };
+    reader.readAsText(file);
   };
 
   const formatCurrency = (value: number) => `$${(Number(value) || 0).toFixed(2)}`;
@@ -127,10 +183,27 @@ export default function SubscriptionsPage() {
             Manage all your recurring subscriptions
           </p>
         </div>
-        <Button onClick={handleAddNew} className="gap-2 sm:w-auto">
-          <Plus className="w-4 h-4" />
-          Add Subscription
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <input
+            type="file"
+            accept=".json"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handleImport}
+          />
+          <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="gap-2 shrink-0">
+            <Upload className="w-4 h-4" />
+            Import
+          </Button>
+          <Button variant="outline" onClick={handleExport} className="gap-2 shrink-0">
+            <Download className="w-4 h-4" />
+            Export
+          </Button>
+          <Button onClick={handleAddNew} className="gap-2 shrink-0">
+            <Plus className="w-4 h-4" />
+            Add Subscription
+          </Button>
+        </div>
       </div>
 
       {/* Search and Filters */}

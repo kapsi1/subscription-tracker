@@ -30,4 +30,18 @@ export class UsersService {
       data,
     });
   }
+
+  async savePushSubscription(userId: string, endpoint: string, p256dh: string, auth: string) {
+    return this.prisma.pushSubscription.upsert({
+      where: { endpoint },
+      update: { userId, p256dh, auth },
+      create: { userId, endpoint, p256dh, auth },
+    });
+  }
+
+  async deletePushSubscription(userId: string, endpoint: string) {
+    return this.prisma.pushSubscription.deleteMany({
+      where: { userId, endpoint },
+    });
+  }
 }

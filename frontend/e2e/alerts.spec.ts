@@ -42,6 +42,10 @@ test.describe('Alert Settings Flow', () => {
     }
     await page.getByPlaceholder('https://your-domain.com/webhook').fill('https://example.com/hook');
 
+    // Configure Budget
+    const budgetInput = page.getByLabel(/Monthly Budget Limit/i);
+    await budgetInput.fill('500');
+
     // 4. Save
     await page.getByRole('button', { name: 'Save Settings' }).click();
     // Verify success toast appears
@@ -55,5 +59,6 @@ test.describe('Alert Settings Flow', () => {
     await expect(webhookSwitch).toHaveAttribute('aria-checked', 'true');
     await expect(page.getByPlaceholder('you@example.com')).toHaveValue(testEmail);
     await expect(page.getByPlaceholder('https://your-domain.com/webhook')).toHaveValue('https://example.com/hook');
+    await expect(page.getByLabel(/Monthly Budget Limit/i)).toHaveValue('500');
   });
 });

@@ -1,4 +1,12 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -32,7 +40,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('logout')
   async logout(@Req() req: any) {
-    // For JWTs, real logouts are usually handled client side by dropping tokens, 
+    // For JWTs, real logouts are usually handled client side by dropping tokens,
     // but a successful server response signals completion.
     return { message: 'Logged out successfully' };
   }

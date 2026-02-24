@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
@@ -10,19 +14,24 @@ export class SubscriptionsService {
   constructor(private prisma: PrismaService) {}
 
   async create(userId: string, createDto: CreateSubscriptionDto) {
-    if (createDto.billingCycle === BillingCycle.custom && !createDto.intervalDays) {
-      throw new BadRequestException('intervalDays is required for custom billing cycle');
+    if (
+      createDto.billingCycle === BillingCycle.custom &&
+      !createDto.intervalDays
+    ) {
+      throw new BadRequestException(
+        'intervalDays is required for custom billing cycle',
+      );
     }
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
-    const nextBillingDate = createDto.nextBillingDate 
+    const nextBillingDate = createDto.nextBillingDate
       ? new Date(createDto.nextBillingDate)
       : calculateNextBillingDate(
-          createDto.billingCycle, 
-          new Date(), 
-          createDto.intervalDays
+          createDto.billingCycle,
+          new Date(),
+          createDto.intervalDays,
         );
 
     return this.prisma.subscription.create({
@@ -35,7 +44,8 @@ export class SubscriptionsService {
         intervalDays: createDto.intervalDays || null,
         category: createDto.category,
         nextBillingDate,
-        reminderEnabled: createDto.reminderEnabled ?? user.defaultReminderEnabled,
+        reminderEnabled:
+          createDto.reminderEnabled ?? user.defaultReminderEnabled,
         reminderDays: createDto.reminderDays ?? user.defaultReminderDays,
       },
     });
@@ -46,6 +56,73 @@ export class SubscriptionsService {
       where: { userId },
       orderBy: { nextBillingDate: 'asc' },
     });
+  }
+
+  async export(userId: string) {
+    const subscriptions = await this.prisma.subscription.findMany({
+      where: { userId },
+      select: {
+        name: true,
+        amount: true,
+        currency: true,
+        billingCycle: true,
+        intervalDays: true,
+        category: true,
+        nextBillingDate: true,
+        reminderEnabled: true,
+        reminderDays: true,
+        isActive: true,
+      },
+    });
+    return { subscriptions };
+  }
+
+  async import(
+    userId: string,
+    importDto: { subscriptions: CreateSubscriptionDto[] },
+  ) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+
+    const createdSubscriptions = [];
+
+    // Process sequentially or use prisma.$transaction
+    for (const sub of importDto.subscriptions) {
+      if (sub.billingCycle === BillingCycle.custom && !sub.intervalDays) {
+        throw new BadRequestException(
+          `intervalDays is required for custom billing cycle on subscription: ${sub.name}`,
+        );
+      }
+
+      const nextBillingDate = sub.nextBillingDate
+        ? new Date(sub.nextBillingDate)
+        : calculateNextBillingDate(
+            sub.billingCycle,
+            new Date(),
+            sub.intervalDays,
+          );
+
+      const created = await this.prisma.subscription.create({
+        data: {
+          userId,
+          name: sub.name,
+          amount: sub.amount,
+          currency: sub.currency,
+          billingCycle: sub.billingCycle,
+          intervalDays: sub.intervalDays || null,
+          category: sub.category,
+          nextBillingDate,
+          reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
+          reminderDays: sub.reminderDays ?? user.defaultReminderDays,
+        },
+      });
+      createdSubscriptions.push(created);
+    }
+
+    return {
+      message: `Successfully imported ${createdSubscriptions.length} subscriptions`,
+      count: createdSubscriptions.length,
+    };
   }
 
   async findOne(userId: string, id: string) {
@@ -63,10 +140,15 @@ export class SubscriptionsService {
     const existing = await this.findOne(userId, id);
 
     const billingCycle = updateDto.billingCycle || existing.billingCycle;
-    const intervalDays = updateDto.intervalDays !== undefined ? updateDto.intervalDays : existing.intervalDays;
+    const intervalDays =
+      updateDto.intervalDays !== undefined
+        ? updateDto.intervalDays
+        : existing.intervalDays;
 
     if (billingCycle === BillingCycle.custom && !intervalDays) {
-      throw new BadRequestException('intervalDays is required for custom billing cycle');
+      throw new BadRequestException(
+        'intervalDays is required for custom billing cycle',
+      );
     }
 
     // If nextBillingDate is provided in DTO, use it.
@@ -77,8 +159,8 @@ export class SubscriptionsService {
     } else if (updateDto.billingCycle || updateDto.intervalDays) {
       nextBillingDate = calculateNextBillingDate(
         billingCycle,
-        new Date(), 
-        intervalDays
+        new Date(),
+        intervalDays,
       );
     }
 
@@ -89,9 +171,15 @@ export class SubscriptionsService {
         ...(updateDto.amount !== undefined && { amount: updateDto.amount }),
         ...(updateDto.currency && { currency: updateDto.currency }),
         ...(updateDto.category && { category: updateDto.category }),
-        ...(updateDto.isActive !== undefined && { isActive: updateDto.isActive }),
-        ...(updateDto.reminderEnabled !== undefined && { reminderEnabled: updateDto.reminderEnabled }),
-        ...(updateDto.reminderDays !== undefined && { reminderDays: updateDto.reminderDays }),
+        ...(updateDto.isActive !== undefined && {
+          isActive: updateDto.isActive,
+        }),
+        ...(updateDto.reminderEnabled !== undefined && {
+          reminderEnabled: updateDto.reminderEnabled,
+        }),
+        ...(updateDto.reminderDays !== undefined && {
+          reminderDays: updateDto.reminderDays,
+        }),
         billingCycle,
         intervalDays,
         nextBillingDate,

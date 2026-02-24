@@ -25,9 +25,7 @@ describe('HealthController', () => {
         {
           provide: RedisHealthIndicator,
           useValue: {
-            isHealthy: jest
-              .fn()
-              .mockResolvedValue({ redis: { status: 'up' } }),
+            isHealthy: jest.fn().mockResolvedValue({ redis: { status: 'up' } }),
           },
         },
       ],

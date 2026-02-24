@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsOptional, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class UpdateSettingsDto {
   @IsOptional()
@@ -9,4 +9,9 @@ export class UpdateSettingsDto {
   @IsInt()
   @Min(0)
   defaultReminderDays?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  monthlyBudget?: number;
 }

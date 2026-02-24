@@ -12,7 +12,7 @@ export class WebhookService {
     subscriptionName: string,
     daysBefore: number,
     amount: number,
-    currency: string
+    currency: string,
   ) {
     const payload = {
       subscriptionName,
@@ -35,9 +35,13 @@ export class WebhookService {
 
     try {
       await axios.post(url, payload, { headers });
-      this.logger.log(`[WEBHOOK] Successfully sent request to ${url} for ${subscriptionName}`);
+      this.logger.log(
+        `[WEBHOOK] Successfully sent request to ${url} for ${subscriptionName}`,
+      );
     } catch (error: any) {
-      this.logger.error(`[WEBHOOK] Failed to send request to ${url}: ${error.message}`);
+      this.logger.error(
+        `[WEBHOOK] Failed to send request to ${url}: ${error.message}`,
+      );
       throw error;
     }
   }

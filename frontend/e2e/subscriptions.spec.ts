@@ -77,5 +77,46 @@ test.describe('Subscriptions Flow', () => {
     // Verify it disappeared and empty state returned
     await expect(page.getByRole('cell', { name: 'Netflix' })).not.toBeVisible();
     await expect(page.getByText('No subscriptions found')).toBeVisible();
+
+    // 6. Test Export
+    // First let's add two simple ones to export
+    await page.getByRole('button', { name: 'Add Subscription' }).click();
+    await page.getByLabel('Service Name').fill('Spotify');
+    await page.getByLabel('Amount').fill('10.99');
+    await page.getByRole('combobox', { name: /Category/i }).click();
+    await page.getByRole('option', { name: 'Entertainment' }).click();
+    await page.getByRole('button', { name: 'Add Subscription' }).click();
+    await expect(page.getByRole('cell', { name: 'Spotify' })).toBeVisible();
+
+    // Click Export button and intercept download
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Export' }).click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toBe('subscriptions.json');
+
+    // 7. Test Import
+    // We already have 1 subscription. We'll simulate importing a JSON file
+    // with 2 new subscriptions. (We bypass actual UI file drop because Playwright gives us `setInputFiles`).
+    const fileChooserPromise = page.waitForEvent('filechooser');
+    await page.getByRole('button', { name: 'Import' }).click();
+    const fileChooser = await fileChooserPromise;
+
+    const importData = {
+      subscriptions: [
+        { name: 'Hulu', amount: 12.99, currency: 'USD', billingCycle: 'monthly', category: 'Entertainment' },
+        { name: 'AWS', amount: 45.0, currency: 'USD', billingCycle: 'monthly', category: 'Cloud Services' }
+      ]
+    };
+
+    const importBuffer = Buffer.from(JSON.stringify(importData));
+    await fileChooser.setFiles({
+        name: 'import.json',
+        mimeType: 'application/json',
+        buffer: importBuffer
+    });
+
+    await expect(page.getByText('Successfully imported subscriptions')).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Hulu' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'AWS' })).toBeVisible();
   });
 });

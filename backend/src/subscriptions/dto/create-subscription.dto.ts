@@ -1,4 +1,15 @@
-import { IsString, IsNumber, IsPositive, IsISO4217CurrencyCode, IsEnum, IsInt, Min, IsOptional, ValidateIf, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsPositive,
+  IsISO4217CurrencyCode,
+  IsEnum,
+  IsInt,
+  Min,
+  IsOptional,
+  ValidateIf,
+  IsBoolean,
+} from 'class-validator';
 import { BillingCycle } from '@prisma/client';
 
 export class CreateSubscriptionDto {
@@ -15,7 +26,7 @@ export class CreateSubscriptionDto {
   @IsEnum(BillingCycle)
   billingCycle!: BillingCycle;
 
-  @ValidateIf(o => o.billingCycle === BillingCycle.custom)
+  @ValidateIf((o) => o.billingCycle === BillingCycle.custom)
   @IsInt()
   @Min(1)
   intervalDays?: number;

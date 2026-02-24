@@ -16,6 +16,9 @@ model User {
   subscriptions Subscription[]
   defaultReminderEnabled Boolean @default(true)
   defaultReminderDays    Int     @default(3)
+  monthlyBudget          Decimal?
+  lastBudgetAlertSentAt  DateTime?
+  pushSubscriptions      PushSubscription[]
 }
 
 enum BillingCycle {
@@ -47,6 +50,17 @@ model Subscription {
 enum AlertType {
   email
   webhook
+  webpush
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
 }
 
 model Alert {
