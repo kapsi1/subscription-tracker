@@ -33,6 +33,7 @@ import { Loader2, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import api from "@/lib/api";
 import { toast } from "sonner";
+import { UKFlag, PolandFlag } from "@/components/flags";
 
 const sidebarItems = [
   { icon: LayoutDashboard, translationKey: "nav.dashboard", path: "/dashboard" },
@@ -146,8 +147,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Language Switcher */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" title={t('language.switch')} aria-label={t('language.switch')} className="text-xl">
-                  {currentLanguage.startsWith("en") ? "🇬🇧" : "🇵🇱"}
+                <Button variant="ghost" size="icon" title={t('language.switch')} aria-label={t('language.switch')} className="flex items-center justify-center">
+                  {currentLanguage.startsWith("en") ? <UKFlag /> : <PolandFlag />}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -157,13 +158,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   onClick={() => handleLanguageChange("en")}
                   className={`gap-2 ${currentLanguage.startsWith("en") ? "font-bold bg-muted" : ""}`}
                 >
-                  <span>🇬🇧</span> {t('language.en')}
+                  <UKFlag /> <span>{t('language.en')}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => handleLanguageChange("pl")}
                   className={`gap-2 ${currentLanguage === "pl" ? "font-bold bg-muted" : ""}`}
                 >
-                  <span>🇵🇱</span> {t('language.pl')}
+                  <PolandFlag /> <span>{t('language.pl')}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
