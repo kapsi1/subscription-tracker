@@ -38,7 +38,7 @@ import { UKFlag, PolandFlag } from "@/components/flags";
 const sidebarItems = [
   { icon: LayoutDashboard, translationKey: "nav.dashboard", path: "/dashboard" },
   { icon: ListChecks, translationKey: "nav.subscriptions", path: "/subscriptions" },
-  { icon: Bell, translationKey: "nav.alerts", path: "/alerts" },
+  { icon: Bell, translationKey: "nav.settings", path: "/settings" },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -130,9 +130,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {t('nav.subscriptions')}
               </Button>
             </Link>
-            <Link href="/alerts">
+            <Link href="/settings">
               <Button
-                variant={pathname === "/alerts" ? "secondary" : "ghost"}
+                variant={pathname === "/settings" ? "secondary" : "ghost"}
                 className="gap-2"
               >
                 <Settings className="w-4 h-4" />

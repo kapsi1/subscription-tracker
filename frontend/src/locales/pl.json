@@ -45,5 +45,90 @@
     "switch": "Zmień Język",
     "en": "English",
     "pl": "Polski"
+   },
+  "subscriptions": {
+    "title": "Subskrypcje",
+    "subtitle": "Zarządzaj swoimi subskrypcjami",
+    "import": "Importuj",
+    "export": "Eksportuj",
+    "add": "Dodaj subskrypcję",
+    "search": "Szukaj subskrypcji po nazwie lub kategorii...",
+    "all": "Wszystkie subskrypcje",
+    "foundCount": "Znaleziono {{count}} subskrypcję",
+    "foundCount_plural": "Znaleziono {{count}} subskrypcje",
+    "foundCount_many": "Znaleziono {{count}} subskrypcji",
+    "noFound": "Nie znaleziono subskrypcji",
+    "noFoundDesc": "Spróbuj zmienić parametry wyszukiwania",
+    "getStarted": "Zacznij od dodania swojej pierwszej subskrypcji",
+    "table": {
+      "service": "Nazwa usługi",
+      "amount": "Kwota",
+      "cycle": "Cykl rozliczeniowy",
+      "next": "Następna płatność",
+      "category": "Kategoria",
+      "actions": "Akcje"
+    },
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę subskrypcję?",
+    "deleteSuccess": "Subskrypcja została pomyślnie usunięta",
+    "deleteError": "Nie udało się usunąć subskrypcji",
+    "saveSuccess": "Subskrypcja została pomyślnie zapisana",
+    "updateSuccess": "Subskrypcja została pomyślnie zaktualizowana",
+    "saveError": "Nie udało się zapisać subskrypcji",
+    "exportSuccess": "Eksport zakończony sukcesem",
+    "exportError": "Nie udało się wyeksportować subskrypcji",
+    "importSuccess": "Pomyślnie zaimportowano subskrypcje",
+    "importError": "Nie udało się przetworzyć lub zaimportować pliku JSON"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "subtitle": "Skonfiguruj powiadomienia o zbliżających się płatnościach",
+    "notifications": {
+      "email": {
+        "title": "Powiadomienia E-mail",
+        "desc": "Otrzymuj alerty pocztą elektroniczną",
+        "enable": "Włącz powiadomienia E-mail",
+        "enableDesc": "Wysyłaj przypomnienia o płatnościach na Twój e-mail",
+        "address": "Adres E-mail",
+        "daily": "Dzienny Przegląd",
+        "dailyDesc": "Otrzymuj podsumowanie dzisiejszych płatności",
+        "weekly": "Raport Tygodniowy",
+        "weeklyDesc": "Otrzymuj cotygodniowe podsumowanie swoich subskrypcji"
+      },
+      "push": {
+        "title": "Powiadomienia Push w Przeglądarce",
+        "desc": "Otrzymuj alerty bezpośrednio w przeglądarce",
+        "enable": "Włącz Push w Przeglądarce",
+        "enableDesc": "Otrzymuj powiadomienia, nawet gdy nie korzystasz z aplikacji",
+        "success": "Powiadomienia Push włączone",
+        "disabled": "Powiadomienia Push wyłączone",
+        "error": "Nie udało się przełączyć powiadomień Push"
+      },
+      "webhook": {
+        "title": "Integracja Webhook",
+        "desc": "Wysyłaj alerty do zewnętrznych serwisów",
+        "enable": "Włącz Webhooki",
+        "enableDesc": "Wysyłaj dane o płatnościach na swój URL webhooka",
+        "url": "URL Webhooka",
+        "urlDesc": "Wyślemy żądanie POST ze szczegółami płatności na ten adres URL"
+      },
+      "default": {
+        "title": "Domyślne Ustawienia Przypomnień",
+        "desc": "Domyślne ustawienia dla nowych subskrypcji",
+        "enable": "Domyślne Przypomnienia o Płatnościach",
+        "enableDesc": "Włącz przypomnienia domyślnie dla nowych subskrypcji",
+        "days": "Domyślna Liczba Dni Przypomnienia",
+        "daysDesc": "Nowe subskrypcje będą ustawione na przypomnienie tyle dni przed terminem płatności",
+        "beforePayment": "dni przed płatnością"
+      }
+    },
+    "budget": {
+      "title": "Limity Budżetu",
+      "desc": "Ustaw miesięczny budżet, aby otrzymać powiadomienie po jego przekroczeniu",
+      "label": "Miesięczny Budżet",
+      "help": "Pozostaw puste, jeśli nie chcesz alertów budżetowych"
+    },
+    "save": "Zapisz Ustawienia",
+    "saveSuccess": "Ustawienia zapisane pomyślnie",
+    "loadError": "Nie udało się załadować ustawień"
   }
 }

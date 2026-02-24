@@ -20,8 +20,10 @@ import { toast } from "sonner";
 import api from "@/lib/api";
 import { useRef } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useTranslation } from "react-i18next";
 
 export default function SubscriptionsPage() {
+  const { t } = useTranslation();
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,7 +40,7 @@ export default function SubscriptionsPage() {
       const res = await api.get("/subscriptions");
       setSubscriptions(res.data);
     } catch (err: any) {
-      toast.error("Failed to load subscriptions");
+      toast.error(t('subscriptions.loadError', { defaultValue: 'Failed to load subscriptions' }));
     } finally {
       setIsLoading(false);
     }
@@ -60,13 +62,13 @@ export default function SubscriptionsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this subscription?")) return;
+    if (!confirm(t('subscriptions.deleteConfirm'))) return;
     try {
       await api.delete(`/subscriptions/${id}`);
       setSubscriptions(subscriptions.filter((sub) => sub.id !== id));
-      toast.success("Subscription deleted successfully");
+      toast.success(t('subscriptions.deleteSuccess'));
     } catch (err) {
-      toast.error("Failed to delete subscription");
+      toast.error(t('subscriptions.deleteError'));
     }
   };
 
@@ -81,17 +83,17 @@ export default function SubscriptionsPage() {
             sub.id === subscription.id ? res.data : sub
           )
         );
-        toast.success("Subscription updated successfully");
+        toast.success(t('subscriptions.updateSuccess'));
       } else {
         // Create new
         const res = await api.post("/subscriptions", subscription);
         setSubscriptions([...subscriptions, res.data]);
-        toast.success("Subscription added successfully");
+        toast.success(t('subscriptions.saveSuccess'));
         sendGAEvent({ event: "add_subscription", value: "success" });
       }
       setModalOpen(false);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to save subscription");
+      toast.error(t('subscriptions.saveError'));
       sendGAEvent({ event: "add_subscription", value: "failed" });
     }
   };
@@ -106,10 +108,10 @@ export default function SubscriptionsPage() {
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
-      toast.success("Export successful");
+      toast.success(t('subscriptions.exportSuccess'));
       sendGAEvent({ event: "export_subscriptions", value: "success" });
     } catch (err: any) {
-      toast.error("Failed to export subscriptions");
+      toast.error(t('subscriptions.exportError'));
       sendGAEvent({ event: "export_subscriptions", value: "failed" });
     }
   };
@@ -128,14 +130,14 @@ export default function SubscriptionsPage() {
         const subscriptionsToImport = Array.isArray(json) ? json : json.subscriptions || [json];
         
         await api.post("/subscriptions/import", { subscriptions: subscriptionsToImport });
-        toast.success(`Successfully imported subscriptions`);
+        toast.success(t('subscriptions.importSuccess'));
         sendGAEvent({ event: "import_subscriptions", value: "success" });
         
         // Refresh list
         setIsLoading(true);
         fetchSubscriptions();
       } catch (err: any) {
-        toast.error(err.response?.data?.message || "Failed to parse or import JSON file");
+        toast.error(t('subscriptions.importError'));
         sendGAEvent({ event: "import_subscriptions", value: "failed" });
       }
       
@@ -170,7 +172,7 @@ export default function SubscriptionsPage() {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-muted-foreground">Loading subscriptions...</div>;
+    return <div className="p-8 text-center text-muted-foreground">{t('common.loading')}</div>;
   }
 
   return (
@@ -178,9 +180,9 @@ export default function SubscriptionsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold">Subscriptions</h1>
+          <h1 className="text-3xl font-semibold">{t('subscriptions.title')}</h1>
           <p className="text-muted-foreground mt-1">
-            Manage all your recurring subscriptions
+            {t('subscriptions.subtitle')}
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -193,15 +195,15 @@ export default function SubscriptionsPage() {
           />
           <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="gap-2 shrink-0">
             <Upload className="w-4 h-4" />
-            Import
+            {t('subscriptions.import')}
           </Button>
           <Button variant="outline" onClick={handleExport} className="gap-2 shrink-0">
             <Download className="w-4 h-4" />
-            Export
+            {t('subscriptions.export')}
           </Button>
           <Button onClick={handleAddNew} className="gap-2 shrink-0">
             <Plus className="w-4 h-4" />
-            Add Subscription
+            {t('subscriptions.add')}
           </Button>
         </div>
       </div>
@@ -212,7 +214,7 @@ export default function SubscriptionsPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search subscriptions by name or category..."
+              placeholder={t('subscriptions.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
@@ -224,21 +226,21 @@ export default function SubscriptionsPage() {
       {/* Subscriptions Table */}
       <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle>All Subscriptions</CardTitle>
+          <CardTitle>{t('subscriptions.all')}</CardTitle>
           <CardDescription>
-            {filteredSubscriptions.length} subscription{filteredSubscriptions.length !== 1 ? "s" : ""} found
+            {t('subscriptions.foundCount', { count: filteredSubscriptions.length })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {filteredSubscriptions.length === 0 ? (
             <EmptyState
-              title="No subscriptions found"
+              title={t('subscriptions.noFound')}
               description={
                 searchQuery
-                  ? "Try adjusting your search query"
-                  : "Get started by adding your first subscription"
+                  ? t('subscriptions.noFoundDesc')
+                  : t('subscriptions.getStarted')
               }
-              actionLabel={searchQuery ? undefined : "Add Subscription"}
+              actionLabel={searchQuery ? undefined : t('subscriptions.add')}
               onAction={searchQuery ? undefined : handleAddNew}
             />
           ) : (
@@ -246,12 +248,12 @@ export default function SubscriptionsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Service Name</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Billing Cycle</TableHead>
-                    <TableHead>Next Billing</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{t('subscriptions.table.service')}</TableHead>
+                    <TableHead>{t('subscriptions.table.amount')}</TableHead>
+                    <TableHead>{t('subscriptions.table.cycle')}</TableHead>
+                    <TableHead>{t('subscriptions.table.next')}</TableHead>
+                    <TableHead>{t('subscriptions.table.category')}</TableHead>
+                    <TableHead className="text-right">{t('subscriptions.table.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

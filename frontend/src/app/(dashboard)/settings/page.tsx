@@ -10,8 +10,10 @@ import { toast } from "sonner";
 import { Bell, Mail, Webhook, Save, PiggyBank, Smartphone } from "lucide-react";
 import api from "@/lib/api";
 import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from "@/lib/push";
+import { useTranslation } from "react-i18next";
 
-export default function AlertsSettingsPage() {
+export default function SettingsPage() {
+  const { t } = useTranslation();
   const [settings, setSettings] = useState({
     defaultReminderEnabled: true,
     defaultReminderDays: "3",
@@ -37,7 +39,7 @@ export default function AlertsSettingsPage() {
           monthlyBudget: response.data.monthlyBudget?.toString() || "",
         });
       } catch (error) {
-        toast.error("Failed to load settings");
+        toast.error(t('settings.loadError'));
       }
     };
 
@@ -59,7 +61,7 @@ export default function AlertsSettingsPage() {
 
     fetchSettings();
     checkPushSubscription();
-  }, []);
+  }, [t]);
 
   const handleSave = async () => {
     try {
@@ -68,9 +70,9 @@ export default function AlertsSettingsPage() {
         defaultReminderDays: parseInt(settings.defaultReminderDays),
         monthlyBudget: settings.monthlyBudget ? parseFloat(settings.monthlyBudget) : null,
       });
-      toast.success("Settings saved successfully");
+      toast.success(t('settings.saveSuccess'));
     } catch (error) {
-      toast.error("Failed to save settings");
+      toast.error(t('settings.saveError', { defaultValue: 'Failed to save settings' }));
     }
   };
 
@@ -81,7 +83,7 @@ export default function AlertsSettingsPage() {
         const sub = await subscribeToPush();
         await api.post("/users/push-subscription", sub.toJSON());
         setSettings({ ...settings, pushEnabled: true });
-        toast.success("Push notifications enabled");
+        toast.success(t('settings.notifications.push.success'));
       } else {
         const registration = await navigator.serviceWorker.getRegistration('/sw.js');
         if (registration) {
@@ -92,10 +94,10 @@ export default function AlertsSettingsPage() {
         }
         await unsubscribeFromPush();
         setSettings({ ...settings, pushEnabled: false });
-        toast.success("Push notifications disabled");
+        toast.success(t('settings.notifications.push.disabled'));
       }
     } catch (error: any) {
-      toast.error("Failed to toggle push notifications: " + (error.message || "Unknown error"));
+      toast.error(t('settings.notifications.push.error') + ": " + (error.message || "Unknown error"));
       setSettings({ ...settings, pushEnabled: false });
     }
   };
@@ -104,9 +106,9 @@ export default function AlertsSettingsPage() {
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-semibold">Alerts & Notifications</h1>
+        <h1 className="text-3xl font-semibold">{t('settings.title')}</h1>
         <p className="text-muted-foreground mt-1">
-          Configure how you want to be notified about upcoming payments
+          {t('settings.subtitle')}
         </p>
       </div>
 
@@ -118,17 +120,17 @@ export default function AlertsSettingsPage() {
               <Mail className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <CardTitle>Email Notifications</CardTitle>
-              <CardDescription>Receive alerts via email</CardDescription>
+              <CardTitle>{t('settings.notifications.email.title')}</CardTitle>
+              <CardDescription>{t('settings.notifications.email.desc')}</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="emailEnabled">Enable Email Notifications</Label>
+              <Label htmlFor="emailEnabled">{t('settings.notifications.email.enable')}</Label>
               <p className="text-sm text-muted-foreground">
-                Send payment reminders to your email
+                {t('settings.notifications.email.enableDesc')}
               </p>
             </div>
             <Switch
@@ -143,7 +145,7 @@ export default function AlertsSettingsPage() {
           {settings.emailNotifications && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="emailAddress">Email Address</Label>
+                <Label htmlFor="emailAddress">{t('settings.notifications.email.address')}</Label>
                 <Input
                   id="emailAddress"
                   type="email"
@@ -157,9 +159,9 @@ export default function AlertsSettingsPage() {
 
               <div className="flex items-center justify-between border-t pt-4">
                 <div className="space-y-0.5">
-                  <Label htmlFor="dailyDigest">Daily Digest</Label>
+                  <Label htmlFor="dailyDigest">{t('settings.notifications.email.daily')}</Label>
                   <p className="text-sm text-muted-foreground">
-                    Receive a summary of today's payments
+                    {t('settings.notifications.email.dailyDesc')}
                   </p>
                 </div>
                 <Switch
@@ -173,9 +175,9 @@ export default function AlertsSettingsPage() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="weeklyReport">Weekly Report</Label>
+                  <Label htmlFor="weeklyReport">{t('settings.notifications.email.weekly')}</Label>
                   <p className="text-sm text-muted-foreground">
-                    Receive a weekly summary of your subscriptions
+                    {t('settings.notifications.email.weeklyDesc')}
                   </p>
                 </div>
                 <Switch
@@ -199,17 +201,17 @@ export default function AlertsSettingsPage() {
               <Smartphone className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <CardTitle>Browser Push Notifications</CardTitle>
-              <CardDescription>Receive alerts directly in your browser</CardDescription>
+              <CardTitle>{t('settings.notifications.push.title')}</CardTitle>
+              <CardDescription>{t('settings.notifications.push.desc')}</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="pushEnabled">Enable Browser Push</Label>
+              <Label htmlFor="pushEnabled">{t('settings.notifications.push.enable')}</Label>
               <p className="text-sm text-muted-foreground">
-                Get notified even when you're not on the app
+                {t('settings.notifications.push.enableDesc')}
               </p>
             </div>
             <Switch
@@ -229,17 +231,17 @@ export default function AlertsSettingsPage() {
               <Webhook className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <CardTitle>Webhook Integration</CardTitle>
-              <CardDescription>Send alerts to external services</CardDescription>
+              <CardTitle>{t('settings.notifications.webhook.title')}</CardTitle>
+              <CardDescription>{t('settings.notifications.webhook.desc')}</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="webhookEnabled">Enable Webhooks</Label>
+              <Label htmlFor="webhookEnabled">{t('settings.notifications.webhook.enable')}</Label>
               <p className="text-sm text-muted-foreground">
-                POST payment data to your webhook URL
+                {t('settings.notifications.webhook.enableDesc')}
               </p>
             </div>
             <Switch
@@ -253,7 +255,7 @@ export default function AlertsSettingsPage() {
 
           {settings.webhookEnabled && (
             <div className="space-y-2">
-              <Label htmlFor="webhookUrl">Webhook URL</Label>
+              <Label htmlFor="webhookUrl">{t('settings.notifications.webhook.url')}</Label>
               <Input
                 id="webhookUrl"
                 type="url"
@@ -264,7 +266,7 @@ export default function AlertsSettingsPage() {
                 }
               />
               <p className="text-xs text-muted-foreground">
-                We'll send a POST request with payment details to this URL
+                {t('settings.notifications.webhook.urlDesc')}
               </p>
             </div>
           )}
@@ -279,9 +281,9 @@ export default function AlertsSettingsPage() {
               <Bell className="w-5 h-5 text-cyan-600" />
             </div>
             <div>
-              <CardTitle>Default Reminder Settings</CardTitle>
+              <CardTitle>{t('settings.notifications.default.title')}</CardTitle>
               <CardDescription>
-                Default settings for new subscriptions
+                {t('settings.notifications.default.desc')}
               </CardDescription>
             </div>
           </div>
@@ -289,9 +291,9 @@ export default function AlertsSettingsPage() {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="defaultEnabled">Default Payment Reminders</Label>
+              <Label htmlFor="defaultEnabled">{t('settings.notifications.default.enable')}</Label>
               <p className="text-sm text-muted-foreground">
-                Enable reminders by default for new subscriptions
+                {t('settings.notifications.default.enableDesc')}
               </p>
             </div>
             <Switch
@@ -304,7 +306,7 @@ export default function AlertsSettingsPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="defaultDays">Default Reminder Days</Label>
+            <Label htmlFor="defaultDays">{t('settings.notifications.default.days')}</Label>
             <div className="flex gap-2 items-center">
               <Input
                 id="defaultDays"
@@ -318,11 +320,11 @@ export default function AlertsSettingsPage() {
                 }
               />
               <span className="text-sm text-muted-foreground">
-                days before payment
+                {t('settings.notifications.default.beforePayment')}
               </span>
             </div>
             <p className="text-xs text-muted-foreground">
-              New subscriptions will be set to remind you this many days before the payment is due
+              {t('settings.notifications.default.daysDesc')}
             </p>
           </div>
         </CardContent>
@@ -336,16 +338,16 @@ export default function AlertsSettingsPage() {
               <PiggyBank className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <CardTitle>Budget Limits</CardTitle>
+              <CardTitle>{t('settings.budget.title')}</CardTitle>
               <CardDescription>
-                Set a monthly budget to get notified if you exceed it
+                {t('settings.budget.desc')}
               </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="monthlyBudget">Monthly Budget</Label>
+            <Label htmlFor="monthlyBudget">{t('settings.budget.label')}</Label>
             <div className="flex gap-2 items-center">
               <span className="text-muted-foreground">$</span>
               <Input
@@ -362,7 +364,7 @@ export default function AlertsSettingsPage() {
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              Leave blank if you don't want budget alerts
+              {t('settings.budget.help')}
             </p>
           </div>
         </CardContent>
@@ -372,7 +374,7 @@ export default function AlertsSettingsPage() {
       <div className="flex justify-end">
         <Button onClick={handleSave} className="gap-2" size="lg">
           <Save className="w-4 h-4" />
-          Save Settings
+          {t('settings.save')}
         </Button>
       </div>
     </div>
