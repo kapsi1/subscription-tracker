@@ -107,9 +107,6 @@ export default function SettingsPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-semibold">{t('settings.title')}</h1>
-        <p className="text-muted-foreground mt-1">
-          {t('settings.subtitle')}
-        </p>
       </div>
 
       {/* Email Notifications */}

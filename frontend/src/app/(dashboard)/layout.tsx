@@ -7,15 +7,11 @@ import {
   CreditCard, 
   LayoutDashboard, 
   ListChecks, 
-  Bell, 
   Settings, 
-  Menu, 
-  X,
   LogOut,
-  User,
-  Palette,
   Moon,
-  Sun
+  Sun,
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,22 +25,15 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import api from "@/lib/api";
 import { toast } from "sonner";
 import { UKFlag, PolandFlag } from "@/components/flags";
-
-const sidebarItems = [
-  { icon: LayoutDashboard, translationKey: "nav.dashboard", path: "/dashboard" },
-  { icon: ListChecks, translationKey: "nav.subscriptions", path: "/subscriptions" },
-  { icon: Bell, translationKey: "nav.settings", path: "/settings" },
-];
+import { cn } from "@/components/ui/utils";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const { isAuthenticated, isLoading, logout } = useAuth();
   const { t, i18n } = useTranslation();
@@ -88,66 +77,74 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Top Navigation */}
       <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
-        <div className="flex h-16 items-center px-4 gap-4">
-          {/* Mobile menu button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-
+        <div className="flex h-16 items-center px-4 sm:px-6 gap-4">
           {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <CreditCard className="w-5 h-5 text-white" />
             </div>
             <span className="font-semibold text-lg hidden sm:inline">SubTracker</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 ml-8">
+          {/* Navigation Links */}
+          <nav className="flex items-center gap-1 ml-2 sm:ml-4">
             <Link href="/dashboard">
               <Button
-                variant={pathname === "/dashboard" ? "secondary" : "ghost"}
-                className="gap-2"
+                variant="ghost"
+                className={cn(
+                  "gap-2 px-2 sm:px-3 transition-colors",
+                  pathname === "/dashboard" 
+                    ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+                size="sm"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                {t('nav.dashboard')}
+                <span className="hidden sm:inline">{t('nav.dashboard')}</span>
               </Button>
             </Link>
             <Link href="/subscriptions">
               <Button
-                variant={pathname === "/subscriptions" ? "secondary" : "ghost"}
-                className="gap-2"
+                variant="ghost"
+                className={cn(
+                  "gap-2 px-2 sm:px-3 transition-colors",
+                  pathname === "/subscriptions" 
+                    ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+                size="sm"
               >
                 <ListChecks className="w-4 h-4" />
-                {t('nav.subscriptions')}
+                <span className="hidden sm:inline">{t('nav.subscriptions')}</span>
               </Button>
             </Link>
             <Link href="/settings">
               <Button
-                variant={pathname === "/settings" ? "secondary" : "ghost"}
-                className="gap-2"
+                variant="ghost"
+                className={cn(
+                  "gap-2 px-2 sm:px-3 transition-colors",
+                  pathname === "/settings" 
+                    ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+                size="sm"
               >
                 <Settings className="w-4 h-4" />
-                {t('nav.settings')}
+                <span className="hidden sm:inline">{t('nav.settings')}</span>
               </Button>
             </Link>
           </nav>
 
-          {/* Right side */}
-          <div className="ml-auto flex items-center gap-2">
+          {/* Right side controls */}
+          <div className="ml-auto flex items-center gap-1 sm:gap-2">
             
             {/* Language Switcher */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" title={t('language.switch')} aria-label={t('language.switch')} className="flex items-center justify-center">
+                <Button variant="ghost" size="icon" title={t('language.switch')} aria-label={t('language.switch')} className="h-9 w-9">
                   {currentLanguage.startsWith("en") ? <UKFlag /> : <PolandFlag />}
                 </Button>
               </DropdownMenuTrigger>
@@ -169,10 +166,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* Theme Toggle */}
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={toggleTheme}
+              className="h-9 w-9"
               title={theme === "dark" ? t('theme.light') : t('theme.dark')}
             >
               {theme === "dark" ? (
@@ -182,11 +181,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               )}
             </Button>
             
+            {/* User Profile */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback className="bg-primary text-white">US</AvatarFallback>
+                <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
+                  <Avatar className="h-9 w-9 border">
+                    <AvatarFallback className="bg-primary text-white text-xs">US</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -207,69 +207,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </header>
 
-      <div className="flex">
-        {/* Sidebar - Desktop */}
-        <aside className="hidden lg:flex w-64 border-r bg-card min-h-[calc(100vh-4rem)] flex-col">
-          <nav className="flex-1 p-4 space-y-1">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.path;
-              return (
-                <Link key={item.path} href={item.path} className="block w-full">
-                  <Button
-                    variant={isActive ? "secondary" : "ghost"}
-                    className="w-full justify-start gap-3"
-                  >
-                    <Icon className="w-5 h-5" />
-                    {t(item.translationKey)}
-                  </Button>
-                </Link>
-              );
-            })}
-          </nav>
-        </aside>
-
-        {/* Sidebar - Mobile */}
-        {sidebarOpen && (
-          <div
-            className="lg:hidden fixed inset-0 z-40 bg-black/50"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <aside
-              className="fixed left-0 top-16 bottom-0 w-64 bg-card border-r"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <nav className="p-4 space-y-1">
-                {sidebarItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = pathname === item.path;
-                  return (
-                    <Link
-                      key={item.path}
-                      href={item.path}
-                      onClick={() => setSidebarOpen(false)}
-                      className="block w-full"
-                    >
-                      <Button
-                        variant={isActive ? "secondary" : "ghost"}
-                        className="w-full justify-start gap-3"
-                      >
-                        <Icon className="w-5 h-5" />
-                        {t(item.translationKey)}
-                      </Button>
-                    </Link>
-                  );
-                })}
-              </nav>
-            </aside>
-          </div>
-        )}
-
-        {/* Main Content */}
-        <main className="flex-1 p-6 lg:p-8">
-          {children}
-        </main>
-      </div>
+      {/* Main Content */}
+      <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        {children}
+      </main>
     </div>
   );
 }

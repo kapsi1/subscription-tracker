@@ -81,7 +81,6 @@
   },
   "settings": {
     "title": "Ustawienia",
-    "subtitle": "Skonfiguruj powiadomienia o zbliżających się płatnościach",
     "notifications": {
       "email": {
         "title": "Powiadomienia E-mail",

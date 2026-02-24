@@ -80,7 +80,6 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "Configure how you want to be notified about upcoming payments",
     "notifications": {
       "email": {
         "title": "Email Notifications",
