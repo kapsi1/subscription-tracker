@@ -24,6 +24,7 @@ import api from "@/lib/api";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
@@ -37,40 +38,42 @@ export default function DashboardPage() {
   const [forecast, setForecast] = useState<any[]>([]);
   const [upcomingPayments, setUpcomingPayments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
+
+  const fetchDashboardData = async () => {
+    try {
+      const [summaryRes, forecastRes, subsRes] = await Promise.all([
+        api.get("/dashboard/summary"),
+        api.get("/dashboard/forecast?months=12"),
+        api.get("/subscriptions"),
+      ]);
+
+      setSummary(summaryRes.data);
+      setForecast(forecastRes.data);
+
+      // Calculate upcoming payments from subscriptions (next 30 days)
+      const now = new Date();
+      const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+      
+      const upcoming = subsRes.data
+        .filter((sub: any) => {
+          if (!sub.isActive || !sub.nextBillingDate) return false;
+          const nextDate = new Date(sub.nextBillingDate);
+          return nextDate >= now && nextDate <= thirtyDaysFromNow;
+        })
+        .sort((a: any, b: any) => new Date(a.nextBillingDate).getTime() - new Date(b.nextBillingDate).getTime())
+        .slice(0, 5); // Take top 5
+
+      setUpcomingPayments(upcoming);
+    } catch (err: any) {
+      toast.error(t('common.error'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const [summaryRes, forecastRes, subsRes] = await Promise.all([
-          api.get("/dashboard/summary"),
-          api.get("/dashboard/forecast?months=12"),
-          api.get("/subscriptions"),
-        ]);
-
-        setSummary(summaryRes.data);
-        setForecast(forecastRes.data);
-
-        // Calculate upcoming payments from subscriptions (next 30 days)
-        const now = new Date();
-        const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-        
-        const upcoming = subsRes.data
-          .filter((sub: any) => {
-            if (!sub.isActive || !sub.nextBillingDate) return false;
-            const nextDate = new Date(sub.nextBillingDate);
-            return nextDate >= now && nextDate <= thirtyDaysFromNow;
-          })
-          .sort((a: any, b: any) => new Date(a.nextBillingDate).getTime() - new Date(b.nextBillingDate).getTime())
-          .slice(0, 5); // Take top 5
-
-        setUpcomingPayments(upcoming);
-      } catch (err: any) {
-        toast.error(t('common.error'));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchDashboardData();
   }, []);
 
@@ -80,6 +83,26 @@ export default function DashboardPage() {
     const date = new Date(dateString);
     const locale = i18n.language === "pl" ? "pl-PL" : "en-US";
     return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
+  };
+
+  const handleEdit = (subscription: Subscription) => {
+    setEditingSubscription(subscription);
+    setModalOpen(true);
+  };
+
+  const handleSave = async (subscription: Partial<Subscription>) => {
+    try {
+      if (subscription.id) {
+        // Edit existing
+        const { id, ...updateData } = subscription;
+        await api.patch(`/subscriptions/${id}`, updateData);
+        toast.success(t('subscriptions.updateSuccess', { defaultValue: 'Subscription updated' }));
+        fetchDashboardData(); // Refresh all data
+      }
+      setModalOpen(false);
+    } catch (err: any) {
+      toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
+    }
   };
 
   const categoryData = Object.keys(summary.categoryBreakdown).map((key, index) => {
@@ -308,7 +331,8 @@ export default function DashboardPage() {
               {upcomingPayments.map((payment) => (
                 <div
                   key={payment.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors gap-3"
+                  onClick={() => handleEdit(payment)}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors gap-3 cursor-pointer"
                 >
                   <div className="flex items-center gap-4 flex-1">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -340,6 +364,13 @@ export default function DashboardPage() {
           )}
         </CardContent>
       </Card>
+
+      <SubscriptionModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        subscription={editingSubscription}
+        onSave={handleSave}
+      />
     </div>
   );
 }
