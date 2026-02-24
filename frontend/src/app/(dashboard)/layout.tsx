@@ -29,12 +29,15 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2 } from "lucide-react";
+import { Loader2, Globe } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import api from "@/lib/api";
+import { toast } from "sonner";
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: "Overview", path: "/dashboard" },
-  { icon: ListChecks, label: "All Subscriptions", path: "/subscriptions" },
-  { icon: Bell, label: "Alerts", path: "/alerts" },
+  { icon: LayoutDashboard, translationKey: "nav.dashboard", path: "/dashboard" },
+  { icon: ListChecks, translationKey: "nav.subscriptions", path: "/subscriptions" },
+  { icon: Bell, translationKey: "nav.alerts", path: "/alerts" },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -43,6 +46,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const { isAuthenticated, isLoading, logout } = useAuth();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -68,6 +72,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const currentLanguage = i18n.language || "en";
+
+  const handleLanguageChange = async (lang: string) => {
+    try {
+      await i18n.changeLanguage(lang);
+      await api.patch('/users/settings', { language: lang });
+    } catch (error) {
+      toast.error(t('common.error'));
+      console.error("Failed to save language preference:", error);
+    }
   };
 
   return (
@@ -101,7 +117,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="gap-2"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                Dashboard
+                {t('nav.dashboard')}
               </Button>
             </Link>
             <Link href="/subscriptions">
@@ -110,7 +126,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="gap-2"
               >
                 <ListChecks className="w-4 h-4" />
-                Subscriptions
+                {t('nav.subscriptions')}
               </Button>
             </Link>
             <Link href="/alerts">
@@ -119,18 +135,44 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="gap-2"
               >
                 <Settings className="w-4 h-4" />
-                Settings
+                {t('nav.settings')}
               </Button>
             </Link>
           </nav>
 
           {/* Right side */}
           <div className="ml-auto flex items-center gap-2">
+            
+            {/* Language Switcher */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" title={t('language.switch')} aria-label={t('language.switch')} className="text-xl">
+                  {currentLanguage.startsWith("en") ? "🇬🇧" : "🇵🇱"}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{t('language.switch')}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => handleLanguageChange("en")}
+                  className={`gap-2 ${currentLanguage.startsWith("en") ? "font-bold bg-muted" : ""}`}
+                >
+                  <span>🇬🇧</span> {t('language.en')}
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => handleLanguageChange("pl")}
+                  className={`gap-2 ${currentLanguage === "pl" ? "font-bold bg-muted" : ""}`}
+                >
+                  <span>🇵🇱</span> {t('language.pl')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={toggleTheme}
-              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              title={theme === "dark" ? t('theme.light') : t('theme.dark')}
             >
               {theme === "dark" ? (
                 <Sun className="h-5 w-5" />
@@ -150,13 +192,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">My Profile</p>
+                    <p className="text-sm font-medium">{t('nav.profile')}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
-                  Log out
+                  {t('nav.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -178,7 +220,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     className="w-full justify-start gap-3"
                   >
                     <Icon className="w-5 h-5" />
-                    {item.label}
+                    {t(item.translationKey)}
                   </Button>
                 </Link>
               );
@@ -212,7 +254,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         className="w-full justify-start gap-3"
                       >
                         <Icon className="w-5 h-5" />
-                        {item.label}
+                        {t(item.translationKey)}
                       </Button>
                     </Link>
                   );

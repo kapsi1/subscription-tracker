@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsNumber, IsOptional, Min, ValidateIf } from 'class-validator';
+import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Min, ValidateIf } from 'class-validator';
 
 export class UpdateSettingsDto {
   @IsOptional()
@@ -15,4 +15,8 @@ export class UpdateSettingsDto {
   @IsNumber()
   @Min(0)
   monthlyBudget?: number | null;
+
+  @IsOptional()
+  @IsString()
+  language?: string;
 }

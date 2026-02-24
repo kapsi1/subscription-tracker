@@ -1,0 +1,49 @@
+{
+  "common": {
+    "loading": "Ładowanie...",
+    "error": "Wystąpił błąd",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "add": "Dodaj",
+    "close": "Zamknij"
+  },
+  "nav": {
+    "dashboard": "Panel główny",
+    "subscriptions": "Subskrypcje",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj się",
+    "profile": "Mój Profil"
+  },
+  "dashboard": {
+    "title": "Panel główny",
+    "subtitle": "Śledź i zarządzaj kosztami subskrypcji",
+    "manageSubscriptions": "Zarządzaj subskrypcjami",
+    "totalMonthlyCost": "Miesięczny koszt całkowity",
+    "totalYearlyCost": "Roczny koszt całkowity",
+    "upcomingPayments": "Nadchodzące płatności",
+    "activeSubscriptions": "Aktywne subskrypcje",
+    "currentlyTracked": "Obecnie śledzone",
+    "projectedAnnual": "Przewidywane koszty roczne",
+    "next30Days": "W ciągu najbliższych 30 dni",
+    "forecast": "Prognoza 12-miesięczna",
+    "forecastDesc": "Prognozowane wydatki miesięczne",
+    "costByCategory": "Koszty według kategorii",
+    "categoryBreakdownDesc": "Podział miesięczny",
+    "pie": "Kołowy",
+    "bar": "Słupkowy",
+    "upcomingPaymentsTitle": "Nadchodzące płatności",
+    "upcomingPaymentsDesc": "Daty następnych rozliczeń",
+    "noUpcomingPayments": "Brak nadchodzących płatności w ciągu najbliższych 30 dni."
+  },
+  "theme": {
+    "light": "Przełącz na tryb jasny",
+    "dark": "Przełącz na tryb ciemny"
+  },
+  "language": {
+    "switch": "Zmień Język",
+    "en": "English",
+    "pl": "Polski"
+  }
+}

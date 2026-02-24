@@ -23,8 +23,10 @@ import {
 import api from "@/lib/api";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardPage() {
+  const { t, i18n } = useTranslation();
   const [selectedChart, setSelectedChart] = useState<"pie" | "bar">("pie");
   const [summary, setSummary] = useState<any>({
     totalMonthlyCost: 0,
@@ -63,7 +65,7 @@ export default function DashboardPage() {
 
         setUpcomingPayments(upcoming);
       } catch (err: any) {
-        toast.error("Failed to load dashboard data");
+        toast.error(t('common.error'));
       } finally {
         setIsLoading(false);
       }
@@ -76,7 +78,8 @@ export default function DashboardPage() {
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const locale = i18n.language === "pl" ? "pl-PL" : "en-US";
+    return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
   };
 
   const categoryData = Object.keys(summary.categoryBreakdown).map((key, index) => {
@@ -89,7 +92,7 @@ export default function DashboardPage() {
   });
 
   if (isLoading) {
-    return <div className="p-8 text-center text-muted-foreground">Loading your dashboard...</div>;
+    return <div className="p-8 text-center text-muted-foreground">{t('common.loading')}</div>;
   }
 
   return (
@@ -97,15 +100,15 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold">Dashboard</h1>
+          <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground mt-1">
-            Track and manage your subscription costs
+            {t('dashboard.subtitle')}
           </p>
         </div>
         <Link href="/subscriptions">
           <Button className="gap-2 sm:w-auto">
             <Plus className="w-4 h-4" />
-            Manage Subscriptions
+            {t('dashboard.manageSubscriptions')}
           </Button>
         </Link>
       </div>
@@ -115,7 +118,7 @@ export default function DashboardPage() {
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Monthly Cost
+              {t('dashboard.totalMonthlyCost')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <DollarSign className="w-4 h-4 text-primary" />
@@ -124,7 +127,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-semibold">{formatCurrency(summary.totalMonthlyCost)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Currently tracked
+              {t('dashboard.currentlyTracked')}
             </p>
           </CardContent>
         </Card>
@@ -132,7 +135,7 @@ export default function DashboardPage() {
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Yearly Cost
+              {t('dashboard.totalYearlyCost')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
               <TrendingUp className="w-4 h-4 text-purple-600" />
@@ -141,7 +144,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-semibold">{formatCurrency(summary.totalYearlyCost)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Projected annual spend
+              {t('dashboard.projectedAnnual')}
             </p>
           </CardContent>
         </Card>
@@ -149,7 +152,7 @@ export default function DashboardPage() {
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Upcoming Payments
+              {t('dashboard.upcomingPayments')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
               <Calendar className="w-4 h-4 text-pink-600" />
@@ -158,7 +161,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-semibold">{upcomingPayments.length}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Next 30 days
+              {t('dashboard.next30Days')}
             </p>
           </CardContent>
         </Card>
@@ -166,7 +169,7 @@ export default function DashboardPage() {
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Active Subscriptions
+              {t('dashboard.activeSubscriptions')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
               <CreditCard className="w-4 h-4 text-cyan-600" />
@@ -175,7 +178,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-semibold">{summary.activeSubscriptions}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Currently tracked
+              {t('dashboard.currentlyTracked')}
             </p>
           </CardContent>
         </Card>
@@ -186,8 +189,8 @@ export default function DashboardPage() {
         {/* Monthly Forecast */}
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle>12-Month Forecast</CardTitle>
-            <CardDescription>Projected monthly spending</CardDescription>
+            <CardTitle>{t('dashboard.forecast')}</CardTitle>
+            <CardDescription>{t('dashboard.forecastDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -221,8 +224,8 @@ export default function DashboardPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Cost by Category</CardTitle>
-                <CardDescription>Monthly breakdown</CardDescription>
+                <CardTitle>{t('dashboard.costByCategory')}</CardTitle>
+                <CardDescription>{t('dashboard.categoryBreakdownDesc')}</CardDescription>
               </div>
               <div className="flex gap-1 bg-muted rounded-lg p-1">
                 <Button
@@ -231,7 +234,7 @@ export default function DashboardPage() {
                   onClick={() => setSelectedChart("pie")}
                   className="h-7 text-xs"
                 >
-                  Pie
+                  {t('dashboard.pie')}
                 </Button>
                 <Button
                   variant={selectedChart === "bar" ? "secondary" : "ghost"}
@@ -239,7 +242,7 @@ export default function DashboardPage() {
                   onClick={() => setSelectedChart("bar")}
                   className="h-7 text-xs"
                 >
-                  Bar
+                  {t('dashboard.bar')}
                 </Button>
               </div>
             </div>
@@ -292,13 +295,13 @@ export default function DashboardPage() {
       {/* Upcoming Payments */}
       <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle>Upcoming Payments</CardTitle>
-          <CardDescription>Your next billing dates</CardDescription>
+          <CardTitle>{t('dashboard.upcomingPaymentsTitle')}</CardTitle>
+          <CardDescription>{t('dashboard.upcomingPaymentsDesc')}</CardDescription>
         </CardHeader>
         <CardContent>
           {upcomingPayments.length === 0 ? (
             <div className="text-center py-6 text-muted-foreground">
-              No upcoming payments in the next 30 days.
+              {t('dashboard.noUpcomingPayments')}
             </div>
           ) : (
             <div className="space-y-3">

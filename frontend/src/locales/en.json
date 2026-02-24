@@ -1,0 +1,49 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "subscriptions": "Subscriptions",
+    "settings": "Settings",
+    "logout": "Log out",
+    "profile": "My Profile"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Track and manage your subscription costs",
+    "manageSubscriptions": "Manage Subscriptions",
+    "totalMonthlyCost": "Total Monthly Cost",
+    "totalYearlyCost": "Total Yearly Cost",
+    "upcomingPayments": "Upcoming Payments",
+    "activeSubscriptions": "Active Subscriptions",
+    "currentlyTracked": "Currently tracked",
+    "projectedAnnual": "Projected annual spend",
+    "next30Days": "Next 30 days",
+    "forecast": "12-Month Forecast",
+    "forecastDesc": "Projected monthly spending",
+    "costByCategory": "Cost by Category",
+    "categoryBreakdownDesc": "Monthly breakdown",
+    "pie": "Pie",
+    "bar": "Bar",
+    "upcomingPaymentsTitle": "Upcoming Payments",
+    "upcomingPaymentsDesc": "Your next billing dates",
+    "noUpcomingPayments": "No upcoming payments in the next 30 days."
+  },
+  "theme": {
+    "light": "Switch to light mode",
+    "dark": "Switch to dark mode"
+  },
+  "language": {
+    "switch": "Switch Language",
+    "en": "English",
+    "pl": "Polski"
+  }
+}

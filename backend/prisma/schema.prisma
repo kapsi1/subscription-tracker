@@ -11,6 +11,7 @@ model User {
   id           String         @id @default(uuid())
   email        String         @unique
   passwordHash String
+  language     String         @default("en")
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   subscriptions Subscription[]
