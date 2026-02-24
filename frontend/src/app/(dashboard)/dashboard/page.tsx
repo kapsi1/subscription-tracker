@@ -227,7 +227,7 @@ export default function DashboardPage() {
                     border: "1px solid #e2e8f0",
                     borderRadius: "8px",
                   }}
-                  formatter={(value: any) => [`$${Number(value).toFixed(2)}`, "Amount"]}
+                  formatter={(value: any) => [`$${Number(value).toFixed(2)}`, t("subscriptions.modal.amount")]}
                 />
                 <Line
                   type="monotone"
@@ -279,7 +279,7 @@ export default function DashboardPage() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={(entry) => `${entry.name}: $${entry.value.toFixed(2)}`}
+                    label={(entry) => `${t(`subscriptions.modal.categories.${entry.name}`)}: $${entry.value.toFixed(2)}`}
                     outerRadius={100}
                     fill="#8884d8"
                     dataKey="value"
@@ -301,7 +301,7 @@ export default function DashboardPage() {
                       border: "1px solid #e2e8f0",
                       borderRadius: "8px",
                     }}
-                    formatter={(value: any) => [`$${Number(value).toFixed(2)}`, "Amount"]}
+                    formatter={(value: any) => [`$${Number(value).toFixed(2)}`, t("subscriptions.modal.amount")]}
                   />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                     {categoryData.map((entry, index) => (
@@ -343,7 +343,7 @@ export default function DashboardPage() {
                         <p className="font-medium">{payment.name}</p>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {payment.category}
+                        {t(`subscriptions.modal.categories.${payment.category}`)}
                       </p>
                     </div>
                   </div>
@@ -355,7 +355,7 @@ export default function DashboardPage() {
                       </p>
                     </div>
                     <Badge variant="outline" className="hidden sm:inline-flex">
-                      {payment.category}
+                      {t(`subscriptions.modal.categories.${payment.category}`)}
                     </Badge>
                   </div>
                 </div>

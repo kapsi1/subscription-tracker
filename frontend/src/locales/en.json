@@ -76,7 +76,41 @@
     "exportSuccess": "Export successful",
     "exportError": "Failed to export subscriptions",
     "importSuccess": "Successfully imported subscriptions",
-    "importError": "Failed to parse or import JSON file"
+    "importError": "Failed to parse or import JSON file",
+    "modal": {
+      "addTitle": "Add Subscription",
+      "editTitle": "Edit Subscription",
+      "addDesc": "Add a new subscription to track",
+      "editDesc": "Update your subscription details",
+      "serviceName": "Service Name",
+      "servicePlaceholder": "e.g. Netflix, Spotify",
+      "amount": "Amount",
+      "currency": "Currency",
+      "billingCycle": "Billing Cycle",
+      "category": "Category",
+      "nextBillingDate": "Next Billing Date",
+      "reminders": "Payment Reminders",
+      "remindersDesc": "Get notified before payment is due",
+      "reminderDays": "Days Before Reminder",
+      "cancel": "Cancel",
+      "add": "Add Subscription",
+      "update": "Update Subscription",
+      "categories": {
+        "Entertainment": "Entertainment",
+        "Productivity": "Productivity",
+        "Cloud Services": "Cloud Services",
+        "Development": "Development",
+        "Professional": "Professional",
+        "Health & Fitness": "Health & Fitness",
+        "Education": "Education",
+        "Other": "Other"
+      },
+      "billingCycles": {
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "custom": "Custom"
+      }
+    }
   },
   "settings": {
     "title": "Settings",

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -64,6 +65,7 @@ export function SubscriptionModal({
   subscription,
   onSave,
 }: SubscriptionModalProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     amount: "",
@@ -90,6 +92,7 @@ export function SubscriptionModal({
     };
 
     if (subscription && open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: subscription.name,
         amount: subscription.amount.toString(),
@@ -137,21 +140,21 @@ export function SubscriptionModal({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {subscription ? "Edit Subscription" : "Add Subscription"}
+            {subscription ? t("subscriptions.modal.editTitle") : t("subscriptions.modal.addTitle")}
           </DialogTitle>
           <DialogDescription>
             {subscription
-              ? "Update your subscription details"
-              : "Add a new subscription to track"}
+              ? t("subscriptions.modal.editDesc")
+              : t("subscriptions.modal.addDesc")}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Service Name</Label>
+              <Label htmlFor="name">{t("subscriptions.modal.serviceName")}</Label>
               <Input
                 id="name"
-                placeholder="e.g. Netflix, Spotify"
+                placeholder={t("subscriptions.modal.servicePlaceholder")}
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -162,7 +165,7 @@ export function SubscriptionModal({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="amount">Amount</Label>
+                <Label htmlFor="amount">{t("subscriptions.modal.amount")}</Label>
                 <Input
                   id="amount"
                   type="number"
@@ -178,7 +181,7 @@ export function SubscriptionModal({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="currency">Currency</Label>
+                <Label htmlFor="currency">{t("subscriptions.modal.currency")}</Label>
                 <Select
                   value={formData.currency}
                   onValueChange={(value) =>
@@ -201,7 +204,7 @@ export function SubscriptionModal({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="billingCycle">Billing Cycle</Label>
+                <Label htmlFor="billingCycle">{t("subscriptions.modal.billingCycle")}</Label>
                 <Select
                   value={formData.billingCycle}
                   onValueChange={(value) =>
@@ -214,7 +217,7 @@ export function SubscriptionModal({
                   <SelectContent>
                     {billingCycles.map((cycle) => (
                       <SelectItem key={cycle.value} value={cycle.value}>
-                        {cycle.label}
+                        {t(`subscriptions.modal.billingCycles.${cycle.value}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -222,7 +225,7 @@ export function SubscriptionModal({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="category">{t("subscriptions.modal.category")}</Label>
                 <Select
                   value={formData.category}
                   onValueChange={(value) =>
@@ -235,7 +238,7 @@ export function SubscriptionModal({
                   <SelectContent>
                     {categories.map((category) => (
                       <SelectItem key={category} value={category}>
-                        {category}
+                        {t(`subscriptions.modal.categories.${category}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -244,7 +247,7 @@ export function SubscriptionModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nextBillingDate">Next Billing Date</Label>
+              <Label htmlFor="nextBillingDate">{t("subscriptions.modal.nextBillingDate")}</Label>
               <Input
                 id="nextBillingDate"
                 type="date"
@@ -258,9 +261,9 @@ export function SubscriptionModal({
 
             <div className="flex items-center justify-between border-t pt-4">
               <div className="space-y-0.5">
-                <Label htmlFor="reminderEnabled">Payment Reminders</Label>
+                <Label htmlFor="reminderEnabled">{t("subscriptions.modal.reminders")}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Get notified before payment is due
+                  {t("subscriptions.modal.remindersDesc")}
                 </p>
               </div>
               <Switch
@@ -274,7 +277,7 @@ export function SubscriptionModal({
 
             {formData.reminderEnabled && (
               <div className="space-y-2">
-                <Label htmlFor="reminderDays">Days Before Reminder</Label>
+                <Label htmlFor="reminderDays">{t("subscriptions.modal.reminderDays")}</Label>
                 <Input
                   id="reminderDays"
                   type="number"
@@ -297,10 +300,10 @@ export function SubscriptionModal({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("subscriptions.modal.cancel")}
             </Button>
             <Button type="submit">
-              {subscription ? "Update" : "Add"} Subscription
+              {subscription ? t("subscriptions.modal.update") : t("subscriptions.modal.add")}
             </Button>
           </DialogFooter>
         </form>

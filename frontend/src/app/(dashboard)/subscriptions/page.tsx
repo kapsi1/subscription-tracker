@@ -263,14 +263,14 @@ export default function SubscriptionsPage() {
                         {subscription.name}
                       </TableCell>
                       <TableCell>{formatCurrency(subscription.amount)}</TableCell>
-                      <TableCell>{formatBillingCycle(subscription.billingCycle)}</TableCell>
+                      <TableCell>{t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}</TableCell>
                       <TableCell>{formatDate(subscription.nextBillingDate)}</TableCell>
                       <TableCell>
                         <Badge
                           variant="outline"
                           className={getCategoryColor(subscription.category)}
                         >
-                          {subscription.category}
+                          {t(`subscriptions.modal.categories.${subscription.category}`)}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">

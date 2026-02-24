@@ -77,7 +77,41 @@
     "exportSuccess": "Eksport zakończony sukcesem",
     "exportError": "Nie udało się wyeksportować subskrypcji",
     "importSuccess": "Pomyślnie zaimportowano subskrypcje",
-    "importError": "Nie udało się przetworzyć lub zaimportować pliku JSON"
+    "importError": "Nie udało się przetworzyć lub zaimportować pliku JSON",
+    "modal": {
+      "addTitle": "Dodaj subskrypcję",
+      "editTitle": "Edytuj subskrypcję",
+      "addDesc": "Dodaj nową subskrypcję do śledzenia",
+      "editDesc": "Zaktualizuj szczegóły subskrypcji",
+      "serviceName": "Nazwa usługi",
+      "servicePlaceholder": "np. Netflix, Spotify",
+      "amount": "Kwota",
+      "currency": "Waluta",
+      "billingCycle": "Cykl rozliczeniowy",
+      "category": "Kategoria",
+      "nextBillingDate": "Data następnej płatności",
+      "reminders": "Przypomnienia o płatnościach",
+      "remindersDesc": "Otrzymuj powiadomienia przed terminem płatności",
+      "reminderDays": "Dni przed przypomnieniem",
+      "cancel": "Anuluj",
+      "add": "Dodaj subskrypcję",
+      "update": "Zaktualizuj subskrypcję",
+      "categories": {
+        "Entertainment": "Rozrywka",
+        "Productivity": "Produktywność",
+        "Cloud Services": "Usługi w chmurze",
+        "Development": "Programowanie",
+        "Professional": "Zawodowe",
+        "Health & Fitness": "Zdrowie i fitness",
+        "Education": "Edukacja",
+        "Other": "Inne"
+      },
+      "billingCycles": {
+        "monthly": "Miesięcznie",
+        "yearly": "Rocznie",
+        "custom": "Niestandardowe"
+      }
+    }
   },
   "settings": {
     "title": "Ustawienia",
