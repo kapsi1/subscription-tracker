@@ -89,19 +89,12 @@ export default function SettingsPage() {
         console.log("[Push] Step 1 done.");
 
         console.log("[Push] Step 2: Subscribing to push...");
-        try {
-          const sub = await subscribeToPush();
-          console.log("[Push] Step 2 done. Posting to backend...");
-          await api.post("/users/push-subscription", sub.toJSON());
-          setSettings((s) => ({ ...s, pushEnabled: true }));
-          toast.success(t('settings.notifications.push.success'));
-          console.log("[Push] All steps completed successfully.");
-        } catch (subError: any) {
-          // Push subscription failed (e.g. can't reach FCM), but permission + SW are fine
-          console.warn("[Push] Push subscription failed, enabling local-only mode:", subError.message);
-          setSettings((s) => ({ ...s, pushEnabled: true }));
-          toast.warning("Push enabled locally. Server-sent push may not work: " + subError.message, { duration: 6000 });
-        }
+        const sub = await subscribeToPush();
+        console.log("[Push] Step 2 done. Posting to backend...");
+        await api.post("/users/push-subscription", sub.toJSON());
+        setSettings((s) => ({ ...s, pushEnabled: true }));
+        toast.success(t('settings.notifications.push.success'));
+        console.log("[Push] All steps completed successfully.");
       } else {
         console.log("[Push] Disabling push...");
         const registration = await navigator.serviceWorker.getRegistration('/sw.js');
