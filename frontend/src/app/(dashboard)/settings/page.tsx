@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Bell, Mail, Webhook, Save, PiggyBank, Smartphone } from "lucide-react";
+import { Bell, Mail, Webhook, Save, PiggyBank, Smartphone, SendHorizonal } from "lucide-react";
 import api from "@/lib/api";
 import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from "@/lib/push";
 import { useTranslation } from "react-i18next";
@@ -26,6 +26,9 @@ export default function SettingsPage() {
     monthlyBudget: "",
     pushEnabled: false,
   });
+  const [testDelay, setTestDelay] = useState("0");
+  const [isSendingTest, setIsSendingTest] = useState(false);
+  const [isTogglingPush, setIsTogglingPush] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -77,14 +80,30 @@ export default function SettingsPage() {
   };
 
   const handlePushToggle = async (checked: boolean) => {
+    setIsTogglingPush(true);
+    console.log("[Push] handlePushToggle called, checked:", checked);
     try {
       if (checked) {
+        console.log("[Push] Step 1: Registering service worker...");
         await registerServiceWorker();
-        const sub = await subscribeToPush();
-        await api.post("/users/push-subscription", sub.toJSON());
-        setSettings({ ...settings, pushEnabled: true });
-        toast.success(t('settings.notifications.push.success'));
+        console.log("[Push] Step 1 done.");
+
+        console.log("[Push] Step 2: Subscribing to push...");
+        try {
+          const sub = await subscribeToPush();
+          console.log("[Push] Step 2 done. Posting to backend...");
+          await api.post("/users/push-subscription", sub.toJSON());
+          setSettings((s) => ({ ...s, pushEnabled: true }));
+          toast.success(t('settings.notifications.push.success'));
+          console.log("[Push] All steps completed successfully.");
+        } catch (subError: any) {
+          // Push subscription failed (e.g. can't reach FCM), but permission + SW are fine
+          console.warn("[Push] Push subscription failed, enabling local-only mode:", subError.message);
+          setSettings((s) => ({ ...s, pushEnabled: true }));
+          toast.warning("Push enabled locally. Server-sent push may not work: " + subError.message, { duration: 6000 });
+        }
       } else {
+        console.log("[Push] Disabling push...");
         const registration = await navigator.serviceWorker.getRegistration('/sw.js');
         if (registration) {
           const sub = await registration.pushManager.getSubscription();
@@ -93,12 +112,79 @@ export default function SettingsPage() {
           }
         }
         await unsubscribeFromPush();
-        setSettings({ ...settings, pushEnabled: false });
+        setSettings((s) => ({ ...s, pushEnabled: false }));
         toast.success(t('settings.notifications.push.disabled'));
       }
     } catch (error: any) {
+      console.error("[Push] Error in handlePushToggle:", error);
       toast.error(t('settings.notifications.push.error') + ": " + (error.message || "Unknown error"));
-      setSettings({ ...settings, pushEnabled: false });
+      setSettings((s) => ({ ...s, pushEnabled: false }));
+    } finally {
+      setIsTogglingPush(false);
+    }
+  };
+
+  const handleResetPush = async () => {
+    if (!confirm("Are you sure? This will unregister the service worker and clear push settings.")) return;
+    try {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const registration of registrations) {
+        await registration.unregister();
+      }
+      setSettings(s => ({ ...s, pushEnabled: false }));
+      toast.success("Push settings reset. Please refresh and try again.");
+    } catch (e) {
+      toast.error("Failed to reset push settings");
+    }
+  };
+
+  const handleTestPush = async () => {
+    setIsSendingTest(true);
+    try {
+      // Request permission if not yet granted
+      if (Notification.permission === "default") {
+        const perm = await Notification.requestPermission();
+        if (perm !== "granted") {
+          toast.error("Notification permission denied");
+          return;
+        }
+      }
+      if (Notification.permission === "denied") {
+        toast.error("Notifications are blocked. Please allow them in browser settings.");
+        return;
+      }
+
+      const delaySeconds = Math.max(0, parseInt(testDelay) || 0);
+
+      const sendNotification = async () => {
+        // Try via service worker first (matches how real push notifications appear)
+        const registration = await navigator.serviceWorker.getRegistration('/sw.js');
+        if (registration) {
+          await registration.showNotification("Test Notification", {
+            body: `This is a test notification${delaySeconds > 0 ? ` (delayed ${delaySeconds}s)` : ""}.`,
+            icon: "/icon.png",
+          });
+        } else {
+          // Fallback to direct Notification API
+          new Notification("Test Notification", {
+            body: `This is a test notification${delaySeconds > 0 ? ` (delayed ${delaySeconds}s)` : ""}.`,
+            icon: "/icon.png",
+          });
+        }
+      };
+
+      if (delaySeconds > 0) {
+        toast.success(`Test notification scheduled in ${delaySeconds}s`);
+        setTimeout(() => void sendNotification(), delaySeconds * 1000);
+      } else {
+        await sendNotification();
+        toast.success("Test notification sent!");
+      }
+    } catch (error: any) {
+      console.error("[Push] Test notification error:", error);
+      toast.error("Failed to send test notification: " + (error.message || "Unknown error"));
+    } finally {
+      setIsSendingTest(false);
     }
   };
 
@@ -203,7 +289,7 @@ export default function SettingsPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="pushEnabled">{t('settings.notifications.push.enable')}</Label>
@@ -215,7 +301,49 @@ export default function SettingsPage() {
               id="pushEnabled"
               checked={settings.pushEnabled}
               onCheckedChange={handlePushToggle}
+              disabled={isTogglingPush}
             />
+          </div>
+
+          <div className="border-t pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Test Notification</Label>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-xs text-muted-foreground h-7"
+                onClick={handleResetPush}
+              >
+                Reset & Clear
+              </Button>
+            </div>
+            {!settings.pushEnabled && (
+              <p className="text-sm text-muted-foreground">Enable push notifications above if possible, or try sending anyway if you already allowed it.</p>
+            )}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="testDelay" className="text-sm text-muted-foreground whitespace-nowrap">Delay (s)</Label>
+                <Input
+                  id="testDelay"
+                  type="number"
+                  min="0"
+                  max="300"
+                  className="max-w-20"
+                  value={testDelay}
+                  onChange={(e) => setTestDelay(e.target.value)}
+                />
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleTestPush}
+                disabled={isSendingTest}
+                className="gap-1.5"
+              >
+                <SendHorizonal className="w-4 h-4" />
+                {isSendingTest ? "Sending..." : "Send Test"}
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
