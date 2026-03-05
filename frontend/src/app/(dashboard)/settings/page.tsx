@@ -81,22 +81,14 @@ export default function SettingsPage() {
 
   const handlePushToggle = async (checked: boolean) => {
     setIsTogglingPush(true);
-    console.log("[Push] handlePushToggle called, checked:", checked);
     try {
       if (checked) {
-        console.log("[Push] Step 1: Registering service worker...");
         await registerServiceWorker();
-        console.log("[Push] Step 1 done.");
-
-        console.log("[Push] Step 2: Subscribing to push...");
         const sub = await subscribeToPush();
-        console.log("[Push] Step 2 done. Posting to backend...");
         await api.post("/users/push-subscription", sub.toJSON());
         setSettings((s) => ({ ...s, pushEnabled: true }));
         toast.success(t('settings.notifications.push.success'));
-        console.log("[Push] All steps completed successfully.");
       } else {
-        console.log("[Push] Disabling push...");
         const registration = await navigator.serviceWorker.getRegistration('/sw.js');
         if (registration) {
           const sub = await registration.pushManager.getSubscription();
@@ -109,7 +101,6 @@ export default function SettingsPage() {
         toast.success(t('settings.notifications.push.disabled'));
       }
     } catch (error: any) {
-      console.error("[Push] Error in handlePushToggle:", error);
       toast.error(t('settings.notifications.push.error') + ": " + (error.message || "Unknown error"));
       setSettings((s) => ({ ...s, pushEnabled: false }));
     } finally {
@@ -117,65 +108,17 @@ export default function SettingsPage() {
     }
   };
 
-  const handleResetPush = async () => {
-    if (!confirm("Are you sure? This will unregister the service worker and clear push settings.")) return;
-    try {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      for (const registration of registrations) {
-        await registration.unregister();
-      }
-      setSettings(s => ({ ...s, pushEnabled: false }));
-      toast.success("Push settings reset. Please refresh and try again.");
-    } catch (e) {
-      toast.error("Failed to reset push settings");
-    }
-  };
+
 
   const handleTestPush = async () => {
     setIsSendingTest(true);
     try {
-      // Request permission if not yet granted
-      if (Notification.permission === "default") {
-        const perm = await Notification.requestPermission();
-        if (perm !== "granted") {
-          toast.error("Notification permission denied");
-          return;
-        }
-      }
-      if (Notification.permission === "denied") {
-        toast.error("Notifications are blocked. Please allow them in browser settings.");
-        return;
-      }
-
       const delaySeconds = Math.max(0, parseInt(testDelay) || 0);
-
-      const sendNotification = async () => {
-        // Try via service worker first (matches how real push notifications appear)
-        const registration = await navigator.serviceWorker.getRegistration('/sw.js');
-        if (registration) {
-          await registration.showNotification("Test Notification", {
-            body: `This is a test notification${delaySeconds > 0 ? ` (delayed ${delaySeconds}s)` : ""}.`,
-            icon: "/icon.png",
-          });
-        } else {
-          // Fallback to direct Notification API
-          new Notification("Test Notification", {
-            body: `This is a test notification${delaySeconds > 0 ? ` (delayed ${delaySeconds}s)` : ""}.`,
-            icon: "/icon.png",
-          });
-        }
-      };
-
-      if (delaySeconds > 0) {
-        toast.success(`Test notification scheduled in ${delaySeconds}s`);
-        setTimeout(() => void sendNotification(), delaySeconds * 1000);
-      } else {
-        await sendNotification();
-        toast.success("Test notification sent!");
-      }
+      const res = await api.post("/users/test-push", { delaySeconds });
+      toast.success(res.data.message);
     } catch (error: any) {
       console.error("[Push] Test notification error:", error);
-      toast.error("Failed to send test notification: " + (error.message || "Unknown error"));
+      toast.error(error.response?.data?.message || "Failed to send test notification");
     } finally {
       setIsSendingTest(false);
     }
@@ -299,17 +242,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="border-t pt-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Test Notification</Label>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-xs text-muted-foreground h-7"
-                onClick={handleResetPush}
-              >
-                Reset & Clear
-              </Button>
-            </div>
+            <Label className="text-sm font-medium">Test Notification</Label>
             {!settings.pushEnabled && (
               <p className="text-sm text-muted-foreground">Enable push notifications above if possible, or try sending anyway if you already allowed it.</p>
             )}

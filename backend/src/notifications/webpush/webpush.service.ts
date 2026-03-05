@@ -20,7 +20,10 @@ export class WebPushService {
 
   async sendNotification(sub: webpush.PushSubscription, payload: any) {
     try {
-      await webpush.sendNotification(sub, JSON.stringify(payload));
+      await webpush.sendNotification(sub, JSON.stringify(payload), {
+        TTL: 86400, // 24 hours
+        urgency: 'high',
+      });
       this.logger.log(`[WebPush] Successfully sent notification to endpoint: ${sub.endpoint}`);
     } catch (error: any) {
       this.logger.error(`[WebPush] Failed to send notification: ${error.message}`);

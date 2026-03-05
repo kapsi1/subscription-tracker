@@ -28,47 +28,31 @@ export async function registerServiceWorker() {
 }
 
 export async function subscribeToPush(): Promise<PushSubscription> {
-  console.log("[Push:subscribe] Start");
-  
-  // 1. Ensure SW is registered and active
   let registration = await navigator.serviceWorker.getRegistration('/sw.js');
   if (!registration) {
-    console.log("[Push:subscribe] No registration found, registering now...");
     registration = await registerServiceWorker();
   }
   
-  console.log("[Push:subscribe] Waiting for serviceWorker.ready...");
   registration = await navigator.serviceWorker.ready;
-  console.log("[Push:subscribe] SW Ready state:", registration.active?.state);
 
-  // 2. Check for existing subscription
-  console.log("[Push:subscribe] Checking for existing subscription...");
   const existingSub = await registration.pushManager.getSubscription();
   if (existingSub) {
-    console.log("[Push:subscribe] Found existing subscription, reusing it.");
     return existingSub;
   }
   
-  // 3. Permission check
-  console.log("[Push:subscribe] Current permission:", Notification.permission);
   if (Notification.permission !== 'granted') {
-    console.log("[Push:subscribe] Requesting permission...");
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
       throw new Error('Notification permission denied');
     }
   }
 
-  // 4. VAPID Key
   const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
   if (!vapidPublicKey) {
     throw new Error('VAPID public key not found');
   }
   const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
-  // 5. Subscribe with Timeout
-  console.log("[Push:subscribe] Calling pushManager.subscribe() with 10s timeout...");
-  
   const subscribePromise = registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: convertedVapidKey,
@@ -78,14 +62,7 @@ export async function subscribeToPush(): Promise<PushSubscription> {
     setTimeout(() => reject(new Error('Push subscription timed out. This can happen if the browser cannot reach push servers.')), 10000);
   });
 
-  try {
-    const pushSubscription = await Promise.race([subscribePromise, timeoutPromise]);
-    console.log("[Push:subscribe] SUCCESS:", pushSubscription);
-    return pushSubscription;
-  } catch (err: any) {
-    console.error("[Push:subscribe] FAILED:", err);
-    throw err;
-  }
+  return await Promise.race([subscribePromise, timeoutPromise]);
 }
 
 export async function unsubscribeFromPush(): Promise<boolean> {
