@@ -63,14 +63,18 @@ export async function subscribeToPush(): Promise<PushSubscription> {
   console.log("[Push:subscribe] VAPID Key found, length:", vapidPublicKey.length);
   const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
-  console.log("[Push:subscribe] Calling pushManager.subscribe() with 10s timeout...");
+  // Small delay to ensure SW state is stable before subscribing (helps in Opera/Chrome)
+  console.log("[Push:subscribe] Waiting 500ms for SW state stabilization...");
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  console.log("[Push:subscribe] Calling pushManager.subscribe() with 15s timeout...");
   const subscribePromise = registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: convertedVapidKey,
   });
 
   const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new Error('Push subscription timed out. Check browser console and VAPID key.')), 10000);
+    setTimeout(() => reject(new Error('Push subscription timed out. This often happens if the browser cannot reach push servers (GCM/FCM).')), 15000);
   });
 
   try {
