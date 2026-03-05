@@ -4,6 +4,7 @@
   "description": "",
   "author": "",
   "private": true,
+  "packageManager": "pnpm@10.27.0",
   "license": "UNLICENSED",
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
