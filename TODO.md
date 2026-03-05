@@ -241,12 +241,12 @@
 - [x] Database health check
 
 ## 3.3 Deployment
-- [ ] Dockerize backend
-- [ ] Dockerize frontend
-- [ ] Configure production environment variables
-- [ ] Deploy Postgres
-- [ ] Deploy Redis
-- [ ] Setup CI/CD pipeline
+- [x] Dockerize backend
+- [x] Dockerize frontend
+- [x] Configure production environment variables
+- [x] Deploy Postgres
+- [x] Deploy Redis
+- [x] Setup CI/CD pipeline
 
 ---
 
@@ -277,3 +277,7 @@
 - [ ] Setup instructions
 - [ ] Environment variables documentation
 - [ ] ADR (Architecture Decision Records)
+
+# 7. Bugs
+- [ ] Push notifications not working on Opera
+- [ ] Push notifications not working when Chrome is not running
