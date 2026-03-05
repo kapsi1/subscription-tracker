@@ -81,14 +81,22 @@ export default function SettingsPage() {
 
   const handlePushToggle = async (checked: boolean) => {
     setIsTogglingPush(true);
+    console.log("[Push] handlePushToggle called, checked:", checked);
     try {
       if (checked) {
+        console.log("[Push] Step 1: Registering service worker...");
         await registerServiceWorker();
+        console.log("[Push] Step 1 done.");
+
+        console.log("[Push] Step 2: Subscribing to push...");
         const sub = await subscribeToPush();
+        console.log("[Push] Step 2 done. Posting to backend...");
         await api.post("/users/push-subscription", sub.toJSON());
         setSettings((s) => ({ ...s, pushEnabled: true }));
         toast.success(t('settings.notifications.push.success'));
+        console.log("[Push] All steps completed successfully.");
       } else {
+        console.log("[Push] Disabling push...");
         const registration = await navigator.serviceWorker.getRegistration('/sw.js');
         if (registration) {
           const sub = await registration.pushManager.getSubscription();
@@ -101,10 +109,25 @@ export default function SettingsPage() {
         toast.success(t('settings.notifications.push.disabled'));
       }
     } catch (error: any) {
+      console.error("[Push] Error in handlePushToggle:", error);
       toast.error(t('settings.notifications.push.error') + ": " + (error.message || "Unknown error"));
       setSettings((s) => ({ ...s, pushEnabled: false }));
     } finally {
       setIsTogglingPush(false);
+    }
+  };
+
+  const handleResetPush = async () => {
+    if (!confirm("Are you sure? This will unregister the service worker and clear push settings.")) return;
+    try {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const registration of registrations) {
+        await registration.unregister();
+      }
+      setSettings(s => ({ ...s, pushEnabled: false }));
+      toast.success("Push settings reset. Please refresh and try again.");
+    } catch (e) {
+      toast.error("Failed to reset push settings");
     }
   };
 
@@ -242,7 +265,17 @@ export default function SettingsPage() {
           </div>
 
           <div className="border-t pt-4 space-y-3">
-            <Label className="text-sm font-medium">Test Notification</Label>
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Test Notification</Label>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-xs text-muted-foreground h-7"
+                onClick={handleResetPush}
+              >
+                Reset & Clear
+              </Button>
+            </div>
             {!settings.pushEnabled && (
               <p className="text-sm text-muted-foreground">Enable push notifications above if possible, or try sending anyway if you already allowed it.</p>
             )}

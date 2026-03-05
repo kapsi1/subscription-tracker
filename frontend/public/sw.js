@@ -1,3 +1,12 @@
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installed');
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activated');
+});
+
 self.addEventListener('push', function (event) {
   if (event.data) {
     let data = { title: 'Notification', body: 'New alert!', data: null };

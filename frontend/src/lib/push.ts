@@ -28,19 +28,28 @@ export async function registerServiceWorker() {
 }
 
 export async function subscribeToPush(): Promise<PushSubscription> {
+  console.log("[Push:subscribe] Start");
+  
   let registration = await navigator.serviceWorker.getRegistration('/sw.js');
   if (!registration) {
+    console.log("[Push:subscribe] No registration found, registering now...");
     registration = await registerServiceWorker();
   }
   
+  console.log("[Push:subscribe] Waiting for serviceWorker.ready...");
   registration = await navigator.serviceWorker.ready;
+  console.log("[Push:subscribe] SW ready state:", registration.active?.state);
 
+  console.log("[Push:subscribe] Checking for existing subscription...");
   const existingSub = await registration.pushManager.getSubscription();
   if (existingSub) {
+    console.log("[Push:subscribe] Found existing subscription, reusing it.");
     return existingSub;
   }
   
+  console.log("[Push:subscribe] Current permission:", Notification.permission);
   if (Notification.permission !== 'granted') {
+    console.log("[Push:subscribe] Requesting permission...");
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
       throw new Error('Notification permission denied');
@@ -51,18 +60,27 @@ export async function subscribeToPush(): Promise<PushSubscription> {
   if (!vapidPublicKey) {
     throw new Error('VAPID public key not found');
   }
+  console.log("[Push:subscribe] VAPID Key found, length:", vapidPublicKey.length);
   const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
+  console.log("[Push:subscribe] Calling pushManager.subscribe() with 10s timeout...");
   const subscribePromise = registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: convertedVapidKey,
   });
 
   const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new Error('Push subscription timed out. This can happen if the browser cannot reach push servers.')), 10000);
+    setTimeout(() => reject(new Error('Push subscription timed out. Check browser console and VAPID key.')), 10000);
   });
 
-  return await Promise.race([subscribePromise, timeoutPromise]);
+  try {
+    const sub = await Promise.race([subscribePromise, timeoutPromise]);
+    console.log("[Push:subscribe] SUCCESS:", sub);
+    return sub;
+  } catch (err: any) {
+    console.error("[Push:subscribe] FAILED:", err);
+    throw err;
+  }
 }
 
 export async function unsubscribeFromPush(): Promise<boolean> {
