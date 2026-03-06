@@ -87,8 +87,8 @@ export function AccentColorSwitcher() {
         --sidebar-primary: ${accent.lightPrimary};
         --sidebar-ring: ${accent.lightPrimary};
         --background: ${accent.lightBg};
-        --card: #ffffff;
-        --secondary: ${accent.lightBg};
+        --card: color-mix(in srgb, white, ${accent.lightPrimary} 2%);
+        --secondary: color-mix(in srgb, white, ${accent.lightPrimary} 5%);
         --border: ${accent.lightPrimary}20;
       }
       .dark {

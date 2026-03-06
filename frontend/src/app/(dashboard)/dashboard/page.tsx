@@ -150,7 +150,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-md font-medium text-muted-foreground">
               {t('dashboard.totalMonthlyCost')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -167,7 +167,7 @@ export default function DashboardPage() {
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-md font-medium text-muted-foreground">
               {t('dashboard.totalYearlyCost')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
@@ -184,7 +184,7 @@ export default function DashboardPage() {
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-md font-medium text-muted-foreground">
               {t('dashboard.upcomingPayments')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
@@ -193,7 +193,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-semibold">{upcomingPayments.length}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               {t('dashboard.next30Days')}
             </p>
           </CardContent>
@@ -201,7 +201,7 @@ export default function DashboardPage() {
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-md font-medium text-muted-foreground">
               {t('dashboard.activeSubscriptions')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
@@ -219,7 +219,7 @@ export default function DashboardPage() {
 
       
       {/* Upcoming Payments */}
-      <Card className="shadow-sm">
+      <Card className="shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
           <CardTitle>{t('dashboard.upcomingPaymentsTitle')}</CardTitle>
           <CardDescription>{t('dashboard.upcomingPaymentsDesc')}</CardDescription>
@@ -271,7 +271,7 @@ export default function DashboardPage() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Forecast */}
-        <Card className="shadow-sm">
+        <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle>{t('dashboard.forecast')}</CardTitle>
             <CardDescription>{t('dashboard.forecastDesc')}</CardDescription>
@@ -341,7 +341,7 @@ export default function DashboardPage() {
         </Card>
 
         {/* Category Breakdown */}
-        <Card className="shadow-sm">
+        <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
