@@ -25,6 +25,7 @@ test.describe('User Settings Persistence', () => {
   });
 
   test('should persist accent color across page reloads', async ({ page }) => {
+    await page.waitForTimeout(1000);
     // Open accent switcher
     await page.getByRole('button', { name: 'Accent Color' }).click();
     
@@ -49,6 +50,7 @@ test.describe('User Settings Persistence', () => {
   });
 
   test('should persist theme across page reloads', async ({ page }) => {
+    await page.waitForTimeout(1000);
     // Open accent switcher
     await page.getByRole('button', { name: 'Accent Color' }).click();
     
