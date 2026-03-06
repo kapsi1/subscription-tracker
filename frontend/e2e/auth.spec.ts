@@ -52,7 +52,12 @@ test.describe('Authentication Flow', () => {
     await expect(page).toHaveURL(/\/login/);
 
     // 3. Login
-    // Switch should be on Sign In mode by default
+    // Ensure we're in Sign In mode (route state can preserve Sign Up mode).
+    const createAccountButton = page.getByRole('button', { name: 'Create Account' });
+    if (await createAccountButton.isVisible().catch(() => false)) {
+      await page.getByRole('button', { name: 'Already have an account? Sign in' }).click();
+    }
+
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     

@@ -51,7 +51,7 @@ export default defineConfig({
       timeout: 120 * 1000,
     },
     {
-      command: 'pnpm run dev',
+      command: 'pnpm exec next dev --webpack',
       url: 'http://localhost:3000',
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,
