@@ -30,10 +30,10 @@ interface AccentColor {
 }
 
 const ACCENT_COLORS: AccentColor[] = [
+  { name: "Indigo", lightPrimary: "#4F46E5", darkPrimary: "#6366f1", lightAccent: "#e0e7ff", darkAccent: "#312e81", lightForeground: "#4F46E5", darkForeground: "#c7d2fe", chartBar: "#4F46E5", lightBg: "#F5F7FF", darkBg: "#0B0E2E" },
   { name: "Crimson", lightPrimary: "#BE123C", darkPrimary: "#f43f5e", lightAccent: "#ffe4e6", darkAccent: "#4c0519", lightForeground: "#BE123C", darkForeground: "#fecdd3", chartBar: "#BE123C", lightBg: "#FFF1F2", darkBg: "#1C040E" },
   { name: "Rose", lightPrimary: "#DB2777", darkPrimary: "#f472b6", lightAccent: "#fce7f3", darkAccent: "#500724", lightForeground: "#DB2777", darkForeground: "#fbcfe8", chartBar: "#DB2777", lightBg: "#FFF0F6", darkBg: "#1C040D" },
   { name: "Lavender", lightPrimary: "#7C3AED", darkPrimary: "#a78bfa", lightAccent: "#f3e8ff", darkAccent: "#2e1065", lightForeground: "#7C3AED", darkForeground: "#e9d5ff", chartBar: "#7C3AED", lightBg: "#F9F5FF", darkBg: "#0F081C" },
-  { name: "Indigo", lightPrimary: "#4F46E5", darkPrimary: "#6366f1", lightAccent: "#e0e7ff", darkAccent: "#312e81", lightForeground: "#4F46E5", darkForeground: "#c7d2fe", chartBar: "#4F46E5", lightBg: "#F5F7FF", darkBg: "#0B0E2E" },
   { name: "Cobalt", lightPrimary: "#1D4ED8", darkPrimary: "#3b82f6", lightAccent: "#dbeafe", darkAccent: "#172554", lightForeground: "#1D4ED8", darkForeground: "#bfdbfe", chartBar: "#1D4ED8", lightBg: "#F0F7FF", darkBg: "#050B1C" },
   { name: "Navy", lightPrimary: "#1E3A8A", darkPrimary: "#2563eb", lightAccent: "#eff6ff", darkAccent: "#172554", lightForeground: "#1E3A8A", darkForeground: "#dbeafe", chartBar: "#1E3A8A", lightBg: "#F0F4FF", darkBg: "#05081A" },
   { name: "Mint", lightPrimary: "#059669", darkPrimary: "#10b981", lightAccent: "#ecfdf5", darkAccent: "#064e3b", lightForeground: "#059669", darkForeground: "#a7f3d0", chartBar: "#059669", lightBg: "#F0FDF9", darkBg: "#02120D" },
@@ -60,8 +60,11 @@ export function AccentColorSwitcher() {
       if (found) {
         setCurrentAccent(found);
         applyAccentColor(found);
+        return;
       }
     }
+    // Apply default if nothing found
+    applyAccentColor(ACCENT_COLORS[0]);
   }, []);
 
   const applyAccentColor = (accent: AccentColor) => {
@@ -164,9 +167,11 @@ export function AccentColorSwitcher() {
               title={accent.name}
               className={cn(
                 "w-10 h-10 rounded-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm border border-transparent",
-                currentAccent.name === accent.name ? "ring-2 ring-primary ring-offset-2 scale-110 border-white/20" : "hover:shadow-md"
+                currentAccent.name === accent.name ? "ring-2 ring-slate-950 ring-offset-2 scale-110 shadow-md" : "hover:shadow-md"
               )}
-              style={{ backgroundColor: (theme === "dark" ? accent.darkPrimary : accent.lightPrimary) }}
+              style={{ 
+                backgroundColor: (theme === "dark" ? accent.darkPrimary : accent.lightPrimary)
+              }}
             />
           ))}
         </div>

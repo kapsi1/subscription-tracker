@@ -28,7 +28,7 @@
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --ring: #4F46E5;
-  --chart-1: #4F46E5;
+  --chart-1: #3b82f6; /* Keep fixed chart-1 */
   --chart-2: #8b5cf6;
   --chart-3: #ec4899;
   --chart-4: #06b6d4;
@@ -67,7 +67,7 @@
   --ring: #6366f1;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: #6366f1;
+  --chart-1: #3b82f6;
   --chart-2: #a78bfa;
   --chart-3: #f472b6;
   --chart-4: #22d3ee;
