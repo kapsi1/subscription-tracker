@@ -115,3 +115,6 @@ dist
 
 *.log
 frontend/playwright-report
+test_output.txt
+test_results.txt
+frontend/test-results
