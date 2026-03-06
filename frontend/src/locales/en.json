@@ -137,6 +137,8 @@
         "testTitle": "Test Reminder Email",
         "testDesc": "Send a sample reminder email to verify your SMTP setup.",
         "testSend": "Send Test Email",
+        "testSendEn": "Send Test Email EN",
+        "testSendPl": "Send Test Email PL",
         "testSending": "Sending...",
         "testSuccess": "Test reminder email sent.",
         "testError": "Failed to send test email"

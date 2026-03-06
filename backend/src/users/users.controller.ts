@@ -117,7 +117,7 @@ export class UsersController {
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-email')
-  async testEmail(@Req() req: any) {
+  async testEmail(@Req() req: any, @Body() body: { lang?: string }) {
     const user = await this.usersService.findById(req.user.userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -129,14 +129,22 @@ export class UsersController {
       );
     }
 
+    const language = body?.lang === 'pl' ? 'pl' : 'en';
+
     await this.emailService.sendAlert(
       user.email,
       'Test Subscription',
       user.defaultReminderDays,
       9.99,
       'USD',
+      language,
     );
 
-    return { message: `Test reminder email sent to ${user.email}.` };
+    return {
+      message:
+        language === 'pl'
+          ? `Wyslano testowy e-mail przypomnienia na adres ${user.email}.`
+          : `Test reminder email sent to ${user.email}.`,
+    };
   }
 }

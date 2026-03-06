@@ -28,7 +28,7 @@ export default function SettingsPage() {
   });
   const [testDelay, setTestDelay] = useState("0");
   const [isSendingTest, setIsSendingTest] = useState(false);
-  const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
+  const [sendingTestEmailLang, setSendingTestEmailLang] = useState<"en" | "pl" | null>(null);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
 
   useEffect(() => {
@@ -158,10 +158,10 @@ export default function SettingsPage() {
     }
   };
 
-  const handleTestEmail = async () => {
-    setIsSendingTestEmail(true);
+  const handleTestEmail = async (lang: "en" | "pl") => {
+    setSendingTestEmailLang(lang);
     try {
-      const res = await api.post("/users/test-email");
+      const res = await api.post("/users/test-email", { lang });
       toast.success(res.data.message || t("settings.notifications.email.testSuccess"));
     } catch (error: any) {
       toast.error(
@@ -169,7 +169,7 @@ export default function SettingsPage() {
           t("settings.notifications.email.testError", { defaultValue: "Failed to send test email" })
       );
     } finally {
-      setIsSendingTestEmail(false);
+      setSendingTestEmailLang(null);
     }
   };
 
@@ -262,18 +262,32 @@ export default function SettingsPage() {
                 <p className="text-sm text-muted-foreground">
                   {t("settings.notifications.email.testDesc")}
                 </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleTestEmail}
-                  disabled={isSendingTestEmail}
-                  className="gap-1.5"
-                >
-                  <SendHorizonal className="w-4 h-4" />
-                  {isSendingTestEmail
-                    ? t("settings.notifications.email.testSending")
-                    : t("settings.notifications.email.testSend")}
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleTestEmail("en")}
+                    disabled={sendingTestEmailLang !== null}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {sendingTestEmailLang === "en"
+                      ? t("settings.notifications.email.testSending")
+                      : t("settings.notifications.email.testSendEn")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleTestEmail("pl")}
+                    disabled={sendingTestEmailLang !== null}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {sendingTestEmailLang === "pl"
+                      ? t("settings.notifications.email.testSending")
+                      : t("settings.notifications.email.testSendPl")}
+                  </Button>
+                </div>
               </div>
             </>
           )}

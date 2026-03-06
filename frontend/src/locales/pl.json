@@ -136,11 +136,13 @@
         "weekly": "Raport Tygodniowy",
         "weeklyDesc": "Otrzymuj cotygodniowe podsumowanie swoich subskrypcji",
         "testTitle": "Testowy e-mail przypomnienia",
-        "testDesc": "Wyslij probny e-mail, aby sprawdzic konfiguracje SMTP.",
-        "testSend": "Wyslij testowy e-mail",
-        "testSending": "Wysylanie...",
-        "testSuccess": "Wyslano testowy e-mail przypomnienia.",
-        "testError": "Nie udalo sie wyslac testowego e-maila"
+        "testDesc": "Wyślij próbny e-mail, aby sprawdzić konfigurację SMTP.",
+        "testSend": "Wyślij testowy e-mail",
+        "testSendEn": "Wyślij testowy e-mail EN",
+        "testSendPl": "Wyślij testowy e-mail PL",
+        "testSending": "Wysyłanie...",
+        "testSuccess": "Wysłano testowy e-mail przypomnienia.",
+        "testError": "Nie udało się wysłać testowego e-maila"
       },
       "push": {
         "title": "Powiadomienia Push w Przeglądarce",

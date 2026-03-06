@@ -55,8 +55,27 @@ export class EmailService {
     daysBefore: number,
     amount: number,
     currency: string,
+    language: 'en' | 'pl' = 'en',
   ) {
-    const htmlTemplate = `
+    const isPolish = language === 'pl';
+    const subject = isPolish
+      ? `Nadchodzące odnowienie subskrypcji: ${subscriptionName}`
+      : `Upcoming Subscription Renewal: ${subscriptionName}`;
+    const htmlTemplate = isPolish
+      ? `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
+        <h2 style="color: #4A90E2; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">Alert subskrypcji</h2>
+        <p>Cześć,</p>
+        <p>To przyjazne przypomnienie o Twojej subskrypcji <strong>${subscriptionName}</strong>.</p>
+        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Kwota:</strong> <span style="font-size: 1.2em; color: #e74c3c;">${amount} ${currency}</span></p>
+          <p style="margin: 5px 0;"><strong>Odnowienie za:</strong> ${daysBefore} dni</p>
+        </div>
+        <p>Jeśli chcesz zarządzać lub anulować tę subskrypcję, zaloguj się do panelu.</p>
+        <p style="margin-top: 30px; font-size: 0.9em; color: #777;">Dziękujemy,<br>Zespół Subscription Tracker</p>
+      </div>
+    `
+      : `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
         <h2 style="color: #4A90E2; border-bottom: 2px solid #eaeaea; padding-bottom: 10px;">Subscription Alert</h2>
         <p>Hello,</p>
@@ -77,7 +96,7 @@ export class EmailService {
           '"Subscription Tracker" <alerts@subscription-tracker.local>',
         ),
         to: email,
-        subject: `Upcoming Subscription Renewal: ${subscriptionName}`,
+        subject,
         html: htmlTemplate,
       });
       this.logger.log(

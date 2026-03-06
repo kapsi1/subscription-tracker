@@ -285,3 +285,4 @@
 - [ ] Webhook integration
 - [ ] Default reminders
 - [ ] Budget threshold alerts
+- [ ] Google Auth
