@@ -138,6 +138,7 @@ export class UsersController {
       9.99,
       'USD',
       language,
+      user.accentColor,
     );
 
     return {
