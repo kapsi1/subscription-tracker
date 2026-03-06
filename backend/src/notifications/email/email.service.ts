@@ -282,6 +282,18 @@ export class EmailService {
     const safeSubscriptionName = this.escapeHtml(subscriptionName);
     const subject = `${locale.emails.upcomingRenewal}: ${subscriptionName}`;
 
+    const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const teamNameHtml = locale.emails.teamName.replace(
+      'Subscription Tracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`
+    );
+
+    const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+    const managePromptHtml = locale.emails.managePrompt.replace(
+      logInText,
+      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`
+    );
+
     const bodyHtml = `
         <div class="email-root">
           <div class="email-shell">
@@ -295,8 +307,8 @@ export class EmailService {
                   <p class="email-metric"><strong>${locale.emails.amount}:</strong> <span class="email-amount">${amount} ${currency}</span></p>
                   <p class="email-metric"><strong>${locale.emails.renewingIn}:</strong> ${daysBefore} ${locale.emails.days}</p>
                 </div>
-                <p class="email-text">${locale.emails.managePrompt}</p>
-                <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${locale.emails.teamName}</p>
+                <p class="email-text">${managePromptHtml}</p>
+                <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
               </div>
             </div>
           </div>
@@ -339,6 +351,18 @@ export class EmailService {
     const locale = LOCALES[language];
     const themeMode = this.resolveTheme(theme);
 
+    const appUrl = this.configService.get<string>('APP_URL') || this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const teamNameHtml = locale.emails.teamName.replace(
+      'Subscription Tracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`
+    );
+
+    const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+    const managePromptHtml = locale.emails.managePrompt.replace(
+      logInText,
+      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`
+    );
+
     const bodyHtml = `
       <div class="email-root">
         <div class="email-shell">
@@ -352,8 +376,8 @@ export class EmailService {
                 <p class="email-metric"><strong>${locale.emails.currentMonthly}:</strong> <span class="email-danger">${amount.toFixed(2)} ${currency}</span></p>
                 <p class="email-metric"><strong>${locale.emails.yourBudget}:</strong> ${budget.toFixed(2)} ${currency}</p>
               </div>
-              <p class="email-text">${locale.emails.managePrompt}</p>
-              <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${locale.emails.teamName}</p>
+              <p class="email-text">${managePromptHtml}</p>
+              <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
             </div>
           </div>
         </div>
