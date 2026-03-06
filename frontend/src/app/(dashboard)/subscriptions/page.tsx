@@ -22,6 +22,19 @@ import api from "@/lib/api";
 import { useRef } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useTranslation } from "react-i18next";
+import { z } from "zod";
+
+const subscriptionImportSchema = z.object({
+  name: z.string().min(1),
+  amount: z.number().positive(),
+  currency: z.string().length(3),
+  billingCycle: z.enum(["monthly", "yearly", "custom"]),
+  intervalDays: z.number().positive().optional().nullable(),
+  category: z.string().min(1),
+  nextBillingDate: z.string().optional(),
+  reminderEnabled: z.boolean().optional(),
+  reminderDays: z.number().positive().optional(),
+});
 
 export default function SubscriptionsPage() {
   const { t } = useTranslation();
@@ -130,7 +143,10 @@ export default function SubscriptionsPage() {
         // Ensure it's an array
         const subscriptionsToImport = Array.isArray(json) ? json : json.subscriptions || [json];
         
-        await api.post("/subscriptions/import", { subscriptions: subscriptionsToImport });
+        // Validate with Zod before sending to the backend
+        const validSubscriptions = z.array(subscriptionImportSchema).parse(subscriptionsToImport);
+        
+        await api.post("/subscriptions/import", { subscriptions: validSubscriptions });
         toast.success(t('subscriptions.importSuccess'));
         sendGAEvent({ event: "import_subscriptions", value: "success" });
         
@@ -138,7 +154,11 @@ export default function SubscriptionsPage() {
         setIsLoading(true);
         fetchSubscriptions();
       } catch (err: any) {
-        toast.error(t('subscriptions.importError'));
+        if (err instanceof z.ZodError) {
+          toast.error(t('subscriptions.importError') + ": Invalid file format");
+        } else {
+          toast.error(t('subscriptions.importError'));
+        }
         sendGAEvent({ event: "import_subscriptions", value: "failed" });
       }
       

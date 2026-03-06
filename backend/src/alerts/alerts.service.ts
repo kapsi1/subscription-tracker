@@ -76,7 +76,6 @@ export class AlertsService {
     const subsWithReminders = (await this.prisma.subscription.findMany({
       where: {
         isActive: true,
-        // @ts-ignore: Stale IDE error - field exists in generated Prisma client
         reminderEnabled: true,
       },
       include: {
@@ -101,9 +100,7 @@ export class AlertsService {
         sub,
         alert.type,
         alert.daysBefore,
-        // @ts-ignore: Stale IDE error - field exists in generated Prisma client
         alert.webhookUrl ?? undefined,
-        // @ts-ignore: Stale IDE error - field exists in generated Prisma client
         alert.webhookSecret ?? undefined,
       );
       if (success) enqueued++;
@@ -116,7 +113,6 @@ export class AlertsService {
         `sub-reminder-${sub.id}`,
         sub,
         AlertType.email,
-        // @ts-ignore: Stale IDE error - field exists in generated Prisma client
         sub.reminderDays,
       );
       if (success) enqueued++;
@@ -204,26 +200,38 @@ export class AlertsService {
       },
     });
 
+    // Fetch all active subscriptions for these users in one query
+    const userIdsWithBudget = usersWithBudget.map(u => u.id);
+    const activeSubscriptions = await this.prisma.subscription.findMany({
+      where: {
+        userId: { in: userIdsWithBudget },
+        isActive: true,
+      },
+    });
+
+    const subsByUser = activeSubscriptions.reduce((acc, sub) => {
+      acc[sub.userId] = acc[sub.userId] || [];
+      acc[sub.userId].push(sub);
+      return acc;
+    }, {} as Record<string, Prisma.SubscriptionGetPayload<{}>[]>);
+
     let countSent = 0;
 
     for (const user of usersWithBudget) {
-      // @ts-ignore
       if (!user.monthlyBudget) continue; // safety check
-      // @ts-ignore
       const monthlyBudget = Number(user.monthlyBudget);
 
       // Check if already sent an alert this month
       if (
-        // @ts-ignore
         user.lastBudgetAlertSentAt &&
-        // @ts-ignore
         user.lastBudgetAlertSentAt >= currentMonthStart
       ) {
         continue; // Alert already sent this month
       }
 
-      // Calculate the user's total monthly cost
-      const summary = await this.dashboardService.getSummary(user.id);
+      // Calculate the user's total monthly cost locally instead of querying the DB again
+      const userSubs = subsByUser[user.id] || [];
+      const summary = this.dashboardService.calculateCosts(userSubs);
 
       if (summary.totalMonthlyCost > monthlyBudget) {
         // Enqueue budget alert email

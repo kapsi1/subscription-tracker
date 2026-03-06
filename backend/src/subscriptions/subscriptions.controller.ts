@@ -14,6 +14,14 @@ import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { ImportSubscriptionsDto } from './dto/import-subscription.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Request } from 'express';
+
+interface RequestWithUser extends Request {
+  user: {
+    userId: string;
+    email: string;
+  };
+}
 
 @UseGuards(JwtAuthGuard)
 @Controller('subscriptions')
@@ -22,7 +30,7 @@ export class SubscriptionsController {
 
   @Post()
   create(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Body() createSubscriptionDto: CreateSubscriptionDto,
   ) {
     return this.subscriptionsService.create(
@@ -32,13 +40,13 @@ export class SubscriptionsController {
   }
 
   @Get('export')
-  export(@Req() req: any) {
+  export(@Req() req: RequestWithUser) {
     return this.subscriptionsService.export(req.user.userId);
   }
 
   @Post('import')
   import(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Body() importSubscriptionsDto: ImportSubscriptionsDto,
   ) {
     return this.subscriptionsService.import(
@@ -48,18 +56,18 @@ export class SubscriptionsController {
   }
 
   @Get()
-  findAll(@Req() req: any) {
+  findAll(@Req() req: RequestWithUser) {
     return this.subscriptionsService.findAll(req.user.userId);
   }
 
   @Get(':id')
-  findOne(@Req() req: any, @Param('id') id: string) {
+  findOne(@Req() req: RequestWithUser, @Param('id') id: string) {
     return this.subscriptionsService.findOne(req.user.userId, id);
   }
 
   @Patch(':id')
   update(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Param('id') id: string,
     @Body() updateSubscriptionDto: UpdateSubscriptionDto,
   ) {
@@ -71,7 +79,8 @@ export class SubscriptionsController {
   }
 
   @Delete(':id')
-  remove(@Req() req: any, @Param('id') id: string) {
+  remove(@Req() req: RequestWithUser, @Param('id') id: string) {
     return this.subscriptionsService.remove(req.user.userId, id);
   }
 }
+

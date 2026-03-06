@@ -6,11 +6,7 @@ import { BillingCycle, Subscription } from '@prisma/client';
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getSummary(userId: string) {
-    const subscriptions = await this.prisma.subscription.findMany({
-      where: { userId, isActive: true },
-    });
-
+  calculateCosts(subscriptions: Subscription[]) {
     let totalMonthlyCost = 0;
     let totalYearlyCost = 0;
     const categoryBreakdown: Record<string, number> = {};
@@ -52,6 +48,14 @@ export class DashboardService {
       activeSubscriptions: subscriptions.length,
       categoryBreakdown,
     };
+  }
+
+  async getSummary(userId: string) {
+    const subscriptions = await this.prisma.subscription.findMany({
+      where: { userId, isActive: true },
+    });
+
+    return this.calculateCosts(subscriptions);
   }
 
   async getForecast(userId: string, months: number = 12) {

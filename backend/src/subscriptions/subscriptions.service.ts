@@ -84,10 +84,7 @@ export class SubscriptionsService {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
-    const createdSubscriptions = [];
-
-    // Process sequentially or use prisma.$transaction
-    for (const sub of importDto.subscriptions) {
+    const subscriptionData = importDto.subscriptions.map((sub) => {
       if (sub.billingCycle === BillingCycle.custom && !sub.intervalDays) {
         throw new BadRequestException(
           `intervalDays is required for custom billing cycle on subscription: ${sub.name}`,
@@ -102,26 +99,27 @@ export class SubscriptionsService {
             sub.intervalDays,
           );
 
-      const created = await this.prisma.subscription.create({
-        data: {
-          userId,
-          name: sub.name,
-          amount: sub.amount,
-          currency: sub.currency,
-          billingCycle: sub.billingCycle,
-          intervalDays: sub.intervalDays || null,
-          category: sub.category,
-          nextBillingDate,
-          reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
-          reminderDays: sub.reminderDays ?? user.defaultReminderDays,
-        },
-      });
-      createdSubscriptions.push(created);
-    }
+      return {
+        userId,
+        name: sub.name,
+        amount: sub.amount,
+        currency: sub.currency,
+        billingCycle: sub.billingCycle,
+        intervalDays: sub.intervalDays || null,
+        category: sub.category,
+        nextBillingDate,
+        reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
+        reminderDays: sub.reminderDays ?? user.defaultReminderDays,
+      };
+    });
+
+    const result = await this.prisma.subscription.createMany({
+      data: subscriptionData,
+    });
 
     return {
-      message: `Successfully imported ${createdSubscriptions.length} subscriptions`,
-      count: createdSubscriptions.length,
+      message: `Successfully imported ${result.count} subscriptions`,
+      count: result.count,
     };
   }
 
