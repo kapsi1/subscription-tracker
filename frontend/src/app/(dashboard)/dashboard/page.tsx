@@ -116,11 +116,11 @@ export default function DashboardPage() {
   };
 
   const categoryData = Object.keys(summary.categoryBreakdown).map((key, index) => {
-    const colors = ["#4F46E5", "#8b5cf6", "#ec4899", "#06b6d4", "#10b981", "#f59e0b"];
+    const chartVar = `--chart-${(index % 5) + 1}`;
     return {
       name: key,
       value: summary.categoryBreakdown[key],
-      color: colors[index % colors.length],
+      color: `var(${chartVar})`,
     };
   });
 
@@ -321,7 +321,7 @@ export default function DashboardPage() {
                   yAxisId="right"
                   dataKey="cumulativeAmount"
                   name={t("dashboard.cumulativeSpending")}
-                  fill="#a949e9"
+                  fill="var(--chart-bar)"
                   radius={[4, 4, 0, 0]}
                   barSize={30}
                 />
@@ -330,9 +330,9 @@ export default function DashboardPage() {
                   type="monotone"
                   dataKey="amount"
                   name={t("dashboard.monthlySpending")}
-                  stroke="#4F46E5"
+                  stroke="var(--primary)"
                   strokeWidth={3}
-                  dot={{ fill: "#4F46E5", strokeWidth: 2, r: 4 }}
+                  dot={{ fill: "var(--primary)", strokeWidth: 2, r: 4 }}
                   activeDot={{ r: 6, strokeWidth: 0 }}
                 />
               </ComposedChart>

@@ -46,7 +46,9 @@
   "language": {
     "switch": "Zmień Język",
     "en": "English",
-    "pl": "Polski"
+    "pl": "Polski",
+    "accentColor": "Kolor akcentu",
+    "selectAccentColor": "Wybierz kolor akcentu"
    },
   "subscriptions": {
     "title": "Subskrypcje",

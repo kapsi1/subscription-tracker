@@ -29,6 +29,7 @@ import api from "@/lib/api";
 import { toast } from "sonner";
 import { UKFlag, PolandFlag } from "@/components/flags";
 import { cn } from "@/components/ui/utils";
+import { AccentColorSwitcher } from "@/components/accent-color-switcher";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -140,6 +141,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Right side controls */}
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
             
+            <AccentColorSwitcher />
+
             {/* Language Switcher */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
