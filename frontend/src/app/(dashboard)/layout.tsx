@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
@@ -11,7 +11,6 @@ import {
   LogOut,
   Moon,
   Sun,
-  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +29,8 @@ import { toast } from "sonner";
 import { UKFlag, PolandFlag } from "@/components/flags";
 import { cn } from "@/components/ui/utils";
 import { AccentColorSwitcher } from "@/components/accent-color-switcher";
+import { LoadingState } from "@/components/loading-state";
+import { ErrorState } from "@/components/error-state";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -37,23 +38,143 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { theme, setTheme } = useTheme();
   const { isAuthenticated, isLoading, logout } = useAuth();
   const { t, i18n } = useTranslation();
+  const isPolishBrowser =
+    typeof navigator !== "undefined" && navigator.language.toLowerCase().startsWith("pl");
+  const initText = {
+    title: "Subscription Tracker",
+    loading: isPolishBrowser
+      ? t("common.loading", { defaultValue: "Ładowanie..." })
+      : t("common.loading", { defaultValue: "Loading..." }),
+    initializing: isPolishBrowser
+      ? t("common.initializingApp", { defaultValue: "Inicjalizowanie aplikacji..." })
+      : t("common.initializingApp", { defaultValue: "Initializing application..." }),
+    connectionError: isPolishBrowser
+      ? t("common.connectionError", { defaultValue: "Błąd połączenia" })
+      : t("common.connectionError", { defaultValue: "Connection Error" }),
+    backendTimeout: isPolishBrowser
+      ? t("common.backendTimeout", {
+          defaultValue: "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
+        })
+      : t("common.backendTimeout", {
+          defaultValue: "The backend did not respond within 15 seconds. Please try again.",
+        }),
+    tryAgain: isPolishBrowser
+      ? t("common.tryAgain", { defaultValue: "Spróbuj ponownie" })
+      : t("common.tryAgain", { defaultValue: "Try Again" }),
+    redirecting: isPolishBrowser
+      ? t("common.redirectingToLogin", { defaultValue: "Przekierowywanie do logowania..." })
+      : t("common.redirectingToLogin", { defaultValue: "Redirecting to login..." }),
+  };
+  const [backendInitStatus, setBackendInitStatus] = useState<"checking" | "ready" | "timeout">("checking");
+
+  const runBackendInitializationCheck = useCallback(() => {
+    setBackendInitStatus("checking");
+
+    let isActive = true;
+    const timeoutId = window.setTimeout(() => {
+      if (isActive) {
+        setBackendInitStatus("timeout");
+      }
+    }, 15000);
+
+    api
+      .get("/health")
+      .then(() => {
+        if (isActive) {
+          window.clearTimeout(timeoutId);
+          setBackendInitStatus("ready");
+        }
+      })
+      .catch(() => {
+        if (isActive) {
+          window.clearTimeout(timeoutId);
+          setBackendInitStatus("timeout");
+        }
+      });
+
+    return () => {
+      isActive = false;
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push("/login");
+    const cleanup = runBackendInitializationCheck();
+    return cleanup;
+  }, [runBackendInitializationCheck]);
+
+  useEffect(() => {
+    if (backendInitStatus !== "ready" || isLoading || isAuthenticated) {
+      return;
     }
-  }, [isLoading, isAuthenticated, router]);
+
+    router.replace("/login");
+
+    const fallbackId = window.setTimeout(() => {
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }, 400);
+
+    return () => {
+      window.clearTimeout(fallbackId);
+    };
+  }, [backendInitStatus, isLoading, isAuthenticated, router]);
+
+  if (backendInitStatus === "checking") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-full max-w-2xl px-4 text-center">
+          <h1 className="text-5xl font-semibold tracking-tight">{initText.title}</h1>
+          <LoadingState
+            message={initText.initializing}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (backendInitStatus === "timeout") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-full max-w-2xl px-4 text-center">
+          <h1 className="text-5xl font-semibold tracking-tight">{initText.title}</h1>
+          <ErrorState
+            title={initText.connectionError}
+            message={initText.backendTimeout}
+            onRetry={runBackendInitializationCheck}
+            retryLabel={initText.tryAgain}
+            retryButtonClassName="bg-[#4F46E5] text-white border-transparent shadow-sm transition-shadow hover:bg-[#4338CA] hover:text-white hover:shadow-md"
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <div className="w-full max-w-2xl px-4 text-center">
+          <h1 className="text-5xl font-semibold tracking-tight mb-8">{initText.title}</h1>
+          <LoadingState
+            message={initText.loading}
+          />
+        </div>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-full max-w-2xl px-4 text-center">
+          <h1 className="text-5xl font-semibold tracking-tight mb-8">{initText.title}</h1>
+          <LoadingState
+            message={initText.redirecting}
+          />
+        </div>
+      </div>
+    );
   }
 
   const handleLogout = () => {

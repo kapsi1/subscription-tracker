@@ -28,6 +28,7 @@ export default function SettingsPage() {
   });
   const [testDelay, setTestDelay] = useState("0");
   const [isSendingTest, setIsSendingTest] = useState(false);
+  const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
 
   useEffect(() => {
@@ -157,6 +158,21 @@ export default function SettingsPage() {
     }
   };
 
+  const handleTestEmail = async () => {
+    setIsSendingTestEmail(true);
+    try {
+      const res = await api.post("/users/test-email");
+      toast.success(res.data.message || t("settings.notifications.email.testSuccess"));
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message ||
+          t("settings.notifications.email.testError", { defaultValue: "Failed to send test email" })
+      );
+    } finally {
+      setIsSendingTestEmail(false);
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
@@ -239,6 +255,25 @@ export default function SettingsPage() {
                     setSettings({ ...settings, weeklyReport: checked })
                   }
                 />
+              </div>
+
+              <div className="border-t pt-4 space-y-2">
+                <Label>{t("settings.notifications.email.testTitle")}</Label>
+                <p className="text-sm text-muted-foreground">
+                  {t("settings.notifications.email.testDesc")}
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTestEmail}
+                  disabled={isSendingTestEmail}
+                  className="gap-1.5"
+                >
+                  <SendHorizonal className="w-4 h-4" />
+                  {isSendingTestEmail
+                    ? t("settings.notifications.email.testSending")
+                    : t("settings.notifications.email.testSend")}
+                </Button>
               </div>
             </>
           )}

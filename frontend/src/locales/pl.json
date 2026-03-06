@@ -7,7 +7,12 @@
     "delete": "Usuń",
     "edit": "Edytuj",
     "add": "Dodaj",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "connectionError": "Błąd połączenia",
+    "initializingApp": "Inicjalizowanie aplikacji...",
+    "backendTimeout": "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
+    "tryAgain": "Spróbuj ponownie",
+    "redirectingToLogin": "Przekierowywanie do logowania..."
   },
   "nav": {
     "dashboard": "Panel główny",
@@ -49,7 +54,7 @@
     "pl": "Polski",
     "accentColor": "Kolor akcentu",
     "selectAccentColor": "Wybierz kolor akcentu"
-   },
+  },
   "subscriptions": {
     "title": "Subskrypcje",
     "subtitle": "Zarządzaj swoimi subskrypcjami",
@@ -129,7 +134,13 @@
         "daily": "Dzienny Przegląd",
         "dailyDesc": "Otrzymuj podsumowanie dzisiejszych płatności",
         "weekly": "Raport Tygodniowy",
-        "weeklyDesc": "Otrzymuj cotygodniowe podsumowanie swoich subskrypcji"
+        "weeklyDesc": "Otrzymuj cotygodniowe podsumowanie swoich subskrypcji",
+        "testTitle": "Testowy e-mail przypomnienia",
+        "testDesc": "Wyslij probny e-mail, aby sprawdzic konfiguracje SMTP.",
+        "testSend": "Wyslij testowy e-mail",
+        "testSending": "Wysylanie...",
+        "testSuccess": "Wyslano testowy e-mail przypomnienia.",
+        "testError": "Nie udalo sie wyslac testowego e-maila"
       },
       "push": {
         "title": "Powiadomienia Push w Przeglądarce",

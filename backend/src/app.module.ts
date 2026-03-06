@@ -62,6 +62,18 @@ import { ThrottlerGuard } from '@nestjs/throttler';
         // Redact sensitive headers from logged requests.
         redact: ['req.headers.authorization', 'req.headers.cookie'],
 
+        // Avoid noisy request logs for successful responses.
+        // Keep warnings/errors for failed requests only.
+        customLogLevel: (_req, res, err) => {
+          if (err || res.statusCode >= 500) {
+            return 'error';
+          }
+          if (res.statusCode >= 400) {
+            return 'warn';
+          }
+          return 'silent';
+        },
+
         transport:
           process.env.NODE_ENV !== 'production'
             ? { target: 'pino-pretty', options: { colorize: true } }

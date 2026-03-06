@@ -23,6 +23,14 @@ services:
       - redis_data:/data
     restart: unless-stopped
 
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: subscription_tracker_mailpit
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   redis_data:

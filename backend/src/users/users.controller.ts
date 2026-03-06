@@ -18,6 +18,7 @@ import { UpdateSettingsDto } from './dto/update-settings.dto';
 import { PushSubscriptionDto } from './dto/push-subscription.dto';
 import { WebPushService } from '../notifications/webpush/webpush.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../notifications/email/email.service';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -28,6 +29,7 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly webPushService: WebPushService,
     private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
   ) {}
 
   @Get('me')
@@ -109,5 +111,29 @@ export class UsersController {
 
     await sendAll();
     return { message: 'Test notification sent.' };
+  }
+
+  @Post('test-email')
+  async testEmail(@Req() req: any) {
+    const user = await this.usersService.findById(req.user.userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.emailNotifications) {
+      throw new BadRequestException(
+        'Email notifications are disabled. Enable them in settings first.',
+      );
+    }
+
+    await this.emailService.sendAlert(
+      user.email,
+      'Test Subscription',
+      user.defaultReminderDays,
+      9.99,
+      'USD',
+    );
+
+    return { message: `Test reminder email sent to ${user.email}.` };
   }
 }

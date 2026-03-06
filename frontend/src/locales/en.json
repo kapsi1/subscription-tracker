@@ -2,6 +2,11 @@
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
+    "connectionError": "Connection Error",
+    "initializingApp": "Initializing application...",
+    "backendTimeout": "The backend did not respond within 15 seconds. Please try again.",
+    "tryAgain": "Try Again",
+    "redirectingToLogin": "Redirecting to login...",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -128,7 +133,13 @@
         "daily": "Daily Digest",
         "dailyDesc": "Receive a summary of today's payments",
         "weekly": "Weekly Report",
-        "weeklyDesc": "Receive a weekly summary of your subscriptions"
+        "weeklyDesc": "Receive a weekly summary of your subscriptions",
+        "testTitle": "Test Reminder Email",
+        "testDesc": "Send a sample reminder email to verify your SMTP setup.",
+        "testSend": "Send Test Email",
+        "testSending": "Sending...",
+        "testSuccess": "Test reminder email sent.",
+        "testError": "Failed to send test email"
       },
       "push": {
         "title": "Browser Push Notifications",
