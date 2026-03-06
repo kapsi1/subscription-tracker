@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
+  const showTestControls = process.env.NODE_ENV !== "production";
   const [settings, setSettings] = useState({
     defaultReminderEnabled: true,
     defaultReminderDays: "3",
@@ -27,8 +28,10 @@ export default function SettingsPage() {
     pushEnabled: false,
   });
   const [testDelay, setTestDelay] = useState("0");
+  const [testEmailLanguage, setTestEmailLanguage] = useState<"en" | "pl">("en");
   const [isSendingTest, setIsSendingTest] = useState(false);
-  const [sendingTestEmailLang, setSendingTestEmailLang] = useState<"en" | "pl" | null>(null);
+  const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
+  const [isSendingBudgetTestEmail, setIsSendingBudgetTestEmail] = useState(false);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
 
   useEffect(() => {
@@ -158,10 +161,10 @@ export default function SettingsPage() {
     }
   };
 
-  const handleTestEmail = async (lang: "en" | "pl") => {
-    setSendingTestEmailLang(lang);
+  const handleTestEmail = async () => {
+    setIsSendingTestEmail(true);
     try {
-      const res = await api.post("/users/test-email", { lang });
+      const res = await api.post("/users/test-email", { lang: testEmailLanguage });
       toast.success(res.data.message || t("settings.notifications.email.testSuccess"));
     } catch (error: any) {
       toast.error(
@@ -169,7 +172,22 @@ export default function SettingsPage() {
           t("settings.notifications.email.testError", { defaultValue: "Failed to send test email" })
       );
     } finally {
-      setSendingTestEmailLang(null);
+      setIsSendingTestEmail(false);
+    }
+  };
+
+  const handleTestBudgetEmail = async () => {
+    setIsSendingBudgetTestEmail(true);
+    try {
+      const res = await api.post("/users/test-budget-email", { lang: testEmailLanguage });
+      toast.success(res.data.message || t("settings.notifications.email.testBudgetSuccess"));
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message ||
+          t("settings.notifications.email.testBudgetError", { defaultValue: "Failed to send test budget email" })
+      );
+    } finally {
+      setIsSendingBudgetTestEmail(false);
     }
   };
 
@@ -257,38 +275,55 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="border-t pt-4 space-y-2">
+              {showTestControls && (
+              <div className="border-t pt-4 space-y-3">
                 <Label>{t("settings.notifications.email.testTitle")}</Label>
                 <p className="text-sm text-muted-foreground">
                   {t("settings.notifications.email.testDesc")}
                 </p>
+
+                <div className="space-y-2">
+                  <Label className="text-sm">{t("settings.notifications.email.testLanguage")}</Label>
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="radio"
+                        name="testEmailLanguage"
+                        value="en"
+                        checked={testEmailLanguage === "en"}
+                        onChange={() => setTestEmailLanguage("en")}
+                      />
+                      English
+                    </label>
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="radio"
+                        name="testEmailLanguage"
+                        value="pl"
+                        checked={testEmailLanguage === "pl"}
+                        onChange={() => setTestEmailLanguage("pl")}
+                      />
+                      Polski
+                    </label>
+                  </div>
+                </div>
+
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleTestEmail("en")}
-                    disabled={sendingTestEmailLang !== null}
+                    onClick={handleTestEmail}
+                    disabled={isSendingTestEmail || isSendingBudgetTestEmail}
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />
-                    {sendingTestEmailLang === "en"
+                    {isSendingTestEmail
                       ? t("settings.notifications.email.testSending")
-                      : t("settings.notifications.email.testSendEn")}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleTestEmail("pl")}
-                    disabled={sendingTestEmailLang !== null}
-                    className="gap-1.5"
-                  >
-                    <SendHorizonal className="w-4 h-4" />
-                    {sendingTestEmailLang === "pl"
-                      ? t("settings.notifications.email.testSending")
-                      : t("settings.notifications.email.testSendPl")}
+                      : t("settings.notifications.email.testSend")}
                   </Button>
                 </div>
               </div>
+              )}
             </>
           )}
         </CardContent>
@@ -323,6 +358,7 @@ export default function SettingsPage() {
             />
           </div>
 
+          {showTestControls && (
           <div className="border-t pt-4 space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">Test Notification</Label>
@@ -363,6 +399,7 @@ export default function SettingsPage() {
               </Button>
             </div>
           </div>
+          )}
         </CardContent>
       </Card>
 
@@ -510,6 +547,26 @@ export default function SettingsPage() {
               {t('settings.budget.help')}
             </p>
           </div>
+          {showTestControls && (
+            <div className="border-t pt-4 space-y-2">
+              <Label>{t("settings.notifications.email.testBudgetTitle")}</Label>
+              <p className="text-sm text-muted-foreground">
+                {t("settings.notifications.email.testBudgetDesc")}
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleTestBudgetEmail}
+                disabled={isSendingTestEmail || isSendingBudgetTestEmail}
+                className="gap-1.5"
+              >
+                <SendHorizonal className="w-4 h-4" />
+                {isSendingBudgetTestEmail
+                  ? t("settings.notifications.email.testSending")
+                  : t("settings.notifications.email.testBudgetSend")}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 

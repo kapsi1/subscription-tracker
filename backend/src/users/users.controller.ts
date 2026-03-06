@@ -10,6 +10,7 @@ import {
   UseGuards,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
   Logger,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
@@ -32,6 +33,12 @@ export class UsersController {
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
   ) {}
+
+  private assertTestEndpointsEnabled() {
+    if (process.env.NODE_ENV === 'production') {
+      throw new ForbiddenException('Test endpoints are disabled in production.');
+    }
+  }
 
   @Get('me')
   async getMe(@Req() req: any) {
@@ -79,6 +86,8 @@ export class UsersController {
     @Req() req: any,
     @Body() body: { delaySeconds?: number },
   ) {
+    this.assertTestEndpointsEnabled();
+
     const subs = await this.prisma.pushSubscription.findMany({
       where: { userId: req.user.userId },
     });
@@ -118,6 +127,8 @@ export class UsersController {
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-email')
   async testEmail(@Req() req: any, @Body() body: { lang?: string }) {
+    this.assertTestEndpointsEnabled();
+
     const user = await this.usersService.findById(req.user.userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -139,6 +150,7 @@ export class UsersController {
       'USD',
       language,
       user.accentColor,
+      user.theme,
     );
 
     return {
@@ -146,6 +158,44 @@ export class UsersController {
         language === 'pl'
           ? `Wyslano testowy e-mail przypomnienia na adres ${user.email}.`
           : `Test reminder email sent to ${user.email}.`,
+    };
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('test-budget-email')
+  async testBudgetEmail(@Req() req: any, @Body() body: { lang?: string }) {
+    this.assertTestEndpointsEnabled();
+
+    const user = await this.usersService.findById(req.user.userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.emailNotifications) {
+      throw new BadRequestException(
+        'Email notifications are disabled. Enable them in settings first.',
+      );
+    }
+
+    const language = body?.lang === 'pl' ? 'pl' : 'en';
+    const budget = user.monthlyBudget ? Number(user.monthlyBudget) : 50;
+    const amount = budget + 12.34;
+
+    await this.emailService.sendBudgetAlert(
+      user.email,
+      amount,
+      budget,
+      'USD',
+      user.accentColor,
+      user.theme,
+      language,
+    );
+
+    return {
+      message:
+        language === 'pl'
+          ? `Wysłano testowy e-mail alertu budżetowego na adres ${user.email}.`
+          : `Test budget alert email sent to ${user.email}.`,
     };
   }
 }

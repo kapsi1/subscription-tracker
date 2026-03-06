@@ -138,11 +138,15 @@
         "testTitle": "Testowy e-mail przypomnienia",
         "testDesc": "Wyślij próbny e-mail, aby sprawdzić konfigurację SMTP.",
         "testSend": "Wyślij testowy e-mail",
-        "testSendEn": "Wyślij testowy e-mail EN",
-        "testSendPl": "Wyślij testowy e-mail PL",
+        "testLanguage": "Język testowego e-maila",
+        "testBudgetTitle": "Testowy e-mail alertu budżetowego",
+        "testBudgetDesc": "Wyślij próbny alert budżetowy w wybranym języku.",
+        "testBudgetSend": "Wyślij testowy alert budżetowy",
         "testSending": "Wysyłanie...",
         "testSuccess": "Wysłano testowy e-mail przypomnienia.",
-        "testError": "Nie udało się wysłać testowego e-maila"
+        "testError": "Nie udało się wysłać testowego e-maila",
+        "testBudgetSuccess": "Wysłano testowy e-mail alertu budżetowego.",
+        "testBudgetError": "Nie udało się wysłać testowego alertu budżetowego"
       },
       "push": {
         "title": "Powiadomienia Push w Przeglądarce",

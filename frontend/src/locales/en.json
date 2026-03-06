@@ -136,12 +136,16 @@
         "weeklyDesc": "Receive a weekly summary of your subscriptions",
         "testTitle": "Test Reminder Email",
         "testDesc": "Send a sample reminder email to verify your SMTP setup.",
+        "testLanguage": "Test Email Language",
         "testSend": "Send Test Email",
-        "testSendEn": "Send Test Email EN",
-        "testSendPl": "Send Test Email PL",
+        "testBudgetTitle": "Test Budget Alert Email",
+        "testBudgetDesc": "Send a sample budget alert email using your selected language.",
+        "testBudgetSend": "Send Test Budget Email",
         "testSending": "Sending...",
         "testSuccess": "Test reminder email sent.",
-        "testError": "Failed to send test email"
+        "testError": "Failed to send test email",
+        "testBudgetSuccess": "Test budget alert email sent.",
+        "testBudgetError": "Failed to send test budget email"
       },
       "push": {
         "title": "Browser Push Notifications",

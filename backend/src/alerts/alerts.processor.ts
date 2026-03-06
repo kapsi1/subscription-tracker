@@ -86,7 +86,7 @@ export class AlertsProcessor extends WorkerHost {
       if (type === AlertType.email) {
         const userPrefs = await this.prisma.user.findUnique({
           where: { email: userEmail },
-          select: { language: true, accentColor: true },
+          select: { language: true, accentColor: true, theme: true },
         });
         await this.emailService.sendAlert(
           userEmail,
@@ -96,6 +96,7 @@ export class AlertsProcessor extends WorkerHost {
           currency,
           userPrefs?.language === 'pl' ? 'pl' : 'en',
           userPrefs?.accentColor,
+          userPrefs?.theme,
         );
         this.logger.log({
           msg: 'Email alert sent successfully',
@@ -200,7 +201,7 @@ export class AlertsProcessor extends WorkerHost {
     try {
       const userPrefs = await this.prisma.user.findUnique({
         where: { email: userEmail },
-        select: { accentColor: true },
+        select: { accentColor: true, theme: true, language: true },
       });
       await this.emailService.sendBudgetAlert(
         userEmail,
@@ -208,6 +209,8 @@ export class AlertsProcessor extends WorkerHost {
         budget,
         currency,
         userPrefs?.accentColor,
+        userPrefs?.theme,
+        userPrefs?.language === 'pl' ? 'pl' : 'en',
       );
       return { success: true };
     } catch (error: any) {
