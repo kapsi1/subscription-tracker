@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { 
   CreditCard, 
   LayoutDashboard, 
@@ -34,6 +34,7 @@ import { ErrorState } from "@/components/error-state";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { isAuthenticated, isLoading, logout } = useAuth();
   const { t, i18n } = useTranslation();
@@ -41,31 +42,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     typeof navigator !== "undefined" && navigator.language.toLowerCase().startsWith("pl");
   const initText = {
     title: "Subscription Tracker",
-    loading: isPolishBrowser
-      ? t("common.loading", { defaultValue: "Ładowanie..." })
-      : t("common.loading", { defaultValue: "Loading..." }),
-    initializing: isPolishBrowser
-      ? t("common.initializingApp", { defaultValue: "Inicjalizowanie aplikacji..." })
-      : t("common.initializingApp", { defaultValue: "Initializing application..." }),
-    connectionError: isPolishBrowser
-      ? t("common.connectionError", { defaultValue: "Błąd połączenia" })
-      : t("common.connectionError", { defaultValue: "Connection Error" }),
-    backendTimeout: isPolishBrowser
-      ? t("common.backendTimeout", {
-          defaultValue: "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
-        })
-      : t("common.backendTimeout", {
-          defaultValue: "The backend did not respond within 15 seconds. Please try again.",
-        }),
-    tryAgain: isPolishBrowser
-      ? t("common.tryAgain", { defaultValue: "Spróbuj ponownie" })
-      : t("common.tryAgain", { defaultValue: "Try Again" }),
-    redirecting: isPolishBrowser
-      ? t("common.redirectingToLogin", { defaultValue: "Przekierowywanie do logowania..." })
-      : t("common.redirectingToLogin", { defaultValue: "Redirecting to login..." }),
+    loading: t("common.loading"),
+    initializing: t("common.initializingApp"),
+    connectionError: t("common.connectionError"),
+    backendTimeout: t("common.backendTimeout"),
+    tryAgain: t("common.tryAgain"),
+    redirecting: t("common.redirectingToLogin"),
   };
   const [backendInitStatus, setBackendInitStatus] = useState<"checking" | "ready" | "timeout">("checking");
-  const redirectStartedRef = useRef(false);
 
   const runBackendInitializationCheck = useCallback(() => {
     setBackendInitStatus("checking");
@@ -104,13 +88,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [runBackendInitializationCheck]);
 
   useEffect(() => {
-    if (backendInitStatus !== "ready" || isLoading || isAuthenticated || redirectStartedRef.current) {
+    if (backendInitStatus !== "ready" || isLoading || isAuthenticated) {
       return;
     }
 
-    redirectStartedRef.current = true;
-    window.location.replace("/login");
-  }, [backendInitStatus, isLoading, isAuthenticated]);
+    router.replace("/login");
+  }, [backendInitStatus, isLoading, isAuthenticated, router]);
 
   if (backendInitStatus === "checking") {
     return (
