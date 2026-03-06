@@ -29,6 +29,7 @@ export default function SettingsPage() {
   });
   const [testDelay, setTestDelay] = useState("0");
   const [testEmailLanguage, setTestEmailLanguage] = useState<"en" | "pl">("en");
+  const [testBudgetEmailLanguage, setTestBudgetEmailLanguage] = useState<"en" | "pl">("en");
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
   const [isSendingBudgetTestEmail, setIsSendingBudgetTestEmail] = useState(false);
@@ -179,7 +180,7 @@ export default function SettingsPage() {
   const handleTestBudgetEmail = async () => {
     setIsSendingBudgetTestEmail(true);
     try {
-      const res = await api.post("/users/test-budget-email", { lang: testEmailLanguage });
+      const res = await api.post("/users/test-budget-email", { lang: testBudgetEmailLanguage });
       toast.success(res.data.message || t("settings.notifications.email.testBudgetSuccess"));
     } catch (error: any) {
       toast.error(
@@ -548,11 +549,37 @@ export default function SettingsPage() {
             </p>
           </div>
           {showTestControls && (
-            <div className="border-t pt-4 space-y-2">
+            <div className="border-t pt-4 space-y-3">
               <Label>{t("settings.notifications.email.testBudgetTitle")}</Label>
               <p className="text-sm text-muted-foreground">
                 {t("settings.notifications.email.testBudgetDesc")}
               </p>
+
+              <div className="space-y-2">
+                <Label className="text-sm">{t("settings.notifications.email.testLanguage")}</Label>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="radio"
+                      name="testBudgetEmailLanguage"
+                      value="en"
+                      checked={testBudgetEmailLanguage === "en"}
+                      onChange={() => setTestBudgetEmailLanguage("en")}
+                    />
+                    English
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="radio"
+                      name="testBudgetEmailLanguage"
+                      value="pl"
+                      checked={testBudgetEmailLanguage === "pl"}
+                      onChange={() => setTestBudgetEmailLanguage("pl")}
+                    />
+                    Polski
+                  </label>
+                </div>
+              </div>
               <Button
                 variant="outline"
                 size="sm"
