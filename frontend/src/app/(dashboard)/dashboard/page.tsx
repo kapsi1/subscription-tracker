@@ -26,6 +26,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
+import { LoadingState } from "@/components/loading-state";
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
@@ -125,7 +126,7 @@ export default function DashboardPage() {
   });
 
   if (isLoading) {
-    return <div className="p-8 text-center text-muted-foreground">{t('common.loading')}</div>;
+    return <LoadingState message={t('common.loading')} />;
   }
 
   return (

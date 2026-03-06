@@ -43,11 +43,17 @@ const AuthContext = createContext<AuthContextType>({
   fetchUser: async () => {},
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children, initialToken }: { children: React.ReactNode, initialToken?: string }) => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (initialToken) return true;
+    if (typeof window !== 'undefined') {
+      return !!localStorage.getItem('accessToken');
+    }
+    return false;
+  });
+  const [isLoading, setIsLoading] = useState(!initialToken);
 
   const fetchUser = useCallback(async () => {
     try {
@@ -59,6 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setIsAuthenticated(false);
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
   }, []);
 
@@ -73,6 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const handleUnauthorized = () => {
       setUser(null);
       setIsAuthenticated(false);
+      document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       router.push('/login');
     };
 
@@ -82,7 +90,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (data: any) => {
     const res = await api.post('/auth/login', data);
-    localStorage.setItem('accessToken', res.data.accessToken);
+    const token = res.data.accessToken;
+    localStorage.setItem('accessToken', token);
+    document.cookie = `accessToken=${token}; path=/; max-age=31536000; SameSite=Lax`;
     if (res.data.refreshToken) localStorage.setItem('refreshToken', res.data.refreshToken);
     await fetchUser();
     router.push('/dashboard');
@@ -90,7 +100,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const register = async (data: any) => {
     const res = await api.post('/auth/register', data);
-    localStorage.setItem('accessToken', res.data.accessToken);
+    const token = res.data.accessToken;
+    localStorage.setItem('accessToken', token);
+    document.cookie = `accessToken=${token}; path=/; max-age=31536000; SameSite=Lax`;
     if (res.data.refreshToken) localStorage.setItem('refreshToken', res.data.refreshToken);
     await fetchUser();
     router.push('/dashboard');
@@ -99,6 +111,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     setUser(null);
     setIsAuthenticated(false);
     router.push('/login');

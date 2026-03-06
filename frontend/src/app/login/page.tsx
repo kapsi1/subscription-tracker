@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard } from "lucide-react";
-import { useAuth } from "@/components/auth-provider";
 import { toast } from "sonner";
+import { useAuth } from "@/components/auth-provider";
 
 export default function LoginPage() {
   const { login, register } = useAuth();
@@ -63,7 +63,6 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-11"
               />
             </div>
             <div className="space-y-2">
@@ -75,7 +74,6 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="h-11"
               />
             </div>
             <Button type="submit" className="w-full h-11" size="lg" disabled={isLoading}>
@@ -88,9 +86,7 @@ export default function LoginPage() {
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              {isLogin
-                ? "Don't have an account? Sign up"
-                : "Already have an account? Sign in"}
+              {isLogin ? "Switch to Register" : "Switch to Login"}
             </button>
           </div>
         </CardContent>

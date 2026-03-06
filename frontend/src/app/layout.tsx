@@ -7,6 +7,8 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider } from "@/components/i18n-provider";
 
+import { cookies } from "next/headers";
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -14,16 +16,19 @@ export const metadata: Metadata = {
   description: 'Manage and forecast your subscriptions cost efficiently',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('accessToken')?.value;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <AuthProvider>
+          <AuthProvider initialToken={token}>
             <I18nProvider>
               {children}
               <Toaster />

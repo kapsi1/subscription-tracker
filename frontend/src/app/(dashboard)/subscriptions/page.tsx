@@ -16,6 +16,7 @@ import { Upload, Download, Plus, Pencil, Trash2, Search, Filter, ArrowUpDown } f
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/empty-state";
 import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
+import { LoadingState } from "@/components/loading-state";
 import { toast } from "sonner";
 import api from "@/lib/api";
 import { useRef } from "react";
@@ -172,7 +173,7 @@ export default function SubscriptionsPage() {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-muted-foreground">{t('common.loading')}</div>;
+    return <LoadingState message={t('common.loading')} />;
   }
 
   return (
