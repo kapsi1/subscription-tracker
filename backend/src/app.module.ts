@@ -37,7 +37,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../.env', // using the root .env or overriding it if needed
+      envFilePath: '.env', // using the root .env or overriding it if needed
     }),
     ThrottlerModule.forRoot([
       {
