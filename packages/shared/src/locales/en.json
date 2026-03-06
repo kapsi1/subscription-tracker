@@ -158,7 +158,7 @@
       },
       "webhook": {
         "title": "Webhook Integration",
-        "desc": "Send alerts to external services",
+        "desc": "Receive alerts to external services",
         "enable": "Enable Webhooks",
         "enableDesc": "POST payment data to your webhook URL",
         "url": "Webhook URL",
@@ -183,5 +183,22 @@
     "save": "Save Settings",
     "saveSuccess": "Settings saved successfully",
     "loadError": "Failed to load settings"
+  },
+  "emails": {
+    "subscriptionAlert": "Subscription Alert",
+    "upcomingRenewal": "Upcoming Subscription Renewal",
+    "greeting": "Hello.",
+    "reminder": "This is a friendly reminder regarding your <strong>{{name}}</strong> subscription.",
+    "amount": "Amount",
+    "renewingIn": "Renewing In",
+    "days": "day(s)",
+    "managePrompt": "If you wish to manage or cancel this subscription, please log in to your dashboard.",
+    "thankYou": "Thank you",
+    "teamName": "Subscription Tracker Team",
+    "budgetExceeded": "Budget Limit Exceeded",
+    "budgetLimitDesc": "This is an automated alert to inform you that your total monthly subscription cost has exceeded your configured budget.",
+    "currentMonthly": "Current Monthly Cost",
+    "yourBudget": "Your Budget",
+    "budgetAlert": "Budget Alert: Monthly Limit Exceeded"
   }
 }

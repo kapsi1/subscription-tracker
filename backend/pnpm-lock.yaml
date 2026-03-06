@@ -44,6 +44,9 @@ importers:
       '@prisma/client':
         specifier: ^6.19.2
         version: 6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3)
+      '@subscription-tracker/shared':
+        specifier: file:..\packages\shared
+        version: file:../packages/shared
       '@types/web-push':
         specifier: ^3.6.4
         version: 3.6.4
@@ -992,6 +995,9 @@ packages:
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
+  '@subscription-tracker/shared@file:../packages/shared':
+    resolution: {directory: ../packages/shared, type: directory}
 
   '@tokenizer/inflate@0.4.1':
     resolution: {integrity: sha512-2mAv+8pkG6GIZiF1kNg1jAjh27IDxEPKwdGul3snfztFerfPGI1LjDezZp3i7BElXompqEtPmoPx6c2wgtWsOA==}
@@ -4605,6 +4611,8 @@ snapshots:
       '@sinonjs/commons': 3.0.1
 
   '@standard-schema/spec@1.1.0': {}
+
+  '@subscription-tracker/shared@file:../packages/shared': {}
 
   '@tokenizer/inflate@0.4.1':
     dependencies:

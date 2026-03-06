@@ -3,16 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-type AppTheme = 'light' | 'dark' | 'system';
+import { COLORS, LOCALES } from '@subscription-tracker/shared';
 
-interface AccentDefinition {
-  lightPrimary: string;
-  darkPrimary: string;
-  lightAccent: string;
-  darkAccent: string;
-  lightBg: string;
-  darkBg: string;
-}
+type AppTheme = 'light' | 'dark' | 'system';
 
 interface EmailColors {
   appBg: string;
@@ -25,33 +18,9 @@ interface EmailColors {
   danger: string;
 }
 
-const DEFAULT_ACCENT: AccentDefinition = {
-  lightPrimary: '#4F46E5',
-  darkPrimary: '#6366f1',
-  lightAccent: '#e0e7ff',
-  darkAccent: '#312e81',
-  lightBg: '#F5F7FF',
-  darkBg: '#0B0E2E',
-};
+const DEFAULT_ACCENT = COLORS.Indigo;
+const ACCENT_DEFINITIONS = COLORS;
 
-const ACCENT_DEFINITIONS: Record<string, AccentDefinition> = {
-  Indigo: { lightPrimary: '#4F46E5', darkPrimary: '#6366f1', lightAccent: '#e0e7ff', darkAccent: '#312e81', lightBg: '#F5F7FF', darkBg: '#0B0E2E' },
-  Crimson: { lightPrimary: '#BE123C', darkPrimary: '#f43f5e', lightAccent: '#ffe4e6', darkAccent: '#4c0519', lightBg: '#FFF1F2', darkBg: '#1C040E' },
-  Rose: { lightPrimary: '#DB2777', darkPrimary: '#f472b6', lightAccent: '#fce7f3', darkAccent: '#500724', lightBg: '#FFF0F6', darkBg: '#1C040D' },
-  Lavender: { lightPrimary: '#7C3AED', darkPrimary: '#a78bfa', lightAccent: '#f3e8ff', darkAccent: '#2e1065', lightBg: '#F9F5FF', darkBg: '#0F081C' },
-  Cobalt: { lightPrimary: '#1D4ED8', darkPrimary: '#3b82f6', lightAccent: '#dbeafe', darkAccent: '#172554', lightBg: '#F0F7FF', darkBg: '#050B1C' },
-  Navy: { lightPrimary: '#1E3A8A', darkPrimary: '#2563eb', lightAccent: '#eff6ff', darkAccent: '#172554', lightBg: '#F0F4FF', darkBg: '#05081A' },
-  Mint: { lightPrimary: '#059669', darkPrimary: '#10b981', lightAccent: '#ecfdf5', darkAccent: '#064e3b', lightBg: '#F0FDF9', darkBg: '#02120D' },
-  Forest: { lightPrimary: '#15803D', darkPrimary: '#22c55e', lightAccent: '#dcfce7', darkAccent: '#052e16', lightBg: '#F0FDF4', darkBg: '#041408' },
-  Sage: { lightPrimary: '#4D7C0F', darkPrimary: '#84cc16', lightAccent: '#f7fee7', darkAccent: '#1a2e05', lightBg: '#FAFEF0', darkBg: '#0D1405' },
-  Amber: { lightPrimary: '#D97706', darkPrimary: '#f59e0b', lightAccent: '#fef3c7', darkAccent: '#451a03', lightBg: '#FFFBEB', darkBg: '#170F04' },
-  Gold: { lightPrimary: '#B45309', darkPrimary: '#fbbf24', lightAccent: '#fef3c7', darkAccent: '#451a03', lightBg: '#FFFCEB', darkBg: '#150D04' },
-  Terracotta: { lightPrimary: '#9A3412', darkPrimary: '#ea580c', lightAccent: '#ffedd5', darkAccent: '#431407', lightBg: '#FFF5F0', darkBg: '#1A0904' },
-  Coffee: { lightPrimary: '#78350F', darkPrimary: '#a16207', lightAccent: '#fef3c7', darkAccent: '#271605', lightBg: '#FFF9F0', darkBg: '#140D04' },
-  Sand: { lightPrimary: '#A16207', darkPrimary: '#d97706', lightAccent: '#fefce8', darkAccent: '#422006', lightBg: '#FFFBF0', darkBg: '#140F04' },
-  Slate: { lightPrimary: '#475569', darkPrimary: '#94a3b8', lightAccent: '#f1f5f9', darkAccent: '#0f172a', lightBg: '#F8FAFC', darkBg: '#0A0C10' },
-  Charcoal: { lightPrimary: '#334155', darkPrimary: '#64748b', lightAccent: '#f8fafc', darkAccent: '#1e293b', lightBg: '#F1F5F9', darkBg: '#0C1014' },
-};
 
 @Injectable()
 export class EmailService {
@@ -124,7 +93,7 @@ export class EmailService {
   }
 
   private getEmailColors(accentColor: string | undefined, mode: 'light' | 'dark'): EmailColors {
-    const accent = ACCENT_DEFINITIONS[accentColor ?? ''] ?? DEFAULT_ACCENT;
+    const accent = (ACCENT_DEFINITIONS as any)[accentColor ?? ''] ?? DEFAULT_ACCENT;
 
     if (mode === 'dark') {
       return {
@@ -308,49 +277,26 @@ export class EmailService {
     accentColor?: string,
     theme?: string,
   ) {
-    const isPolish = language === 'pl';
+    const locale = LOCALES[language];
     const themeMode = this.resolveTheme(theme);
     const safeSubscriptionName = this.escapeHtml(subscriptionName);
-    const subject = isPolish
-      ? `Nadchodzące odnowienie subskrypcji: ${subscriptionName}`
-      : `Upcoming Subscription Renewal: ${subscriptionName}`;
+    const subject = `${locale.emails.upcomingRenewal}: ${subscriptionName}`;
 
-    const bodyHtml = isPolish
-      ? `
+    const bodyHtml = `
         <div class="email-root">
           <div class="email-shell">
             <div class="email-card">
               <div class="email-topbar-bg"></div>
               <div class="email-content">
-                <h2 class="email-title">Alert subskrypcji</h2>
-                <p class="email-greeting">Cześć.</p>
-                <p class="email-text">To przypomnienie o Twojej subskrypcji <strong>${safeSubscriptionName}</strong>.</p>
+                <h2 class="email-title">${locale.emails.subscriptionAlert}</h2>
+                <p class="email-greeting">${locale.emails.greeting}</p>
+                <p class="email-text">${locale.emails.reminder.replace('{{name}}', safeSubscriptionName)}</p>
                 <div class="email-highlight">
-                  <p class="email-metric"><strong>Kwota:</strong> <span class="email-amount">${amount} ${currency}</span></p>
-                  <p class="email-metric"><strong>Odnowienie za:</strong> ${daysBefore} dni</p>
+                  <p class="email-metric"><strong>${locale.emails.amount}:</strong> <span class="email-amount">${amount} ${currency}</span></p>
+                  <p class="email-metric"><strong>${locale.emails.renewingIn}:</strong> ${daysBefore} ${locale.emails.days}</p>
                 </div>
-                <p class="email-text">Jeśli chcesz zarządzać lub anulować tę subskrypcję, zaloguj się do panelu.</p>
-                <p class="email-signoff email-muted">Dziękujemy,<br>Zespół Subscription Tracker</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      `
-      : `
-        <div class="email-root">
-          <div class="email-shell">
-            <div class="email-card">
-              <div class="email-topbar-bg"></div>
-              <div class="email-content">
-                <h2 class="email-title">Subscription Alert</h2>
-                <p class="email-greeting">Hello.</p>
-                <p class="email-text">This is a friendly reminder regarding your <strong>${safeSubscriptionName}</strong> subscription.</p>
-                <div class="email-highlight">
-                  <p class="email-metric"><strong>Amount:</strong> <span class="email-amount">${amount} ${currency}</span></p>
-                  <p class="email-metric"><strong>Renewing In:</strong> ${daysBefore} day(s)</p>
-                </div>
-                <p class="email-text">If you wish to manage or cancel this subscription, please log in to your dashboard.</p>
-                <p class="email-signoff email-muted">Thank you,<br>Subscription Tracker Team</p>
+                <p class="email-text">${locale.emails.managePrompt}</p>
+                <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${locale.emails.teamName}</p>
               </div>
             </div>
           </div>
@@ -390,45 +336,24 @@ export class EmailService {
     theme?: string,
     language: 'en' | 'pl' = 'en',
   ) {
-    const isPolish = language === 'pl';
+    const locale = LOCALES[language];
     const themeMode = this.resolveTheme(theme);
 
-    const bodyHtml = isPolish
-      ? `
+    const bodyHtml = `
       <div class="email-root">
         <div class="email-shell">
           <div class="email-card">
             <div class="email-danger-topbar-bg"></div>
             <div class="email-content">
-              <h2 class="email-danger-title">Przekroczono limit budżetu</h2>
-              <p class="email-greeting">Cześć.</p>
-              <p class="email-text">To automatyczne powiadomienie, że łączny miesięczny koszt Twoich subskrypcji przekroczył ustawiony budżet.</p>
+              <h2 class="email-danger-title">${locale.emails.budgetExceeded}</h2>
+              <p class="email-greeting">${locale.emails.greeting}</p>
+              <p class="email-text">${locale.emails.budgetLimitDesc}</p>
               <div class="email-highlight">
-                <p class="email-metric"><strong>Aktualny koszt miesięczny:</strong> <span class="email-danger">${amount.toFixed(2)} ${currency}</span></p>
-                <p class="email-metric"><strong>Twój budżet:</strong> ${budget.toFixed(2)} ${currency}</p>
+                <p class="email-metric"><strong>${locale.emails.currentMonthly}:</strong> <span class="email-danger">${amount.toFixed(2)} ${currency}</span></p>
+                <p class="email-metric"><strong>${locale.emails.yourBudget}:</strong> ${budget.toFixed(2)} ${currency}</p>
               </div>
-              <p class="email-text">Zaloguj się do panelu, aby przejrzeć i zarządzać aktywnymi subskrypcjami.</p>
-              <p class="email-signoff email-muted">Dziękujemy,<br>Zespół Subscription Tracker</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
-      : `
-      <div class="email-root">
-        <div class="email-shell">
-          <div class="email-card">
-            <div class="email-danger-topbar-bg"></div>
-            <div class="email-content">
-              <h2 class="email-danger-title">Budget Limit Exceeded</h2>
-              <p class="email-greeting">Hello.</p>
-              <p class="email-text">This is an automated alert to inform you that your total monthly subscription cost has exceeded your configured budget.</p>
-              <div class="email-highlight">
-                <p class="email-metric"><strong>Current Monthly Cost:</strong> <span class="email-danger">${amount.toFixed(2)} ${currency}</span></p>
-                <p class="email-metric"><strong>Your Budget:</strong> ${budget.toFixed(2)} ${currency}</p>
-              </div>
-              <p class="email-text">Log in to your dashboard to review and manage your active subscriptions.</p>
-              <p class="email-signoff email-muted">Thank you,<br>Subscription Tracker Team</p>
+              <p class="email-text">${locale.emails.managePrompt}</p>
+              <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${locale.emails.teamName}</p>
             </div>
           </div>
         </div>
@@ -444,9 +369,7 @@ export class EmailService {
           '"Subscription Tracker" <alerts@subscription-tracker.local>',
         ),
         to: email,
-        subject: isPolish
-          ? 'Alert budżetowy: przekroczono limit miesięczny'
-          : 'Budget Alert: Monthly Limit Exceeded',
+        subject: locale.emails.budgetAlert,
         html: htmlTemplate,
       });
       this.logger.log(

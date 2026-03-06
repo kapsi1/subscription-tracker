@@ -184,5 +184,22 @@
     "save": "Zapisz Ustawienia",
     "saveSuccess": "Ustawienia zapisane pomyślnie",
     "loadError": "Nie udało się załadować ustawień"
+  },
+  "emails": {
+    "subscriptionAlert": "Alert subskrypcji",
+    "upcomingRenewal": "Nadchodzące odnowienie subskrypcji",
+    "greeting": "Cześć.",
+    "reminder": "To przypomnienie o Twojej subskrypcji <strong>{{name}}</strong>.",
+    "amount": "Kwota",
+    "renewingIn": "Odnowienie za",
+    "days": "dni",
+    "managePrompt": "Jeśli chcesz zarządzać lub anulować tę subskrypcję, zaloguj się do panelu.",
+    "thankYou": "Dziękujemy",
+    "teamName": "Zespół Subscription Tracker",
+    "budgetExceeded": "Przekroczono limit budżetu",
+    "budgetLimitDesc": "To automatyczne powiadomienie, że łączny miesięczny koszt Twoich subskrypcji przekroczył ustawiony budżet.",
+    "currentMonthly": "Aktualny koszt miesięczny",
+    "yourBudget": "Twój budżet",
+    "budgetAlert": "Alert budżetowy: przekroczono limit miesięczny"
   }
 }
