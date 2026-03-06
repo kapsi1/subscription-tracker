@@ -53,6 +53,8 @@ model Subscription {
   updatedAt       DateTime       @updatedAt
   alerts          Alert[]
   payments        PaymentHistory[]
+
+  @@index([userId])
 }
 
 enum AlertType {
@@ -69,6 +71,8 @@ model PushSubscription {
   p256dh    String
   auth      String
   createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Alert {
@@ -80,6 +84,8 @@ model Alert {
   isEnabled      Boolean      @default(true)
   webhookUrl     String?
   webhookSecret  String?
+
+  @@index([subscriptionId])
 }
 
 model PaymentHistory {
@@ -89,4 +95,6 @@ model PaymentHistory {
   amount         Decimal
   currency       String
   paidAt         DateTime     @default(now())
+
+  @@index([subscriptionId])
 }
