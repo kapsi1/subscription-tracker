@@ -29,6 +29,8 @@
     "next30Days": "W ciągu najbliższych 30 dni",
     "forecast": "Prognoza 12-miesięczna",
     "forecastDesc": "Prognozowane wydatki miesięczne",
+    "cumulativeSpending": "Skumulowane wydatki",
+    "monthlySpending": "Wydatki miesięczne",
     "costByCategory": "Koszty według kategorii",
     "categoryBreakdownDesc": "Podział miesięczny",
     "pie": "Kołowy",

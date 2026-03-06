@@ -19,6 +19,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ComposedChart,
 } from "recharts";
 import api from "@/lib/api";
 import Link from "next/link";
@@ -50,7 +51,16 @@ export default function DashboardPage() {
       ]);
 
       setSummary(summaryRes.data);
-      setForecast(forecastRes.data);
+      
+      const forecastWithCumulative = summaryRes.data && forecastRes.data.reduce((acc: any[], item: any, index: number) => {
+        const previousCumulative = index > 0 ? acc[index - 1].cumulativeAmount : 0;
+        acc.push({
+          ...item,
+          cumulativeAmount: previousCumulative + item.amount
+        });
+        return acc;
+      }, []);
+      setForecast(forecastWithCumulative || []);
 
       // Calculate upcoming payments from subscriptions (next 30 days)
       const now = new Date();
@@ -267,28 +277,65 @@ export default function DashboardPage() {
             <CardDescription>{t('dashboard.forecastDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={forecast}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="month" stroke="#64748b" />
-                <YAxis stroke="#64748b" />
+            <ResponsiveContainer width="100%" height={350}>
+              <ComposedChart data={forecast}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                <XAxis 
+                  dataKey="month" 
+                  stroke="#64748b" 
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis 
+                  yAxisId="left"
+                  stroke="#64748b" 
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `$${value}`}
+                />
+                <YAxis 
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#94a3b8" 
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `$${value}`}
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "white",
                     border: "1px solid #e2e8f0",
                     borderRadius: "8px",
+                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                   }}
-                  formatter={(value: any) => [`$${Number(value).toFixed(2)}`, t("subscriptions.modal.amount")]}
+                  formatter={(value: any, name?: string) => [
+                    `$${Number(value).toFixed(2)}`,
+                    name
+                  ]}
+                />
+                <Legend iconType="circle" />
+                <Bar
+                  yAxisId="right"
+                  dataKey="cumulativeAmount"
+                  name={t("dashboard.cumulativeSpending")}
+                  fill="#a949e9"
+                  radius={[4, 4, 0, 0]}
+                  barSize={30}
                 />
                 <Line
+                  yAxisId="left"
                   type="monotone"
                   dataKey="amount"
+                  name={t("dashboard.monthlySpending")}
                   stroke="#4F46E5"
-                  strokeWidth={2}
-                  dot={{ fill: "#4F46E5", r: 4 }}
-                  activeDot={{ r: 6 }}
+                  strokeWidth={3}
+                  dot={{ fill: "#4F46E5", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, strokeWidth: 0 }}
                 />
-              </LineChart>
+              </ComposedChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>

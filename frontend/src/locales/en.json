@@ -29,6 +29,8 @@
     "next30Days": "Next 30 days",
     "forecast": "12-Month Forecast",
     "forecastDesc": "Projected monthly spending",
+    "cumulativeSpending": "Cumulative Spending",
+    "monthlySpending": "Monthly Spending",
     "costByCategory": "Cost by Category",
     "categoryBreakdownDesc": "Monthly breakdown",
     "pie": "Pie",
