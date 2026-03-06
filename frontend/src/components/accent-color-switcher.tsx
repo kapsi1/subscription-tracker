@@ -79,7 +79,7 @@ export function AccentColorSwitcher() {
         --accent-foreground: ${accent.lightForeground};
         --ring: ${accent.lightPrimary};
         --chart-bar: ${accent.chartBar}80;
-        --chart-1: ${accent.lightPrimary};
+        --chart-1: #3b82f6;
         --chart-2: #8b5cf6;
         --chart-3: #ec4899;
         --chart-4: #06b6d4;
@@ -97,15 +97,15 @@ export function AccentColorSwitcher() {
         --accent-foreground: ${accent.darkForeground};
         --ring: ${accent.darkPrimary};
         --chart-bar: ${accent.chartBar}aa;
-        --chart-1: ${accent.darkPrimary};
-        --chart-2: #a78bfa;
-        --chart-3: #f472b6;
-        --chart-4: #22d3ee;
-        --chart-5: #34d399;
+        --chart-1: #3b82f6; /* Fixed Blue */
+        --chart-2: #8b5cf6;
+        --chart-3: #ec4899;
+        --chart-4: #06b6d4;
+        --chart-5: #10b981;
         --sidebar-primary: ${accent.darkPrimary};
         --sidebar-ring: ${accent.darkPrimary};
         --background: ${accent.darkBg};
-        --card: ${accent.darkBg}D0; /* Semi-transparent */
+        --card: ${accent.darkBg}; /* Solid background */
         --secondary: ${accent.darkBg};
         --border: ${accent.darkPrimary}30;
       }
@@ -148,9 +148,9 @@ export function AccentColorSwitcher() {
             title={theme === "dark" ? t('theme.light') : t('theme.dark')}
           >
             {theme === "dark" ? (
-              <Sun className="h-4 w-4" />
-            ) : (
               <Moon className="h-4 w-4" />
+            ) : (
+              <Sun className="h-4 w-4" />
             )}
           </Button>
         </div>

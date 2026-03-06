@@ -278,6 +278,10 @@
 - [ ] Environment variables documentation
 - [ ] ADR (Architecture Decision Records)
 
-# 7. Bugs
+# 7. Additional
 - [ ] Push notifications not working on Opera
 - [ ] Push notifications not working when Chrome is not running
+- [ ] Email notifications
+- [ ] Webhook integration
+- [ ] Default reminders
+- [ ] Budget threshold alerts
