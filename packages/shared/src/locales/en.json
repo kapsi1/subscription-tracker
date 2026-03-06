@@ -199,6 +199,14 @@
     "budgetLimitDesc": "This is an automated alert to inform you that your total monthly subscription cost has exceeded your configured budget.",
     "currentMonthly": "Current Monthly Cost",
     "yourBudget": "Your Budget",
-    "budgetAlert": "Budget Alert: Monthly Limit Exceeded"
+    "budgetAlert": "Budget Alert: Monthly Limit Exceeded",
+    "dailyDigestSubject": "Daily Subscription Digest",
+    "weeklyReportSubject": "Weekly Subscription Report",
+    "dailyDigestTitle": "Daily Digest",
+    "weeklyReportTitle": "Weekly Report",
+    "digestSummary": "Here is a quick summary of your active subscriptions and upcoming payments.",
+    "totalActive": "Active Subscriptions",
+    "upcomingThisWeek": "Upcoming This Week",
+    "totalMonthly": "Total Monthly Cost"
   }
 }

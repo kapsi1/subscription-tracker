@@ -198,4 +198,50 @@ export class UsersController {
           : `Test budget alert email sent to ${user.email}.`,
     };
   }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('test-daily-digest')
+  async testDailyDigest(@Req() req: any, @Body() body: { lang?: string }) {
+    this.assertTestEndpointsEnabled();
+
+    const user = await this.usersService.findById(req.user.userId);
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.emailNotifications) throw new BadRequestException('Email notifications are disabled.');
+
+    const language = body?.lang === 'pl' ? 'pl' : 'en';
+
+    await this.emailService.sendDailyDigest(
+      user.email,
+      { totalActive: 5, totalMonthly: 125.50, upcomingThisWeek: 2 },
+      'USD',
+      language,
+      user.accentColor,
+      user.theme,
+    );
+
+    return { message: language === 'pl' ? `Wysłano testowy dzienny przegląd.` : `Test daily digest sent.` };
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('test-weekly-report')
+  async testWeeklyReport(@Req() req: any, @Body() body: { lang?: string }) {
+    this.assertTestEndpointsEnabled();
+
+    const user = await this.usersService.findById(req.user.userId);
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.emailNotifications) throw new BadRequestException('Email notifications are disabled.');
+
+    const language = body?.lang === 'pl' ? 'pl' : 'en';
+
+    await this.emailService.sendWeeklyReport(
+      user.email,
+      { totalActive: 5, totalMonthly: 125.50, upcomingThisWeek: 2 },
+      'USD',
+      language,
+      user.accentColor,
+      user.theme,
+    );
+
+    return { message: language === 'pl' ? `Wysłano testowy raport tygodniowy.` : `Test weekly report sent.` };
+  }
 }

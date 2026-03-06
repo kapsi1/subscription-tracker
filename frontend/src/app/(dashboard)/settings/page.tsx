@@ -33,6 +33,8 @@ export default function SettingsPage() {
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
   const [isSendingBudgetTestEmail, setIsSendingBudgetTestEmail] = useState(false);
+  const [isSendingDailyTest, setIsSendingDailyTest] = useState(false);
+  const [isSendingWeeklyTest, setIsSendingWeeklyTest] = useState(false);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
 
   useEffect(() => {
@@ -192,6 +194,30 @@ export default function SettingsPage() {
     }
   };
 
+  const handleTestDailyDigest = async () => {
+    setIsSendingDailyTest(true);
+    try {
+      const res = await api.post("/users/test-daily-digest", { lang: testEmailLanguage });
+      toast.success(res.data.message || "Test daily digest sent");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to send test daily digest");
+    } finally {
+      setIsSendingDailyTest(false);
+    }
+  };
+
+  const handleTestWeeklyReport = async () => {
+    setIsSendingWeeklyTest(true);
+    try {
+      const res = await api.post("/users/test-weekly-report", { lang: testEmailLanguage });
+      toast.success(res.data.message || "Test weekly report sent");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to send test weekly report");
+    } finally {
+      setIsSendingWeeklyTest(false);
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
@@ -213,7 +239,7 @@ export default function SettingsPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
             <div className="space-y-0.5">
               <Label htmlFor="emailEnabled">{t('settings.notifications.email.enable')}</Label>
               <p className="text-sm text-muted-foreground">
@@ -244,36 +270,40 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-between border-t pt-4">
-                <div className="space-y-0.5">
-                  <Label htmlFor="dailyDigest">{t('settings.notifications.email.daily')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.notifications.email.dailyDesc')}
-                  </p>
+              <div className="border-t pt-2 mt-2">
+                <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="dailyDigest">{t('settings.notifications.email.daily')}</Label>
+                    <p className="text-sm text-muted-foreground">
+                      {t('settings.notifications.email.dailyDesc')}
+                    </p>
+                  </div>
+                  <Switch
+                    id="dailyDigest"
+                    checked={settings.dailyDigest}
+                    onCheckedChange={(checked) =>
+                      setSettings({ ...settings, dailyDigest: checked })
+                    }
+                  />
                 </div>
-                <Switch
-                  id="dailyDigest"
-                  checked={settings.dailyDigest}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, dailyDigest: checked })
-                  }
-                />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="weeklyReport">{t('settings.notifications.email.weekly')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.notifications.email.weeklyDesc')}
-                  </p>
+              <div className="border-t pt-2 mt-2">
+                <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="weeklyReport">{t('settings.notifications.email.weekly')}</Label>
+                    <p className="text-sm text-muted-foreground">
+                      {t('settings.notifications.email.weeklyDesc')}
+                    </p>
+                  </div>
+                  <Switch
+                    id="weeklyReport"
+                    checked={settings.weeklyReport}
+                    onCheckedChange={(checked) =>
+                      setSettings({ ...settings, weeklyReport: checked })
+                    }
+                  />
                 </div>
-                <Switch
-                  id="weeklyReport"
-                  checked={settings.weeklyReport}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, weeklyReport: checked })
-                  }
-                />
               </div>
 
               {showTestControls && (
@@ -314,13 +344,37 @@ export default function SettingsPage() {
                     variant="outline"
                     size="sm"
                     onClick={handleTestEmail}
-                    disabled={isSendingTestEmail || isSendingBudgetTestEmail}
+                    disabled={isSendingTestEmail || isSendingBudgetTestEmail || isSendingDailyTest || isSendingWeeklyTest}
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />
                     {isSendingTestEmail
                       ? t("settings.notifications.email.testSending")
                       : t("settings.notifications.email.testSend")}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestDailyDigest}
+                    disabled={isSendingTestEmail || isSendingBudgetTestEmail || isSendingDailyTest || isSendingWeeklyTest}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {isSendingDailyTest
+                      ? t("settings.notifications.email.testSending")
+                      : "Test Daily Digest"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestWeeklyReport}
+                    disabled={isSendingTestEmail || isSendingBudgetTestEmail || isSendingDailyTest || isSendingWeeklyTest}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {isSendingWeeklyTest
+                      ? t("settings.notifications.email.testSending")
+                      : "Test Weekly Report"}
                   </Button>
                 </div>
               </div>
@@ -344,7 +398,7 @@ export default function SettingsPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
             <div className="space-y-0.5">
               <Label htmlFor="pushEnabled">{t('settings.notifications.push.enable')}</Label>
               <p className="text-sm text-muted-foreground">
@@ -418,7 +472,7 @@ export default function SettingsPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
             <div className="space-y-0.5">
               <Label htmlFor="webhookEnabled">{t('settings.notifications.webhook.enable')}</Label>
               <p className="text-sm text-muted-foreground">
@@ -470,7 +524,7 @@ export default function SettingsPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
             <div className="space-y-0.5">
               <Label htmlFor="defaultEnabled">{t('settings.notifications.default.enable')}</Label>
               <p className="text-sm text-muted-foreground">

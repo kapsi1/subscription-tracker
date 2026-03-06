@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-import { COLORS, LOCALES } from '@subscription-tracker/shared';
+import { COLORS, LOCALES, ColorsConfig } from '@subscription-tracker/shared';
 
 type AppTheme = 'light' | 'dark' | 'system';
 
@@ -19,7 +19,7 @@ interface EmailColors {
 }
 
 const DEFAULT_ACCENT = COLORS.Indigo;
-const ACCENT_DEFINITIONS = COLORS;
+const ACCENT_DEFINITIONS: ColorsConfig = COLORS;
 
 
 @Injectable()
@@ -93,7 +93,7 @@ export class EmailService {
   }
 
   private getEmailColors(accentColor: string | undefined, mode: 'light' | 'dark'): EmailColors {
-    const accent = (ACCENT_DEFINITIONS as any)[accentColor ?? ''] ?? DEFAULT_ACCENT;
+    const accent = ACCENT_DEFINITIONS[accentColor ?? ''] ?? DEFAULT_ACCENT;
 
     if (mode === 'dark') {
       return {
@@ -404,6 +404,140 @@ export class EmailService {
       this.logger.error(
         `[SMTP] Failed to send budget alert email to ${email}: ${message}`,
       );
+      throw error;
+    }
+  }
+
+  async sendDailyDigest(
+    email: string,
+    stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number },
+    currency: string,
+    language: 'en' | 'pl' = 'en',
+    accentColor?: string,
+    theme?: string,
+  ) {
+    const locale = LOCALES[language];
+    const themeMode = this.resolveTheme(theme);
+
+    const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const teamNameHtml = locale.emails.teamName.replace(
+      'Subscription Tracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`
+    );
+
+    const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+    const managePromptHtml = locale.emails.managePrompt.replace(
+      logInText,
+      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`
+    );
+
+    const emails = locale.emails as Record<string, string>;
+
+    const bodyHtml = `
+      <div class="email-root">
+        <div class="email-shell">
+          <div class="email-card">
+            <div class="email-topbar-bg"></div>
+            <div class="email-content">
+              <h2 class="email-title">${emails.dailyDigestTitle}</h2>
+              <p class="email-greeting">${locale.emails.greeting}</p>
+              <p class="email-text">${emails.digestSummary}</p>
+              <div class="email-highlight">
+                <p class="email-metric"><strong>${emails.totalActive}:</strong> ${stats.totalActive}</p>
+                <p class="email-metric"><strong>${emails.upcomingThisWeek}:</strong> ${stats.upcomingThisWeek}</p>
+                <p class="email-metric"><strong>${emails.totalMonthly}:</strong> <span class="email-amount">${stats.totalMonthly.toFixed(2)} ${currency}</span></p>
+              </div>
+              <p class="email-text">${managePromptHtml}</p>
+              <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const htmlTemplate = this.buildEmailDocument(bodyHtml, accentColor, themeMode);
+
+    try {
+      await this.transporter.sendMail({
+        from: this.configService.get<string>(
+          'SMTP_FROM',
+          '"Subscription Tracker" <alerts@subscription-tracker.local>',
+        ),
+        to: email,
+        subject: emails.dailyDigestSubject,
+        html: htmlTemplate,
+      });
+      this.logger.log(`[SMTP] Successfully sent daily digest email to ${email}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`[SMTP] Failed to send daily digest to ${email}: ${message}`);
+      throw error;
+    }
+  }
+
+  async sendWeeklyReport(
+    email: string,
+    stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number },
+    currency: string,
+    language: 'en' | 'pl' = 'en',
+    accentColor?: string,
+    theme?: string,
+  ) {
+    const locale = LOCALES[language];
+    const themeMode = this.resolveTheme(theme);
+
+    const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const teamNameHtml = locale.emails.teamName.replace(
+      'Subscription Tracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`
+    );
+
+    const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+    const managePromptHtml = locale.emails.managePrompt.replace(
+      logInText,
+      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`
+    );
+
+    const emails = locale.emails as Record<string, string>;
+
+    const bodyHtml = `
+      <div class="email-root">
+        <div class="email-shell">
+          <div class="email-card">
+            <div class="email-topbar-bg"></div>
+            <div class="email-content">
+              <h2 class="email-title">${emails.weeklyReportTitle}</h2>
+              <p class="email-greeting">${locale.emails.greeting}</p>
+              <p class="email-text">${emails.digestSummary}</p>
+              <div class="email-highlight">
+                <p class="email-metric"><strong>${emails.totalActive}:</strong> ${stats.totalActive}</p>
+                <p class="email-metric"><strong>${emails.upcomingThisWeek}:</strong> ${stats.upcomingThisWeek}</p>
+                <p class="email-metric"><strong>${emails.totalMonthly}:</strong> <span class="email-amount">${stats.totalMonthly.toFixed(2)} ${currency}</span></p>
+              </div>
+              <p class="email-text">${managePromptHtml}</p>
+              <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const htmlTemplate = this.buildEmailDocument(bodyHtml, accentColor, themeMode);
+
+    try {
+      await this.transporter.sendMail({
+        from: this.configService.get<string>(
+          'SMTP_FROM',
+          '"Subscription Tracker" <alerts@subscription-tracker.local>',
+        ),
+        to: email,
+        subject: emails.weeklyReportSubject,
+        html: htmlTemplate,
+      });
+      this.logger.log(`[SMTP] Successfully sent weekly report email to ${email}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`[SMTP] Failed to send weekly report to ${email}: ${message}`);
       throw error;
     }
   }

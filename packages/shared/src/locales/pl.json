@@ -200,6 +200,14 @@
     "budgetLimitDesc": "To automatyczne powiadomienie, że łączny miesięczny koszt Twoich subskrypcji przekroczył ustawiony budżet.",
     "currentMonthly": "Aktualny koszt miesięczny",
     "yourBudget": "Twój budżet",
-    "budgetAlert": "Alert budżetowy: przekroczono limit miesięczny"
+    "budgetAlert": "Alert budżetowy: przekroczono limit miesięczny",
+    "dailyDigestSubject": "Dzienny przegląd subskrypcji",
+    "weeklyReportSubject": "Tygodniowy raport subskrypcji",
+    "dailyDigestTitle": "Dzienny Przegląd",
+    "weeklyReportTitle": "Raport Tygodniowy",
+    "digestSummary": "Oto krótkie podsumowanie Twoich aktywnych subskrypcji i nadchodzących płatności.",
+    "totalActive": "Aktywne subskrypcje",
+    "upcomingThisWeek": "Nadchodzące w tym tygodniu",
+    "totalMonthly": "Miesięczny koszt całkowity"
   }
 }
