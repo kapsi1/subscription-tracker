@@ -207,6 +207,57 @@ export default function DashboardPage() {
         </Card>
       </div>
 
+      
+      {/* Upcoming Payments */}
+      <Card className="shadow-sm">
+        <CardHeader>
+          <CardTitle>{t('dashboard.upcomingPaymentsTitle')}</CardTitle>
+          <CardDescription>{t('dashboard.upcomingPaymentsDesc')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {upcomingPayments.length === 0 ? (
+            <div className="text-center py-6 text-muted-foreground">
+              {t('dashboard.noUpcomingPayments')}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {upcomingPayments.map((payment) => (
+                <div
+                  key={payment.id}
+                  onClick={() => handleEdit(payment)}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors gap-3 cursor-pointer"
+                >
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <CreditCard className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{payment.name}</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {t(`subscriptions.modal.categories.${payment.category}`)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 sm:gap-6">
+                    <div className="text-right">
+                      <p className="font-semibold">{formatCurrency(payment.amount)}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDate(payment.nextBillingDate)}
+                      </p>
+                    </div>
+                    <Badge variant="outline" className="hidden sm:inline-flex">
+                      {t(`subscriptions.modal.categories.${payment.category}`)}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Forecast */}
@@ -314,56 +365,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Upcoming Payments */}
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle>{t('dashboard.upcomingPaymentsTitle')}</CardTitle>
-          <CardDescription>{t('dashboard.upcomingPaymentsDesc')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {upcomingPayments.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground">
-              {t('dashboard.noUpcomingPayments')}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {upcomingPayments.map((payment) => (
-                <div
-                  key={payment.id}
-                  onClick={() => handleEdit(payment)}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors gap-3 cursor-pointer"
-                >
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <CreditCard className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{payment.name}</p>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {t(`subscriptions.modal.categories.${payment.category}`)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 sm:gap-6">
-                    <div className="text-right">
-                      <p className="font-semibold">{formatCurrency(payment.amount)}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatDate(payment.nextBillingDate)}
-                      </p>
-                    </div>
-                    <Badge variant="outline" className="hidden sm:inline-flex">
-                      {t(`subscriptions.modal.categories.${payment.category}`)}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
 
       <SubscriptionModal
         open={modalOpen}
