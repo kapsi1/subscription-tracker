@@ -170,8 +170,8 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('dashboard.totalYearlyCost')}
             </CardTitle>
-            <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-              <TrendingUp className="w-4 h-4 text-purple-600" />
+            <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+              <TrendingUp className="w-4 h-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
@@ -187,8 +187,8 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('dashboard.upcomingPayments')}
             </CardTitle>
-            <div className="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
-              <Calendar className="w-4 h-4 text-pink-600" />
+            <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+              <Calendar className="w-4 h-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
@@ -204,8 +204,8 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('dashboard.activeSubscriptions')}
             </CardTitle>
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-              <CreditCard className="w-4 h-4 text-cyan-600" />
+            <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+              <CreditCard className="w-4 h-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
@@ -306,9 +306,9 @@ export default function DashboardPage() {
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "white",
-                    border: "1px solid #e2e8f0",
-                    borderRadius: "8px",
+                    backgroundColor: "var(--card)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius)",
                     boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                   }}
                   formatter={(value: any, name?: string) => [
