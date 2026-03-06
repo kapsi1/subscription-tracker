@@ -35,8 +35,12 @@ test.describe('Internationalization (i18n) Flow', () => {
     // We can select by the accessible label or title.
     await page.getByRole('button', { name: 'Switch Language', exact: false }).click();
     
+    // Prepare to wait for the patch request
+    const patchPromise = page.waitForResponse(resp => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH');
+    
     // Select Polski
     await page.getByRole('menuitem', { name: 'Polski', exact: false }).click();
+    await patchPromise;
 
     // 3. Verify Translation
     // Verify the title translated to 'Panel główny'

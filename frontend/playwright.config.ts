@@ -45,8 +45,8 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: [
     {
-      command: 'cd ../backend && pnpm run start',
-      url: 'http://localhost:3001/health',
+      command: 'cd ../backend && pnpm run dev',
+      url: 'http://localhost:3001',
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,
     },

@@ -19,4 +19,32 @@ export class UpdateSettingsDto {
   @IsOptional()
   @IsString()
   language?: string;
+
+  @IsOptional()
+  @IsString()
+  theme?: string;
+
+  @IsOptional()
+  @IsString()
+  accentColor?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  emailNotifications?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  webhookEnabled?: boolean;
+
+  @IsOptional()
+  @IsString()
+  webhookUrl?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  dailyDigest?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  weeklyReport?: boolean;
 }

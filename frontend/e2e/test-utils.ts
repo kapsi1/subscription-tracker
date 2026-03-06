@@ -1,11 +1,7 @@
-import { Pool } from 'pg';
-
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5433/subscription_tracker?schema=public',
-});
+import { Client } from 'pg';
 
 export async function closePool() {
-  await pool.end();
+  // Deprecated: No shared pool to close anymore.
 }
 
 /**
@@ -13,7 +9,10 @@ export async function closePool() {
  * by directly querying the PostgreSQL database.
  */
 export async function cleanupUser(email: string) {
-  const client = await pool.connect();
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5433/subscription_tracker?schema=public',
+  });
+  await client.connect();
   try {
     await client.query('BEGIN');
     
@@ -53,6 +52,6 @@ export async function cleanupUser(email: string) {
     await client.query('ROLLBACK');
     console.error(`Failed to cleanup user ${email}:`, error);
   } finally {
-    client.release();
+    await client.end();
   }
 }

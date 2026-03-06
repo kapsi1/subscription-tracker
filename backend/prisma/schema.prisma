@@ -20,6 +20,13 @@ model User {
   monthlyBudget          Decimal?
   lastBudgetAlertSentAt  DateTime?
   pushSubscriptions      PushSubscription[]
+  theme                  String         @default("system")
+  accentColor            String         @default("Indigo")
+  emailNotifications     Boolean        @default(true)
+  webhookEnabled         Boolean        @default(false)
+  webhookUrl             String?
+  dailyDigest            Boolean        @default(false)
+  weeklyReport           Boolean        @default(true)
 }
 
 enum BillingCycle {

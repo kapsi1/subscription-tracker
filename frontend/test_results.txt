@@ -1,0 +1,106 @@
+
+Running 8 tests using 1 worker
+
+[1A[2K[1/8] [chromium] › e2e\auth.spec.ts:14:7 › Authentication Flow › should navigate to login page and show correct elements
+[1A[2K[2/8] [chromium] › e2e\auth.spec.ts:26:7 › Authentication Flow › should complete the registration, login and logout cycle
+[1A[2K[chromium] › e2e\auth.spec.ts:26:7 › Authentication Flow › should complete the registration, login and logout cycle
+Successfully cleaned up test user: testuser-auth-1772802460855@example.com
+
+[1A[2K  1) [chromium] › e2e\auth.spec.ts:26:7 › Authentication Flow › should complete the registration, login and logout cycle 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: 'US' })[22m
+
+
+      46 |     // 2. Logout
+      47 |     // Open user menu dropdown
+    > 48 |     await page.getByRole('button', { name: 'US', exact: false }).click();
+         |                                                                  ^
+      49 |     
+      50 |     // Click explicit Logout text since it has a specific aria role in Radix
+      51 |     await page.getByRole('menuitem', { name: /Log out/i }).click();
+        at C:\dev\subscription-tracker\frontend\e2e\auth.spec.ts:48:66
+
+    Error Context: test-results\auth-Authentication-Flow-s-eaee8-tion-login-and-logout-cycle-chromium\error-context.md
+
+
+[1A[2K[3/8] [chromium] › e2e\dashboard.spec.ts:13:7 › Dashboard Flow › should display accurate summary cards for active subscriptions
+[1A[2K[chromium] › e2e\dashboard.spec.ts:13:7 › Dashboard Flow › should display accurate summary cards for active subscriptions
+Successfully cleaned up test user: testuser-dash-1772802524250@example.com
+
+[1A[2K[4/8] [chromium] › e2e\i18n.spec.ts:14:7 › Internationalization (i18n) Flow › should switch language and persist across reloads
+[1A[2K  2) [chromium] › e2e\i18n.spec.ts:14:7 › Internationalization (i18n) Flow › should switch language and persist across reloads 
+
+    Error: Cannot use a pool after calling end on the pool
+
+       at test-utils.ts:16
+
+      14 |  */
+      15 | export async function cleanupUser(email: string) {
+    > 16 |   const client = await pool.connect();
+         |                             ^
+      17 |   try {
+      18 |     await client.query('BEGIN');
+      19 |     
+        at BoundPool.connect (C:\dev\subscription-tracker\frontend\node_modules\.pnpm\pg-pool@3.11.0_pg@8.18.0\node_modules\pg-pool\index.js:184:19)
+        at cleanupUser (C:\dev\subscription-tracker\frontend\e2e\test-utils.ts:16:29)
+        at C:\dev\subscription-tracker\frontend\e2e\i18n.spec.ts:10:22
+
+
+[1A[2K[5/8] [chromium] › e2e\settings.spec.ts:27:7 › User Settings Persistence › should persist accent color across page reloads
+[1A[2K[chromium] › e2e\settings.spec.ts:27:7 › User Settings Persistence › should persist accent color across page reloads
+Successfully cleaned up test user: testuser-settings-1772802535946-70@example.com
+
+[1A[2K[6/8] [chromium] › e2e\settings.spec.ts:51:7 › User Settings Persistence › should persist theme across page reloads
+[1A[2K[chromium] › e2e\settings.spec.ts:51:7 › User Settings Persistence › should persist theme across page reloads
+Successfully cleaned up test user: testuser-settings-1772802539109-195@example.com
+
+[1A[2K[7/8] [chromium] › e2e\settings.spec.ts:77:7 › User Settings Persistence › should persist notification settings in Settings page
+[1A[2K[chromium] › e2e\settings.spec.ts:77:7 › User Settings Persistence › should persist notification settings in Settings page
+Successfully cleaned up test user: testuser-settings-1772802541847-983@example.com
+
+[1A[2K[8/8] [chromium] › e2e\subscriptions.spec.ts:13:7 › Subscriptions Flow › should manage subscriptions (CRUD)
+[1A[2K  3) [chromium] › e2e\subscriptions.spec.ts:13:7 › Subscriptions Flow › should manage subscriptions (CRUD) 
+
+    TimeoutError: page.waitForURL: Timeout 30000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation to "**/dashboard" until "load"
+    ============================================================
+
+      18 |     await page.getByLabel('Password').fill(testPassword);
+      19 |     await page.getByRole('button', { name: 'Create Account' }).click();
+    > 20 |     await page.waitForURL('**/dashboard', { timeout: 30_000 });
+         |                ^
+      21 |
+      22 |     // Navigate to Subscriptions
+      23 |     await page.goto('/subscriptions');
+        at C:\dev\subscription-tracker\frontend\e2e\subscriptions.spec.ts:20:16
+
+    Error: Cannot use a pool after calling end on the pool
+
+       at test-utils.ts:16
+
+      14 |  */
+      15 | export async function cleanupUser(email: string) {
+    > 16 |   const client = await pool.connect();
+         |                             ^
+      17 |   try {
+      18 |     await client.query('BEGIN');
+      19 |     
+        at BoundPool.connect (C:\dev\subscription-tracker\frontend\node_modules\.pnpm\pg-pool@3.11.0_pg@8.18.0\node_modules\pg-pool\index.js:184:19)
+        at cleanupUser (C:\dev\subscription-tracker\frontend\e2e\test-utils.ts:16:29)
+        at C:\dev\subscription-tracker\frontend\e2e\subscriptions.spec.ts:9:22
+
+    Error Context: test-results\subscriptions-Subscription-d83d0--manage-subscriptions-CRUD--chromium\error-context.md
+
+
+[1A[2K  3 failed
+    [chromium] › e2e\auth.spec.ts:26:7 › Authentication Flow › should complete the registration, login and logout cycle 
+    [chromium] › e2e\i18n.spec.ts:14:7 › Internationalization (i18n) Flow › should switch language and persist across reloads 
+    [chromium] › e2e\subscriptions.spec.ts:13:7 › Subscriptions Flow › should manage subscriptions (CRUD) 
+  5 passed (2.0m)
+
+[36m  Serving HTML report at http://localhost:60577. Press Ctrl+C to quit.[39m

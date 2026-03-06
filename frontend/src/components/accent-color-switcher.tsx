@@ -14,6 +14,7 @@ import { cn } from "@/components/ui/utils";
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import api from "@/lib/api";
 
 interface AccentColor {
   name: string;
@@ -54,17 +55,40 @@ export function AccentColorSwitcher() {
   const [currentAccent, setCurrentAccent] = useState<AccentColor>(ACCENT_COLORS[0]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("app-accent-color");
-    if (saved) {
-      const found = ACCENT_COLORS.find(c => c.name === saved);
+    // Check cache first for zero-flicker load
+    const cached = localStorage.getItem("app-accent-color");
+    if (cached) {
+      const found = ACCENT_COLORS.find(c => c.name === cached);
       if (found) {
         setCurrentAccent(found);
         applyAccentColor(found);
-        return;
       }
     }
-    // Apply default if nothing found
-    applyAccentColor(ACCENT_COLORS[0]);
+
+    const fetchSettings = async () => {
+      try {
+        const response = await api.get("/users/me");
+        if (response.data.theme) {
+          setTheme(response.data.theme);
+        }
+        if (response.data.accentColor) {
+          const found = ACCENT_COLORS.find(c => c.name === response.data.accentColor);
+          if (found) {
+            setCurrentAccent(found);
+            applyAccentColor(found);
+            localStorage.setItem("app-accent-color", found.name);
+          }
+        } else if (!cached) {
+          // Apply default if nothing found and no cache
+          applyAccentColor(ACCENT_COLORS[0]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user settings", error);
+        if (!cached) applyAccentColor(ACCENT_COLORS[0]);
+      }
+    };
+
+    fetchSettings();
   }, []);
 
   const applyAccentColor = (accent: AccentColor) => {
@@ -116,14 +140,25 @@ export function AccentColorSwitcher() {
     `;
   };
 
-  const handleSelect = (accent: AccentColor) => {
+  const handleSelect = async (accent: AccentColor) => {
     setCurrentAccent(accent);
-    localStorage.setItem("app-accent-color", accent.name);
     applyAccentColor(accent);
+    localStorage.setItem("app-accent-color", accent.name);
+    try {
+      await api.patch("/users/settings", { accentColor: accent.name });
+    } catch (error) {
+      console.error("Failed to save accent color", error);
+    }
   };
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+  const toggleTheme = async () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    try {
+      await api.patch("/users/settings", { theme: newTheme });
+    } catch (error) {
+      console.error("Failed to save theme setting", error);
+    }
   };
 
   return (

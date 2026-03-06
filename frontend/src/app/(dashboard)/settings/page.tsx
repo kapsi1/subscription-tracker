@@ -34,13 +34,18 @@ export default function SettingsPage() {
     const fetchSettings = async () => {
       try {
         const response = await api.get("/users/me");
-        setSettings({
-          ...settings,
-          defaultReminderEnabled: response.data.defaultReminderEnabled,
-          defaultReminderDays: response.data.defaultReminderDays.toString(),
-          emailAddress: response.data.email,
-          monthlyBudget: response.data.monthlyBudget?.toString() || "",
-        });
+          setSettings({
+            ...settings,
+            defaultReminderEnabled: response.data.defaultReminderEnabled,
+            defaultReminderDays: response.data.defaultReminderDays?.toString() || "3",
+            emailAddress: response.data.email,
+            monthlyBudget: response.data.monthlyBudget?.toString() || "",
+            emailNotifications: response.data.emailNotifications,
+            webhookEnabled: response.data.webhookEnabled,
+            webhookUrl: response.data.webhookUrl || "",
+            dailyDigest: response.data.dailyDigest,
+            weeklyReport: response.data.weeklyReport,
+          });
       } catch (error) {
         toast.error(t('settings.loadError'));
       }
@@ -72,6 +77,11 @@ export default function SettingsPage() {
         defaultReminderEnabled: settings.defaultReminderEnabled,
         defaultReminderDays: parseInt(settings.defaultReminderDays),
         monthlyBudget: settings.monthlyBudget ? parseFloat(settings.monthlyBudget) : null,
+        emailNotifications: settings.emailNotifications,
+        webhookEnabled: settings.webhookEnabled,
+        webhookUrl: settings.webhookUrl,
+        dailyDigest: settings.dailyDigest,
+        weeklyReport: settings.weeklyReport,
       });
       toast.success(t('settings.saveSuccess'));
     } catch (error) {

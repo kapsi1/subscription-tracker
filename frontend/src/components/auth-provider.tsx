@@ -12,8 +12,15 @@ export interface User {
   updatedAt: string;
   defaultReminderEnabled: boolean;
   defaultReminderDays: number;
-  monthlyBudget: number | string | null;
-  lastBudgetAlertSentAt: string | null;
+  monthlyBudget          : number | string | null;
+  lastBudgetAlertSentAt  : string | null;
+  theme                  : string;
+  accentColor            : string;
+  emailNotifications     : boolean;
+  webhookEnabled         : boolean;
+  webhookUrl             : string | null;
+  dailyDigest            : boolean;
+  weeklyReport           : boolean;
 }
 
 interface AuthContextType {

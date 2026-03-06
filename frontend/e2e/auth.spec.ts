@@ -44,11 +44,8 @@ test.describe('Authentication Flow', () => {
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
     // 2. Logout
-    // Open user menu dropdown
-    await page.getByRole('button', { name: 'US', exact: false }).click();
-    
-    // Click explicit Logout text since it has a specific aria role in Radix
-    await page.getByRole('menuitem', { name: /Log out/i }).click();
+    // Click explicit Logout button in the header
+    await page.getByRole('button', { name: 'Log out' }).click();
 
     // Verify redirect to login
     await page.waitForURL('**/login', { timeout: 30_000 });
