@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:18
     container_name: subscription_tracker_db
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -11,11 +11,11 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_v18:/var/lib/postgresql
     restart: unless-stopped
 
   redis:
-    image: redis:7-alpine
+    image: redis:8
     container_name: subscription_tracker_redis
     ports:
       - "6379:6379"
@@ -32,5 +32,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  postgres_data:
+  postgres_data_v18:
   redis_data:

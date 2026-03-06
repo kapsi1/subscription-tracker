@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { 
   CreditCard, 
   LayoutDashboard, 
@@ -34,7 +34,6 @@ import { ErrorState } from "@/components/error-state";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { isAuthenticated, isLoading, logout } = useAuth();
   const { t, i18n } = useTranslation();
@@ -66,6 +65,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       : t("common.redirectingToLogin", { defaultValue: "Redirecting to login..." }),
   };
   const [backendInitStatus, setBackendInitStatus] = useState<"checking" | "ready" | "timeout">("checking");
+  const redirectStartedRef = useRef(false);
 
   const runBackendInitializationCheck = useCallback(() => {
     setBackendInitStatus("checking");
@@ -104,22 +104,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [runBackendInitializationCheck]);
 
   useEffect(() => {
-    if (backendInitStatus !== "ready" || isLoading || isAuthenticated) {
+    if (backendInitStatus !== "ready" || isLoading || isAuthenticated || redirectStartedRef.current) {
       return;
     }
 
-    router.replace("/login");
-
-    const fallbackId = window.setTimeout(() => {
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
-      }
-    }, 400);
-
-    return () => {
-      window.clearTimeout(fallbackId);
-    };
-  }, [backendInitStatus, isLoading, isAuthenticated, router]);
+    redirectStartedRef.current = true;
+    window.location.replace("/login");
+  }, [backendInitStatus, isLoading, isAuthenticated]);
 
   if (backendInitStatus === "checking") {
     return (
@@ -172,6 +163,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <LoadingState
             message={initText.redirecting}
           />
+          <div className="mt-4">
+            <Button asChild variant="outline">
+              <a href="/login">Go to login</a>
+            </Button>
+          </div>
         </div>
       </div>
     );
