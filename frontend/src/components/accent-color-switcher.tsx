@@ -30,22 +30,22 @@ interface AccentColor {
 }
 
 const ACCENT_COLORS: AccentColor[] = [
+  { name: "Crimson", lightPrimary: "#BE123C", darkPrimary: "#f43f5e", lightAccent: "#ffe4e6", darkAccent: "#4c0519", lightForeground: "#BE123C", darkForeground: "#fecdd3", chartBar: "#BE123C", lightBg: "#FFF1F2", darkBg: "#1C040E" },
+  { name: "Rose", lightPrimary: "#DB2777", darkPrimary: "#f472b6", lightAccent: "#fce7f3", darkAccent: "#500724", lightForeground: "#DB2777", darkForeground: "#fbcfe8", chartBar: "#DB2777", lightBg: "#FFF0F6", darkBg: "#1C040D" },
+  { name: "Lavender", lightPrimary: "#7C3AED", darkPrimary: "#a78bfa", lightAccent: "#f3e8ff", darkAccent: "#2e1065", lightForeground: "#7C3AED", darkForeground: "#e9d5ff", chartBar: "#7C3AED", lightBg: "#F9F5FF", darkBg: "#0F081C" },
   { name: "Indigo", lightPrimary: "#4F46E5", darkPrimary: "#6366f1", lightAccent: "#e0e7ff", darkAccent: "#312e81", lightForeground: "#4F46E5", darkForeground: "#c7d2fe", chartBar: "#4F46E5", lightBg: "#F5F7FF", darkBg: "#0B0E2E" },
-  { name: "Violet", lightPrimary: "#7c3aed", darkPrimary: "#a78bfa", lightAccent: "#ede9fe", darkAccent: "#4c1d95", lightForeground: "#7c3aed", darkForeground: "#ddd6fe", chartBar: "#7c3aed", lightBg: "#F9F5FF", darkBg: "#110931" },
-  { name: "Purple", lightPrimary: "#9333ea", darkPrimary: "#c084fc", lightAccent: "#f3e8ff", darkAccent: "#581c87", lightForeground: "#9333ea", darkForeground: "#e9d5ff", chartBar: "#9333ea", lightBg: "#FAF5FF", darkBg: "#160A2C" },
-  { name: "Fuchsia", lightPrimary: "#c026d3", darkPrimary: "#e879f9", lightAccent: "#fae8ff", darkAccent: "#701a75", lightForeground: "#c026d3", darkForeground: "#f5d0fe", chartBar: "#c026d3", lightBg: "#FDF4FF", darkBg: "#1A082D" },
-  { name: "Rose", lightPrimary: "#e11d48", darkPrimary: "#fb7185", lightAccent: "#ffe4e6", darkAccent: "#881337", lightForeground: "#e11d48", darkForeground: "#fecdd3", chartBar: "#e11d48", lightBg: "#FFF1F2", darkBg: "#220412" },
-  { name: "Pink", lightPrimary: "#db2777", darkPrimary: "#f472b6", lightAccent: "#fce7f3", darkAccent: "#831843", lightForeground: "#db2777", darkForeground: "#fbcfe8", chartBar: "#db2777", lightBg: "#FDF2F8", darkBg: "#210515" },
-  { name: "Red", lightPrimary: "#dc2626", darkPrimary: "#f87171", lightAccent: "#fee2e2", darkAccent: "#7f1d1d", lightForeground: "#dc2626", darkForeground: "#fecaca", chartBar: "#dc2626", lightBg: "#FEF2F2", darkBg: "#220707" },
-  { name: "Orange", lightPrimary: "#ea580c", darkPrimary: "#fb923c", lightAccent: "#ffedd5", darkAccent: "#7c2d12", lightForeground: "#ea580c", darkForeground: "#fed7aa", chartBar: "#ea580c", lightBg: "#FFF7ED", darkBg: "#1C0D08" },
-  { name: "Amber", lightPrimary: "#d97706", darkPrimary: "#fbbf24", lightAccent: "#fef3c7", darkAccent: "#78350f", lightForeground: "#d97706", darkForeground: "#fde68a", chartBar: "#d97706", lightBg: "#FFFBEB", darkBg: "#1B0F06" },
-  { name: "Yellow", lightPrimary: "#ca8a04", darkPrimary: "#facc15", lightAccent: "#fef9c3", darkAccent: "#713f12", lightForeground: "#ca8a04", darkForeground: "#fef08a", chartBar: "#ca8a04", lightBg: "#FEFCE8", darkBg: "#171206" },
-  { name: "Lime", lightPrimary: "#65a30d", darkPrimary: "#a3e635", lightAccent: "#f7fee7", darkAccent: "#365314", lightForeground: "#65a30d", darkForeground: "#bef264", chartBar: "#65a30d", lightBg: "#F7FEE7", darkBg: "#0E1505" },
-  { name: "Green", lightPrimary: "#16a34a", darkPrimary: "#4ade80", lightAccent: "#f0fdf4", darkAccent: "#14532d", lightForeground: "#16a34a", darkForeground: "#bbf7d0", chartBar: "#16a34a", lightBg: "#F0FDF4", darkBg: "#051508" },
-  { name: "Emerald", lightPrimary: "#059669", darkPrimary: "#34d399", lightAccent: "#ecfdf5", darkAccent: "#064e3b", lightForeground: "#059669", darkForeground: "#a7f3d0", chartBar: "#059669", lightBg: "#ECFDF5", darkBg: "#02150E" },
-  { name: "Teal", lightPrimary: "#0d9488", darkPrimary: "#2dd4bf", lightAccent: "#f0fdfa", darkAccent: "#134e4a", lightForeground: "#0d9488", darkForeground: "#99f6e4", chartBar: "#0d9488", lightBg: "#F0FDFA", darkBg: "#041513" },
-  { name: "Cyan", lightPrimary: "#0891b2", darkPrimary: "#22d3ee", lightAccent: "#ecfeff", darkAccent: "#164e63", lightForeground: "#0891b2", darkForeground: "#a5f3fc", chartBar: "#0891b2", lightBg: "#ECFEFF", darkBg: "#04141A" },
-  { name: "Sky", lightPrimary: "#0284c7", darkPrimary: "#38bdf8", lightAccent: "#f0f9ff", darkAccent: "#0c4a6e", lightForeground: "#0284c7", darkForeground: "#bae6fd", chartBar: "#0284c7", lightBg: "#F0F9FF", darkBg: "#03111A" },
+  { name: "Cobalt", lightPrimary: "#1D4ED8", darkPrimary: "#3b82f6", lightAccent: "#dbeafe", darkAccent: "#172554", lightForeground: "#1D4ED8", darkForeground: "#bfdbfe", chartBar: "#1D4ED8", lightBg: "#F0F7FF", darkBg: "#050B1C" },
+  { name: "Navy", lightPrimary: "#1E3A8A", darkPrimary: "#2563eb", lightAccent: "#eff6ff", darkAccent: "#172554", lightForeground: "#1E3A8A", darkForeground: "#dbeafe", chartBar: "#1E3A8A", lightBg: "#F0F4FF", darkBg: "#05081A" },
+  { name: "Mint", lightPrimary: "#059669", darkPrimary: "#10b981", lightAccent: "#ecfdf5", darkAccent: "#064e3b", lightForeground: "#059669", darkForeground: "#a7f3d0", chartBar: "#059669", lightBg: "#F0FDF9", darkBg: "#02120D" },
+  { name: "Forest", lightPrimary: "#15803D", darkPrimary: "#22c55e", lightAccent: "#dcfce7", darkAccent: "#052e16", lightForeground: "#15803D", darkForeground: "#bbf7d0", chartBar: "#15803D", lightBg: "#F0FDF4", darkBg: "#041408" },
+  { name: "Sage", lightPrimary: "#4D7C0F", darkPrimary: "#84cc16", lightAccent: "#f7fee7", darkAccent: "#1a2e05", lightForeground: "#4D7C0F", darkForeground: "#d9f99d", chartBar: "#4D7C0F", lightBg: "#FAFEF0", darkBg: "#0D1405" },
+  { name: "Amber", lightPrimary: "#D97706", darkPrimary: "#f59e0b", lightAccent: "#fef3c7", darkAccent: "#451a03", lightForeground: "#D97706", darkForeground: "#fde68a", chartBar: "#D97706", lightBg: "#FFFBEB", darkBg: "#170F04" },
+  { name: "Gold", lightPrimary: "#B45309", darkPrimary: "#fbbf24", lightAccent: "#fef3c7", darkAccent: "#451a03", lightForeground: "#B45309", darkForeground: "#fde68a", chartBar: "#B45309", lightBg: "#FFFCEB", darkBg: "#150D04" },
+  { name: "Terracotta", lightPrimary: "#9A3412", darkPrimary: "#ea580c", lightAccent: "#ffedd5", darkAccent: "#431407", lightForeground: "#9A3412", darkForeground: "#fed7aa", chartBar: "#9A3412", lightBg: "#FFF5F0", darkBg: "#1A0904" },
+  { name: "Coffee", lightPrimary: "#78350F", darkPrimary: "#a16207", lightAccent: "#fef3c7", darkAccent: "#271605", lightForeground: "#78350F", darkForeground: "#fde68a", chartBar: "#78350F", lightBg: "#FFF9F0", darkBg: "#140D04" },
+  { name: "Sand", lightPrimary: "#A16207", darkPrimary: "#d97706", lightAccent: "#fefce8", darkAccent: "#422006", lightForeground: "#A16207", darkForeground: "#fef08a", chartBar: "#A16207", lightBg: "#FFFBF0", darkBg: "#140F04" },
+  { name: "Slate", lightPrimary: "#475569", darkPrimary: "#94a3b8", lightAccent: "#f1f5f9", darkAccent: "#0f172a", lightForeground: "#475569", darkForeground: "#e2e8f0", chartBar: "#475569", lightBg: "#F8FAFC", darkBg: "#0A0C10" },
+  { name: "Charcoal", lightPrimary: "#334155", darkPrimary: "#64748b", lightAccent: "#f8fafc", darkAccent: "#1e293b", lightForeground: "#334155", darkForeground: "#cbd5e1", chartBar: "#334155", lightBg: "#F1F5F9", darkBg: "#0C1014" },
 ];
 
 export function AccentColorSwitcher() {
