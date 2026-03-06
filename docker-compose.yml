@@ -5,8 +5,8 @@ services:
     image: postgres:18
     container_name: subscription_tracker_db
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-subscription_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Secur3Passw0rd!}
       POSTGRES_DB: ${POSTGRES_DB:-subscription_tracker}
     ports:
       - "5433:5432"

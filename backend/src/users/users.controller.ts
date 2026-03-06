@@ -12,6 +12,7 @@ import {
   BadRequestException,
   Logger,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
@@ -72,6 +73,7 @@ export class UsersController {
     return this.usersService.deletePushSubscription(req.user.userId, endpoint);
   }
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-push')
   async testPush(
     @Req() req: any,
@@ -113,6 +115,7 @@ export class UsersController {
     return { message: 'Test notification sent.' };
   }
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-email')
   async testEmail(@Req() req: any) {
     const user = await this.usersService.findById(req.user.userId);

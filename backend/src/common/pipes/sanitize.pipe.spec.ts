@@ -10,7 +10,7 @@ describe('SanitizePipe', () => {
   it('should remove HTML tags from strings', () => {
     const input = '<script>alert("xss")</script>Hello <p>world</p>';
     const output = pipe.transform(input, {} as any);
-    expect(output).toBe('alert("xss")Hello world');
+    expect(output).toBe('Hello world');
   });
 
   it('should sanitize strings inside objects', () => {

@@ -64,9 +64,10 @@ export class AlertsProcessor extends WorkerHost {
 
     let webhookSecret: string | undefined;
     if (encryptedSecret) {
-      const encryptionSecret =
-        this.configService.get<string>('WEBHOOK_SECRET_KEY') ||
-        'default-webhook-encryption-key';
+      const encryptionSecret = this.configService.get<string>('WEBHOOK_SECRET_KEY');
+      if (!encryptionSecret) {
+        throw new Error('WEBHOOK_SECRET_KEY must be set in the environment to process webhooks with secrets');
+      }
       webhookSecret = EncryptionUtil.decrypt(encryptedSecret, encryptionSecret);
     }
 

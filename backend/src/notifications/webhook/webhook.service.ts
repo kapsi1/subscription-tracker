@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import axios from 'axios';
 import { createHmac } from 'node:crypto';
 
@@ -14,6 +14,26 @@ export class WebhookService {
     amount: number,
     currency: string,
   ) {
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(url);
+    } catch (e) {
+      throw new BadRequestException('Invalid webhook URL');
+    }
+
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+      throw new BadRequestException('Invalid webhook protocol');
+    }
+
+    const hostname = parsedUrl.hostname.toLowerCase();
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+    const isPrivateIP = /^(127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|169\.254\.)/.test(hostname);
+    
+    if (isLocalhost || isPrivateIP) {
+      this.logger.warn(`[WEBHOOK] Blocked attempt to call internal URL: ${url}`);
+      throw new BadRequestException('Webhook URL points to an internal network');
+    }
+
     const payload = {
       subscriptionName,
       daysBefore,

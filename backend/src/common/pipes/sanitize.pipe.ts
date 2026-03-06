@@ -1,4 +1,5 @@
 import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
+import sanitizeHtml from 'sanitize-html';
 
 @Injectable()
 export class SanitizePipe implements PipeTransform {
@@ -13,9 +14,10 @@ export class SanitizePipe implements PipeTransform {
   }
 
   private sanitizeString(str: string): string {
-    // Simple sanitization to prevent basic XSS or unwanted tags
-    // For a more robust solution, use a library like dompurify or sanitize-html
-    return str.replace(/<[^>]*>?/gm, '');
+    return sanitizeHtml(str, {
+      allowedTags: [],
+      allowedAttributes: {},
+    });
   }
 
   private sanitizeObject(obj: any): any {
