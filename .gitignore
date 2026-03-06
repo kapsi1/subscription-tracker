@@ -113,3 +113,5 @@ dist
 # Biome cache
 .biome
 
+*.log
+frontend/playwright-report
