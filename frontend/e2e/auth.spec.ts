@@ -28,7 +28,7 @@ test.describe('Authentication Flow', () => {
     await page.goto('/login');
     
     // Switch to Sign Up mode
-    await page.getByRole('button', { name: "Don't have an account? Sign up" }).click();
+    await page.getByRole('button', { name: "Switch to Register" }).click();
     await expect(page.getByRole('button', { name: 'Create Account' })).toBeVisible();
 
     // Fill the form
@@ -55,7 +55,7 @@ test.describe('Authentication Flow', () => {
     // Ensure we're in Sign In mode (route state can preserve Sign Up mode).
     const createAccountButton = page.getByRole('button', { name: 'Create Account' });
     if (await createAccountButton.isVisible().catch(() => false)) {
-      await page.getByRole('button', { name: 'Already have an account? Sign in' }).click();
+      await page.getByRole('button', { name: 'Switch to Login' }).click();
     }
 
     await page.getByLabel('Email').fill(testEmail);

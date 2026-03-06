@@ -16,7 +16,7 @@ test.describe('Internationalization (i18n) Flow', () => {
     await page.goto('/login');
     
     // Switch to Sign Up mode
-    await page.getByRole('button', { name: "Don't have an account? Sign up" }).click();
+    await page.getByRole('button', { name: "Switch to Register" }).click();
     
     // Fill the form
     await page.getByLabel('Email').fill(testEmail);

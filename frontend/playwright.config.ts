@@ -9,12 +9,9 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
 export default defineConfig({
   testDir: './e2e',
-  timeout: 10000,
-  expect: {
-    timeout: 10000,
-  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -48,14 +45,14 @@ export default defineConfig({
       command: 'cd ../backend && pnpm run dev',
       url: 'http://localhost:3001',
       reuseExistingServer: !process.env.CI,
-      timeout: 60 * 1000,
+      timeout: 30 * 1000,
     },
     {
       command: 'pnpm exec next dev --webpack',
       // command: 'cd ../frontend && pnpm run dev',
       url: 'http://localhost:3000',
       reuseExistingServer: !process.env.CI,
-      timeout: 60 * 1000,
+      timeout: 30 * 1000,
     },
   ],
 });

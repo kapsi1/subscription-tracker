@@ -168,6 +168,7 @@ export function AccentColorSwitcher() {
           variant="ghost" 
           size="icon" 
           title={t('language.accentColor')} 
+          aria-label={t('language.accentColor')}
           className="h-9 w-9 flex items-center justify-center translate-y-px"
         >
           <div 
@@ -185,6 +186,7 @@ export function AccentColorSwitcher() {
             onClick={toggleTheme}
             className="h-8 w-8 rounded-lg"
             title={theme === "dark" ? t('theme.light') : t('theme.dark')}
+            aria-label={theme === "dark" ? t('theme.light') : t('theme.dark')}
           >
             {theme === "dark" ? (
               <Moon className="h-4 w-4" />

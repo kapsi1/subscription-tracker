@@ -13,13 +13,14 @@ test.describe('Dashboard Flow', () => {
   test('should display accurate summary cards for active subscriptions', async ({ page }) => {
     // 1. Setup: Register
     await page.goto('/login');
-    await page.getByRole('button', { name: "Don't have an account? Sign up" }).click();
+    await page.getByRole('button', { name: "Switch to Register" }).click();
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     await page.getByRole('button', { name: 'Create Account' }).click();
     await page.waitForURL('**/dashboard', { timeout: 30_000 });
 
     // 2. Add two subscriptions via the Subscriptions page
+    await page.waitForTimeout(1000);
     await page.goto('/subscriptions');
     await expect(page.getByRole('heading', { name: 'Subscriptions', exact: true })).toBeVisible();
 

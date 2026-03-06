@@ -215,7 +215,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <AccentColorSwitcher />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Button variant="ghost" size="icon" className="h-9 w-9" aria-label={t('language.switch')}>
                   {currentLanguage.startsWith("en") ? <UKFlag /> : <PolandFlag />}
                 </Button>
               </DropdownMenuTrigger>
@@ -231,7 +231,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button variant="ghost" size="icon" onClick={handleLogout} className="h-9 w-9">
+            <Button variant="ghost" size="icon" onClick={handleLogout} className="h-9 w-9" aria-label={t('nav.logout')}>
               <LogOut className="h-5 w-5" />
             </Button>
           </div>

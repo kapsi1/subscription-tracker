@@ -13,13 +13,14 @@ test.describe('Subscriptions Flow', () => {
   test('should manage subscriptions (CRUD)', async ({ page }) => {
     // 1. Setup: Register and Login
     await page.goto('/login');
-    await page.getByRole('button', { name: "Don't have an account? Sign up" }).click();
+    await page.getByRole('button', { name: "Switch to Register" }).click();
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     await page.getByRole('button', { name: 'Create Account' }).click();
     await page.waitForURL('**/dashboard', { timeout: 30_000 });
 
     // Navigate to Subscriptions
+    await page.waitForTimeout(1000);
     await page.goto('/subscriptions');
     await expect(page.getByRole('heading', { name: 'Subscriptions', exact: true })).toBeVisible();
 
@@ -63,6 +64,7 @@ test.describe('Subscriptions Flow', () => {
     
     await expect(page.getByRole('dialog', { name: 'Edit Subscription' })).toBeVisible();
     await page.getByLabel('Amount').fill('17.99');
+    await page.waitForTimeout(500); // Wait for potential state settlement
     await page.getByRole('button', { name: 'Update Subscription' }).click();
 
     await expect(page.getByRole('dialog')).not.toBeVisible();
