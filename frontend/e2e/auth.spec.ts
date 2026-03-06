@@ -2,12 +2,20 @@ import { test, expect } from '@playwright/test';
 import { cleanupUser, closePool } from './test-utils';
 
 test.describe('Authentication Flow', () => {
-  const testEmail = `testuser-auth-${Date.now()}@example.com`;
   const testPassword = 'StrongPassword123!';
+  const createdEmails: string[] = [];
+
+  const generateTestEmail = () => {
+    const email = `testuser-auth-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`;
+    createdEmails.push(email);
+    return email;
+  };
 
   // Cleanup after all tests in this execution block finish
   test.afterAll(async () => {
-    await cleanupUser(testEmail);
+    for (const email of createdEmails) {
+      await cleanupUser(email);
+    }
     await closePool();
   });
 
@@ -23,7 +31,33 @@ test.describe('Authentication Flow', () => {
     await expect(page.getByRole('button', { name: 'Sign In' })).toBeVisible();
   });
 
+  test('should redirect unauthenticated users from root directly to login without dashboard flash', async ({ page }) => {
+    const visitedUrls: string[] = [];
+    page.on('framenavigated', (frame) => {
+      if (frame === page.mainFrame()) {
+        visitedUrls.push(frame.url());
+      }
+    });
+
+    await page.goto('/');
+    await page.waitForURL('**/login', { timeout: 30_000 });
+
+    await expect(page).toHaveURL(/\/login/);
+    await expect(page.getByRole('button', { name: 'Sign In' })).toBeVisible();
+
+    const visitedDashboard = visitedUrls.some((url) => {
+      try {
+        return new URL(url).pathname === '/dashboard';
+      } catch {
+        return false;
+      }
+    });
+    expect(visitedDashboard).toBeFalsy();
+  });
+
   test('should complete the registration, login and logout cycle', async ({ page }) => {
+    const testEmail = generateTestEmail();
+
     // 1. Registration
     await page.goto('/login');
     
@@ -67,5 +101,25 @@ test.describe('Authentication Flow', () => {
     // Verify redirect to dashboard again
     await page.waitForURL('**/dashboard', { timeout: 30_000 });
     await expect(page).toHaveURL(/\/dashboard/);
+  });
+
+  test('should redirect authenticated users from root to dashboard without auth loading gate flash', async ({ page }) => {
+    const testEmail = generateTestEmail();
+
+    await page.goto('/login');
+    await page.getByRole('button', { name: "Switch to Register" }).click();
+    await page.getByLabel('Email').fill(testEmail);
+    await page.getByLabel('Password').fill(testPassword);
+    await page.getByRole('button', { name: 'Create Account' }).click();
+    await page.waitForURL('**/dashboard', { timeout: 30_000 });
+
+    await page.goto('/');
+    await page.waitForURL('**/dashboard', { timeout: 30_000 });
+
+    await expect(page).toHaveURL(/\/dashboard/);
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Sign In' })).not.toBeVisible();
+    await expect(page.getByText('Redirecting to login...')).not.toBeVisible();
+    await expect(page.getByText('Initializing application...')).not.toBeVisible();
   });
 });

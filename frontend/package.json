@@ -9,7 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@next/third-parties": "^16.1.6",

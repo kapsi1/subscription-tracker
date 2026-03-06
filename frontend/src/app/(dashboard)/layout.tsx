@@ -129,7 +129,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   // 2. Not Authenticated (show full screen loading)
-  if (!isAuthenticated && !isRedirecting) {
+  if (!isAuthenticated && !isLoading && !isRedirecting) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="w-full max-w-2xl px-4 text-center">
