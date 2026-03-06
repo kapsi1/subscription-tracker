@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 @Injectable()
 export class EmailService {
@@ -8,15 +9,44 @@ export class EmailService {
   private transporter: nodemailer.Transporter;
 
   constructor(private readonly configService: ConfigService) {
-    this.transporter = nodemailer.createTransport({
-      host: this.configService.get<string>('SMTP_HOST', 'localhost'),
-      port: this.configService.get<number>('SMTP_PORT', 1025),
-      secure: this.configService.get<boolean>('SMTP_SECURE', false),
-      auth: {
-        user: this.configService.get<string>('SMTP_USER'),
-        pass: this.configService.get<string>('SMTP_PASS'),
-      },
-    });
+    const host = this.configService.get<string>('SMTP_HOST', 'localhost');
+    const port = this.getNumberEnv('SMTP_PORT', 1025);
+    const secure = this.getBooleanEnv('SMTP_SECURE', port === 465);
+    const user = this.configService.get<string>('SMTP_USER')?.trim();
+    const pass = this.configService.get<string>('SMTP_PASS');
+
+    const transportOptions: SMTPTransport.Options = {
+      host,
+      port,
+      secure,
+    };
+
+    if (user && pass) {
+      transportOptions.auth = { user, pass };
+    }
+
+    this.transporter = nodemailer.createTransport(transportOptions);
+
+    this.logger.log(
+      `[SMTP] Transport configured (host=${host}, port=${port}, secure=${secure})`,
+    );
+  }
+
+  private getNumberEnv(key: string, fallback: number): number {
+    const raw = this.configService.get<string>(key);
+    if (!raw) {
+      return fallback;
+    }
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+
+  private getBooleanEnv(key: string, fallback: boolean): boolean {
+    const raw = this.configService.get<string>(key);
+    if (!raw) {
+      return fallback;
+    }
+    return raw.trim().toLowerCase() === 'true';
   }
 
   async sendAlert(
@@ -53,9 +83,10 @@ export class EmailService {
       this.logger.log(
         `[SMTP] Successfully sent warning email to ${email} for ${subscriptionName}`,
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       this.logger.error(
-        `[SMTP] Failed to send email to ${email} for ${subscriptionName}: ${error.message}`,
+        `[SMTP] Failed to send email to ${email} for ${subscriptionName}: ${message}`,
       );
       // Throw the error so it bubbles up to BullMQ to utilize the configured retry mechanisms
       throw error;
@@ -92,9 +123,14 @@ export class EmailService {
         subject: `Budget Alert: Monthly Limit Exceeded`,
         html: htmlTemplate,
       });
-      this.logger.log(`[SMTP] Successfully sent budget alert email to ${email}`);
-    } catch (error: any) {
-      this.logger.error(`[SMTP] Failed to send budget alert email to ${email}: ${error.message}`);
+      this.logger.log(
+        `[SMTP] Successfully sent budget alert email to ${email}`,
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(
+        `[SMTP] Failed to send budget alert email to ${email}: ${message}`,
+      );
       throw error;
     }
   }
