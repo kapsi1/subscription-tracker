@@ -53,7 +53,25 @@
     "en": "English",
     "pl": "Polski",
     "accentColor": "Kolor akcentu",
-    "selectAccentColor": "Wybierz kolor akcentu"
+    "selectAccentColor": "Wybierz kolor akcentu",
+    "colors": {
+      "Indigo": "Indygowy",
+      "Crimson": "Karmazynowy",
+      "Rose": "Różany",
+      "Lavender": "Lawendowy",
+      "Cobalt": "Kobaltowy",
+      "Navy": "Granatowy",
+      "Mint": "Miętowy",
+      "Forest": "Leśny",
+      "Sage": "Szałwiowy",
+      "Amber": "Bursztynowy",
+      "Gold": "Złoty",
+      "Terracotta": "Terakota",
+      "Coffee": "Kawowy",
+      "Sand": "Piaskowy",
+      "Slate": "Łupkowy",
+      "Charcoal": "Węglowy"
+    }
   },
   "subscriptions": {
     "title": "Subskrypcje",
