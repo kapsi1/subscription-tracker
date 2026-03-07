@@ -387,12 +387,21 @@ export default function DashboardPage() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: any) => `$${Number(value).toFixed(2)}`} />
+                  <Tooltip 
+                    formatter={(value: any, name?: string) => [
+                      `$${Number(value).toFixed(2)}`, 
+                      t(`subscriptions.modal.categories.${name || ''}`, { defaultValue: name })
+                    ]} 
+                  />
                 </PieChart>
               ) : (
                 <BarChart data={categoryData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="name" stroke="#64748b" />
+                  <XAxis 
+                    dataKey="name" 
+                    stroke="#64748b" 
+                    tickFormatter={(value) => t(`subscriptions.modal.categories.${value}`, { defaultValue: value })}
+                  />
                   <YAxis stroke="#64748b" />
                   <Tooltip
                     contentStyle={{
@@ -400,6 +409,7 @@ export default function DashboardPage() {
                       border: "1px solid #e2e8f0",
                       borderRadius: "8px",
                     }}
+                    labelFormatter={(label) => t(`subscriptions.modal.categories.${label}`, { defaultValue: label })}
                     formatter={(value: any) => [`$${Number(value).toFixed(2)}`, t("subscriptions.modal.amount")]}
                   />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]}>

@@ -1,4 +1,5 @@
 "use client";
+// Force HMR reload
 
 import { useEffect, useState } from "react";
 import { 
@@ -180,8 +181,8 @@ export function AccentColorSwitcher() {
             <button
               key={accent.name}
               onClick={() => handleSelect(accent)}
-              title={t(`language.colors.${accent.name}`, { defaultValue: accent.name })}
-              aria-label={t(`language.colors.${accent.name}`, { defaultValue: accent.name })}
+              title={t(`colors.${accent.name}`, { defaultValue: accent.name })}
+              aria-label={t(`colors.${accent.name}`, { defaultValue: accent.name })}
               className={cn(
                 "w-10 h-10 rounded-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm border border-transparent",
                 currentAccent.name === accent.name ? "ring-2 ring-slate-950 ring-offset-2 scale-110 shadow-md" : "hover:shadow-md"
