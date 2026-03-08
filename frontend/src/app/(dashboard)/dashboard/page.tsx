@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
 import { LoadingState } from "@/components/loading-state";
+import { formatCurrency } from "@/lib/utils";
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
@@ -88,7 +89,6 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, []);
 
-  const formatCurrency = (value: number) => `$${(Number(value) || 0).toFixed(2)}`;
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -112,7 +112,16 @@ export default function DashboardPage() {
       }
       setModalOpen(false);
     } catch (err: any) {
-      toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
+      const backendMessage = err.response?.data?.message;
+      const isCurrencyError = Array.isArray(backendMessage) 
+        ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
+        : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
+
+      if (isCurrencyError) {
+        toast.error(t('subscriptions.modal.invalidCurrency', { defaultValue: 'Invalid currency code' }));
+      } else {
+        toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
+      }
     }
   };
 
@@ -253,7 +262,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex items-center gap-4 sm:gap-6">
                     <div className="text-right">
-                      <p className="font-semibold">{formatCurrency(payment.amount)}</p>
+                      <p className="font-semibold">{formatCurrency(payment.amount, payment.currency)}</p>
                       <p className="text-sm text-muted-foreground">
                         {formatDate(payment.nextBillingDate)}
                       </p>

@@ -6,10 +6,15 @@
  * Format a number as currency
  */
 export function formatCurrency(value: number, currency: string = "USD"): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency,
-  }).format(value);
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(value);
+  } catch (e) {
+    // Fallback for invalid currency codes
+    return `${currency} ${(Number(value) || 0).toFixed(2)}`;
+  }
 }
 
 /**

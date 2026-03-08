@@ -286,3 +286,7 @@
 - [ ] Default reminders
 - [ ] Budget threshold alerts
 - [ ] Google Auth
+- [ ] Custom billing cycle
+- [ ] Category management
+- [x] Currency management
+- [ ] Payment history

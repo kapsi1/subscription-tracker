@@ -136,7 +136,8 @@
         "monthly": "Monthly",
         "yearly": "Yearly",
         "custom": "Custom"
-      }
+      },
+      "invalidCurrency": "Please enter a valid 3-letter currency code (ISO 4217)"
     }
   },
   "settings": {

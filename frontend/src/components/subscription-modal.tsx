@@ -57,7 +57,7 @@ const billingCycles = [
   { label: "Yearly", value: "yearly" },
   { label: "Custom", value: "custom" },
 ];
-const currencies = ["USD", "EUR", "GBP"];
+const LAST_CURRENCY_KEY = "last_subscription_currency";
 
 export function SubscriptionModal({
   open,
@@ -69,13 +69,15 @@ export function SubscriptionModal({
   const [formData, setFormData] = useState({
     name: "",
     amount: "",
-    currency: "USD",
+    currency: "USD", // Will be updated in useEffect
     billingCycle: "monthly",
     category: "Other",
     nextBillingDate: new Date().toISOString().split("T")[0],
     reminderEnabled: true,
     reminderDays: "3",
   });
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     const fetchDefaults = async () => {
@@ -106,22 +108,43 @@ export function SubscriptionModal({
         reminderDays: (subscription.reminderDays ?? 3).toString(),
       });
     } else if (!subscription && open) {
+      const lastCurrency = localStorage.getItem(LAST_CURRENCY_KEY) || "USD";
       setFormData({
         name: "",
         amount: "",
-        currency: "USD",
+        currency: lastCurrency,
         billingCycle: "monthly",
         category: "Other",
         nextBillingDate: new Date().toISOString().split("T")[0],
         reminderEnabled: true,
         reminderDays: "3",
       });
+      setIsSubmitted(false);
+      setErrors({});
       fetchDefaults();
     }
   }, [subscription, open]);
 
+  const validate = () => {
+    const newErrors: Record<string, boolean> = {};
+    if (!formData.name.trim()) newErrors.name = true;
+    if (!formData.amount || isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) newErrors.amount = true;
+    if (!formData.currency.trim() || formData.currency.length !== 3) newErrors.currency = true;
+    if (!formData.nextBillingDate) newErrors.nextBillingDate = true;
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitted(true);
+    
+    if (!validate()) {
+      return;
+    }
+
+    localStorage.setItem(LAST_CURRENCY_KEY, formData.currency);
     onSave({
       ...(subscription?.id ? { id: subscription.id } : {}),
       name: formData.name,
@@ -156,9 +179,11 @@ export function SubscriptionModal({
                 id="name"
                 placeholder={t("subscriptions.modal.servicePlaceholder")}
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, name: e.target.value });
+                  if (errors.name) setErrors({ ...errors, name: false });
+                }}
+                aria-invalid={isSubmitted && errors.name}
                 required
               />
             </div>
@@ -173,32 +198,31 @@ export function SubscriptionModal({
                   min="0"
                   placeholder="0.00"
                   value={formData.amount}
-                  onChange={(e) =>
-                    setFormData({ ...formData, amount: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setFormData({ ...formData, amount: e.target.value });
+                    if (errors.amount) setErrors({ ...errors, amount: false });
+                  }}
+                  aria-invalid={isSubmitted && errors.amount}
                   required
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="currency">{t("subscriptions.modal.currency")}</Label>
-                <Select
+                <Input
+                  id="currency"
+                  placeholder="USD"
                   value={formData.currency}
-                  onValueChange={(value) =>
-                     setFormData({ ...formData, currency: value })
-                  }
-                >
-                  <SelectTrigger id="currency">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {currencies.map((currency) => (
-                      <SelectItem key={currency} value={currency}>
-                        {currency}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(e) => {
+                    const value = e.target.value.toUpperCase();
+                    setFormData({ ...formData, currency: value });
+                    if (errors.currency) setErrors({ ...errors, currency: false });
+                  }}
+                  aria-invalid={isSubmitted && errors.currency}
+                  required
+                  maxLength={3}
+                  className="uppercase"
+                />
               </div>
             </div>
 
@@ -252,9 +276,11 @@ export function SubscriptionModal({
                 id="nextBillingDate"
                 type="date"
                 value={formData.nextBillingDate}
-                onChange={(e) =>
-                  setFormData({ ...formData, nextBillingDate: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, nextBillingDate: e.target.value });
+                  if (errors.nextBillingDate) setErrors({ ...errors, nextBillingDate: false });
+                }}
+                aria-invalid={isSubmitted && errors.nextBillingDate}
                 required
               />
             </div>

@@ -23,6 +23,7 @@ import { useRef } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
+import { formatCurrency } from "@/lib/utils";
 
 const subscriptionImportSchema = z.object({
   name: z.string().min(1),
@@ -107,7 +108,16 @@ export default function SubscriptionsPage() {
       }
       setModalOpen(false);
     } catch (err: any) {
-      toast.error(t('subscriptions.saveError'));
+      const backendMessage = err.response?.data?.message;
+      const isCurrencyError = Array.isArray(backendMessage) 
+        ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
+        : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
+
+      if (isCurrencyError) {
+        toast.error(t('subscriptions.modal.invalidCurrency', { defaultValue: 'Invalid currency code' }));
+      } else {
+        toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
+      }
       sendGAEvent({ event: "add_subscription", value: "failed" });
     }
   };
@@ -170,7 +180,6 @@ export default function SubscriptionsPage() {
     reader.readAsText(file);
   };
 
-  const formatCurrency = (value: number) => `$${(Number(value) || 0).toFixed(2)}`;
   const formatDate = (dateString?: string) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
@@ -283,7 +292,7 @@ export default function SubscriptionsPage() {
                       <TableCell className="font-medium">
                         {subscription.name}
                       </TableCell>
-                      <TableCell>{formatCurrency(subscription.amount)}</TableCell>
+                      <TableCell>{formatCurrency(subscription.amount, subscription.currency)}</TableCell>
                       <TableCell>{t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}</TableCell>
                       <TableCell>{formatDate(subscription.nextBillingDate)}</TableCell>
                       <TableCell>

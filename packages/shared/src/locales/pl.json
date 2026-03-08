@@ -137,7 +137,8 @@
         "monthly": "Miesięcznie",
         "yearly": "Rocznie",
         "custom": "Niestandardowe"
-      }
+      },
+      "invalidCurrency": "Wprowadź prawidłowy 3-literowy kod waluty (ISO 4217)"
     }
   },
   "settings": {
