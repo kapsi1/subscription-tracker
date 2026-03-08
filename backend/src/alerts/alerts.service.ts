@@ -6,6 +6,7 @@ import { Queue } from 'bullmq';
 
 import { AlertType, Prisma, BillingCycle } from '@prisma/client';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { PaymentsService } from '../payments/payments.service';
 
 type AlertWithSub = Prisma.AlertGetPayload<{
   include: {
@@ -43,6 +44,7 @@ export class AlertsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly dashboardService: DashboardService,
+    private readonly paymentsService: PaymentsService,
     @InjectQueue('alertQueue') private readonly alertQueue: Queue,
   ) {}
 
@@ -264,6 +266,25 @@ export class AlertsService {
       event: 'budget_scheduler_complete',
       totalUsersChecked: usersWithBudget.length,
       alertsEnqueued: countSent,
+    });
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleDailyDigestCron() {
+    this.logger.log({
+      msg: 'Daily digest scheduler started',
+      event: 'daily_digest_scheduler_start',
+    });
+
+    try {
+      await this.paymentsService.processPaymentsAndSendDigests();
+    } catch (error) {
+      this.logger.error(`Daily digest scheduler failed: ${error.message}`);
+    }
+
+    this.logger.log({
+      msg: 'Daily digest scheduler completed',
+      event: 'daily_digest_scheduler_complete',
     });
   }
 }

@@ -4,6 +4,7 @@ import { AlertsService } from './alerts.service';
 import { AlertsProcessor } from './alerts.processor';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { DashboardModule } from '../dashboard/dashboard.module';
+import { PaymentsModule } from '../payments/payments.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { DashboardModule } from '../dashboard/dashboard.module';
     }),
     NotificationsModule,
     DashboardModule,
+    PaymentsModule,
   ],
   providers: [AlertsService, AlertsProcessor],
 })

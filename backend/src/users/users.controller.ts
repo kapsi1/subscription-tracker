@@ -213,6 +213,10 @@ export class UsersController {
     await this.emailService.sendDailyDigest(
       user.email,
       { totalActive: 5, totalMonthly: 125.50, upcomingThisWeek: 2 },
+      [
+        { name: 'Netflix', amount: 15.99, currency: 'USD' },
+        { name: 'Spotify', amount: 9.99, currency: 'USD' },
+      ],
       'USD',
       language,
       user.accentColor,

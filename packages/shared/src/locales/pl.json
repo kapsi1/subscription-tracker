@@ -227,6 +227,8 @@
     "digestSummary": "Oto krótkie podsumowanie Twoich aktywnych subskrypcji i nadchodzących płatności.",
     "totalActive": "Aktywne subskrypcje",
     "upcomingThisWeek": "Nadchodzące w tym tygodniu",
-    "totalMonthly": "Miesięczny koszt całkowity"
+    "totalMonthly": "Miesięczny koszt całkowity",
+    "paidYesterday": "Subskrypcje opłacone wczoraj",
+    "noPaymentsPaidYesterday": "Wczoraj nie opłacono żadnych subskrypcji."
   }
 }

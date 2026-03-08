@@ -226,6 +226,8 @@
     "digestSummary": "Here is a quick summary of your active subscriptions and upcoming payments.",
     "totalActive": "Active Subscriptions",
     "upcomingThisWeek": "Upcoming This Week",
-    "totalMonthly": "Total Monthly Cost"
+    "totalMonthly": "Total Monthly Cost",
+    "paidYesterday": "Subscriptions Paid Yesterday",
+    "noPaymentsPaidYesterday": "No subscriptions were paid yesterday."
   }
 }

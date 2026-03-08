@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AlertsService } from './alerts.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { DashboardService } from '../dashboard/dashboard.service';
+import { PaymentsService } from '../payments/payments.service';
 import { getQueueToken } from '@nestjs/bullmq';
 
 describe('AlertsService', () => {
@@ -9,6 +10,7 @@ describe('AlertsService', () => {
   let prismaMock: any;
   let queueMock: any;
   let dashboardMock: any;
+  let paymentsMock: any;
 
   beforeEach(async () => {
     prismaMock = {
@@ -33,11 +35,16 @@ describe('AlertsService', () => {
       getSummary: jest.fn().mockResolvedValue({ totalMonthlyCost: 100 }),
     };
 
+    paymentsMock = {
+      processPaymentsAndSendDigests: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AlertsService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: DashboardService, useValue: dashboardMock },
+        { provide: PaymentsService, useValue: paymentsMock },
         { provide: getQueueToken('alertQueue'), useValue: queueMock },
       ],
     }).compile();

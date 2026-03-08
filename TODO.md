@@ -289,4 +289,6 @@
 - [ ] Custom billing cycle
 - [ ] Category management
 - [x] Currency management
-- [ ] Payment history
+- [x] Payment history
+- [ ] When adding or saving subscription, check all fields for validity and show error messages
+- [x] "Daily Digest" emails should be sent at midnight, when a subscription was paid a previous day.  They should include all subscriptions paid that day.

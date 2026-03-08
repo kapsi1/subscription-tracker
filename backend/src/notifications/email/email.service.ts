@@ -411,6 +411,7 @@ export class EmailService {
   async sendDailyDigest(
     email: string,
     stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number },
+    paidYesterday: { name: string; amount: number; currency: string }[],
     currency: string,
     language: 'en' | 'pl' = 'en',
     accentColor?: string,
@@ -433,6 +434,28 @@ export class EmailService {
 
     const emails = locale.emails as Record<string, string>;
 
+    let paidYesterdayHtml = '';
+    if (paidYesterday.length > 0) {
+      const items = paidYesterday
+        .map(
+          (p) =>
+            `<li style="margin-bottom: 8px;"><strong>${this.escapeHtml(p.name)}</strong>: ${p.amount.toFixed(2)} ${p.currency}</li>`,
+        )
+        .join('');
+      paidYesterdayHtml = `
+        <div style="margin-top: 20px;">
+          <h3 style="font-size: 20px; margin-bottom: 12px;">${emails.paidYesterday}</h3>
+          <ul style="padding-left: 20px; margin: 0;">${items}</ul>
+        </div>
+      `;
+    } else {
+      paidYesterdayHtml = `
+        <div style="margin-top: 20px;">
+          <p class="email-text email-muted">${emails.noPaymentsPaidYesterday}</p>
+        </div>
+      `;
+    }
+
     const bodyHtml = `
       <div class="email-root">
         <div class="email-shell">
@@ -447,7 +470,8 @@ export class EmailService {
                 <p class="email-metric"><strong>${emails.upcomingThisWeek}:</strong> ${stats.upcomingThisWeek}</p>
                 <p class="email-metric"><strong>${emails.totalMonthly}:</strong> <span class="email-amount">${stats.totalMonthly.toFixed(2)} ${currency}</span></p>
               </div>
-              <p class="email-text">${managePromptHtml}</p>
+              ${paidYesterdayHtml}
+              <p class="email-text" style="margin-top: 24px;">${managePromptHtml}</p>
               <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
             </div>
           </div>

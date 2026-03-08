@@ -16,6 +16,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { AlertsModule } from './alerts/alerts.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { HealthModule } from './health/health.module';
+import { PaymentsModule } from './payments/payments.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 
 import { APP_GUARD } from '@nestjs/core';
@@ -88,6 +89,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     AlertsModule,
     NotificationsModule,
     HealthModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [
