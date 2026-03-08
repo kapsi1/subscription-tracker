@@ -138,7 +138,14 @@
         "yearly": "Rocznie",
         "custom": "Niestandardowe"
       },
-      "invalidCurrency": "Wprowadź prawidłowy 3-literowy kod waluty (ISO 4217)"
+      "errors": {
+        "nameRequired": "Nazwa usługi jest wymagana",
+        "amountRequired": "Kwota musi być większa od 0",
+        "currencyRequired": "Kod waluty jest wymagany",
+        "invalidCurrency": "Wprowadź prawidłowy 3-literowy kod waluty (ISO 4217)",
+        "nextBillingDateRequired": "Data następnej płatności jest wymagana",
+        "reminderDaysRequired": "Liczba dni przypomnienia musi wynosić od 0 do 30"
+      }
     }
   },
   "settings": {

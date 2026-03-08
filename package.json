@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter @subscription-tracker/shared build && concurrently -n \"shared,backend,frontend\" -c \"magenta,blue,green\" \"pnpm --filter @subscription-tracker/shared dev\" \"pnpm --filter backend dev\" \"pnpm --filter next-app dev\"",
+    "dev:shared": "pnpm --filter @subscription-tracker/shared dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:frontend": "pnpm --filter next-app dev"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +16,7 @@
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.1",
+    "concurrently": "^9.2.1",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1"
   }

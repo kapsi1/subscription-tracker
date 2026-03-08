@@ -137,7 +137,14 @@
         "yearly": "Yearly",
         "custom": "Custom"
       },
-      "invalidCurrency": "Please enter a valid 3-letter currency code (ISO 4217)"
+      "errors": {
+        "nameRequired": "Service name is required",
+        "amountRequired": "Amount must be greater than 0",
+        "currencyRequired": "Currency code is required",
+        "invalidCurrency": "Please enter a valid 3-letter currency code (ISO 4217)",
+        "nextBillingDateRequired": "Next billing date is required",
+        "reminderDaysRequired": "Reminder days must be between 0 and 30"
+      }
     }
   },
   "settings": {

@@ -76,7 +76,7 @@ export function SubscriptionModal({
     reminderEnabled: true,
     reminderDays: "3",
   });
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
@@ -126,11 +126,25 @@ export function SubscriptionModal({
   }, [subscription, open]);
 
   const validate = () => {
-    const newErrors: Record<string, boolean> = {};
-    if (!formData.name.trim()) newErrors.name = true;
-    if (!formData.amount || isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) newErrors.amount = true;
-    if (!formData.currency.trim() || formData.currency.length !== 3) newErrors.currency = true;
-    if (!formData.nextBillingDate) newErrors.nextBillingDate = true;
+    const newErrors: Record<string, string> = {};
+    if (!formData.name.trim()) newErrors.name = "nameRequired";
+    if (!formData.amount || isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
+      newErrors.amount = "amountRequired";
+    }
+    if (!formData.currency.trim()) {
+      newErrors.currency = "currencyRequired";
+    } else if (formData.currency.length !== 3) {
+      newErrors.currency = "invalidCurrency";
+    }
+    if (!formData.nextBillingDate) {
+      newErrors.nextBillingDate = "nextBillingDateRequired";
+    }
+    if (formData.reminderEnabled) {
+      const days = parseInt(formData.reminderDays);
+      if (isNaN(days) || days < 0 || days > 30) {
+        newErrors.reminderDays = "reminderDaysRequired";
+      }
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -181,11 +195,19 @@ export function SubscriptionModal({
                 value={formData.name}
                 onChange={(e) => {
                   setFormData({ ...formData, name: e.target.value });
-                  if (errors.name) setErrors({ ...errors, name: false });
+                  if (errors.name) {
+                    const newErrors = { ...errors };
+                    delete newErrors.name;
+                    setErrors(newErrors);
+                  }
                 }}
-                aria-invalid={isSubmitted && errors.name}
-                required
+                aria-invalid={isSubmitted && !!errors.name}
               />
+              {isSubmitted && errors.name && (
+                <p className="text-xs font-medium text-destructive">
+                  {t(`subscriptions.modal.errors.${errors.name}`)}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -200,11 +222,19 @@ export function SubscriptionModal({
                   value={formData.amount}
                   onChange={(e) => {
                     setFormData({ ...formData, amount: e.target.value });
-                    if (errors.amount) setErrors({ ...errors, amount: false });
+                    if (errors.amount) {
+                      const newErrors = { ...errors };
+                      delete newErrors.amount;
+                      setErrors(newErrors);
+                    }
                   }}
-                  aria-invalid={isSubmitted && errors.amount}
-                  required
+                  aria-invalid={isSubmitted && !!errors.amount}
                 />
+                {isSubmitted && errors.amount && (
+                  <p className="text-xs font-medium text-destructive">
+                    {t(`subscriptions.modal.errors.${errors.amount}`)}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -216,13 +246,21 @@ export function SubscriptionModal({
                   onChange={(e) => {
                     const value = e.target.value.toUpperCase();
                     setFormData({ ...formData, currency: value });
-                    if (errors.currency) setErrors({ ...errors, currency: false });
+                    if (errors.currency) {
+                      const newErrors = { ...errors };
+                      delete newErrors.currency;
+                      setErrors(newErrors);
+                    }
                   }}
-                  aria-invalid={isSubmitted && errors.currency}
-                  required
+                  aria-invalid={isSubmitted && !!errors.currency}
                   maxLength={3}
                   className="uppercase"
                 />
+                {isSubmitted && errors.currency && (
+                  <p className="text-xs font-medium text-destructive">
+                    {t(`subscriptions.modal.errors.${errors.currency}`)}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -278,11 +316,19 @@ export function SubscriptionModal({
                 value={formData.nextBillingDate}
                 onChange={(e) => {
                   setFormData({ ...formData, nextBillingDate: e.target.value });
-                  if (errors.nextBillingDate) setErrors({ ...errors, nextBillingDate: false });
+                  if (errors.nextBillingDate) {
+                    const newErrors = { ...errors };
+                    delete newErrors.nextBillingDate;
+                    setErrors(newErrors);
+                  }
                 }}
-                aria-invalid={isSubmitted && errors.nextBillingDate}
-                required
+                aria-invalid={isSubmitted && !!errors.nextBillingDate}
               />
+              {isSubmitted && errors.nextBillingDate && (
+                <p className="text-xs font-medium text-destructive">
+                  {t(`subscriptions.modal.errors.${errors.nextBillingDate}`)}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center justify-between border-t pt-4">
@@ -310,11 +356,21 @@ export function SubscriptionModal({
                   min="0"
                   max="30"
                   value={formData.reminderDays}
-                  onChange={(e) =>
-                    setFormData({ ...formData, reminderDays: e.target.value })
-                  }
-                  required
+                  onChange={(e) => {
+                    setFormData({ ...formData, reminderDays: e.target.value });
+                    if (errors.reminderDays) {
+                      const newErrors = { ...errors };
+                      delete newErrors.reminderDays;
+                      setErrors(newErrors);
+                    }
+                  }}
+                  aria-invalid={isSubmitted && !!errors.reminderDays}
                 />
+                {isSubmitted && errors.reminderDays && (
+                  <p className="text-xs font-medium text-destructive">
+                    {t(`subscriptions.modal.errors.${errors.reminderDays}`)}
+                  </p>
+                )}
               </div>
             )}
 
