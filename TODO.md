@@ -285,7 +285,7 @@
 - [x] Webhook integration
 - [ ] Default reminders
 - [ ] Budget threshold alerts
-- [ ] Google Auth
+- [x] Google Auth
 - [ ] Custom billing cycle
 - [ ] Category management
 - [x] Currency management
