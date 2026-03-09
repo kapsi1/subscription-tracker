@@ -82,6 +82,6 @@ describe('getCategoryColor', () => {
 
   it('should return default gray classes for unknown categories', () => {
     const result = getCategoryColor('SomeRandomCategory');
-    expect(result).toContain('gray');
+    expect(result).toContain('slate');
   });
 });

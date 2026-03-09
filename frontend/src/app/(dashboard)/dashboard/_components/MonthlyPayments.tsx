@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CreditCard, ArrowUp, ArrowDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, getCategoryColor } from "@/lib/utils";
 import { useAuth } from "@/components/auth-provider";
 import api from "@/lib/api";
 import { Label } from "@/components/ui/label";
@@ -219,7 +219,15 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                   </div>
                 </div>
                 <div className="flex items-center gap-4 sm:gap-6">
-                  <div className="text-right">
+                  <div className="hidden sm:flex min-w-[120px] justify-end">
+                    <Badge 
+                      variant="outline" 
+                      className={getCategoryColor(payment.category, 'dashboard')}
+                    >
+                      {t(`subscriptions.modal.categories.${payment.category}`)}
+                    </Badge>
+                  </div>
+                  <div className="text-right min-w-[90px]">
                     <p className="font-semibold">
                       {formatCurrency(payment.amount, payment.currency)}
                     </p>
@@ -227,9 +235,6 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                       {formatDate(payment.date)}
                     </p>
                   </div>
-                  <Badge variant="outline" className="hidden sm:inline-flex">
-                    {t(`subscriptions.modal.categories.${payment.category}`)}
-                  </Badge>
                 </div>
               </div>
             ))}
