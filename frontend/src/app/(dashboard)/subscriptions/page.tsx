@@ -113,12 +113,11 @@ export default function SubscriptionsPage() {
         ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
         : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
 
-      if (isCurrencyError) {
-        toast.error(t('subscriptions.modal.invalidCurrency', { defaultValue: 'Invalid currency code' }));
-      } else {
+      if (!isCurrencyError) {
         toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
       }
       sendGAEvent({ event: "add_subscription", value: "failed" });
+      throw err; // Re-throw so modal can catch it
     }
   };
 

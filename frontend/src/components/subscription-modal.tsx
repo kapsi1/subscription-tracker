@@ -38,7 +38,7 @@ interface SubscriptionModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   subscription: Subscription | null;
-  onSave: (subscription: Partial<Subscription>) => void;
+  onSave: (subscription: Partial<Subscription>) => Promise<void>;
 }
 
 const categories = [
@@ -78,6 +78,7 @@ export function SubscriptionModal({
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const fetchDefaults = async () => {
@@ -150,7 +151,7 @@ export function SubscriptionModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
     
@@ -158,18 +159,32 @@ export function SubscriptionModal({
       return;
     }
 
-    localStorage.setItem(LAST_CURRENCY_KEY, formData.currency);
-    onSave({
-      ...(subscription?.id ? { id: subscription.id } : {}),
-      name: formData.name,
-      amount: parseFloat(formData.amount),
-      currency: formData.currency,
-      billingCycle: formData.billingCycle,
-      category: formData.category,
-      nextBillingDate: formData.nextBillingDate,
-      reminderEnabled: formData.reminderEnabled,
-      reminderDays: parseInt(formData.reminderDays),
-    });
+    setIsSaving(true);
+    try {
+      localStorage.setItem(LAST_CURRENCY_KEY, formData.currency);
+      await onSave({
+        ...(subscription?.id ? { id: subscription.id } : {}),
+        name: formData.name,
+        amount: parseFloat(formData.amount),
+        currency: formData.currency,
+        billingCycle: formData.billingCycle,
+        category: formData.category,
+        nextBillingDate: formData.nextBillingDate,
+        reminderEnabled: formData.reminderEnabled,
+        reminderDays: parseInt(formData.reminderDays),
+      });
+    } catch (err: any) {
+      const backendMessage = err.response?.data?.message;
+      const isCurrencyError = Array.isArray(backendMessage) 
+        ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
+        : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
+
+      if (isCurrencyError) {
+        setErrors(prev => ({ ...prev, currency: "invalidCurrency" }));
+      }
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -384,8 +399,8 @@ export function SubscriptionModal({
             >
               {t("subscriptions.modal.cancel")}
             </Button>
-            <Button type="submit">
-              {subscription ? t("subscriptions.modal.update") : t("subscriptions.modal.add")}
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? t("common.loading") : (subscription ? t("subscriptions.modal.update") : t("subscriptions.modal.add"))}
             </Button>
           </DialogFooter>
         </form>
