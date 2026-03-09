@@ -92,14 +92,8 @@ test.describe('User Settings Persistence', () => {
     await page.getByLabel('Enable Webhooks').click();
     await page.getByLabel('Webhook URL').fill('https://example.com/webhook');
     
-    // Prepare to wait for the patch request
-    const patchPromise = page.waitForResponse(resp => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH');
-    
-    // Save settings - using exact text from translation
-    await page.getByRole('button', { name: 'Save Preferences' }).click();
-    await patchPromise; 
-    
-    await expect(page.getByText('Settings saved successfully')).toBeVisible();
+    // Autosave should persist these changes
+    await page.waitForResponse(resp => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH');
 
     // Reload page
     await page.reload();

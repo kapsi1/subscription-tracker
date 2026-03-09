@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -47,13 +47,15 @@ export default function SettingsPage() {
   const [isSendingWeeklyTest, setIsSendingWeeklyTest] = useState(false);
   const [isSendingWebhookTest, setIsSendingWebhookTest] = useState(false);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
+  const hasLoadedSettingsRef = useRef(false);
+  const lastSavedPreferencesRef = useRef<string | null>(null);
+  const latestSaveAttemptRef = useRef<string | null>(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
         const response = await api.get("/users/me");
-          setSettings((prev) => ({
-            ...prev,
+          const loadedSettings = {
             defaultReminderEnabled: response.data.defaultReminderEnabled,
             defaultReminderDays: response.data.defaultReminderDays?.toString() || "3",
             emailAddress: response.data.email,
@@ -64,7 +66,26 @@ export default function SettingsPage() {
             webhookSecret: response.data.webhookSecret || "",
             dailyDigest: response.data.dailyDigest,
             weeklyReport: response.data.weeklyReport,
+            pushEnabled: false,
+          };
+          setSettings((prev) => ({
+            ...prev,
+            ...loadedSettings,
           }));
+          lastSavedPreferencesRef.current = JSON.stringify({
+            defaultReminderEnabled: loadedSettings.defaultReminderEnabled,
+            defaultReminderDays: Number.parseInt(loadedSettings.defaultReminderDays, 10),
+            monthlyBudget: loadedSettings.monthlyBudget
+              ? Number.parseFloat(loadedSettings.monthlyBudget)
+              : null,
+            emailNotifications: loadedSettings.emailNotifications,
+            webhookEnabled: loadedSettings.webhookEnabled,
+            webhookUrl: loadedSettings.webhookUrl,
+            webhookSecret: loadedSettings.webhookSecret,
+            dailyDigest: loadedSettings.dailyDigest,
+            weeklyReport: loadedSettings.weeklyReport,
+          });
+          hasLoadedSettingsRef.current = true;
           setProfile({
             name: response.data.name || "",
             email: response.data.email || "",
@@ -96,24 +117,47 @@ export default function SettingsPage() {
     checkPushSubscription();
   }, [t]);
 
-  const handleSave = async () => {
-    try {
-      await api.patch("/users/settings", {
-        defaultReminderEnabled: settings.defaultReminderEnabled,
-        defaultReminderDays: parseInt(settings.defaultReminderDays),
-        monthlyBudget: settings.monthlyBudget ? parseFloat(settings.monthlyBudget) : null,
-        emailNotifications: settings.emailNotifications,
-        webhookEnabled: settings.webhookEnabled,
-        webhookUrl: settings.webhookUrl,
-        webhookSecret: settings.webhookSecret,
-        dailyDigest: settings.dailyDigest,
-        weeklyReport: settings.weeklyReport,
-      });
-      toast.success(t('settings.saveSuccess'));
-    } catch (error) {
-      toast.error(t('settings.saveError', { defaultValue: 'Failed to save settings' }));
+  useEffect(() => {
+    if (!hasLoadedSettingsRef.current) return;
+
+    const parsedReminderDays = Number.parseInt(settings.defaultReminderDays, 10);
+    if (Number.isNaN(parsedReminderDays)) return;
+
+    let parsedMonthlyBudget: number | null = null;
+    if (settings.monthlyBudget.trim() !== "") {
+      parsedMonthlyBudget = Number.parseFloat(settings.monthlyBudget);
+      if (Number.isNaN(parsedMonthlyBudget)) return;
     }
-  };
+
+    const payload = {
+      defaultReminderEnabled: settings.defaultReminderEnabled,
+      defaultReminderDays: parsedReminderDays,
+      monthlyBudget: parsedMonthlyBudget,
+      emailNotifications: settings.emailNotifications,
+      webhookEnabled: settings.webhookEnabled,
+      webhookUrl: settings.webhookUrl,
+      webhookSecret: settings.webhookSecret,
+      dailyDigest: settings.dailyDigest,
+      weeklyReport: settings.weeklyReport,
+    };
+
+    const serializedPayload = JSON.stringify(payload);
+    if (serializedPayload === lastSavedPreferencesRef.current) return;
+
+    const timer = window.setTimeout(async () => {
+      latestSaveAttemptRef.current = serializedPayload;
+      try {
+        await api.patch("/users/settings", payload);
+        if (latestSaveAttemptRef.current === serializedPayload) {
+          lastSavedPreferencesRef.current = serializedPayload;
+        }
+      } catch (_error) {
+        toast.error(t("settings.saveError", { defaultValue: "Failed to save settings" }));
+      }
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [settings, t]);
 
   const handleSaveProfile = async () => {
     try {
@@ -819,13 +863,6 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button onClick={handleSave} className="gap-2" size="lg">
-          <Save className="w-4 h-4" />
-          {t("settings.savePreferences", { defaultValue: "Save Preferences" })}
-        </Button>
-      </div>
       </>
       )}
     </div>

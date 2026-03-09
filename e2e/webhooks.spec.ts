@@ -58,9 +58,8 @@ test.describe('Webhooks', () => {
       await webhookCard.getByLabel(/URL/i).fill(webhookUrl);
       await webhookCard.getByLabel(/Secret/i).fill(webhookSecret);
       
-      // 6. Save
-      await page.getByRole('button', { name: /Save Preferences/i }).click();
-      await expect(page.getByText('Settings saved successfully')).toBeVisible();
+      // 6. Autosave
+      await page.waitForResponse(resp => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH');
 
       // 7. Send Test Webhook
       await webhookCard.getByRole('button', { name: /Send Test Webhook/i }).click();

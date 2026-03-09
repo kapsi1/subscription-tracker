@@ -301,4 +301,4 @@ For any new feature add unit and E2E tests
 - [x] Create user profile page. Make the profile page a tab in Settings page. Currents Settings page should be renamed to "Preferences".
 - [ ] Add Change Password and Change Email flow in user profile
 - [ ] Add Delete Account flow in user profile
-- [ ] Save settings on any change, remove the Save Settings button
+- [x] Save settings on any change, remove the Save Settings button
