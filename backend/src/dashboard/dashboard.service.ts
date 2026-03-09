@@ -117,39 +117,41 @@ export class DashboardService {
     };
   }
 
-  async getSummary(userId: string) {
+  async getSummary(userId: string, month?: number, year?: number) {
+    const now = new Date();
+    const queryYear = year !== undefined ? Number(year) : now.getFullYear();
+    const queryMonth = month !== undefined ? Number(month) : now.getMonth();
+
+    const yearStart = new Date(queryYear, 0, 1);
+    const nextYearStart = new Date(queryYear + 1, 0, 1);
+
     const subscriptions = await this.prisma.subscription.findMany({
       where: { userId, isActive: true },
     });
 
-    const costs = this.calculateCosts(subscriptions);
+    const paymentsInMonth = await this.getMonthlyPayments(
+      userId,
+      queryMonth,
+      queryYear,
+    );
 
-    const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-    const yearStart = new Date(now.getFullYear(), 0, 1);
-    const nextYearStart = new Date(now.getFullYear() + 1, 0, 1);
+    let totalMonthlyCost = 0;
+    const categoryBreakdown: Record<string, number> = {};
 
-    const [paidThisMonth, paidThisYear] = await Promise.all([
-      this.prisma.paymentHistory.aggregate({
-        where: {
-          paidAt: {
-            gte: monthStart,
-            lt: nextMonthStart,
-          },
-          subscription: {
-            userId,
-          },
-        },
-        _sum: {
-          amount: true,
-        },
-      }),
+    for (const p of paymentsInMonth) {
+      totalMonthlyCost += p.amount;
+      if (!categoryBreakdown[p.category]) {
+        categoryBreakdown[p.category] = 0;
+      }
+      categoryBreakdown[p.category] += p.amount;
+    }
+
+    const [paidThisYear] = await Promise.all([
       this.prisma.paymentHistory.aggregate({
         where: {
           paidAt: {
             gte: yearStart,
-            lt: now,
+            lt: nextYearStart,
           },
           subscription: {
             userId,
@@ -161,23 +163,32 @@ export class DashboardService {
       }),
     ]);
 
-    const upcomingThisYear = this.calculateUpcomingAmountInRange(
-      subscriptions,
-      now,
-      nextYearStart,
-    );
+    let upcomingThisYear = 0;
+    if (queryYear >= now.getFullYear()) {
+      const startForUpcoming =
+        queryYear === now.getFullYear() ? now : yearStart;
+      upcomingThisYear = this.calculateUpcomingAmountInRange(
+        subscriptions,
+        startForUpcoming,
+        nextYearStart,
+      );
+    }
 
     return {
-      ...costs,
-      totalMonthlyCost: Number(paidThisMonth._sum.amount ?? 0),
+      totalMonthlyCost,
       totalYearlyCost: Number(paidThisYear._sum.amount ?? 0) + upcomingThisYear,
+      activeSubscriptions: subscriptions.length,
+      categoryBreakdown,
     };
   }
 
-  async getMonthlyPayments(userId: string) {
+  async getMonthlyPayments(userId: string, month?: number, year?: number) {
     const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const queryYear = year !== undefined ? Number(year) : now.getFullYear();
+    const queryMonth = month !== undefined ? Number(month) : now.getMonth();
+
+    const monthStart = new Date(queryYear, queryMonth, 1);
+    const nextMonthStart = new Date(queryYear, queryMonth + 1, 1);
 
     const [paidPayments, subscriptions] = await Promise.all([
       this.prisma.paymentHistory.findMany({

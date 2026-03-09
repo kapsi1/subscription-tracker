@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DollarSign, Calendar, CreditCard, TrendingUp, Plus, ArrowUp, ArrowDown } from "lucide-react";
+import { DollarSign, Calendar, CreditCard, TrendingUp, Plus, ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Line,
   BarChart,
@@ -54,13 +54,18 @@ export default function DashboardPage() {
   const [paymentSortBy, setPaymentSortBy] = useState<"date" | "amount">("date");
   const [paymentSortDirection, setPaymentSortDirection] = useState<"asc" | "desc">("asc");
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (date: Date) => {
+    setIsLoading(true);
     try {
+      const month = date.getMonth();
+      const year = date.getFullYear();
+
       const [summaryRes, forecastRes, monthlyPaymentsRes] = await Promise.all([
-        api.get("/dashboard/summary"),
+        api.get(`/dashboard/summary?month=${month}&year=${year}`),
         api.get("/dashboard/forecast?months=12"),
-        api.get("/dashboard/monthly-payments"),
+        api.get(`/dashboard/monthly-payments?month=${month}&year=${year}`),
       ]);
 
       setSummary(summaryRes.data);
@@ -83,8 +88,20 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    fetchDashboardData(selectedDate);
+  }, [selectedDate]);
+
+  const handlePrevMonth = () => {
+    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1));
+  };
+
+  const handleResetMonth = () => {
+    setSelectedDate(new Date());
+  };
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -140,11 +157,47 @@ export default function DashboardPage() {
             {t('dashboard.subtitle')}
           </p>
         </div>
-        <Link href="/subscriptions">
-          <Button className="gap-2 sm:w-auto">
-            {t('dashboard.manageSubscriptions')}
-          </Button>
-        </Link>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex items-center gap-2 bg-muted/50 border rounded-lg p-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handlePrevMonth}
+              className="h-8 w-8"
+              aria-label={t("common.previous")}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div className="min-w-[140px] text-center font-medium">
+              {selectedDate.toLocaleDateString(i18n.language === "pl" ? "pl-PL" : "en-US", {
+                month: "long",
+                year: "numeric",
+              })}
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleNextMonth}
+              className="h-8 w-8"
+              aria-label={t("common.next")}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleResetMonth}
+              className="text-xs px-2 h-7 ml-1"
+            >
+              {t("dashboard.thisMonth")}
+            </Button>
+          </div>
+          <Link href="/subscriptions">
+            <Button className="gap-2 sm:w-auto">
+              {t('dashboard.manageSubscriptions')}
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Summary Cards */}

@@ -16,13 +16,21 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get('summary')
-  async getSummary(@Req() req: any) {
-    return this.dashboardService.getSummary(req.user.userId);
+  async getSummary(
+    @Req() req: any,
+    @Query('month') month?: number,
+    @Query('year') year?: number,
+  ) {
+    return this.dashboardService.getSummary(req.user.userId, month, year);
   }
 
   @Get('monthly-payments')
-  async getMonthlyPayments(@Req() req: any) {
-    return this.dashboardService.getMonthlyPayments(req.user.userId);
+  async getMonthlyPayments(
+    @Req() req: any,
+    @Query('month') month?: number,
+    @Query('year') year?: number,
+  ) {
+    return this.dashboardService.getMonthlyPayments(req.user.userId, month, year);
   }
 
   @Get('forecast')

@@ -12,7 +12,9 @@
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
-    "close": "Close"
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next"
   },
   "nav": {
     "dashboard": "Dashboard",

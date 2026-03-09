@@ -231,18 +231,12 @@ For any new feature add unit and E2E tests
 ---
 
 # 3. Observability & DevOps
-
-## 3.1 Logging
 - [x] Structured logs
 - [x] Include request ID
 - [x] Log alert executions
-
-## 3.2 Monitoring
 - [x] Health check endpoint
 - [x] Redis health check
 - [x] Database health check
-
-## 3.3 Deployment
 - [x] Dockerize backend
 - [x] Dockerize frontend
 - [x] Configure production environment variables
@@ -253,7 +247,6 @@ For any new feature add unit and E2E tests
 ---
 
 # 4. Advanced (Optional)
-
 - [x] JSON import/export
 - [x] Web push notifications
 - [x] Budget threshold alerts
@@ -262,7 +255,6 @@ For any new feature add unit and E2E tests
 ---
 
 # 5. Security Checklist
-
 - [x] Rate limiting
 - [x] Security headers (Helmet)
 - [x] CSRF protection (if needed)
@@ -273,7 +265,6 @@ For any new feature add unit and E2E tests
 ---
 
 # 6. Documentation
-
 - [ ] Architecture overview diagram
 - [ ] API documentation
 - [ ] Setup instructions
@@ -304,6 +295,6 @@ For any new feature add unit and E2E tests
 - [x] Save settings on any change, remove the Save Settings button
 - [x] Instead of "Upcoming Payments" show payments for this month. Include done payments as well, with a suitablestyle to indicate they are done The list should be sorted by date, with a button to change sort direction. Also enable sorting by amount. Adjust the card's subtitle. 
 - [x] Make the main container of dashboard full width with a small margin, on small and medium screen width.
-- [ ] Add buttons to switch the month to previous and next, and display the current month and year. Implement month switching. The whole dashboard should be showing data for the selected month, except 12-month forecast chart.
+- [x] Add buttons to switch the month to previous and next, and display the current month and year. Implement month switching. The whole dashboard should be showing data for the selected month, except 12-month forecast chart.
 - [ ] Make the 12-month forecast chart full-width on large screen width. In forecast chart for each column, under month names, add a circle with a hover effect (like the color chooser in the top nav bar). Background should be transparent by default, and accent color on hover. Inside the circle there should be a number of payments done that month. Hovering over the circle shows a html tooltip with a list of payments for this month (date, name, cost)
 - [ ] Billing cycle -> custom does nothing

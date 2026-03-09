@@ -8,6 +8,8 @@
     "edit": "Edytuj",
     "add": "Dodaj",
     "close": "Zamknij",
+    "previous": "Poprzedni",
+    "next": "Następny",
     "connectionError": "Błąd połączenia",
     "initializingApp": "Inicjalizowanie aplikacji...",
     "backendTimeout": "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
