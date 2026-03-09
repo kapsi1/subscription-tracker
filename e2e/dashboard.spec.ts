@@ -14,6 +14,7 @@ test.describe('Dashboard Flow', () => {
     // 1. Setup: Register
     await page.goto('/login');
     await page.getByRole('button', { name: "Switch to Register" }).click();
+    await page.getByLabel('Full Name').fill('Dashboard Test User');
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     await page.getByRole('button', { name: 'Create Account' }).click();

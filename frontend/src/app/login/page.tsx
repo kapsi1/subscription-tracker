@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ import { useAuth } from "@/components/auth-provider";
 export default function LoginPage() {
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,11 +26,18 @@ export default function LoginPage() {
         await login({ email, password });
         toast.success("Successfully logged in.");
       } else {
-        await register({ email, password });
+        await register({ name, email, password });
         toast.success("Account created successfully.");
       }
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || err.message || "Authentication failed");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const apiMessage = (err.response?.data as { message?: string } | undefined)?.message;
+        toast.error(apiMessage || err.message || "Authentication failed");
+      } else if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Authentication failed");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -54,6 +63,19 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required={!isLogin}
+                />
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input

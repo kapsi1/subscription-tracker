@@ -34,7 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-  const { isAuthenticated, isLoading, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { t, i18n } = useTranslation();
 
   const [backendInitStatus, setBackendInitStatus] = useState<"checking" | "ready" | "timeout">("ready");
@@ -97,6 +97,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [backendInitStatus, isLoading, isAuthenticated, isRedirecting, router]);
 
   const handleLogout = () => logout();
+
+  const getUserInitials = () => {
+    const source = user?.name?.trim() || user?.email?.trim() || "";
+    if (!source) return "U";
+
+    const parts = source.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+
+    return source.slice(0, 2).toUpperCase();
+  };
 
   const handleLanguageChange = async (lang: string) => {
     try {
@@ -231,9 +243,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button variant="ghost" size="icon" onClick={handleLogout} className="h-9 w-9" aria-label={t('nav.logout')}>
-              <LogOut className="h-5 w-5" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-9 w-9 rounded-full border bg-muted p-0 text-xs font-semibold tracking-wide"
+                  aria-label="User menu"
+                >
+                  {getUserInitials()}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleLogout} className="gap-2">
+                  <LogOut className="h-4 w-4" />
+                  <span>{t('nav.logout')}</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>

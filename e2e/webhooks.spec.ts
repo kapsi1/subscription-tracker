@@ -17,6 +17,7 @@ test.describe('Webhooks', () => {
     await page.goto('/login');
     console.log('2. Registering');
     await page.getByRole('button', { name: "Switch to Register" }).click();
+    await page.getByLabel('Full Name').fill('Webhook Test User');
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     await page.getByRole('button', { name: 'Create Account' }).click();

@@ -66,6 +66,7 @@ test.describe('Authentication Flow', () => {
     await expect(page.getByRole('button', { name: 'Create Account' })).toBeVisible();
 
     // Fill the form
+    await page.getByLabel('Full Name').fill('Auth Test User');
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     
@@ -78,8 +79,8 @@ test.describe('Authentication Flow', () => {
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
     // 2. Logout
-    // Click explicit Logout button in the header
-    await page.getByRole('button', { name: 'Log out' }).click();
+    await page.getByRole('button', { name: 'User menu' }).click();
+    await page.getByRole('menuitem', { name: 'Log out' }).click();
 
     // Verify redirect to login
     await page.waitForURL('**/login', { timeout: 30_000 });
@@ -108,6 +109,7 @@ test.describe('Authentication Flow', () => {
 
     await page.goto('/login');
     await page.getByRole('button', { name: "Switch to Register" }).click();
+    await page.getByLabel('Full Name').fill('Auth Redirect User');
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     await page.getByRole('button', { name: 'Create Account' }).click();

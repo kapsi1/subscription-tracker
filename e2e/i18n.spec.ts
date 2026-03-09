@@ -19,6 +19,7 @@ test.describe('Internationalization (i18n) Flow', () => {
     await page.getByRole('button', { name: "Switch to Register" }).click();
     
     // Fill the form
+    await page.getByLabel('Full Name').fill('I18n Test User');
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     

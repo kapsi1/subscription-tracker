@@ -7,6 +7,7 @@ import api from '@/lib/api';
 export interface User {
   id: string;
   email: string;
+  name: string | null;
   language: string;
   createdAt: string;
   updatedAt: string;

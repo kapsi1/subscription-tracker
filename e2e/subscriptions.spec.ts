@@ -14,6 +14,7 @@ test.describe('Subscriptions Flow', () => {
     // 1. Setup: Register and Login
     await page.goto('/login');
     await page.getByRole('button', { name: "Switch to Register" }).click();
+    await page.getByLabel('Full Name').fill('Subscriptions Test User');
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     await page.getByRole('button', { name: 'Create Account' }).click();
