@@ -114,7 +114,8 @@ dist
 .biome
 
 *.log
-frontend/playwright-report
 test_output.txt
 test_results.txt
-frontend/test-results
+playwright-report/
+test-results/
+e2e-snapshots/

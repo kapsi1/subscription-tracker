@@ -42,14 +42,13 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: [
     {
-      command: 'cd ../backend && pnpm run dev',
+      command: 'pnpm --filter backend dev',
       url: 'http://localhost:3001',
       reuseExistingServer: !process.env.CI,
       timeout: 30 * 1000,
     },
     {
-      command: 'pnpm exec next dev --webpack',
-      // command: 'cd ../frontend && pnpm run dev',
+      command: 'pnpm --filter next-app dev',
       url: 'http://localhost:3000',
       reuseExistingServer: !process.env.CI,
       timeout: 30 * 1000,
