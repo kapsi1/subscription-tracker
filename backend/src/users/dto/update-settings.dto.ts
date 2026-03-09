@@ -55,4 +55,15 @@ export class UpdateSettingsDto {
   @IsOptional()
   @IsBoolean()
   weeklyReport?: boolean;
+  @IsOptional()
+  @IsString()
+  dashboardSortBy?: string;
+
+  @IsOptional()
+  @IsString()
+  dashboardSortOrder?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  showPaidPayments?: boolean;
 }

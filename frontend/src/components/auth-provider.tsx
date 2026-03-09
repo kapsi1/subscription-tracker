@@ -22,6 +22,9 @@ export interface User {
   webhookUrl             : string | null;
   dailyDigest            : boolean;
   weeklyReport           : boolean;
+  dashboardSortBy        : string;
+  dashboardSortOrder     : string;
+  showPaidPayments       : boolean;
 }
 
 interface AuthContextType {

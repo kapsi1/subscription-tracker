@@ -55,7 +55,8 @@
     "sortByDate": "Data",
     "sortByAmount": "Kwota",
     "sortDirectionAsc": "Sortuj rosnąco",
-    "sortDirectionDesc": "Sortuj malejąco"
+    "sortDirectionDesc": "Sortuj malejąco",
+    "showPaid": "Pokaż opłacone"
   },
   "theme": {
     "light": "Przełącz na tryb jasny",

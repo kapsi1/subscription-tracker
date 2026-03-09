@@ -55,7 +55,8 @@
     "sortByDate": "Date",
     "sortByAmount": "Amount",
     "sortDirectionAsc": "Sort ascending",
-    "sortDirectionDesc": "Sort descending"
+    "sortDirectionDesc": "Sort descending",
+    "showPaid": "Show paid"
   },
   "theme": {
     "light": "Switch to light mode",

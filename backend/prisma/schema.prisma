@@ -30,6 +30,9 @@ model User {
   webhookSecret          String?
   dailyDigest            Boolean        @default(false)
   weeklyReport           Boolean        @default(true)
+  dashboardSortBy        String         @default("date")
+  dashboardSortOrder     String         @default("asc")
+  showPaidPayments       Boolean        @default(true)
 }
 
 enum BillingCycle {
