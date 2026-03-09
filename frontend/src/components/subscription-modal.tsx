@@ -84,7 +84,7 @@ export function SubscriptionModal({
 
   useEffect(() => {
     if (subscription && open) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setFormData({
         name: subscription.name,
         amount: subscription.amount.toString(),

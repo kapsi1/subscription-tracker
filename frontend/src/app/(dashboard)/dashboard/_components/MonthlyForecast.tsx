@@ -23,8 +23,8 @@ interface MonthlyForecastProps {
 }
 
 interface RechartsPayloadItem {
-  payload: any;
-  value: any;
+  payload: unknown;
+  value: number | string | undefined;
   dataKey?: string | number;
 }
 
@@ -69,7 +69,7 @@ const CustomTooltip = ({ active, payload, label, t, currency = "USD" }: CustomTo
 };
 
 export function MonthlyForecast({ forecast, currency = "USD" }: MonthlyForecastProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Card className="shadow-sm hover:shadow-md transition-shadow">

@@ -6,7 +6,7 @@ describe('DashboardController', () => {
   let controller: DashboardController;
   let serviceMock: Record<string, jest.Mock>;
 
-  const mockReq = { user: { userId: 'user-1' } };
+  const mockReq = { user: { userId: 'user-1' } } as any;
 
   const mockSummary = {
     totalMonthlyCost: 25,

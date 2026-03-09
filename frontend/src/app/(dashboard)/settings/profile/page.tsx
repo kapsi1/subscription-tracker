@@ -5,12 +5,12 @@ import { toast } from "sonner";
 import api from "@/lib/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/components/auth-provider";
-import { ProfileSection } from "../_components/ProfileSection";
+import { ProfileSection, ProfileData } from "../_components/ProfileSection";
 
 export default function ProfilePage() {
   const { t } = useTranslation();
   const { fetchUser } = useAuth();
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<ProfileData>({
     name: "",
     email: "",
     createdAt: "",

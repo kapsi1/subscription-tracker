@@ -6,14 +6,16 @@ import { Input } from "@/components/ui/input";
 import { UserRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+export interface ProfileData {
+  name: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface ProfileSectionProps {
-  profile: {
-    name: string;
-    email: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-  setProfile: (profile: any) => void;
+  profile: ProfileData;
+  setProfile: (profile: ProfileData) => void;
 }
 
 export function ProfileSection({ profile, setProfile }: ProfileSectionProps) {
