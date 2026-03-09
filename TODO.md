@@ -309,6 +309,7 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Review code for security vulnerabilities and best practices.
 - [ ] Review code for performance issues and best practices.
 - [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types.
+- [ ] Review code for areas that can be shortened or simplified.
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
 - [ ] Check for and remove unused code and translations
 - [x] Refactor settings page: split it into multiple components, by section
@@ -317,3 +318,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Create a JSON with test subscriptions data that can be imported in the app. Include different currencies, billing cycles, categories, payment history, etc. Make different months have different amount of subscriptions. Include some very long subscription names to test the subscriptions list.
 - [ ] Add payment history to the subscription details page (the edit subscription modal)
 - [x] This Month Payments (in SummaryCards.tsx): show done this month/total this month, e.g. 2/10
+- [x] In All Subscriptions table, make the column headers clickable (add cursor-pointer class), and clicking them sort the table. Show up/down chevrons next to column name, to show sort order. Default order is Next Billing / ascending (chronological).

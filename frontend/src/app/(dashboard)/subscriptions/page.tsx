@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Upload, Download, Plus, Pencil, Trash2, Search, Filter, ArrowUpDown } from "lucide-react";
+import { Upload, Download, Plus, Pencil, Trash2, Search, Filter, ArrowUpDown, ChevronUp, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/empty-state";
 import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
@@ -56,6 +56,10 @@ export default function SubscriptionsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof Subscription;
+    direction: "asc" | "desc";
+  }>({ key: "nextBillingDate" as keyof Subscription, direction: "asc" });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -77,6 +81,53 @@ export default function SubscriptionsPage() {
     sub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     sub.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const sortedSubscriptions = [...filteredSubscriptions].sort((a, b) => {
+    const key = sortConfig.key;
+    const direction = sortConfig.direction === "asc" ? 1 : -1;
+
+    const aValue = a[key];
+    const bValue = b[key];
+
+    // Numeric comparison for amount
+    if (key === "amount") {
+      const aNum = typeof aValue === "number" ? aValue : parseFloat(aValue as string) || 0;
+      const bNum = typeof bValue === "number" ? bValue : parseFloat(bValue as string) || 0;
+      return (aNum - bNum) * direction;
+    }
+
+    // Handle null/undefined values
+    if (aValue === bValue) return 0;
+    if (aValue === undefined || aValue === null) return 1;
+    if (bValue === undefined || bValue === null) return -1;
+
+    // String comparison for names and categories
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return aValue.localeCompare(bValue) * direction;
+    }
+
+    // Generic comparison for other types
+    return (aValue < bValue ? -1 : 1) * direction;
+  });
+
+  const handleSort = (key: keyof Subscription) => {
+    let direction: "asc" | "desc" = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortIcon = (key: keyof Subscription) => {
+    if (sortConfig.key !== key) {
+      return <ArrowUpDown className="ml-2 h-4 w-4" />;
+    }
+    return sortConfig.direction === "asc" ? (
+      <ChevronUp className="ml-2 h-4 w-4" />
+    ) : (
+      <ChevronDown className="ml-2 h-4 w-4" />
+    );
+  };
 
   const handleAddNew = () => {
     setEditingSubscription(null);
@@ -293,16 +344,56 @@ export default function SubscriptionsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t('subscriptions.table.service')}</TableHead>
-                    <TableHead>{t('subscriptions.table.amount')}</TableHead>
-                    <TableHead>{t('subscriptions.table.cycle')}</TableHead>
-                    <TableHead>{t('subscriptions.table.next')}</TableHead>
-                    <TableHead>{t('subscriptions.table.category')}</TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:text-foreground transition-colors select-none"
+                      onClick={() => handleSort("name")}
+                    >
+                      <div className="flex items-center">
+                        {t('subscriptions.table.service')}
+                        {getSortIcon("name")}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:text-foreground transition-colors select-none"
+                      onClick={() => handleSort("amount")}
+                    >
+                      <div className="flex items-center">
+                        {t('subscriptions.table.amount')}
+                        {getSortIcon("amount")}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:text-foreground transition-colors select-none"
+                      onClick={() => handleSort("billingCycle")}
+                    >
+                      <div className="flex items-center">
+                        {t('subscriptions.table.cycle')}
+                        {getSortIcon("billingCycle")}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:text-foreground transition-colors select-none"
+                      onClick={() => handleSort("nextBillingDate")}
+                    >
+                      <div className="flex items-center">
+                        {t('subscriptions.table.next')}
+                        {getSortIcon("nextBillingDate")}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:text-foreground transition-colors select-none"
+                      onClick={() => handleSort("category")}
+                    >
+                      <div className="flex items-center">
+                        {t('subscriptions.table.category')}
+                        {getSortIcon("category")}
+                      </div>
+                    </TableHead>
                     <TableHead className="text-right"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredSubscriptions.map((subscription) => (
+                  {sortedSubscriptions.map((subscription) => (
                     <TableRow 
                       key={subscription.id} 
                       className="hover:bg-accent/50 cursor-pointer group"
@@ -335,6 +426,17 @@ export default function SubscriptionsPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2 opacity-0 focus-within:opacity-100 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(subscription);
+                            }}
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="icon"
