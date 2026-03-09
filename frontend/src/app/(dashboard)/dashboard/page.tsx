@@ -271,13 +271,15 @@ export default function DashboardPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-2">
-            <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
-              {t('dashboard.totalMonthlyCost')}
-            </CardTitle>
-            {/* <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <DollarSign className="w-4 h-4 text-primary" />
-            </div> */}
+          <CardHeader className="flex flex-col items-center justify-center pb-2 px-4 h-24 text-center">
+            <div className="flex flex-row items-center justify-center gap-2">
+              <CardTitle className="text-md font-medium text-muted-foreground leading-tight">
+                {t('dashboard.totalMonthlyCost')}
+              </CardTitle>
+              <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                <DollarSign className="w-4 h-4 text-primary" />
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalMonthlyCost)}</div>
@@ -285,13 +287,15 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-2">
-            <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
-              {t('dashboard.totalYearlyCost')}
-            </CardTitle>
-            {/* <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
-              <TrendingUp className="w-4 h-4 text-primary" />
-            </div> */}
+          <CardHeader className="flex flex-col items-center justify-center pb-2 px-4 h-24 text-center">
+            <div className="flex flex-row items-center justify-center gap-2">
+              <CardTitle className="text-md font-medium text-muted-foreground leading-tight">
+                {t('dashboard.totalYearlyCost')}
+              </CardTitle>
+              <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                <TrendingUp className="w-4 h-4 text-primary" />
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalYearlyCost, 'USD', 0)}</div>
@@ -299,13 +303,15 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-2">
-            <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
-              {t('dashboard.monthlyPayments')}
-            </CardTitle>
-            {/* <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
-              <Calendar className="w-4 h-4 text-primary" />
-            </div> */}
+          <CardHeader className="flex flex-col items-center justify-center pb-2 px-4 h-24 text-center">
+            <div className="flex flex-row items-center justify-center gap-2">
+              <CardTitle className="text-md font-medium text-muted-foreground leading-tight">
+                {t('dashboard.monthlyPayments')}
+              </CardTitle>
+              <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                <Calendar className="w-4 h-4 text-primary" />
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-4xl text-center font-semibold">{monthlyPayments.length}</div>
@@ -313,13 +319,15 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-2">
-            <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
-              {t('dashboard.activeSubscriptions')}
-            </CardTitle>
-            {/* <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
-              <CreditCard className="w-4 h-4 text-primary" />
-            </div> */}
+          <CardHeader className="flex flex-col items-center justify-center pb-2 px-4 h-24 text-center">
+            <div className="flex flex-row items-center justify-center gap-2">
+              <CardTitle className="text-md font-medium text-muted-foreground leading-tight">
+                {t('dashboard.activeSubscriptions')}
+              </CardTitle>
+              <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                <CreditCard className="w-4 h-4 text-primary" />
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-4xl text-center font-semibold">{summary.activeSubscriptions}</div>
@@ -397,7 +405,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className={payment.status === "done" ? "font-medium line-through" : "font-medium"}>
+                        <p className="font-medium">
                           {payment.name}
                         </p>
                         {payment.status === "done" ? (
@@ -411,11 +419,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex items-center gap-4 sm:gap-6">
                     <div className="text-right">
-                      <p
-                        className={
-                          payment.status === "done" ? "font-semibold line-through" : "font-semibold"
-                        }
-                      >
+                      <p className="font-semibold">
                         {formatCurrency(payment.amount, payment.currency)}
                       </p>
                       <p className="text-sm text-muted-foreground">
