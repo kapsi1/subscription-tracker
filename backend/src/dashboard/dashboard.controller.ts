@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import type { RequestWithUser } from '../common/interfaces/request.interface';
+
 
 @UseGuards(JwtAuthGuard)
 @Controller('dashboard')
@@ -17,7 +19,7 @@ export class DashboardController {
 
   @Get('summary')
   async getSummary(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Query('month') month?: number,
     @Query('year') year?: number,
   ) {
@@ -26,7 +28,7 @@ export class DashboardController {
 
   @Get('monthly-payments')
   async getMonthlyPayments(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Query('month') month?: number,
     @Query('year') year?: number,
   ) {
@@ -35,7 +37,7 @@ export class DashboardController {
 
   @Get('forecast')
   async getForecast(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Query('months', new DefaultValuePipe(12), ParseIntPipe) months: number,
   ) {
     // Ensuring maximum capping so users can't crash server iterating forever

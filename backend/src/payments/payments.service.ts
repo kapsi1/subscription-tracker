@@ -143,8 +143,9 @@ export class PaymentsService {
               user.accentColor,
               user.theme,
             );
-          } catch (error) {
-            this.logger.error(`Failed to send daily digest to ${user.email}: ${error.message}`);
+          } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            this.logger.error(`Failed to send daily digest to ${user.email}: ${message}`);
           }
         }
       } else {

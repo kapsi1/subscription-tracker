@@ -4,20 +4,14 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 
-interface GoogleProfile {
-  googleId: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  picture?: string;
-  accessToken: string;
-}
+import { GoogleProfile } from './interfaces/google-profile.interface';
+
 
 @Injectable()
 export class AuthService {
@@ -126,10 +120,10 @@ export class AuthService {
       accessToken: this.jwtService.sign(payload),
       refreshToken: this.jwtService.sign(payload, {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
-        expiresIn: this.configService.get<string>(
+        expiresIn: this.configService.get<string | number>(
           'JWT_REFRESH_EXPIRES_IN',
           '7d',
-        ) as any,
+        ) as JwtSignOptions['expiresIn'],
       }),
     };
   }

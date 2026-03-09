@@ -17,9 +17,10 @@ export class WebhookService {
     let parsedUrl: URL;
     try {
       parsedUrl = new URL(url);
-    } catch (e) {
+    } catch (error: unknown) {
       throw new BadRequestException('Invalid webhook URL');
     }
+
 
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
       throw new BadRequestException('Invalid webhook protocol');
@@ -58,9 +59,10 @@ export class WebhookService {
       this.logger.log(
         `[WEBHOOK] Successfully sent request to ${url} for ${subscriptionName}`,
       );
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       this.logger.error(
-        `[WEBHOOK] Failed to send request to ${url}: ${error.message}`,
+        `[WEBHOOK] Failed to send request to ${url}: ${message}`,
       );
       throw error;
     }

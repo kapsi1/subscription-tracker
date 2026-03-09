@@ -7,10 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Bell } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Settings } from "@/types/settings";
+
 interface ReminderSectionProps {
   defaultReminderEnabled: boolean;
   defaultReminderDays: string;
-  onSettingsChange: (updates: any) => void;
+  onSettingsChange: (updates: Partial<Settings>) => void;
 }
 
 export function ReminderSection({

@@ -12,10 +12,25 @@ import { WebhookSection } from "../_components/WebhookSection";
 import { ReminderSection } from "../_components/ReminderSection";
 import { BudgetSection } from "../_components/BudgetSection";
 
+export interface Settings {
+  defaultReminderEnabled: boolean;
+  defaultReminderDays: string;
+  emailNotifications: boolean;
+  emailAddress: string;
+  webhookEnabled: boolean;
+  webhookUrl: string;
+  webhookSecret: string;
+  dailyDigest: boolean;
+  weeklyReport: boolean;
+  monthlyBudget: string;
+  pushEnabled: boolean;
+  currency: string;
+}
+
 export default function PreferencesPage() {
   const { t } = useTranslation();
   const showTestControls = process.env.NODE_ENV !== "production";
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<Settings>({
     defaultReminderEnabled: true,
     defaultReminderDays: "3",
     emailNotifications: true,
@@ -169,8 +184,9 @@ export default function PreferencesPage() {
         setSettings((s) => ({ ...s, pushEnabled: false }));
         toast.success(t('settings.notifications.push.disabled'));
       }
-    } catch (error: any) {
-      toast.error(t('settings.notifications.push.error') + ": " + (error.message || "Unknown error"));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      toast.error(t('settings.notifications.push.error') + ": " + message);
       setSettings((s) => ({ ...s, pushEnabled: false }));
     } finally {
       setIsTogglingPush(false);
@@ -197,8 +213,9 @@ export default function PreferencesPage() {
       const delaySeconds = Math.max(0, parseInt(testDelay) || 0);
       const res = await api.post("/users/test-push", { delaySeconds });
       toast.success(res.data.message);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to send test notification");
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to send test notification");
     } finally {
       setIsSendingTest(false);
     }
@@ -209,8 +226,9 @@ export default function PreferencesPage() {
     try {
       const res = await api.post("/users/test-email", { lang: testEmailLanguage });
       toast.success(res.data.message || t("settings.notifications.email.testSuccess"));
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || t("settings.notifications.email.testError"));
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || t("settings.notifications.email.testError"));
     } finally {
       setIsSendingTestEmail(false);
     }
@@ -221,8 +239,9 @@ export default function PreferencesPage() {
     try {
       const res = await api.post("/users/test-budget-email", { lang: testBudgetEmailLanguage });
       toast.success(res.data.message || t("settings.notifications.email.testBudgetSuccess"));
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || t("settings.notifications.email.testBudgetError"));
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || t("settings.notifications.email.testBudgetError"));
     } finally {
       setIsSendingBudgetTestEmail(false);
     }
@@ -233,8 +252,9 @@ export default function PreferencesPage() {
     try {
       const res = await api.post("/users/test-daily-digest", { lang: testEmailLanguage });
       toast.success(res.data.message || "Test daily digest sent");
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to send test daily digest");
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to send test daily digest");
     } finally {
       setIsSendingDailyTest(false);
     }
@@ -245,8 +265,9 @@ export default function PreferencesPage() {
     try {
       const res = await api.post("/users/test-weekly-report", { lang: testEmailLanguage });
       toast.success(res.data.message || "Test weekly report sent");
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to send test weekly report");
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to send test weekly report");
     } finally {
       setIsSendingWeeklyTest(false);
     }
@@ -260,14 +281,15 @@ export default function PreferencesPage() {
         secret: settings.webhookSecret 
       });
       toast.success(res.data.message || t("settings.notifications.webhook.testSuccess"));
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || t("settings.notifications.webhook.testError"));
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || t("settings.notifications.webhook.testError"));
     } finally {
       setIsSendingWebhookTest(false);
     }
   };
 
-  const handleSettingsChange = (updates: any) => {
+  const handleSettingsChange = (updates: Partial<Settings>) => {
     setSettings(prev => ({ ...prev, ...updates }));
   };
 

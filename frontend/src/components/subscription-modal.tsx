@@ -151,7 +151,7 @@ export function SubscriptionModal({
         reminderEnabled: formData.reminderEnabled,
         reminderDays: parseInt(formData.reminderDays),
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Backend handles currency
     } finally {
       setIsSaving(false);

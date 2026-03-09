@@ -18,15 +18,16 @@ export class WebPushService {
     }
   }
 
-  async sendNotification(sub: webpush.PushSubscription, payload: any) {
+  async sendNotification(sub: webpush.PushSubscription, payload: unknown) {
     try {
       await webpush.sendNotification(sub, JSON.stringify(payload), {
         TTL: 86400, // 24 hours
         urgency: 'high',
       });
       this.logger.log(`[WebPush] Successfully sent notification to endpoint: ${sub.endpoint}`);
-    } catch (error: any) {
-      this.logger.error(`[WebPush] Failed to send notification: ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`[WebPush] Failed to send notification: ${message}`);
       throw error;
     }
   }

@@ -14,14 +14,8 @@ import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { ImportSubscriptionsDto } from './dto/import-subscription.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { Request } from 'express';
-
-interface RequestWithUser extends Request {
-  user: {
-    userId: string;
-    email: string;
-  };
-}
+import type { Request } from 'express';
+import type { RequestWithUser } from '../common/interfaces/request.interface';
 
 @UseGuards(JwtAuthGuard)
 @Controller('subscriptions')

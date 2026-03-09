@@ -44,11 +44,12 @@ export class AlertsProcessor extends WorkerHost {
   }
 
   async process(
-    job: Job<any, unknown, string>,
+    job: Job<AlertJobData | BudgetAlertJobData, unknown, string>,
   ): Promise<{ success: boolean }> {
     if (job.name === 'processBudgetAlert') {
       return this.processBudgetAlert(job as Job<BudgetAlertJobData, unknown, string>);
     }
+    const data = job.data as AlertJobData;
     const {
       type,
       alertId,
@@ -60,7 +61,7 @@ export class AlertsProcessor extends WorkerHost {
       currency,
       webhookUrl,
       webhookSecret: encryptedSecret,
-    } = job.data;
+    } = data;
 
     let webhookSecret: string | undefined;
     if (encryptedSecret) {
@@ -213,12 +214,13 @@ export class AlertsProcessor extends WorkerHost {
         userPrefs?.language === 'pl' ? 'pl' : 'en',
       );
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
       this.logger.error({
         msg: 'Failed to process budget alert',
         jobId: job.id,
         userEmail,
-        error: error.message,
+        error: message,
       });
       throw error;
     }

@@ -80,7 +80,7 @@ export async function subscribeToPush(): Promise<PushSubscription> {
         applicationServerKey: convertedVapidKey,
       });
       return sub;
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("[Push:subscribe] pushManager.subscribe error details:", e);
       throw e;
     }
@@ -97,7 +97,7 @@ export async function subscribeToPush(): Promise<PushSubscription> {
     const sub = await Promise.race([subscribePromise, timeoutPromise]);
     console.log("[Push:subscribe] SUCCESS:", sub);
     return sub;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[Push:subscribe] FAILED:", err);
     throw err;
   }

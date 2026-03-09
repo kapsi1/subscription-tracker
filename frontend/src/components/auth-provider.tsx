@@ -28,12 +28,24 @@ export interface User {
   avatarUrl              : string | null;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password?: string;
+}
+
+export interface RegisterCredentials {
+  email: string;
+  name: string;
+  password?: string;
+}
+
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (data: any) => Promise<void>;
-  register: (data: any) => Promise<void>;
+  login: (data: LoginCredentials) => Promise<void>;
+  register: (data: RegisterCredentials) => Promise<void>;
   logout: () => void;
   fetchUser: () => Promise<void>;
 }
@@ -93,7 +105,7 @@ export const AuthProvider = ({ children, initialToken }: { children: React.React
     return () => window.removeEventListener('unauthorized', handleUnauthorized);
   }, [router, fetchUser]);
 
-  const login = async (data: any) => {
+  const login = async (data: LoginCredentials) => {
     const res = await api.post('/auth/login', data);
     const token = res.data.accessToken;
     localStorage.setItem('accessToken', token);
@@ -103,7 +115,7 @@ export const AuthProvider = ({ children, initialToken }: { children: React.React
     router.push('/dashboard');
   };
 
-  const register = async (data: any) => {
+  const register = async (data: RegisterCredentials) => {
     const res = await api.post('/auth/register', data);
     const token = res.data.accessToken;
     localStorage.setItem('accessToken', token);

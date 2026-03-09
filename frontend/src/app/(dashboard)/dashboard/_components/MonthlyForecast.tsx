@@ -13,19 +13,34 @@ import {
   Bar,
   Line,
 } from "recharts";
-
 import { formatCurrency } from "@/lib/utils";
+import { ForecastItem } from "@/types/dashboard";
+import type { i18n as i18nType, TFunction } from "i18next";
 
 interface MonthlyForecastProps {
-  forecast: any[];
+  forecast: ForecastItem[];
   currency?: string;
 }
 
-const CustomTooltip = ({ active, payload, label, t, i18n, currency = "USD" }: any) => {
+interface RechartsPayloadItem {
+  payload: any;
+  value: any;
+  dataKey?: string | number;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: RechartsPayloadItem[];
+  label?: string;
+  t: TFunction;
+  currency?: string;
+}
+
+const CustomTooltip = ({ active, payload, label, t, currency = "USD" }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    const monthlySpending = payload.find((p: any) => p.dataKey === 'amount')?.value;
-    const cumulativeSpending = payload.find((p: any) => p.dataKey === 'cumulativeAmount')?.value;
+    const data = payload[0].payload as ForecastItem;
+    const monthlySpending = payload.find((p) => p.dataKey === 'amount')?.value;
+    const cumulativeSpending = payload.find((p) => p.dataKey === 'cumulativeAmount')?.value;
     const payments = data.payments || [];
 
     return (
@@ -92,7 +107,7 @@ export function MonthlyForecast({ forecast, currency = "USD" }: MonthlyForecastP
               tickFormatter={(value) => formatCurrency(value, currency, 0)}
             />
             <Tooltip
-              content={<CustomTooltip t={t} i18n={i18n} currency={currency} />}
+              content={<CustomTooltip t={t} currency={currency} />}
               cursor={{ fill: 'var(--primary)', opacity: 0.05 }}
             />
             <Legend iconType="circle" />

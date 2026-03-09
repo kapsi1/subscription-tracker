@@ -4,7 +4,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 
-import { AlertType, Prisma, BillingCycle } from '@prisma/client';
+import { AlertType, Prisma, BillingCycle, Subscription } from '@prisma/client';
+
 import { DashboardService } from '../dashboard/dashboard.service';
 import { PaymentsService } from '../payments/payments.service';
 
@@ -133,7 +134,7 @@ export class AlertsService {
 
   private async enqueueIfNecessary(
     alertId: string,
-    sub: any, // Subscription with user
+    sub: SubWithUser,
     type: AlertType,
     daysBefore: number,
     webhookUrl?: string,
@@ -215,7 +216,8 @@ export class AlertsService {
       acc[sub.userId] = acc[sub.userId] || [];
       acc[sub.userId].push(sub);
       return acc;
-    }, {} as Record<string, Prisma.SubscriptionGetPayload<{}>[]>);
+    }, {} as Record<string, Subscription[]>);
+
 
     let countSent = 0;
 

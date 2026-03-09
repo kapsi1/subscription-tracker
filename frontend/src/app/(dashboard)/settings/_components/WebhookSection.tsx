@@ -8,11 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Webhook, SendHorizonal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Settings } from "@/types/settings";
+
 interface WebhookSectionProps {
   webhookEnabled: boolean;
   webhookUrl: string;
   webhookSecret: string;
-  onSettingsChange: (updates: any) => void;
+  onSettingsChange: (updates: Partial<Settings>) => void;
   showTestControls: boolean;
   onTestWebhook: () => void;
   isSendingWebhookTest: boolean;

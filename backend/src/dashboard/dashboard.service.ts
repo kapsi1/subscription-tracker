@@ -2,6 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BillingCycle, Subscription } from '@prisma/client';
 
+export interface ForecastPayment {
+  id: string;
+  name: string;
+  amount: number;
+  currency: string;
+  date: Date;
+}
+
+export interface ForecastItem {
+  month: string;
+  year: number;
+  amount: number;
+  currency: string;
+  payments: ForecastPayment[];
+}
+
+
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
@@ -298,12 +315,12 @@ export class DashboardService {
     });
   }
 
-  async getForecast(userId: string, months: number = 12) {
+  async getForecast(userId: string, months: number = 12): Promise<ForecastItem[]> {
     const subscriptions = await this.prisma.subscription.findMany({
       where: { userId, isActive: true },
     });
-
-    const forecast = [];
+    
+    const forecast: ForecastItem[] = [];
     const now = new Date();
 
     const monthNames = [
@@ -336,9 +353,10 @@ export class DashboardService {
         year: targetDate.getFullYear(),
         amount: 0,
         currency: userCurrency,
-        payments: [] as any[],
+        payments: [],
       });
     }
+
 
     // Go through each subscription and accurately step forward its next billing dates
     // to slot them into the correct forecast bucket.

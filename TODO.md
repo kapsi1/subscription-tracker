@@ -310,6 +310,8 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Review code for performance issues and best practices.
 - [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types.
 - [ ] Review code for areas that can be shortened or simplified.
+- [ ] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
+- [ ] Find and fix compiler & linter errors and warnings.
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
 - [ ] Check for and remove unused code and translations
 - [x] Refactor settings page: split it into multiple components, by section

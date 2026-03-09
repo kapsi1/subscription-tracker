@@ -21,6 +21,8 @@ import { PushSubscriptionDto } from './dto/push-subscription.dto';
 import { WebPushService } from '../notifications/webpush/webpush.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../notifications/email/email.service';
+import type { RequestWithUser } from '../common/interfaces/request.interface';
+
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -41,7 +43,7 @@ export class UsersController {
   }
 
   @Get('me')
-  async getMe(@Req() req: any) {
+  async getMe(@Req() req: RequestWithUser) {
     const user = await this.usersService.findById(req.user.userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -53,7 +55,7 @@ export class UsersController {
 
   @Patch('settings')
   async updateSettings(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Body() updateSettingsDto: UpdateSettingsDto,
   ) {
     return this.usersService.update(req.user.userId, updateSettingsDto);
@@ -61,7 +63,7 @@ export class UsersController {
 
   @Post('push-subscription')
   async savePushSubscription(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Body() subDto: PushSubscriptionDto,
   ) {
     return this.usersService.savePushSubscription(
@@ -74,7 +76,7 @@ export class UsersController {
 
   @Delete('push-subscription')
   async deletePushSubscription(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Query('endpoint') endpoint: string,
   ) {
     return this.usersService.deletePushSubscription(req.user.userId, endpoint);
@@ -83,7 +85,7 @@ export class UsersController {
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-push')
   async testPush(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Body() body: { delaySeconds?: number },
   ) {
     this.assertTestEndpointsEnabled();
@@ -109,8 +111,9 @@ export class UsersController {
             { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
             payload,
           );
-        } catch (error: any) {
-          this.logger.error(`Test push failed for endpoint ${sub.endpoint}: ${error.message}`);
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : String(error);
+          this.logger.error(`Test push failed for endpoint ${sub.endpoint}: ${message}`);
         }
       }
     };
@@ -126,7 +129,7 @@ export class UsersController {
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-email')
-  async testEmail(@Req() req: any, @Body() body: { lang?: string }) {
+  async testEmail(@Req() req: RequestWithUser, @Body() body: { lang?: string }) {
     this.assertTestEndpointsEnabled();
 
     const user = await this.usersService.findById(req.user.userId);
@@ -163,7 +166,7 @@ export class UsersController {
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-budget-email')
-  async testBudgetEmail(@Req() req: any, @Body() body: { lang?: string }) {
+  async testBudgetEmail(@Req() req: RequestWithUser, @Body() body: { lang?: string }) {
     this.assertTestEndpointsEnabled();
 
     const user = await this.usersService.findById(req.user.userId);
@@ -201,7 +204,7 @@ export class UsersController {
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-daily-digest')
-  async testDailyDigest(@Req() req: any, @Body() body: { lang?: string }) {
+  async testDailyDigest(@Req() req: RequestWithUser, @Body() body: { lang?: string }) {
     this.assertTestEndpointsEnabled();
 
     const user = await this.usersService.findById(req.user.userId);
@@ -228,7 +231,7 @@ export class UsersController {
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-weekly-report')
-  async testWeeklyReport(@Req() req: any, @Body() body: { lang?: string }) {
+  async testWeeklyReport(@Req() req: RequestWithUser, @Body() body: { lang?: string }) {
     this.assertTestEndpointsEnabled();
 
     const user = await this.usersService.findById(req.user.userId);
@@ -252,7 +255,7 @@ export class UsersController {
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-webhook')
   async testWebhook(
-    @Req() req: any,
+    @Req() req: RequestWithUser,
     @Body() body: { url: string; secret?: string },
   ) {
     this.assertTestEndpointsEnabled();
@@ -264,9 +267,10 @@ export class UsersController {
     try {
       await this.usersService.testWebhook(req.user.userId, body.url, body.secret);
       return { message: 'Test webhook sent successfully.' };
-    } catch (error: any) {
-      this.logger.error(`Test webhook failed: ${error.message}`);
-      throw new BadRequestException(`Test webhook failed: ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Test webhook failed: ${message}`);
+      throw new BadRequestException(`Test webhook failed: ${message}`);
     }
   }
 }

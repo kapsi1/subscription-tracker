@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { PiggyBank, SendHorizonal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Settings } from "@/types/settings";
+
 interface BudgetSectionProps {
   monthlyBudget: string;
   currency: string;
-  onSettingsChange: (updates: any) => void;
+  onSettingsChange: (updates: Partial<Settings>) => void;
   showTestControls: boolean;
   testBudgetEmailLanguage: "en" | "pl";
   setTestBudgetEmailLanguage: (lang: "en" | "pl") => void;

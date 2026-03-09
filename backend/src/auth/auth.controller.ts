@@ -15,8 +15,18 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
-import type { Response } from 'express';
+import type { Response, Request } from 'express';
+
 import { ConfigService } from '@nestjs/config';
+import type { RequestWithUser } from '../common/interfaces/request.interface';
+import type { GoogleProfile } from './interfaces/google-profile.interface';
+
+type RequestWithGoogleProfile = Request & {
+  user: GoogleProfile;
+};
+
+
+
 
 @Controller('auth')
 export class AuthController {
@@ -27,13 +37,13 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() _req: any) {
+  async googleAuth(@Req() _req: Request) {
     // Initiates Google OAuth2 flow
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
+  async googleAuthCallback(@Req() req: RequestWithGoogleProfile, @Res() res: Response) {
     const tokens = await this.authService.validateGoogleUser(req.user);
     const frontendUrl = this.configService.getOrThrow<string>('FRONTEND_URL');
 
@@ -67,7 +77,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  async logout(@Req() req: any) {
+  async logout(@Req() req: RequestWithUser) {
     // For JWTs, real logouts are usually handled client side by dropping tokens,
     // but a successful server response signals completion.
     return { message: 'Logged out successfully' };

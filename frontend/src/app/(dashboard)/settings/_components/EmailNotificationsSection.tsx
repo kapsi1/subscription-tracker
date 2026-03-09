@@ -8,12 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Mail, SendHorizonal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Settings } from "@/types/settings";
+
 interface EmailNotificationsSectionProps {
   emailNotifications: boolean;
   emailAddress: string;
   dailyDigest: boolean;
   weeklyReport: boolean;
-  onSettingsChange: (updates: any) => void;
+  onSettingsChange: (updates: Partial<Settings>) => void;
   showTestControls: boolean;
   testEmailLanguage: "en" | "pl";
   setTestEmailLanguage: (lang: "en" | "pl") => void;

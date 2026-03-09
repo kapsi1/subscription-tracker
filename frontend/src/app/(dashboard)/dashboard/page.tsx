@@ -19,17 +19,20 @@ import { MonthlyPayments, MonthlyPayment } from "./_components/MonthlyPayments";
 import { MonthlyForecast } from "./_components/MonthlyForecast";
 import { CostByCategory } from "./_components/CostByCategory";
 import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
+import { DashboardSummary, ForecastItem } from "@/types/dashboard";
+
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const [summary, setSummary] = useState<any>({
+  const [summary, setSummary] = useState<DashboardSummary>({
     totalMonthlyCost: 0,
     totalYearlyCost: 0,
     activeSubscriptions: 0,
     categoryBreakdown: {},
+    currency: "USD",
   });
-  const [forecast, setForecast] = useState<any[]>([]);
+  const [forecast, setForecast] = useState<ForecastItem[]>([]);
   const [monthlyPayments, setMonthlyPayments] = useState<MonthlyPayment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -54,8 +57,8 @@ export default function DashboardPage() {
 
       setSummary(summaryRes.data);
 
-      const forecastWithCumulative = summaryRes.data && forecastRes.data.reduce((acc: any[], item: any, index: number) => {
-        const previousCumulative = index > 0 ? acc[index - 1].cumulativeAmount : 0;
+      const forecastWithCumulative = summaryRes.data && (forecastRes.data as ForecastItem[]).reduce((acc: ForecastItem[], item: ForecastItem, index: number) => {
+        const previousCumulative = index > 0 ? (acc[index - 1].cumulativeAmount || 0) : 0;
         acc.push({
           ...item,
           cumulativeAmount: previousCumulative + item.amount
@@ -64,7 +67,7 @@ export default function DashboardPage() {
       }, []);
       setForecast(forecastWithCumulative || []);
       setMonthlyPayments(monthlyPaymentsRes.data || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(t('common.error'));
     } finally {
       setIsLoading(false);
@@ -119,7 +122,7 @@ export default function DashboardPage() {
         fetchDashboardData(selectedDate);
       }
       setModalOpen(false);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
       throw err;
     }

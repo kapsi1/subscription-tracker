@@ -70,7 +70,7 @@ export default function SubscriptionsPage() {
     try {
       const res = await api.get("/subscriptions");
       setSubscriptions(res.data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(t('subscriptions.loadError', { defaultValue: 'Failed to load subscriptions' }));
     } finally {
       setIsLoading(false);
@@ -170,8 +170,9 @@ export default function SubscriptionsPage() {
         sendGAEvent({ event: "add_subscription", value: "success" });
       }
       setModalOpen(false);
-    } catch (err: any) {
-      const backendMessage = err.response?.data?.message;
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string | string[] } } };
+      const backendMessage = error.response?.data?.message;
       const isCurrencyError = Array.isArray(backendMessage) 
         ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
         : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
@@ -196,7 +197,7 @@ export default function SubscriptionsPage() {
       downloadAnchorNode.remove();
       toast.success(t('subscriptions.exportSuccess'));
       sendGAEvent({ event: "export_subscriptions", value: "success" });
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(t('subscriptions.exportError'));
       sendGAEvent({ event: "export_subscriptions", value: "failed" });
     }
@@ -225,7 +226,7 @@ export default function SubscriptionsPage() {
         // Refresh list
         setIsLoading(true);
         fetchSubscriptions();
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (err instanceof z.ZodError) {
           toast.error(t('subscriptions.importError') + ": Invalid file format");
         } else {
