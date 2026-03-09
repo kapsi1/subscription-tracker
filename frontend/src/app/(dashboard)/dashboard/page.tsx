@@ -66,18 +66,17 @@ export default function DashboardPage() {
       }, []);
       setForecast(forecastWithCumulative || []);
 
-      // Calculate upcoming payments from subscriptions (next 30 days)
+      // Calculate upcoming payments from subscriptions (remaining in current month)
       const now = new Date();
-      const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+      const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
       
       const upcoming = subsRes.data
         .filter((sub: any) => {
           if (!sub.isActive || !sub.nextBillingDate) return false;
           const nextDate = new Date(sub.nextBillingDate);
-          return nextDate >= now && nextDate <= thirtyDaysFromNow;
+          return nextDate >= now && nextDate < monthEnd;
         })
-        .sort((a: any, b: any) => new Date(a.nextBillingDate).getTime() - new Date(b.nextBillingDate).getTime())
-        .slice(0, 5); // Take top 5
+        .sort((a: any, b: any) => new Date(a.nextBillingDate).getTime() - new Date(b.nextBillingDate).getTime());
 
       setUpcomingPayments(upcoming);
     } catch (err: any) {
@@ -214,7 +213,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-semibold">{upcomingPayments.length}</div>
             <p className="text-sm text-muted-foreground mt-1">
-              {t('dashboard.next30Days')}
+              {t('dashboard.thisMonth')}
             </p>
           </CardContent>
         </Card>

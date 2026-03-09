@@ -6,6 +6,58 @@ import { BillingCycle, Subscription } from '@prisma/client';
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private addMonthsClamped(date: Date, months: number) {
+    const m = date.getMonth();
+    date.setMonth(m + months);
+    if (date.getMonth() !== (m + months) % 12) {
+      date.setDate(0);
+    }
+  }
+
+  private addYearsClamped(date: Date, years: number) {
+    const y = date.getFullYear();
+    const m = date.getMonth();
+    const d = date.getDate();
+    date.setFullYear(y + years);
+    if (m === 1 && d === 29 && date.getMonth() !== 1) {
+      date.setDate(0);
+    }
+  }
+
+  private calculateUpcomingAmountInRange(
+    subscriptions: Subscription[],
+    rangeStart: Date,
+    rangeEnd: Date,
+  ) {
+    let total = 0;
+
+    for (const sub of subscriptions) {
+      const amount = Number(sub.amount);
+      const billingDate = new Date(sub.nextBillingDate);
+      let loops = 0;
+
+      while (billingDate < rangeEnd && loops < 1000) {
+        loops++;
+
+        if (billingDate >= rangeStart) {
+          total += amount;
+        }
+
+        if (sub.billingCycle === BillingCycle.monthly) {
+          this.addMonthsClamped(billingDate, 1);
+        } else if (sub.billingCycle === BillingCycle.yearly) {
+          this.addYearsClamped(billingDate, 1);
+        } else if (sub.billingCycle === BillingCycle.custom && sub.intervalDays) {
+          billingDate.setDate(billingDate.getDate() + sub.intervalDays);
+        } else {
+          break;
+        }
+      }
+    }
+
+    return total;
+  }
+
   calculateCosts(subscriptions: Subscription[]) {
     let totalMonthlyCost = 0;
     let totalYearlyCost = 0;
@@ -82,7 +134,7 @@ export class DashboardService {
         where: {
           paidAt: {
             gte: yearStart,
-            lt: nextYearStart,
+            lt: now,
           },
           subscription: {
             userId,
@@ -94,10 +146,16 @@ export class DashboardService {
       }),
     ]);
 
+    const upcomingThisYear = this.calculateUpcomingAmountInRange(
+      subscriptions,
+      now,
+      nextYearStart,
+    );
+
     return {
       ...costs,
       totalMonthlyCost: Number(paidThisMonth._sum.amount ?? 0),
-      totalYearlyCost: Number(paidThisYear._sum.amount ?? 0),
+      totalYearlyCost: Number(paidThisYear._sum.amount ?? 0) + upcomingThisYear,
     };
   }
 
