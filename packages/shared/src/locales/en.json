@@ -41,6 +41,8 @@
     "forecastDesc": "Projected monthly spending",
     "cumulativeSpending": "Cumulative Spending",
     "monthlySpending": "Monthly Spending",
+    "monthly": "Monthly",
+    "cumulative": "Cumulative",
     "costByCategory": "Cost by Category",
     "categoryBreakdownDesc": "Monthly breakdown",
     "pie": "Pie",
@@ -90,6 +92,8 @@
   "subscriptions": {
     "title": "Subscriptions",
     "subtitle": "Manage all your recurring subscriptions",
+    "payment": "payment",
+    "payments": "payments",
     "import": "Import",
     "export": "Export",
     "add": "Add Subscription",

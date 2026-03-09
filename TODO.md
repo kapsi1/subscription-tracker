@@ -300,3 +300,9 @@ For any new feature add unit and E2E tests
 - [ ] Billing cycle -> custom does nothing
 - [ ] Support mixed currencies. Add a toggle in settings, that enables currency conversion. When toggle is enabled, show an input that accepts a currency code (validate on backend). This code will be what all currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. If the toggle in settings is disabled, for aggregated values show a list of values, by currency. For charts separate the charts by currency. Use an external service to convert currencies. Show a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
 - [ ] If user is logged with a Google account, show their profile picture in corner, instead of initials
+- [ ] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
+- [ ] Review translations for spelling, grammar, consistency, capitalization and style.
+- [ ] Review code for security vulnerabilities and best practices.
+- [ ] Review code for performance issues and best practices.
+- [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types.
+- [ ] Bug: can't scroll the payments list in the 12-month forecast tooltip

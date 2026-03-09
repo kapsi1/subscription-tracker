@@ -40,6 +40,8 @@
     "forecastDesc": "Prognozowane wydatki miesięczne",
     "cumulativeSpending": "Skumulowane wydatki",
     "monthlySpending": "Wydatki miesięczne",
+    "monthly": "Miesięczne",
+    "cumulative": "Skumulowane",
     "costByCategory": "Koszty według kategorii",
     "categoryBreakdownDesc": "Podział miesięczny",
     "pie": "Kołowy",
@@ -90,6 +92,8 @@
   "subscriptions": {
     "title": "Subskrypcje",
     "subtitle": "Zarządzaj swoimi subskrypcjami",
+    "payment": "płatność",
+    "payments": "płatności",
     "import": "Importuj",
     "export": "Eksportuj",
     "add": "Dodaj subskrypcję",

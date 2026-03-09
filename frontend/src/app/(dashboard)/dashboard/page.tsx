@@ -215,10 +215,9 @@ export default function DashboardPage() {
 
       <MonthlyPayments monthlyPayments={monthlyPayments} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <MonthlyForecast forecast={forecast} />
-        <CostByCategory categoryBreakdown={summary.categoryBreakdown} />
-      </div>
+      <MonthlyForecast forecast={forecast} />
+
+      <CostByCategory categoryBreakdown={summary.categoryBreakdown} />
     </div>
   );
 }

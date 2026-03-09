@@ -324,6 +324,7 @@ export class DashboardService {
         year: targetDate.getFullYear(),
         amount: 0,
         currency: 'USD', // simplistic assumption for multi-currency
+        payments: [] as any[],
       });
     }
 
@@ -350,6 +351,13 @@ export class DashboardService {
         // Ensure it falls within our forecast window, including the current partial month.
         if (index >= 0 && index < months) {
           forecast[index].amount += amount;
+          forecast[index].payments.push({
+            id: sub.id,
+            name: sub.name,
+            amount: amount,
+            currency: sub.currency,
+            date: new Date(currentBillingDate),
+          });
         }
 
         // Stepping to next billing date exactly like Subscriptions module logic
