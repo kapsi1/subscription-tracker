@@ -312,7 +312,7 @@ export default function SubscriptionsPage() {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <div className="truncate cursor-default">
+                              <div className="truncate cursor-pointer">
                                 {subscription.name}
                               </div>
                             </TooltipTrigger>

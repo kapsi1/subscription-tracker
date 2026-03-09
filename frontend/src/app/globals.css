@@ -179,6 +179,17 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+
+  button,
+  [role="button"],
+  a,
+  input[type="submit"],
+  input[type="button"],
+  input[type="checkbox"],
+  input[type="radio"],
+  select {
+    cursor: pointer;
+  }
 }
 
 .custom-scrollbar::-webkit-scrollbar {
