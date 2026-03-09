@@ -150,11 +150,20 @@
   },
   "settings": {
     "title": "Settings",
+    "tabs": {
+      "profile": "Profile",
+      "preferences": "Preferences"
+    },
     "profile": {
       "title": "Account Profile",
       "desc": "Update your personal information",
       "name": "Full Name",
-      "namePlaceholder": "Enter your full name"
+      "namePlaceholder": "Enter your full name",
+      "memberSince": "Member since",
+      "lastUpdated": "Last updated",
+      "save": "Save Profile",
+      "saveSuccess": "Profile updated successfully",
+      "saveError": "Failed to save profile"
     },
     "notifications": {
       "email": {
@@ -222,6 +231,7 @@
       "help": "Leave blank if you don't want budget alerts"
     },
     "save": "Save Settings",
+    "savePreferences": "Save Preferences",
     "saveSuccess": "Settings saved successfully",
     "loadError": "Failed to load settings"
   },

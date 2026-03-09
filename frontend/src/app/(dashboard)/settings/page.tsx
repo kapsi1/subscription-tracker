@@ -7,14 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Bell, Mail, Webhook, Save, PiggyBank, Smartphone, SendHorizonal } from "lucide-react";
+import { Bell, Mail, Webhook, Save, PiggyBank, Smartphone, SendHorizonal, UserRound } from "lucide-react";
 import api from "@/lib/api";
 import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from "@/lib/push";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/components/auth-provider";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
+  const { fetchUser } = useAuth();
   const showTestControls = process.env.NODE_ENV !== "production";
+  const [activeTab, setActiveTab] = useState<"profile" | "preferences">("preferences");
   const [settings, setSettings] = useState({
     defaultReminderEnabled: true,
     defaultReminderDays: "3",
@@ -27,6 +30,12 @@ export default function SettingsPage() {
     weeklyReport: true,
     monthlyBudget: "",
     pushEnabled: false,
+  });
+  const [profile, setProfile] = useState({
+    name: "",
+    email: "",
+    createdAt: "",
+    updatedAt: "",
   });
   const [testDelay, setTestDelay] = useState("0");
   const [testEmailLanguage, setTestEmailLanguage] = useState<"en" | "pl">("en");
@@ -43,8 +52,8 @@ export default function SettingsPage() {
     const fetchSettings = async () => {
       try {
         const response = await api.get("/users/me");
-          setSettings({
-            ...settings,
+          setSettings((prev) => ({
+            ...prev,
             defaultReminderEnabled: response.data.defaultReminderEnabled,
             defaultReminderDays: response.data.defaultReminderDays?.toString() || "3",
             emailAddress: response.data.email,
@@ -55,6 +64,12 @@ export default function SettingsPage() {
             webhookSecret: response.data.webhookSecret || "",
             dailyDigest: response.data.dailyDigest,
             weeklyReport: response.data.weeklyReport,
+          }));
+          setProfile({
+            name: response.data.name || "",
+            email: response.data.email || "",
+            createdAt: response.data.createdAt || "",
+            updatedAt: response.data.updatedAt || "",
           });
       } catch (error) {
         toast.error(t('settings.loadError'));
@@ -97,6 +112,18 @@ export default function SettingsPage() {
       toast.success(t('settings.saveSuccess'));
     } catch (error) {
       toast.error(t('settings.saveError', { defaultValue: 'Failed to save settings' }));
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      await api.patch("/users/settings", {
+        name: profile.name.trim(),
+      });
+      await fetchUser();
+      toast.success(t("settings.profile.saveSuccess", { defaultValue: "Profile updated successfully" }));
+    } catch (error) {
+      toast.error(t("settings.profile.saveError", { defaultValue: "Failed to save profile" }));
     }
   };
 
@@ -241,11 +268,91 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="w-full max-w-4xl space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-semibold">{t('settings.title')}</h1>
       </div>
+
+      <div className="inline-flex items-center gap-1 rounded-lg border bg-muted p-1">
+        <Button
+          type="button"
+          variant={activeTab === "preferences" ? "secondary" : "ghost"}
+          size="sm"
+          onClick={() => setActiveTab("preferences")}
+        >
+          {t("settings.tabs.preferences", { defaultValue: "Preferences" })}
+        </Button>
+        <Button
+          type="button"
+          variant={activeTab === "profile" ? "secondary" : "ghost"}
+          size="sm"
+          onClick={() => setActiveTab("profile")}
+        >
+          {t("settings.tabs.profile", { defaultValue: "Profile" })}
+        </Button>
+      </div>
+
+      {activeTab === "profile" && (
+        <>
+          <Card className="shadow-sm">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                  <UserRound className="w-5 h-5 text-orange-600" />
+                </div>
+                <div>
+                  <CardTitle>{t("settings.profile.title")}</CardTitle>
+                  <CardDescription>{t("settings.profile.desc")}</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="profileName">{t("settings.profile.name")}</Label>
+                <Input
+                  id="profileName"
+                  value={profile.name}
+                  placeholder={t("settings.profile.namePlaceholder")}
+                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="profileEmail">{t("settings.notifications.email.address")}</Label>
+                <Input id="profileEmail" value={profile.email} disabled />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.profile.memberSince", { defaultValue: "Member since" })}
+                  </p>
+                  <p className="text-sm font-medium">
+                    {profile.createdAt ? new Date(profile.createdAt).toLocaleString() : "-"}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.profile.lastUpdated", { defaultValue: "Last updated" })}
+                  </p>
+                  <p className="text-sm font-medium">
+                    {profile.updatedAt ? new Date(profile.updatedAt).toLocaleString() : "-"}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-end">
+            <Button onClick={handleSaveProfile} className="gap-2" size="lg">
+              <Save className="w-4 h-4" />
+              {t("settings.profile.save", { defaultValue: "Save Profile" })}
+            </Button>
+          </div>
+        </>
+      )}
+
+      {activeTab === "preferences" && (
+      <>
 
       {/* Email Notifications */}
       <Card className="shadow-sm">
@@ -716,9 +823,11 @@ export default function SettingsPage() {
       <div className="flex justify-end">
         <Button onClick={handleSave} className="gap-2" size="lg">
           <Save className="w-4 h-4" />
-          {t('settings.save')}
+          {t("settings.savePreferences", { defaultValue: "Save Preferences" })}
         </Button>
       </div>
+      </>
+      )}
     </div>
   );
 }

@@ -151,11 +151,20 @@
   },
   "settings": {
     "title": "Ustawienia",
+    "tabs": {
+      "profile": "Profil",
+      "preferences": "Preferencje"
+    },
     "profile": {
       "title": "Profil Konta",
       "desc": "Zaktualizuj swoje dane osobowe",
       "name": "Imię i Nazwisko",
-      "namePlaceholder": "Wprowadź swoje imię i nazwisko"
+      "namePlaceholder": "Wprowadź swoje imię i nazwisko",
+      "memberSince": "Członek od",
+      "lastUpdated": "Ostatnia aktualizacja",
+      "save": "Zapisz Profil",
+      "saveSuccess": "Profil został zaktualizowany",
+      "saveError": "Nie udało się zapisać profilu"
     },
     "notifications": {
       "email": {
@@ -223,6 +232,7 @@
       "help": "Pozostaw puste, jeśli nie chcesz alertów budżetowych"
     },
     "save": "Zapisz Ustawienia",
+    "savePreferences": "Zapisz Preferencje",
     "saveSuccess": "Ustawienia zapisane pomyślnie",
     "loadError": "Nie udało się załadować ustawień"
   },

@@ -1,3 +1,5 @@
+For any new feature add unit and E2E tests
+
 # Subscription Cost Tracker – Task List (Architecture 1: Monolith)
 
 ## 0. Project Setup
@@ -296,6 +298,7 @@
 - [x] Show user's initials in the top right corner of the dashboard, instead of the logout button.  Clicking on it should open a dropdown with "Logout"
 - [ ] After registration send user a verification email and don't allow login until verified. Create a flow for verification including a way to resend the verification email.
 - [ ] Add a "Forgot Password" flow.
-- [ ] Create user profile page. Make the profile page a tab in Settings page. Currents Settings page should be renamed to "Preferences".
+- [x] Create user profile page. Make the profile page a tab in Settings page. Currents Settings page should be renamed to "Preferences".
 - [ ] Add Change Password and Change Email flow in user profile
 - [ ] Add Delete Account flow in user profile
+- [ ] Save settings on any change, remove the Save Settings button

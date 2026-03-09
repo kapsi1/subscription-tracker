@@ -48,6 +48,7 @@ test.describe('Webhooks', () => {
       // 3. Navigate to Settings
       await page.goto('/settings');
       await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
+      await page.getByRole('button', { name: 'Preferences' }).click();
 
       // 4. Enable Webhook
       const webhookCard = page.locator('div:has-text("Webhook Integration")').last();
@@ -58,7 +59,7 @@ test.describe('Webhooks', () => {
       await webhookCard.getByLabel(/Secret/i).fill(webhookSecret);
       
       // 6. Save
-      await page.getByRole('button', { name: /Save Settings/i }).click();
+      await page.getByRole('button', { name: /Save Preferences/i }).click();
       await expect(page.getByText('Settings saved successfully')).toBeVisible();
 
       // 7. Send Test Webhook

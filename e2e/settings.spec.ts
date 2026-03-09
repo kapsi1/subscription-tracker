@@ -83,6 +83,7 @@ test.describe('User Settings Persistence', () => {
     await page.goto('/settings');
     await settingsResponse;
     await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Preferences' }).click();
     // Toggle email notifications
     const emailToggle = page.getByLabel('Enable Email Notifications');
     await emailToggle.click();
@@ -95,7 +96,7 @@ test.describe('User Settings Persistence', () => {
     const patchPromise = page.waitForResponse(resp => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH');
     
     // Save settings - using exact text from translation
-    await page.getByRole('button', { name: 'Save Settings' }).click();
+    await page.getByRole('button', { name: 'Save Preferences' }).click();
     await patchPromise; 
     
     await expect(page.getByText('Settings saved successfully')).toBeVisible();

@@ -2,6 +2,10 @@ import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Min, ValidateIf } fro
 
 export class UpdateSettingsDto {
   @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
   @IsBoolean()
   defaultReminderEnabled?: boolean;
 
