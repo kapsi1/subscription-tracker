@@ -18,6 +18,7 @@ import { SummaryCards } from "./_components/SummaryCards";
 import { MonthlyPayments, MonthlyPayment } from "./_components/MonthlyPayments";
 import { MonthlyForecast } from "./_components/MonthlyForecast";
 import { CostByCategory } from "./_components/CostByCategory";
+import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
@@ -34,6 +35,10 @@ export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [pickerYear, setPickerYear] = useState(selectedDate.getFullYear());
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
 
   const fetchDashboardData = async (date: Date) => {
     setIsLoading(true);
@@ -92,6 +97,32 @@ export default function DashboardPage() {
   const handleMonthSelect = (monthIndex: number) => {
     setSelectedDate(new Date(pickerYear, monthIndex, 1));
     setIsPickerOpen(false);
+  };
+
+  const handleEditSubscription = async (id: string) => {
+    try {
+      const res = await api.get(`/subscriptions/${id}`);
+      setEditingSubscription(res.data);
+      setModalOpen(true);
+    } catch (err) {
+      toast.error(t('subscriptions.loadError', { defaultValue: 'Failed to load subscription details' }));
+    }
+  };
+
+  const handleSaveSubscription = async (subscription: Partial<Subscription>) => {
+    try {
+      if (subscription.id) {
+        const { id, ...updateData } = subscription;
+        await api.patch(`/subscriptions/${id}`, updateData);
+        toast.success(t('subscriptions.updateSuccess'));
+        // Refresh dashboard data
+        fetchDashboardData(selectedDate);
+      }
+      setModalOpen(false);
+    } catch (err: any) {
+      toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
+      throw err;
+    }
   };
 
   if (isLoading) {
@@ -213,11 +244,21 @@ export default function DashboardPage() {
         monthlyPaymentsCount={monthlyPayments.length}
       />
 
-      <MonthlyPayments monthlyPayments={monthlyPayments} />
+      <MonthlyPayments 
+        monthlyPayments={monthlyPayments} 
+        onEdit={handleEditSubscription}
+      />
 
       <MonthlyForecast forecast={forecast} currency={summary.currency} />
 
       <CostByCategory categoryBreakdown={summary.categoryBreakdown} currency={summary.currency} />
+
+      <SubscriptionModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        subscription={editingSubscription}
+        onSave={handleSaveSubscription}
+      />
     </div>
   );
 }

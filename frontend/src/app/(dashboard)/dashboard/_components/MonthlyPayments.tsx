@@ -31,9 +31,10 @@ export type MonthlyPayment = {
 
 interface MonthlyPaymentsProps {
   monthlyPayments: MonthlyPayment[];
+  onEdit?: (subscriptionId: string) => void;
 }
 
-export function MonthlyPayments({ monthlyPayments }: MonthlyPaymentsProps) {
+export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProps) {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [paymentSortBy, setPaymentSortBy] = useState<"date" | "amount">("date");
@@ -184,8 +185,9 @@ export function MonthlyPayments({ monthlyPayments }: MonthlyPaymentsProps) {
             {sortedMonthlyPayments.map((payment) => (
               <div
                 key={payment.id}
-                className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 ${payment.status === "done"
-                  ? "border-dashed bg-muted opacity-70"
+                onClick={() => onEdit?.(payment.subscriptionId)}
+                className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 cursor-pointer ${payment.status === "done"
+                  ? "border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80"
                   : "bg-card hover:bg-accent/50"
                   }`}
               >
@@ -198,7 +200,7 @@ export function MonthlyPayments({ monthlyPayments }: MonthlyPaymentsProps) {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <p className="font-medium truncate cursor-default max-w-[180px] sm:max-w-[250px] md:max-w-[350px]">
+                            <p className="font-medium truncate cursor-pointer max-w-[180px] sm:max-w-[250px] md:max-w-[350px]">
                               {payment.name}
                             </p>
                           </TooltipTrigger>
