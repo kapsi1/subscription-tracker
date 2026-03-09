@@ -24,6 +24,16 @@ interface CostByCategoryProps {
   currency?: string;
 }
 
+interface PieLabelProps {
+  cx?: number;
+  cy?: number;
+  midAngle?: number;
+  outerRadius?: number;
+  percent?: number;
+  name?: string;
+  value?: number;
+}
+
 export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCategoryProps) {
   const { t } = useTranslation();
   const [selectedChart, setSelectedChart] = useState<"pie" | "bar">("pie");
@@ -36,6 +46,42 @@ export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCa
       color: `var(${chartVar})`,
     };
   });
+
+  const renderPieLabel = ({ cx, cy, midAngle, outerRadius, percent, name, value }: PieLabelProps) => {
+    if (
+      cx === undefined ||
+      cy === undefined ||
+      midAngle === undefined ||
+      outerRadius === undefined ||
+      percent === undefined ||
+      !name ||
+      value === undefined
+    ) {
+      return null;
+    }
+
+    // Skip narrow slices to avoid stacked collisions; details remain available in the tooltip.
+    if (percent < 0.05) {
+      return null;
+    }
+
+    const radius = outerRadius + 18;
+    const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
+    const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="currentColor"
+        fontSize={12}
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+      >
+        {`${t(`subscriptions.modal.categories.${name}`, { defaultValue: name })}: ${formatCurrency(value, currency)}`}
+      </text>
+    );
+  };
 
   return (
     <Card className="shadow-sm hover:shadow-md transition-shadow">
@@ -74,7 +120,7 @@ export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCa
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={(entry) => `${t(`subscriptions.modal.categories.${entry.name}`)}: ${formatCurrency(entry.value, currency)}`}
+                label={renderPieLabel}
                 outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
