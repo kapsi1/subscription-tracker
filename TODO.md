@@ -302,7 +302,7 @@ For any new feature add unit and E2E tests
 - [ ] Add Change Password and Change Email flow in user profile
 - [ ] Add Delete Account flow in user profile
 - [x] Save settings on any change, remove the Save Settings button
-- [ ] Instead of "Upcoming Payments" show payments for this month. Include done payments as well, with a suitablestyle to indicate they are done The list should be sorted by date, with a button to change sort direction. Also enable sorting by amount. Adjust the card's subtitle. 
+- [x] Instead of "Upcoming Payments" show payments for this month. Include done payments as well, with a suitablestyle to indicate they are done The list should be sorted by date, with a button to change sort direction. Also enable sorting by amount. Adjust the card's subtitle. 
 - [ ] Add buttons to switch the month to previous and next, and display the current month and year. Implement month switching. The whole dashboard should be showing data for the selected month, except 12-month forecast chart.
 - [ ] Make the 12-month forecast chart full-width on large screen width. Make the main container of dashboard full width with a small margin, on small and medium screen width. In forecast chart for each column, under month names, add a circle with a hover effect (like the color chooser in the top nav bar). Background should be transparent by default, and accent color on hover. Inside the circle there should be a number of payments done that month. Hovering over the circle shows a html tooltip with a list of payments for this month (date, name, cost)
 - [ ] Billing cycle -> custom does nothing

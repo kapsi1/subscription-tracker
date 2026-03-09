@@ -23,6 +23,7 @@ describe('DashboardService', () => {
       },
       paymentHistory: {
         aggregate: jest.fn(),
+        findMany: jest.fn(),
       },
     };
 
@@ -65,5 +66,61 @@ describe('DashboardService', () => {
     expect(res.totalYearlyCost).toBe(455);
     expect(res.categoryBreakdown['Cloud']).toBe(10);
     expect(res.categoryBreakdown['Video']).toBe(15);
+  });
+
+  it('should return done and upcoming monthly payments sorted by date', async () => {
+    prismaMock.paymentHistory.findMany.mockResolvedValue([
+      {
+        id: 'history-1',
+        subscriptionId: 'sub-1',
+        amount: 9.99,
+        currency: 'USD',
+        paidAt: new Date('2026-03-05T00:00:00.000Z'),
+        subscription: {
+          id: 'sub-1',
+          name: 'Video Stream',
+          category: 'Entertainment',
+        },
+      },
+    ]);
+
+    prismaMock.subscription.findMany.mockResolvedValue([
+      {
+        id: 'sub-1',
+        userId: 'user-1',
+        name: 'Video Stream',
+        amount: 9.99,
+        currency: 'USD',
+        billingCycle: BillingCycle.monthly,
+        intervalDays: null,
+        nextBillingDate: new Date('2026-04-05T00:00:00.000Z'),
+        category: 'Entertainment',
+        isActive: true,
+      },
+      {
+        id: 'sub-2',
+        userId: 'user-1',
+        name: 'Cloud Storage',
+        amount: 4.99,
+        currency: 'USD',
+        billingCycle: BillingCycle.monthly,
+        intervalDays: null,
+        nextBillingDate: new Date('2026-03-20T00:00:00.000Z'),
+        category: 'Cloud',
+        isActive: true,
+      },
+    ]);
+
+    const result = await service.getMonthlyPayments('user-1');
+
+    expect(result).toHaveLength(2);
+    expect(result[0]).toMatchObject({
+      name: 'Video Stream',
+      status: 'done',
+    });
+    expect(result[1]).toMatchObject({
+      name: 'Cloud Storage',
+      status: 'upcoming',
+    });
   });
 });

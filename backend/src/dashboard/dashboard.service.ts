@@ -6,6 +6,21 @@ import { BillingCycle, Subscription } from '@prisma/client';
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private incrementBillingDate(subscription: Subscription, billingDate: Date) {
+    if (subscription.billingCycle === BillingCycle.monthly) {
+      this.addMonthsClamped(billingDate, 1);
+    } else if (subscription.billingCycle === BillingCycle.yearly) {
+      this.addYearsClamped(billingDate, 1);
+    } else if (
+      subscription.billingCycle === BillingCycle.custom &&
+      subscription.intervalDays
+    ) {
+      billingDate.setDate(billingDate.getDate() + subscription.intervalDays);
+    } else {
+      throw new Error('Invalid billing cycle configuration');
+    }
+  }
+
   private addMonthsClamped(date: Date, months: number) {
     const m = date.getMonth();
     date.setMonth(m + months);
@@ -157,6 +172,113 @@ export class DashboardService {
       totalMonthlyCost: Number(paidThisMonth._sum.amount ?? 0),
       totalYearlyCost: Number(paidThisYear._sum.amount ?? 0) + upcomingThisYear,
     };
+  }
+
+  async getMonthlyPayments(userId: string) {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    const [paidPayments, subscriptions] = await Promise.all([
+      this.prisma.paymentHistory.findMany({
+        where: {
+          paidAt: {
+            gte: monthStart,
+            lt: nextMonthStart,
+          },
+          subscription: {
+            userId,
+          },
+        },
+        include: {
+          subscription: {
+            select: {
+              id: true,
+              name: true,
+              category: true,
+            },
+          },
+        },
+        orderBy: {
+          paidAt: 'asc',
+        },
+      }),
+      this.prisma.subscription.findMany({
+        where: {
+          userId,
+          isActive: true,
+        },
+      }),
+    ]);
+
+    const paidKey = (subscriptionId: string, date: Date) =>
+      `${subscriptionId}:${date.toISOString().slice(0, 10)}`;
+
+    const paidPaymentKeys = new Set(
+      paidPayments.map((payment) => paidKey(payment.subscriptionId, payment.paidAt)),
+    );
+
+    const completedItems = paidPayments.map((payment) => ({
+      id: payment.id,
+      subscriptionId: payment.subscriptionId,
+      name: payment.subscription.name,
+      category: payment.subscription.category,
+      amount: Number(payment.amount),
+      currency: payment.currency,
+      date: payment.paidAt,
+      status: 'done' as const,
+    }));
+
+    const upcomingItems: Array<{
+      id: string;
+      subscriptionId: string;
+      name: string;
+      category: string;
+      amount: number;
+      currency: string;
+      date: Date;
+      status: 'upcoming';
+    }> = [];
+
+    for (const sub of subscriptions) {
+      const billingDate = new Date(sub.nextBillingDate);
+      let loops = 0;
+
+      while (billingDate < nextMonthStart && loops < 1000) {
+        loops++;
+
+        if (billingDate >= monthStart) {
+          const key = paidKey(sub.id, billingDate);
+
+          if (!paidPaymentKeys.has(key)) {
+            upcomingItems.push({
+              id: `${sub.id}-${billingDate.toISOString()}`,
+              subscriptionId: sub.id,
+              name: sub.name,
+              category: sub.category,
+              amount: Number(sub.amount),
+              currency: sub.currency,
+              date: new Date(billingDate),
+              status: 'upcoming',
+            });
+          }
+        }
+
+        try {
+          this.incrementBillingDate(sub, billingDate);
+        } catch {
+          break;
+        }
+      }
+    }
+
+    return [...completedItems, ...upcomingItems].sort((a, b) => {
+      const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+      if (dateDiff !== 0) {
+        return dateDiff;
+      }
+      return a.amount - b.amount;
+    });
   }
 
   async getForecast(userId: string, months: number = 12) {

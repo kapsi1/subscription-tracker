@@ -44,7 +44,16 @@
     "bar": "Słupkowy",
     "upcomingPaymentsTitle": "Nadchodzące płatności",
     "upcomingPaymentsDesc": "Daty następnych rozliczeń",
-    "noUpcomingPayments": "Brak nadchodzących płatności w ciągu najbliższych 30 dni."
+    "noUpcomingPayments": "Brak nadchodzących płatności w ciągu najbliższych 30 dni.",
+    "monthlyPayments": "Płatności w tym miesiącu",
+    "monthlyPaymentsTitle": "Płatności w tym miesiącu",
+    "monthlyPaymentsDesc": "Opłacone i zaplanowane płatności na bieżący miesiąc",
+    "noMonthlyPayments": "Brak płatności w tym miesiącu.",
+    "paymentDone": "Opłacone",
+    "sortByDate": "Data",
+    "sortByAmount": "Kwota",
+    "sortDirectionAsc": "Sortuj rosnąco",
+    "sortDirectionDesc": "Sortuj malejąco"
   },
   "theme": {
     "light": "Przełącz na tryb jasny",

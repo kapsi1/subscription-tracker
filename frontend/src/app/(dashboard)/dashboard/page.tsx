@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DollarSign, Calendar, CreditCard, TrendingUp, Plus, Bell } from "lucide-react";
+import { DollarSign, Calendar, CreditCard, TrendingUp, Plus, ArrowUp, ArrowDown } from "lucide-react";
 import {
-  LineChart,
   Line,
   BarChart,
   Bar,
@@ -25,10 +24,20 @@ import api from "@/lib/api";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
 import { LoadingState } from "@/components/loading-state";
 import { formatCurrency } from "@/lib/utils";
 import { useAuth } from "@/components/auth-provider";
+
+type MonthlyPayment = {
+  id: string;
+  subscriptionId: string;
+  name: string;
+  category: string;
+  amount: number;
+  currency: string;
+  date: string;
+  status: "done" | "upcoming";
+};
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
@@ -41,17 +50,17 @@ export default function DashboardPage() {
     categoryBreakdown: {},
   });
   const [forecast, setForecast] = useState<any[]>([]);
-  const [upcomingPayments, setUpcomingPayments] = useState<any[]>([]);
+  const [monthlyPayments, setMonthlyPayments] = useState<MonthlyPayment[]>([]);
+  const [paymentSortBy, setPaymentSortBy] = useState<"date" | "amount">("date");
+  const [paymentSortDirection, setPaymentSortDirection] = useState<"asc" | "desc">("asc");
   const [isLoading, setIsLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
 
   const fetchDashboardData = async () => {
     try {
-      const [summaryRes, forecastRes, subsRes] = await Promise.all([
+      const [summaryRes, forecastRes, monthlyPaymentsRes] = await Promise.all([
         api.get("/dashboard/summary"),
         api.get("/dashboard/forecast?months=12"),
-        api.get("/subscriptions"),
+        api.get("/dashboard/monthly-payments"),
       ]);
 
       setSummary(summaryRes.data);
@@ -65,20 +74,7 @@ export default function DashboardPage() {
         return acc;
       }, []);
       setForecast(forecastWithCumulative || []);
-
-      // Calculate upcoming payments from subscriptions (remaining in current month)
-      const now = new Date();
-      const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-      
-      const upcoming = subsRes.data
-        .filter((sub: any) => {
-          if (!sub.isActive || !sub.nextBillingDate) return false;
-          const nextDate = new Date(sub.nextBillingDate);
-          return nextDate >= now && nextDate < monthEnd;
-        })
-        .sort((a: any, b: any) => new Date(a.nextBillingDate).getTime() - new Date(b.nextBillingDate).getTime());
-
-      setUpcomingPayments(upcoming);
+      setMonthlyPayments(monthlyPaymentsRes.data || []);
     } catch (err: any) {
       toast.error(t('common.error'));
     } finally {
@@ -97,34 +93,21 @@ export default function DashboardPage() {
     return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
   };
 
-  const handleEdit = (subscription: Subscription) => {
-    setEditingSubscription(subscription);
-    setModalOpen(true);
-  };
+  const sortedMonthlyPayments = useMemo(() => {
+    return [...monthlyPayments].sort((a, b) => {
+      const baseSort =
+        paymentSortBy === "date"
+          ? new Date(a.date).getTime() - new Date(b.date).getTime()
+          : Number(a.amount) - Number(b.amount);
 
-  const handleSave = async (subscription: Partial<Subscription>) => {
-    try {
-      if (subscription.id) {
-        // Edit existing
-        const { id, ...updateData } = subscription;
-        await api.patch(`/subscriptions/${id}`, updateData);
-        toast.success(t('subscriptions.updateSuccess', { defaultValue: 'Subscription updated' }));
-        fetchDashboardData(); // Refresh all data
+      if (baseSort !== 0) {
+        return paymentSortDirection === "asc" ? baseSort : -baseSort;
       }
-      setModalOpen(false);
-    } catch (err: any) {
-      const backendMessage = err.response?.data?.message;
-      const isCurrencyError = Array.isArray(backendMessage) 
-        ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
-        : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
 
-      if (isCurrencyError) {
-        toast.error(t('subscriptions.modal.invalidCurrency', { defaultValue: 'Invalid currency code' }));
-      } else {
-        toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
-      }
-    }
-  };
+      const dateTieBreak = new Date(a.date).getTime() - new Date(b.date).getTime();
+      return paymentSortDirection === "asc" ? dateTieBreak : -dateTieBreak;
+    });
+  }, [monthlyPayments, paymentSortBy, paymentSortDirection]);
 
   const categoryData = Object.keys(summary.categoryBreakdown).map((key, index) => {
     const chartVar = `--chart-${(index % 5) + 1}`;
@@ -204,14 +187,14 @@ export default function DashboardPage() {
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-md font-medium text-muted-foreground">
-              {t('dashboard.upcomingPayments')}
+              {t('dashboard.monthlyPayments')}
             </CardTitle>
             <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
               <Calendar className="w-4 h-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold">{upcomingPayments.length}</div>
+            <div className="text-2xl font-semibold">{monthlyPayments.length}</div>
             <p className="text-sm text-muted-foreground mt-1">
               {t('dashboard.thisMonth')}
             </p>
@@ -237,24 +220,69 @@ export default function DashboardPage() {
       </div>
 
       
-      {/* Upcoming Payments */}
+      {/* Monthly Payments */}
       <Card className="shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle>{t('dashboard.upcomingPaymentsTitle')}</CardTitle>
-          <CardDescription>{t('dashboard.upcomingPaymentsDesc')}</CardDescription>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <CardTitle>{t('dashboard.monthlyPaymentsTitle')}</CardTitle>
+              <CardDescription>{t('dashboard.monthlyPaymentsDesc')}</CardDescription>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant={paymentSortBy === "date" ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => setPaymentSortBy("date")}
+              >
+                {t("dashboard.sortByDate")}
+              </Button>
+              <Button
+                type="button"
+                variant={paymentSortBy === "amount" ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => setPaymentSortBy("amount")}
+              >
+                {t("dashboard.sortByAmount")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="px-3"
+                onClick={() =>
+                  setPaymentSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+                }
+                aria-label={t(
+                  paymentSortDirection === "asc"
+                    ? "dashboard.sortDirectionAsc"
+                    : "dashboard.sortDirectionDesc",
+                )}
+              >
+                {paymentSortDirection === "asc" ? (
+                  <ArrowUp className="w-4 h-4" />
+                ) : (
+                  <ArrowDown className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
-          {upcomingPayments.length === 0 ? (
+          {sortedMonthlyPayments.length === 0 ? (
             <div className="text-center py-6 text-muted-foreground">
-              {t('dashboard.noUpcomingPayments')}
+              {t('dashboard.noMonthlyPayments')}
             </div>
           ) : (
             <div className="space-y-3">
-              {upcomingPayments.map((payment) => (
+              {sortedMonthlyPayments.map((payment) => (
                 <div
                   key={payment.id}
-                  onClick={() => handleEdit(payment)}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors gap-3 cursor-pointer"
+                  className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 ${
+                    payment.status === "done"
+                      ? "border-dashed bg-muted opacity-70"
+                      : "bg-card hover:bg-accent/50"
+                  }`}
                 >
                   <div className="flex items-center gap-4 flex-1">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -262,7 +290,12 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="font-medium">{payment.name}</p>
+                        <p className={payment.status === "done" ? "font-medium line-through" : "font-medium"}>
+                          {payment.name}
+                        </p>
+                        {payment.status === "done" ? (
+                          <Badge variant="secondary">{t("dashboard.paymentDone")}</Badge>
+                        ) : null}
                       </div>
                       <p className="text-sm text-muted-foreground">
                         {t(`subscriptions.modal.categories.${payment.category}`)}
@@ -271,9 +304,15 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex items-center gap-4 sm:gap-6">
                     <div className="text-right">
-                      <p className="font-semibold">{formatCurrency(payment.amount, payment.currency)}</p>
+                      <p
+                        className={
+                          payment.status === "done" ? "font-semibold line-through" : "font-semibold"
+                        }
+                      >
+                        {formatCurrency(payment.amount, payment.currency)}
+                      </p>
                       <p className="text-sm text-muted-foreground">
-                        {formatDate(payment.nextBillingDate)}
+                        {formatDate(payment.date)}
                       </p>
                     </div>
                     <Badge variant="outline" className="hidden sm:inline-flex">
@@ -441,13 +480,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-
-      <SubscriptionModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        subscription={editingSubscription}
-        onSave={handleSave}
-      />
     </div>
   );
 }

@@ -20,6 +20,11 @@ export class DashboardController {
     return this.dashboardService.getSummary(req.user.userId);
   }
 
+  @Get('monthly-payments')
+  async getMonthlyPayments(@Req() req: any) {
+    return this.dashboardService.getMonthlyPayments(req.user.userId);
+  }
+
   @Get('forecast')
   async getForecast(
     @Req() req: any,

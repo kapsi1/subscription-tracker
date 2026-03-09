@@ -29,6 +29,7 @@
     "totalMonthlyCost": "Total Monthly Cost",
     "totalYearlyCost": "Total Yearly Cost",
     "upcomingPayments": "Upcoming Payments",
+    "monthlyPayments": "This Month Payments",
     "activeSubscriptions": "Active Subscriptions",
     "currentlyTracked": "Currently tracked",
     "thisMonth": "This month",
@@ -44,7 +45,15 @@
     "bar": "Bar",
     "upcomingPaymentsTitle": "Upcoming Payments",
     "upcomingPaymentsDesc": "Your next billing dates",
-    "noUpcomingPayments": "No upcoming payments in the next 30 days."
+    "noUpcomingPayments": "No upcoming payments in the next 30 days.",
+    "monthlyPaymentsTitle": "This Month Payments",
+    "monthlyPaymentsDesc": "Completed and scheduled payments for the current month",
+    "noMonthlyPayments": "No payments for this month yet.",
+    "paymentDone": "Done",
+    "sortByDate": "Date",
+    "sortByAmount": "Amount",
+    "sortDirectionAsc": "Sort ascending",
+    "sortDirectionDesc": "Sort descending"
   },
   "theme": {
     "light": "Switch to light mode",

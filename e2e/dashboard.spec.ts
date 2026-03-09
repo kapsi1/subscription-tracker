@@ -63,7 +63,7 @@ test.describe('Dashboard Flow', () => {
     await expect(page.getByText('$20.00')).toBeVisible();
     await expect(page.getByText('$240.00')).toBeVisible();
 
-    // Verify Upcoming Payments section exists
-    await expect(page.getByRole('heading', { name: 'Upcoming Payments' }).last()).toBeVisible();
+    // Verify This Month Payments section exists
+    await expect(page.getByRole('heading', { name: 'This Month Payments' }).last()).toBeVisible();
   });
 });

@@ -19,9 +19,23 @@ describe('DashboardController', () => {
     { month: 'Jan', year: 2025, amount: 25, currency: 'USD' },
   ];
 
+  const mockMonthlyPayments = [
+    {
+      id: 'pay-1',
+      subscriptionId: 'sub-1',
+      name: 'Netflix',
+      category: 'Entertainment',
+      amount: 15,
+      currency: 'USD',
+      date: new Date('2026-03-10T00:00:00.000Z'),
+      status: 'done',
+    },
+  ];
+
   beforeEach(async () => {
     serviceMock = {
       getSummary: jest.fn().mockResolvedValue(mockSummary),
+      getMonthlyPayments: jest.fn().mockResolvedValue(mockMonthlyPayments),
       getForecast: jest.fn().mockResolvedValue(mockForecast),
     };
 
@@ -45,6 +59,13 @@ describe('DashboardController', () => {
 
     expect(serviceMock.getForecast).toHaveBeenCalledWith('user-1', 12);
     expect(result).toEqual(mockForecast);
+  });
+
+  it('should return monthly payments for user', async () => {
+    const result = await controller.getMonthlyPayments(mockReq);
+
+    expect(serviceMock.getMonthlyPayments).toHaveBeenCalledWith('user-1');
+    expect(result).toEqual(mockMonthlyPayments);
   });
 
   it('should clamp months to maximum of 60', async () => {
