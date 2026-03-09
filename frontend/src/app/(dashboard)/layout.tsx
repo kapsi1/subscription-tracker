@@ -9,6 +9,7 @@ import {
   ListChecks, 
   Settings, 
   LogOut,
+  UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -247,14 +248,40 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="h-9 w-9 rounded-full border bg-muted p-0 text-xs font-semibold tracking-wide"
+                  className="h-9 w-9 rounded-full border bg-muted p-0 overflow-hidden"
                   aria-label="User menu"
                 >
-                  {getUserInitials()}
+                  {user?.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.name || "User avatar"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-xs font-semibold tracking-wide">
+                      {getUserInitials()}
+                    </span>
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleLogout} className="gap-2">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user?.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/settings/profile" className="flex items-center gap-2 cursor-pointer">
+                    <UserRound className="h-4 w-4" />
+                    <span>{t('settings.tabs.profile')}</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="gap-2 cursor-pointer text-destructive focus:text-destructive">
                   <LogOut className="h-4 w-4" />
                   <span>{t('nav.logout')}</span>
                 </DropdownMenuItem>

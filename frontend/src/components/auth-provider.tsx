@@ -25,6 +25,7 @@ export interface User {
   dashboardSortBy        : string;
   dashboardSortOrder     : string;
   showPaidPayments       : boolean;
+  avatarUrl              : string | null;
 }
 
 interface AuthContextType {

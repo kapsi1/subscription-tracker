@@ -28,7 +28,7 @@ export class AuthService {
   ) {}
 
   async validateGoogleUser(googleProfile: GoogleProfile) {
-    const { googleId, email, firstName, lastName } = googleProfile;
+    const { googleId, email, firstName, lastName, picture } = googleProfile;
     const name = [firstName, lastName].filter(Boolean).join(' ');
 
     let user = await this.usersService.findByGoogleId(googleId);
@@ -42,6 +42,7 @@ export class AuthService {
         user = await this.usersService.update(user.id, {
           googleId: googleId,
           name: user.name || name,
+          avatarUrl: user.avatarUrl || picture,
         });
       } else {
         // New user entirely
@@ -49,8 +50,14 @@ export class AuthService {
           email: email,
           googleId: googleId,
           name: name,
+          avatarUrl: picture,
         });
       }
+    } else if (picture && user.avatarUrl !== picture) {
+      // Update avatar if changed
+      user = await this.usersService.update(user.id, {
+        avatarUrl: picture,
+      });
     }
 
     return this.generateTokens(user.id, user.email);

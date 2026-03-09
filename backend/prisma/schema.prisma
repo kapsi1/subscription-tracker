@@ -34,6 +34,7 @@ model User {
   dashboardSortOrder     String         @default("asc")
   showPaidPayments       Boolean        @default(true)
   currency               String         @default("USD")
+  avatarUrl              String?
 }
 
 enum BillingCycle {
