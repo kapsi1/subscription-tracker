@@ -319,3 +319,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add payment history to the subscription details page (the edit subscription modal)
 - [x] This Month Payments (in SummaryCards.tsx): show done this month/total this month, e.g. 2/10
 - [x] In All Subscriptions table, make the column headers clickable (add cursor-pointer class), and clicking them sort the table. Show up/down chevrons next to column name, to show sort order. Default order is Next Billing / ascending (chronological).
+- [ ] Make the category background colors in /subscriptions more muted, and the text colors darker. Use the same colors for categories in dashboard.

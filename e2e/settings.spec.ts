@@ -93,7 +93,10 @@ test.describe('User Settings Persistence', () => {
     await page.getByLabel('Webhook URL').fill('https://example.com/webhook');
     
     // Autosave should persist these changes
+    // Wait for the debounced save to complete
     await page.waitForResponse(resp => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH');
+    await page.waitForTimeout(1000); // Extra buffer for DB/State to settle
+
 
     // Reload page
     await page.reload();

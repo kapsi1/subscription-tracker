@@ -51,9 +51,9 @@ test.describe('Webhooks', () => {
       await page.getByRole('button', { name: 'Preferences' }).click();
 
       // 4. Enable Webhook
-      const webhookCard = page.locator('div:has-text("Webhook Integration")').last();
+      const webhookCard = page.locator('div.shadow-sm', { hasText: 'Webhook Integration' }).last();
       await webhookCard.getByRole('switch').click();
-      
+      await page.waitForTimeout(500);
       // 5. Fill details
       await webhookCard.getByLabel(/URL/i).fill(webhookUrl);
       await webhookCard.getByLabel(/Secret/i).fill(webhookSecret);

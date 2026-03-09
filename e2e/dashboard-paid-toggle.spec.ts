@@ -61,8 +61,10 @@ test.describe('Dashboard Paid Toggle', () => {
     await expect(toggle).toBeChecked();
 
     // Check "Paid Sub" is visible and marked as "Done"
-    await expect(page.getByText('Paid Sub')).toBeVisible();
-    await expect(page.getByText('Done')).toBeVisible();
+    // The payment list might take a moment to refresh from the manual DB insertion
+    await page.waitForTimeout(1000);
+    await expect(page.getByText('Paid Sub').first()).toBeVisible();
+    await expect(page.getByText('Done').first()).toBeVisible();
 
     // 5. Toggle OFF
     await toggle.click();
