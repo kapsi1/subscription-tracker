@@ -64,7 +64,7 @@ export default function DashboardPage() {
       ]);
 
       setSummary(summaryRes.data);
-      
+
       const forecastWithCumulative = summaryRes.data && forecastRes.data.reduce((acc: any[], item: any, index: number) => {
         const previousCumulative = index > 0 ? acc[index - 1].cumulativeAmount : 0;
         acc.push({
@@ -142,7 +142,6 @@ export default function DashboardPage() {
         </div>
         <Link href="/subscriptions">
           <Button className="gap-2 sm:w-auto">
-            <Plus className="w-4 h-4" />
             {t('dashboard.manageSubscriptions')}
           </Button>
         </Link>
@@ -151,75 +150,63 @@ export default function DashboardPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-md font-medium text-muted-foreground">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4">
+            <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
               {t('dashboard.totalMonthlyCost')}
             </CardTitle>
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            {/* <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <DollarSign className="w-4 h-4 text-primary" />
-            </div>
+            </div> */}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold">{formatCurrency(summary.totalMonthlyCost)}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {t('dashboard.thisMonth')}
-            </p>
+            <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalMonthlyCost)}</div>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-md font-medium text-muted-foreground">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4">
+            <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
               {t('dashboard.totalYearlyCost')}
             </CardTitle>
-            <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+            {/* <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
               <TrendingUp className="w-4 h-4 text-primary" />
-            </div>
+            </div> */}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold">{formatCurrency(summary.totalYearlyCost)}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {t('dashboard.projectedAnnual')}
-            </p>
+            <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalYearlyCost)}</div>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-md font-medium text-muted-foreground">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4">
+            <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
               {t('dashboard.monthlyPayments')}
             </CardTitle>
-            <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+            {/* <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
               <Calendar className="w-4 h-4 text-primary" />
-            </div>
+            </div> */}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold">{monthlyPayments.length}</div>
-            <p className="text-sm text-muted-foreground mt-1">
-              {t('dashboard.thisMonth')}
-            </p>
+            <div className="text-4xl text-center font-semibold">{monthlyPayments.length}</div>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-md font-medium text-muted-foreground">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4">
+            <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
               {t('dashboard.activeSubscriptions')}
             </CardTitle>
-            <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+            {/* <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
               <CreditCard className="w-4 h-4 text-primary" />
-            </div>
+            </div> */}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold">{summary.activeSubscriptions}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {t('dashboard.currentlyTracked')}
-            </p>
+            <div className="text-4xl text-center font-semibold">{summary.activeSubscriptions}</div>
           </CardContent>
         </Card>
       </div>
 
-      
+
       {/* Monthly Payments */}
       <Card className="shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
@@ -278,11 +265,10 @@ export default function DashboardPage() {
               {sortedMonthlyPayments.map((payment) => (
                 <div
                   key={payment.id}
-                  className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 ${
-                    payment.status === "done"
+                  className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 ${payment.status === "done"
                       ? "border-dashed bg-muted opacity-70"
                       : "bg-card hover:bg-accent/50"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-4 flex-1">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -338,25 +324,25 @@ export default function DashboardPage() {
             <ResponsiveContainer width="100%" height={350}>
               <ComposedChart data={forecast}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis 
-                  dataKey="month" 
-                  stroke="#64748b" 
+                <XAxis
+                  dataKey="month"
+                  stroke="#64748b"
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
                 />
-                <YAxis 
+                <YAxis
                   yAxisId="left"
-                  stroke="#64748b" 
+                  stroke="#64748b"
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(value) => `$${value}`}
                 />
-                <YAxis 
+                <YAxis
                   yAxisId="right"
                   orientation="right"
-                  stroke="#94a3b8" 
+                  stroke="#94a3b8"
                   fontSize={10}
                   tickLine={false}
                   axisLine={false}
@@ -444,19 +430,19 @@ export default function DashboardPage() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip 
+                  <Tooltip
                     formatter={(value: any, name?: string) => [
-                      `$${Number(value).toFixed(2)}`, 
+                      `$${Number(value).toFixed(2)}`,
                       t(`subscriptions.modal.categories.${name || ''}`, { defaultValue: name })
-                    ]} 
+                    ]}
                   />
                 </PieChart>
               ) : (
                 <BarChart data={categoryData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis 
-                    dataKey="name" 
-                    stroke="#64748b" 
+                  <XAxis
+                    dataKey="name"
+                    stroke="#64748b"
                     tickFormatter={(value) => t(`subscriptions.modal.categories.${value}`, { defaultValue: value })}
                   />
                   <YAxis stroke="#64748b" />
