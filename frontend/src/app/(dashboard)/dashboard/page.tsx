@@ -28,9 +28,11 @@ import { useTranslation } from "react-i18next";
 import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
 import { LoadingState } from "@/components/loading-state";
 import { formatCurrency } from "@/lib/utils";
+import { useAuth } from "@/components/auth-provider";
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const [selectedChart, setSelectedChart] = useState<"pie" | "bar">("pie");
   const [summary, setSummary] = useState<any>({
     totalMonthlyCost: 0,
@@ -138,11 +140,19 @@ export default function DashboardPage() {
     return <LoadingState message={t('common.loading')} />;
   }
 
+  const greetingName =
+    user?.name?.trim() ||
+    user?.email?.split("@")[0] ||
+    "there";
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
+          <p className="text-sm text-muted-foreground">
+            {t("dashboard.greeting", { name: greetingName })}
+          </p>
           <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground mt-1">
             {t('dashboard.subtitle')}
@@ -170,7 +180,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-semibold">{formatCurrency(summary.totalMonthlyCost)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {t('dashboard.currentlyTracked')}
+              {t('dashboard.thisMonth')}
             </p>
           </CardContent>
         </Card>

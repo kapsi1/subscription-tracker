@@ -55,7 +55,31 @@ export class DashboardService {
       where: { userId, isActive: true },
     });
 
-    return this.calculateCosts(subscriptions);
+    const costs = this.calculateCosts(subscriptions);
+
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    const paidThisMonth = await this.prisma.paymentHistory.aggregate({
+      where: {
+        paidAt: {
+          gte: monthStart,
+          lt: nextMonthStart,
+        },
+        subscription: {
+          userId,
+        },
+      },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    return {
+      ...costs,
+      totalMonthlyCost: Number(paidThisMonth._sum.amount ?? 0),
+    };
   }
 
   async getForecast(userId: string, months: number = 12) {

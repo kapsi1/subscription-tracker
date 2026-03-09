@@ -12,6 +12,9 @@ describe('DashboardService', () => {
       subscription: {
         findMany: jest.fn(),
       },
+      paymentHistory: {
+        aggregate: jest.fn(),
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -29,9 +32,12 @@ describe('DashboardService', () => {
       { amount: 120, billingCycle: BillingCycle.yearly, category: 'Cloud' },
       { amount: 15, billingCycle: BillingCycle.monthly, category: 'Video' },
     ]);
+    prismaMock.paymentHistory.aggregate.mockResolvedValue({
+      _sum: { amount: 44.5 },
+    });
 
     const res = await service.getSummary('user-1');
-    expect(res.totalMonthlyCost).toBe(120 / 12 + 15);
+    expect(res.totalMonthlyCost).toBe(44.5);
     expect(res.totalYearlyCost).toBe(120 + 15 * 12);
     expect(res.categoryBreakdown['Cloud']).toBe(10);
     expect(res.categoryBreakdown['Video']).toBe(15);

@@ -50,6 +50,8 @@ export default function SettingsPage() {
   const hasLoadedSettingsRef = useRef(false);
   const lastSavedPreferencesRef = useRef<string | null>(null);
   const latestSaveAttemptRef = useRef<string | null>(null);
+  const lastSavedProfileNameRef = useRef<string>("");
+  const latestProfileSaveAttemptRef = useRef<string | null>(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -92,6 +94,7 @@ export default function SettingsPage() {
             createdAt: response.data.createdAt || "",
             updatedAt: response.data.updatedAt || "",
           });
+          lastSavedProfileNameRef.current = (response.data.name || "").trim();
       } catch (error) {
         toast.error(t('settings.loadError'));
       }
@@ -159,17 +162,27 @@ export default function SettingsPage() {
     return () => window.clearTimeout(timer);
   }, [settings, t]);
 
-  const handleSaveProfile = async () => {
-    try {
-      await api.patch("/users/settings", {
-        name: profile.name.trim(),
-      });
-      await fetchUser();
-      toast.success(t("settings.profile.saveSuccess", { defaultValue: "Profile updated successfully" }));
-    } catch (error) {
-      toast.error(t("settings.profile.saveError", { defaultValue: "Failed to save profile" }));
-    }
-  };
+  useEffect(() => {
+    if (!hasLoadedSettingsRef.current) return;
+
+    const trimmedName = profile.name.trim();
+    if (trimmedName === lastSavedProfileNameRef.current) return;
+
+    const timer = window.setTimeout(async () => {
+      latestProfileSaveAttemptRef.current = trimmedName;
+      try {
+        await api.patch("/users/settings", { name: trimmedName });
+        if (latestProfileSaveAttemptRef.current === trimmedName) {
+          lastSavedProfileNameRef.current = trimmedName;
+        }
+        await fetchUser();
+      } catch (_error) {
+        toast.error(t("settings.profile.saveError", { defaultValue: "Failed to save profile" }));
+      }
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [profile.name, fetchUser, t]);
 
   const handlePushToggle = async (checked: boolean) => {
     setIsTogglingPush(true);
@@ -386,12 +399,6 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <div className="flex justify-end">
-            <Button onClick={handleSaveProfile} className="gap-2" size="lg">
-              <Save className="w-4 h-4" />
-              {t("settings.profile.save", { defaultValue: "Save Profile" })}
-            </Button>
-          </div>
         </>
       )}
 
