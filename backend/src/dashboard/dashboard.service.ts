@@ -60,25 +60,44 @@ export class DashboardService {
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const yearStart = new Date(now.getFullYear(), 0, 1);
+    const nextYearStart = new Date(now.getFullYear() + 1, 0, 1);
 
-    const paidThisMonth = await this.prisma.paymentHistory.aggregate({
-      where: {
-        paidAt: {
-          gte: monthStart,
-          lt: nextMonthStart,
+    const [paidThisMonth, paidThisYear] = await Promise.all([
+      this.prisma.paymentHistory.aggregate({
+        where: {
+          paidAt: {
+            gte: monthStart,
+            lt: nextMonthStart,
+          },
+          subscription: {
+            userId,
+          },
         },
-        subscription: {
-          userId,
+        _sum: {
+          amount: true,
         },
-      },
-      _sum: {
-        amount: true,
-      },
-    });
+      }),
+      this.prisma.paymentHistory.aggregate({
+        where: {
+          paidAt: {
+            gte: yearStart,
+            lt: nextYearStart,
+          },
+          subscription: {
+            userId,
+          },
+        },
+        _sum: {
+          amount: true,
+        },
+      }),
+    ]);
 
     return {
       ...costs,
       totalMonthlyCost: Number(paidThisMonth._sum.amount ?? 0),
+      totalYearlyCost: Number(paidThisYear._sum.amount ?? 0),
     };
   }
 
