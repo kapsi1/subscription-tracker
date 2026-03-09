@@ -314,3 +314,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Refactor settings page: split it into multiple components, by section
 - [ ] Add a language selector to the login/register pages
 - [ ] Add more translations for major languages
+- [ ] Create a JSON with test subscriptions data that can be imported in the app. Include different currencies, billing cycles, categories, payment history, etc. Make different months have different amount of subscriptions. Include some very long subscription names to test the subscriptions list.
