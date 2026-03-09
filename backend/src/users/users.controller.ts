@@ -248,4 +248,25 @@ export class UsersController {
 
     return { message: language === 'pl' ? `Wysłano testowy raport tygodniowy.` : `Test weekly report sent.` };
   }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('test-webhook')
+  async testWebhook(
+    @Req() req: any,
+    @Body() body: { url: string; secret?: string },
+  ) {
+    this.assertTestEndpointsEnabled();
+
+    if (!body.url) {
+      throw new BadRequestException('Webhook URL is required');
+    }
+
+    try {
+      await this.usersService.testWebhook(req.user.userId, body.url, body.secret);
+      return { message: 'Test webhook sent successfully.' };
+    } catch (error: any) {
+      this.logger.error(`Test webhook failed: ${error.message}`);
+      throw new BadRequestException(`Test webhook failed: ${error.message}`);
+    }
+  }
 }

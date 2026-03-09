@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Prisma } from '@prisma/client';
+import { WebhookService } from '../notifications/webhook/webhook.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly webhookService: WebhookService,
+  ) {}
 
   async findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
@@ -43,5 +47,16 @@ export class UsersService {
     return this.prisma.pushSubscription.deleteMany({
       where: { userId, endpoint },
     });
+  }
+
+  async testWebhook(userId: string, url: string, secret?: string) {
+    return this.webhookService.sendAlert(
+      url,
+      secret,
+      'Test Subscription',
+      3,
+      19.99,
+      'USD',
+    );
   }
 }
