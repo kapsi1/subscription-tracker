@@ -189,7 +189,15 @@
         "enable": "Włącz Webhooki",
         "enableDesc": "Wysyłaj dane o płatnościach na swój URL webhooka",
         "url": "URL Webhooka",
-        "urlDesc": "Wyślemy żądanie POST ze szczegółami płatności na ten adres URL"
+        "urlDesc": "Wyślemy żądanie POST ze szczegółami płatności na ten adres URL",
+        "secret": "Klucz tajny Webhooka",
+        "secretDesc": "Opcjonalny klucz tajny do podpisywania żądań. Zostanie wysłany w nagłówku X-Webhook-Signature.",
+        "testTitle": "Testuj integrację Webhook",
+        "testDesc": "Wyślij przykładowe powiadomienie na skonfigurowany adres URL.",
+        "testSend": "Wyślij testowy Webhook",
+        "testSending": "Wysyłanie...",
+        "testSuccess": "Testowy webhook wysłany pomyślnie.",
+        "testError": "Nie udało się wysłać testowego webhooka"
       },
       "default": {
         "title": "Domyślne Ustawienia Przypomnień",

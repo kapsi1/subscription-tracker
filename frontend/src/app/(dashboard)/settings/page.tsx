@@ -22,6 +22,7 @@ export default function SettingsPage() {
     emailAddress: "",
     webhookEnabled: false,
     webhookUrl: "",
+    webhookSecret: "",
     dailyDigest: false,
     weeklyReport: true,
     monthlyBudget: "",
@@ -35,6 +36,7 @@ export default function SettingsPage() {
   const [isSendingBudgetTestEmail, setIsSendingBudgetTestEmail] = useState(false);
   const [isSendingDailyTest, setIsSendingDailyTest] = useState(false);
   const [isSendingWeeklyTest, setIsSendingWeeklyTest] = useState(false);
+  const [isSendingWebhookTest, setIsSendingWebhookTest] = useState(false);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
 
   useEffect(() => {
@@ -50,6 +52,7 @@ export default function SettingsPage() {
             emailNotifications: response.data.emailNotifications,
             webhookEnabled: response.data.webhookEnabled,
             webhookUrl: response.data.webhookUrl || "",
+            webhookSecret: response.data.webhookSecret || "",
             dailyDigest: response.data.dailyDigest,
             weeklyReport: response.data.weeklyReport,
           });
@@ -87,6 +90,7 @@ export default function SettingsPage() {
         emailNotifications: settings.emailNotifications,
         webhookEnabled: settings.webhookEnabled,
         webhookUrl: settings.webhookUrl,
+        webhookSecret: settings.webhookSecret,
         dailyDigest: settings.dailyDigest,
         weeklyReport: settings.weeklyReport,
       });
@@ -215,6 +219,24 @@ export default function SettingsPage() {
       toast.error(error.response?.data?.message || "Failed to send test weekly report");
     } finally {
       setIsSendingWeeklyTest(false);
+    }
+  };
+
+  const handleTestWebhook = async () => {
+    setIsSendingWebhookTest(true);
+    try {
+      const res = await api.post("/users/test-webhook", { 
+        url: settings.webhookUrl,
+        secret: settings.webhookSecret 
+      });
+      toast.success(res.data.message || t("settings.notifications.webhook.testSuccess"));
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message ||
+          t("settings.notifications.webhook.testError", { defaultValue: "Failed to send test webhook" })
+      );
+    } finally {
+      setIsSendingWebhookTest(false);
     }
   };
 
@@ -489,20 +511,59 @@ export default function SettingsPage() {
           </div>
 
           {settings.webhookEnabled && (
-            <div className="space-y-2">
-              <Label htmlFor="webhookUrl">{t('settings.notifications.webhook.url')}</Label>
-              <Input
-                id="webhookUrl"
-                type="url"
-                placeholder="https://your-domain.com/webhook"
-                value={settings.webhookUrl}
-                onChange={(e) =>
-                  setSettings({ ...settings, webhookUrl: e.target.value })
-                }
-              />
-              <p className="text-xs text-muted-foreground">
-                {t('settings.notifications.webhook.urlDesc')}
-              </p>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="webhookUrl">{t('settings.notifications.webhook.url')}</Label>
+                <Input
+                  id="webhookUrl"
+                  type="url"
+                  placeholder="https://your-domain.com/webhook"
+                  value={settings.webhookUrl}
+                  onChange={(e) =>
+                    setSettings({ ...settings, webhookUrl: e.target.value })
+                  }
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.notifications.webhook.urlDesc')}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="webhookSecret">{t('settings.notifications.webhook.secret')}</Label>
+                <Input
+                  id="webhookSecret"
+                  type="password"
+                  placeholder="Secret key"
+                  value={settings.webhookSecret}
+                  onChange={(e) =>
+                    setSettings({ ...settings, webhookSecret: e.target.value })
+                  }
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.notifications.webhook.secretDesc')}
+                </p>
+              </div>
+
+              {showTestControls && (
+                <div className="border-t pt-4 space-y-3">
+                  <Label>{t("settings.notifications.webhook.testTitle")}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.notifications.webhook.testDesc")}
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestWebhook}
+                    disabled={isSendingWebhookTest || !settings.webhookUrl}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {isSendingWebhookTest
+                      ? t("settings.notifications.webhook.testSending")
+                      : t("settings.notifications.webhook.testSend")}
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </CardContent>

@@ -25,6 +25,7 @@ model User {
   emailNotifications     Boolean        @default(true)
   webhookEnabled         Boolean        @default(false)
   webhookUrl             String?
+  webhookSecret          String?
   dailyDigest            Boolean        @default(false)
   weeklyReport           Boolean        @default(true)
 }

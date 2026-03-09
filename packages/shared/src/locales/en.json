@@ -188,7 +188,15 @@
         "enable": "Enable Webhooks",
         "enableDesc": "POST payment data to your webhook URL",
         "url": "Webhook URL",
-        "urlDesc": "We'll send a POST request with payment details to this URL"
+        "urlDesc": "We'll send a POST request with payment details to this URL",
+        "secret": "Webhook Secret",
+        "secretDesc": "Optional secret key to sign the webhook payload. Will be sent in X-Webhook-Signature header.",
+        "testTitle": "Test Webhook Integration",
+        "testDesc": "Send a sample webhook to your configured URL and secret.",
+        "testSend": "Send Test Webhook",
+        "testSending": "Sending...",
+        "testSuccess": "Test webhook sent successfully.",
+        "testError": "Failed to send test webhook"
       },
       "default": {
         "title": "Default Reminder Settings",

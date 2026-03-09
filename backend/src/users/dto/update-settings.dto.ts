@@ -41,6 +41,10 @@ export class UpdateSettingsDto {
   webhookUrl?: string;
 
   @IsOptional()
+  @IsString()
+  webhookSecret?: string;
+
+  @IsOptional()
   @IsBoolean()
   dailyDigest?: boolean;
 
