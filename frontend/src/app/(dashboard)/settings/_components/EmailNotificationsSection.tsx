@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Mail, SendHorizonal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { Settings } from "@/types/settings";
+import { Settings } from "@subscription-tracker/shared";
 
 interface EmailNotificationsSectionProps {
   emailNotifications: boolean;

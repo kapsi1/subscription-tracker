@@ -27,3 +27,5 @@ export type Currency = {
   flag: string;
   countryCode: string;
 };
+
+export * from './types';

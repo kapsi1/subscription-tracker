@@ -18,8 +18,8 @@ import { SummaryCards } from "./_components/SummaryCards";
 import { MonthlyPayments, MonthlyPayment } from "./_components/MonthlyPayments";
 import { MonthlyForecast } from "./_components/MonthlyForecast";
 import { CostByCategory } from "./_components/CostByCategory";
-import { SubscriptionModal, Subscription } from "@/components/subscription-modal";
-import { DashboardSummary, ForecastItem } from "@/types/dashboard";
+import { SubscriptionModal } from "@/components/subscription-modal";
+import { DashboardSummary, ForecastItem, Subscription } from "@subscription-tracker/shared";
 
 
 export default function DashboardPage() {

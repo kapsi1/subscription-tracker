@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Bell } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { Settings } from "@/types/settings";
+import { Settings } from "@subscription-tracker/shared";
 
 interface ReminderSectionProps {
   defaultReminderEnabled: boolean;
-  defaultReminderDays: string;
+  defaultReminderDays: number;
   onSettingsChange: (updates: Partial<Settings>) => void;
 }
 
@@ -63,9 +63,9 @@ export function ReminderSection({
               min="1"
               max="30"
               className="max-w-24"
-              value={defaultReminderDays}
+              value={defaultReminderDays.toString()}
               onChange={(e) =>
-                onSettingsChange({ defaultReminderDays: e.target.value })
+                onSettingsChange({ defaultReminderDays: parseInt(e.target.value) || 0 })
               }
             />
             <span className="text-sm text-muted-foreground">

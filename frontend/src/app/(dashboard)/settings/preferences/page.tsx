@@ -12,27 +12,14 @@ import { WebhookSection } from "../_components/WebhookSection";
 import { ReminderSection } from "../_components/ReminderSection";
 import { BudgetSection } from "../_components/BudgetSection";
 
-export interface Settings {
-  defaultReminderEnabled: boolean;
-  defaultReminderDays: string;
-  emailNotifications: boolean;
-  emailAddress: string;
-  webhookEnabled: boolean;
-  webhookUrl: string;
-  webhookSecret: string;
-  dailyDigest: boolean;
-  weeklyReport: boolean;
-  monthlyBudget: string;
-  pushEnabled: boolean;
-  currency: string;
-}
+import { Settings } from "@subscription-tracker/shared";
 
 export default function PreferencesPage() {
   const { t } = useTranslation();
   const showTestControls = process.env.NODE_ENV !== "production";
   const [settings, setSettings] = useState<Settings>({
     defaultReminderEnabled: true,
-    defaultReminderDays: "3",
+    defaultReminderDays: 3,
     emailNotifications: true,
     emailAddress: "",
     webhookEnabled: false,
@@ -40,7 +27,7 @@ export default function PreferencesPage() {
     webhookSecret: "",
     dailyDigest: false,
     weeklyReport: true,
-    monthlyBudget: "",
+    monthlyBudget: null,
     pushEnabled: false,
     currency: "USD",
   });
@@ -64,9 +51,9 @@ export default function PreferencesPage() {
         const response = await api.get("/users/me");
         const loadedSettings = {
           defaultReminderEnabled: response.data.defaultReminderEnabled,
-          defaultReminderDays: response.data.defaultReminderDays?.toString() || "3",
+          defaultReminderDays: parseInt(response.data.defaultReminderDays) || 3,
           emailAddress: response.data.email,
-          monthlyBudget: response.data.monthlyBudget?.toString() || "",
+          monthlyBudget: response.data.monthlyBudget ? parseFloat(response.data.monthlyBudget) : null,
           emailNotifications: response.data.emailNotifications,
           webhookEnabled: response.data.webhookEnabled,
           webhookUrl: response.data.webhookUrl || "",
@@ -82,10 +69,8 @@ export default function PreferencesPage() {
         }));
         lastSavedPreferencesRef.current = JSON.stringify({
           defaultReminderEnabled: loadedSettings.defaultReminderEnabled,
-          defaultReminderDays: Number.parseInt(loadedSettings.defaultReminderDays, 10),
-          monthlyBudget: loadedSettings.monthlyBudget
-            ? Number.parseFloat(loadedSettings.monthlyBudget)
-            : null,
+          defaultReminderDays: loadedSettings.defaultReminderDays,
+          monthlyBudget: loadedSettings.monthlyBudget,
           emailNotifications: loadedSettings.emailNotifications,
           webhookEnabled: loadedSettings.webhookEnabled,
           webhookUrl: loadedSettings.webhookUrl,
@@ -123,19 +108,10 @@ export default function PreferencesPage() {
   useEffect(() => {
     if (!hasLoadedSettingsRef.current) return;
 
-    const parsedReminderDays = Number.parseInt(settings.defaultReminderDays, 10);
-    if (Number.isNaN(parsedReminderDays)) return;
-
-    let parsedMonthlyBudget: number | null = null;
-    if (settings.monthlyBudget.trim() !== "") {
-      parsedMonthlyBudget = Number.parseFloat(settings.monthlyBudget);
-      if (Number.isNaN(parsedMonthlyBudget)) return;
-    }
-
     const payload = {
       defaultReminderEnabled: settings.defaultReminderEnabled,
-      defaultReminderDays: parsedReminderDays,
-      monthlyBudget: parsedMonthlyBudget,
+      defaultReminderDays: settings.defaultReminderDays,
+      monthlyBudget: settings.monthlyBudget,
       emailNotifications: settings.emailNotifications,
       webhookEnabled: settings.webhookEnabled,
       webhookUrl: settings.webhookUrl,
@@ -277,8 +253,8 @@ export default function PreferencesPage() {
     setIsSendingWebhookTest(true);
     try {
       const res = await api.post("/users/test-webhook", { 
-        url: settings.webhookUrl,
-        secret: settings.webhookSecret 
+        url: settings.webhookUrl || "",
+        secret: settings.webhookSecret || "" 
       });
       toast.success(res.data.message || t("settings.notifications.webhook.testSuccess"));
     } catch (error: unknown) {
@@ -302,7 +278,7 @@ export default function PreferencesPage() {
 
       <EmailNotificationsSection 
         emailNotifications={settings.emailNotifications}
-        emailAddress={settings.emailAddress}
+        emailAddress={settings.emailAddress ?? ""}
         dailyDigest={settings.dailyDigest}
         weeklyReport={settings.weeklyReport}
         onSettingsChange={handleSettingsChange}
@@ -320,7 +296,7 @@ export default function PreferencesPage() {
       />
 
       <PushNotificationsSection 
-        pushEnabled={settings.pushEnabled}
+        pushEnabled={settings.pushEnabled ?? false}
         onPushToggle={handlePushToggle}
         isTogglingPush={isTogglingPush}
         showTestControls={showTestControls}
@@ -333,8 +309,8 @@ export default function PreferencesPage() {
 
       <WebhookSection 
         webhookEnabled={settings.webhookEnabled}
-        webhookUrl={settings.webhookUrl}
-        webhookSecret={settings.webhookSecret}
+        webhookUrl={settings.webhookUrl ?? ""}
+        webhookSecret={settings.webhookSecret ?? ""}
         onSettingsChange={handleSettingsChange}
         showTestControls={showTestControls}
         onTestWebhook={handleTestWebhook}

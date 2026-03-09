@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { PiggyBank, SendHorizonal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { Settings } from "@/types/settings";
+import { Settings } from "@subscription-tracker/shared";
 
 interface BudgetSectionProps {
-  monthlyBudget: string;
+  monthlyBudget: number | null | undefined;
   currency: string;
   onSettingsChange: (updates: Partial<Settings>) => void;
   showTestControls: boolean;
@@ -61,9 +61,9 @@ export function BudgetSection({
               step="0.01"
               placeholder="e.g. 50.00"
               className="max-w-32"
-              value={monthlyBudget}
+              value={monthlyBudget ?? ""}
               onChange={(e) =>
-                onSettingsChange({ monthlyBudget: e.target.value })
+                onSettingsChange({ monthlyBudget: e.target.value === "" ? null : parseFloat(e.target.value) })
               }
             />
           </div>

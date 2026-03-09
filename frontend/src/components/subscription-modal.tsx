@@ -21,18 +21,7 @@ import {
 } from "./ui/select";
 import { Switch } from "./ui/switch";
 
-export interface Subscription {
-  id: string;
-  name: string;
-  amount: number;
-  currency: string;
-  billingCycle: string;
-  nextBillingDate?: string;
-  category: string;
-  isActive?: boolean;
-  reminderEnabled?: boolean;
-  reminderDays?: number;
-}
+import { Subscription } from "@subscription-tracker/shared";
 
 interface SubscriptionModalProps {
   open: boolean;
