@@ -5,6 +5,8 @@ import {
   HttpCode,
   HttpStatus,
   Req,
+  Res,
+  Get,
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
@@ -12,10 +14,36 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
+import type { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() _req: any) {
+    // Initiates Google OAuth2 flow
+  }
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
+    const tokens = await this.authService.validateGoogleUser(req.user);
+    const frontendUrl = this.configService.getOrThrow<string>('FRONTEND_URL');
+
+    // Redirect to frontend with tokens as query params
+    // In production, consider using secure, HttpOnly cookies for tokens instead
+    return res.redirect(
+      `${frontendUrl}/auth/callback?accessToken=${tokens.accessToken}&refreshToken=${tokens.refreshToken}`,
+    );
+  }
+
 
   @Throttle({ default: { limit: 100, ttl: 60000 } })
   @Post('register')

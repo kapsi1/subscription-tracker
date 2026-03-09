@@ -281,8 +281,8 @@
 # 7. Additional
 - [ ] Push notifications not working on Opera
 - [ ] Push notifications not working when Chrome is not running
-- [ ] Email notifications
-- [ ] Webhook integration
+- [ ] Email notifications on production
+- [x] Webhook integration
 - [ ] Default reminders
 - [ ] Budget threshold alerts
 - [ ] Google Auth

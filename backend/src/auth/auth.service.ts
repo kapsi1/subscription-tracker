@@ -18,6 +18,33 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  async validateGoogleUser(googleProfile: any) {
+    const { googleId, email } = googleProfile;
+
+    let user = await this.usersService.findByGoogleId(googleId);
+
+    if (!user) {
+      // User doesn't exist by Google ID, check by email
+      user = await this.usersService.findByEmail(email);
+
+      if (user) {
+        // User exists by email - link Google account
+        user = await this.usersService.update(user.id, {
+          googleId: googleId,
+        });
+      } else {
+        // New user entirely
+        user = await this.usersService.create({
+          email: email,
+          googleId: googleId,
+        });
+      }
+    }
+
+    return this.generateTokens(user.id, user.email);
+  }
+
+
   async register(registerDto: RegisterDto) {
     const existingUser = await this.usersService.findByEmail(registerDto.email);
     if (existingUser) {
@@ -39,6 +66,10 @@ export class AuthService {
     const user = await this.usersService.findByEmail(loginDto.email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!user.passwordHash) {
+      throw new UnauthorizedException('Please login with Google');
     }
 
     const isPasswordValid = await bcrypt.compare(
