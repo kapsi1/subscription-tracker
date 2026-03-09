@@ -1,4 +1,37 @@
 {
+  "auth": {
+    "title": "Monitor Kosztów Subskrypcji",
+    "login": {
+      "title": "Logowanie",
+      "subtitle": "Zaloguj się, aby zarządzać swoimi subskrypcjami",
+      "submit": "Zaloguj się",
+      "switch": "Przełącz na Rejestrację"
+    },
+    "register": {
+      "title": "Utwórz Konto",
+      "subtitle": "Utwórz konto, aby rozpocząć",
+      "submit": "Utwórz Konto",
+      "switch": "Przełącz na Logowanie"
+    },
+    "fields": {
+      "name": "Imię i Nazwisko",
+      "namePlaceholder": "Jan Kowalski",
+      "email": "Email",
+      "emailPlaceholder": "ty@example.com",
+      "password": "Hasło",
+      "passwordPlaceholder": "••••••••"
+    },
+    "social": {
+      "title": "Lub kontynuuj przez",
+      "google": "Google"
+    },
+    "status": {
+      "pleaseWait": "Proszę czekać...",
+      "loginSuccess": "Zalogowano pomyślnie.",
+      "registerSuccess": "Konto zostało utworzone.",
+      "failed": "Błąd uwierzytelniania"
+    }
+  },
   "common": {
     "loading": "Ładowanie...",
     "error": "Wystąpił błąd",

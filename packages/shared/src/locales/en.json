@@ -1,4 +1,37 @@
 {
+  "auth": {
+    "title": "Subscription Cost Tracker",
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Sign in to manage your subscriptions",
+      "submit": "Sign In",
+      "switch": "Switch to Register"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Create an account to get started",
+      "submit": "Create Account",
+      "switch": "Switch to Login"
+    },
+    "fields": {
+      "name": "Full Name",
+      "namePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••"
+    },
+    "social": {
+      "title": "Or continue with",
+      "google": "Google"
+    },
+    "status": {
+      "pleaseWait": "Please wait...",
+      "loginSuccess": "Successfully logged in.",
+      "registerSuccess": "Account created successfully.",
+      "failed": "Authentication failed"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",

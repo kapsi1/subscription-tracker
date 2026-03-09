@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { UKFlag, PolandFlag } from "@/components/flags";
 import { cn } from "@/components/ui/utils";
 import { AccentColorSwitcher } from "@/components/accent-color-switcher";
+import { LanguageSelector } from "@/components/language-selector";
 import { LoadingState } from "@/components/loading-state";
 import { ErrorState } from "@/components/error-state"; // Assuming this path
 import { useTheme } from "next-themes"; // Assuming this path
@@ -111,14 +112,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return source.slice(0, 2).toUpperCase();
   };
 
-  const handleLanguageChange = async (lang: string) => {
-    try {
-      await i18n.changeLanguage(lang);
-      await api.patch('/users/settings', { language: lang });
-    } catch (error) {
-      toast.error(t('common.error'));
-    }
-  };
 
   const title = "Subscription Tracker";
   const currentLanguage = i18n.language || "en";
@@ -226,23 +219,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
             <AccentColorSwitcher />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9" aria-label={t('language.switch')}>
-                  {currentLanguage.startsWith("en") ? <UKFlag /> : <PolandFlag />}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{t('language.switch')}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleLanguageChange("en")} className="gap-2">
-                  <UKFlag /> <span>{t('language.en')}</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleLanguageChange("pl")} className="gap-2">
-                  <PolandFlag /> <span>{t('language.pl')}</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <LanguageSelector />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

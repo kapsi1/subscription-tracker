@@ -312,7 +312,7 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
 - [ ] Check for and remove unused code and translations
 - [x] Refactor settings page: split it into multiple components, by section
-- [ ] Add a language selector to the login/register pages
+- [x] Add a language selector to the login/register pages
 - [ ] Add more translations for major languages
 - [x] Create a JSON with test subscriptions data that can be imported in the app. Include different currencies, billing cycles, categories, payment history, etc. Make different months have different amount of subscriptions. Include some very long subscription names to test the subscriptions list.
 - [ ] Add payment history to the subscription details page (the edit subscription modal)
