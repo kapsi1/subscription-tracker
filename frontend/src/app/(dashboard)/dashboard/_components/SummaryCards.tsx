@@ -12,10 +12,15 @@ interface SummaryCardsProps {
     activeSubscriptions: number;
     currency: string;
   };
-  monthlyPaymentsCount: number;
+  monthlyPaymentsDoneCount: number;
+  monthlyPaymentsTotalCount: number;
 }
 
-export function SummaryCards({ summary, monthlyPaymentsCount }: SummaryCardsProps) {
+export function SummaryCards({
+  summary,
+  monthlyPaymentsDoneCount,
+  monthlyPaymentsTotalCount,
+}: SummaryCardsProps) {
   const { t } = useTranslation();
 
   return (
@@ -64,7 +69,9 @@ export function SummaryCards({ summary, monthlyPaymentsCount }: SummaryCardsProp
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-4xl text-center font-semibold">{monthlyPaymentsCount}</div>
+          <div className="text-4xl text-center font-semibold">
+            {monthlyPaymentsDoneCount}/{monthlyPaymentsTotalCount}
+          </div>
         </CardContent>
       </Card>
 

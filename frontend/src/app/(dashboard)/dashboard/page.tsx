@@ -129,6 +129,10 @@ export default function DashboardPage() {
     return <LoadingState message={t('common.loading')} />;
   }
 
+  const monthlyPaymentsDoneCount = monthlyPayments.filter(
+    (payment) => payment.status === "done",
+  ).length;
+
   const greetingName =
     user?.name?.trim() ||
     user?.email?.split("@")[0] ||
@@ -241,7 +245,8 @@ export default function DashboardPage() {
 
       <SummaryCards
         summary={summary}
-        monthlyPaymentsCount={monthlyPayments.length}
+        monthlyPaymentsDoneCount={monthlyPaymentsDoneCount}
+        monthlyPaymentsTotalCount={monthlyPayments.length}
       />
 
       <MonthlyPayments 
