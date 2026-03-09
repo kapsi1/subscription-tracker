@@ -1,0 +1,131 @@
+{
+  "subscriptions": [
+    {
+      "name": "Netflix Premium Ultra HD 4K Plan",
+      "amount": 19.99,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Entertainment",
+      "nextBillingDate": "2026-03-15T00:00:00.000Z",
+      "reminderEnabled": true,
+      "reminderDays": 2,
+      "payments": [
+        { "amount": 19.99, "currency": "USD", "paidAt": "2026-02-15T12:00:00.000Z" },
+        { "amount": 19.99, "currency": "USD", "paidAt": "2026-01-15T12:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Disney+ Yearly Special Offer",
+      "amount": 109.90,
+      "currency": "USD",
+      "billingCycle": "yearly",
+      "category": "Entertainment",
+      "nextBillingDate": "2026-11-20T00:00:00.000Z",
+      "payments": [
+        { "amount": 109.90, "currency": "USD", "paidAt": "2025-11-20T10:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Gym Membership (Iron Paradise)",
+      "amount": 45.00,
+      "currency": "EUR",
+      "billingCycle": "custom",
+      "intervalDays": 28,
+      "category": "Health",
+      "nextBillingDate": "2026-03-24T00:00:00.000Z",
+      "payments": [
+        { "amount": 45.00, "currency": "EUR", "paidAt": "2026-02-24T08:00:00.000Z" },
+        { "amount": 45.00, "currency": "EUR", "paidAt": "2026-01-27T08:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Rent for the Downtown Apartment (Shared with roommates and including all utilities and parking)",
+      "amount": 1250.00,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Housing",
+      "nextBillingDate": "2026-04-01T00:00:00.000Z",
+      "payments": [
+        { "amount": 1250.00, "currency": "USD", "paidAt": "2026-03-01T07:00:00.000Z" },
+        { "amount": 1250.00, "currency": "USD", "paidAt": "2026-02-01T07:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Internet Fiber 1Gbps",
+      "amount": 59.99,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Utilities",
+      "nextBillingDate": "2026-03-12T00:00:00.000Z",
+      "payments": [
+        { "amount": 59.99, "currency": "USD", "paidAt": "2026-02-12T09:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Spotify Family Plan",
+      "amount": 16.99,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Entertainment",
+      "nextBillingDate": "2026-03-22T00:00:00.000Z",
+      "payments": [
+        { "amount": 16.99, "currency": "USD", "paidAt": "2026-02-22T15:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Adobe Creative Cloud All Apps",
+      "amount": 54.99,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Productivity",
+      "nextBillingDate": "2026-04-05T00:00:00.000Z",
+      "isActive": false,
+      "payments": [
+        { "amount": 54.99, "currency": "USD", "paidAt": "2026-03-05T11:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "AWS Cloud Services (DynamoDB, Lambda, S3, EC2, CloudFront, Route53, and more)",
+      "amount": 42.15,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Cloud Services",
+      "nextBillingDate": "2026-03-28T00:00:00.000Z",
+      "payments": [
+        { "amount": 42.15, "currency": "USD", "paidAt": "2026-02-28T00:01:00.000Z" }
+      ]
+    },
+    {
+      "name": "GitHub Copilot for Individuals",
+      "amount": 10.00,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Development",
+      "nextBillingDate": "2026-03-18T00:00:00.000Z"
+    },
+    {
+      "name": "Medium Membership",
+      "amount": 50.00,
+      "currency": "USD",
+      "billingCycle": "yearly",
+      "category": "Professional",
+      "nextBillingDate": "2026-08-10T00:00:00.000Z",
+      "payments": [
+        { "amount": 50.00, "currency": "USD", "paidAt": "2025-08-10T14:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Cleaners (Bi-weekly)",
+      "amount": 80.00,
+      "currency": "GBP",
+      "billingCycle": "custom",
+      "intervalDays": 14,
+      "category": "Services",
+      "nextBillingDate": "2026-03-14T00:00:00.000Z",
+      "payments": [
+        { "amount": 80.00, "currency": "GBP", "paidAt": "2026-02-28T10:00:00.000Z" },
+        { "amount": 80.00, "currency": "GBP", "paidAt": "2026-02-14T10:00:00.000Z" }
+      ]
+    }
+  ]
+}

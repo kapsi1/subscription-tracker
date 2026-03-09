@@ -11,6 +11,12 @@ import { useAuth } from "@/components/auth-provider";
 import api from "@/lib/api";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export type MonthlyPayment = {
   id: string;
@@ -188,12 +194,21 @@ export function MonthlyPayments({ monthlyPayments }: MonthlyPaymentsProps) {
                     <CreditCard className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">
-                        {payment.name}
-                      </p>
+                    <div className="flex items-center gap-2 max-w-full">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <p className="font-medium truncate cursor-default max-w-[180px] sm:max-w-[250px] md:max-w-[350px]">
+                              {payment.name}
+                            </p>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom" className="max-w-[300px] wrap-break-word">
+                            {payment.name}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                       {payment.status === "done" ? (
-                        <Badge variant="secondary">{t("dashboard.paymentDone")}</Badge>
+                        <Badge variant="secondary" className="shrink-0">{t("dashboard.paymentDone")}</Badge>
                       ) : null}
                     </div>
                     <p className="text-sm text-muted-foreground">

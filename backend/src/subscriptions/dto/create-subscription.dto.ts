@@ -8,7 +8,10 @@ import {
   IsOptional,
   ValidateIf,
   IsBoolean,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { BillingCycle } from '@prisma/client';
 
 export class CreateSubscriptionDto {
@@ -42,4 +45,30 @@ export class CreateSubscriptionDto {
   @IsOptional()
   @IsString()
   nextBillingDate?: string;
+
+  @IsOptional()
+  @IsString()
+  currency?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PaymentHistoryDto)
+  payments?: PaymentHistoryDto[];
+}
+
+export class PaymentHistoryDto {
+  @IsNumber()
+  @IsPositive()
+  amount!: number;
+
+  @IsString()
+  currency!: string;
+
+  @IsString()
+  paidAt!: string;
 }

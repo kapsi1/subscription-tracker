@@ -146,7 +146,11 @@
         "Cloud Services": "Usługi w chmurze",
         "Development": "Programowanie",
         "Professional": "Zawodowe",
+        "Health": "Zdrowie i fitness",
         "Health & Fitness": "Zdrowie i fitness",
+        "Housing": "Mieszkanie",
+        "Utilities": "Media",
+        "Services": "Usługi",
         "Education": "Edukacja",
         "Other": "Inne"
       },

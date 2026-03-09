@@ -47,7 +47,10 @@ const categories = [
   "Cloud Services",
   "Development",
   "Professional",
-  "Health & Fitness",
+  "Health",
+  "Housing",
+  "Utilities",
+  "Services",
   "Education",
   "Other",
 ];

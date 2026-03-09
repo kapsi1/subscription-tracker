@@ -84,42 +84,52 @@ export class SubscriptionsService {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
-    const subscriptionData = importDto.subscriptions.map((sub) => {
-      if (sub.billingCycle === BillingCycle.custom && !sub.intervalDays) {
-        throw new BadRequestException(
-          `intervalDays is required for custom billing cycle on subscription: ${sub.name}`,
-        );
-      }
-
-      const nextBillingDate = sub.nextBillingDate
-        ? new Date(sub.nextBillingDate)
-        : calculateNextBillingDate(
-            sub.billingCycle,
-            new Date(),
-            sub.intervalDays,
+    const createdSubscriptions = await this.prisma.$transaction(
+      importDto.subscriptions.map((sub) => {
+        if (sub.billingCycle === BillingCycle.custom && !sub.intervalDays) {
+          throw new BadRequestException(
+            `intervalDays is required for custom billing cycle on subscription: ${sub.name}`,
           );
+        }
 
-      return {
-        userId,
-        name: sub.name,
-        amount: sub.amount,
-        currency: user.currency,
-        billingCycle: sub.billingCycle,
-        intervalDays: sub.intervalDays || null,
-        category: sub.category,
-        nextBillingDate,
-        reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
-        reminderDays: sub.reminderDays ?? user.defaultReminderDays,
-      };
-    });
+        const nextBillingDate = sub.nextBillingDate
+          ? new Date(sub.nextBillingDate)
+          : calculateNextBillingDate(
+              sub.billingCycle,
+              new Date(),
+              sub.intervalDays,
+            );
 
-    const result = await this.prisma.subscription.createMany({
-      data: subscriptionData,
-    });
+        return this.prisma.subscription.create({
+          data: {
+            userId,
+            name: sub.name,
+            amount: sub.amount,
+            currency: sub.currency || user.currency,
+            billingCycle: sub.billingCycle,
+            intervalDays: sub.intervalDays || null,
+            category: sub.category,
+            nextBillingDate,
+            reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
+            reminderDays: sub.reminderDays ?? user.defaultReminderDays,
+            isActive: sub.isActive ?? true,
+            payments: sub.payments
+              ? {
+                  create: sub.payments.map((p) => ({
+                    amount: p.amount,
+                    currency: p.currency,
+                    paidAt: new Date(p.paidAt),
+                  })),
+                }
+              : undefined,
+          },
+        });
+      }),
+    );
 
     return {
-      message: `Successfully imported ${result.count} subscriptions`,
-      count: result.count,
+      message: `Successfully imported ${createdSubscriptions.length} subscriptions`,
+      count: createdSubscriptions.length,
     };
   }
 

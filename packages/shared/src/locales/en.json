@@ -145,7 +145,11 @@
         "Cloud Services": "Cloud Services",
         "Development": "Development",
         "Professional": "Professional",
+        "Health": "Health & Fitness",
         "Health & Fitness": "Health & Fitness",
+        "Housing": "Housing",
+        "Utilities": "Utilities",
+        "Services": "Services",
         "Education": "Education",
         "Other": "Other"
       },

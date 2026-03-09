@@ -24,6 +24,12 @@ import { sendGAEvent } from "@next/third-parties/google";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { formatCurrency } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const subscriptionImportSchema = z.object({
   name: z.string().min(1),
@@ -35,6 +41,12 @@ const subscriptionImportSchema = z.object({
   nextBillingDate: z.string().optional(),
   reminderEnabled: z.boolean().optional(),
   reminderDays: z.number().positive().optional(),
+  isActive: z.boolean().optional(),
+  payments: z.array(z.object({
+    amount: z.number().positive(),
+    currency: z.string().length(3),
+    paidAt: z.string(),
+  })).optional(),
 });
 
 export default function SubscriptionsPage() {
@@ -196,6 +208,10 @@ export default function SubscriptionsPage() {
       "Cloud Services": "bg-cyan-100 text-cyan-700 border-cyan-200",
       Development: "bg-green-100 text-green-700 border-green-200",
       Professional: "bg-orange-100 text-orange-700 border-orange-200",
+      Health: "bg-rose-100 text-rose-700 border-rose-200",
+      Housing: "bg-amber-100 text-amber-700 border-amber-200",
+      Utilities: "bg-indigo-100 text-indigo-700 border-indigo-200",
+      Services: "bg-teal-100 text-teal-700 border-teal-200",
     };
     return colors[category] || "bg-gray-100 text-gray-700 border-gray-200";
   };
@@ -282,14 +298,29 @@ export default function SubscriptionsPage() {
                     <TableHead>{t('subscriptions.table.cycle')}</TableHead>
                     <TableHead>{t('subscriptions.table.next')}</TableHead>
                     <TableHead>{t('subscriptions.table.category')}</TableHead>
-                    <TableHead className="text-right">{t('subscriptions.table.actions')}</TableHead>
+                    <TableHead className="text-right"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredSubscriptions.map((subscription) => (
-                    <TableRow key={subscription.id} className="hover:bg-accent/50">
-                      <TableCell className="font-medium">
-                        {subscription.name}
+                    <TableRow 
+                      key={subscription.id} 
+                      className="hover:bg-accent/50 cursor-pointer group"
+                      onClick={() => handleEdit(subscription)}
+                    >
+                      <TableCell className="font-medium max-w-[200px]">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="truncate cursor-default">
+                                {subscription.name}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="max-w-[300px] wrap-break-word">
+                              {subscription.name}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </TableCell>
                       <TableCell>{formatCurrency(subscription.amount, subscription.currency)}</TableCell>
                       <TableCell>{t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}</TableCell>
@@ -303,20 +334,15 @@ export default function SubscriptionsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-2 opacity-0 focus-within:opacity-100 group-hover:opacity-100 transition-opacity">
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => handleEdit(subscription)}
-                            className="h-8 w-8"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(subscription.id)}
-                            className="h-8 w-8 text-destructive hover:text-destructive"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(subscription.id);
+                            }}
+                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
