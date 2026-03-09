@@ -5,11 +5,12 @@
 /**
  * Format a number as currency
  */
-export function formatCurrency(value: number, currency: string = "USD"): string {
+export function formatCurrency(value: number, currency: string = "USD", maximumFractionDigits = 2): string {
   try {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: currency,
+      maximumFractionDigits
     }).format(value);
   } catch (e) {
     // Fallback for invalid currency codes

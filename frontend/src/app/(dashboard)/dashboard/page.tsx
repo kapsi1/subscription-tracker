@@ -20,6 +20,11 @@ import {
   ResponsiveContainer,
   ComposedChart,
 } from "recharts";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import api from "@/lib/api";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -55,6 +60,8 @@ export default function DashboardPage() {
   const [paymentSortDirection, setPaymentSortDirection] = useState<"asc" | "desc">("asc");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [pickerYear, setPickerYear] = useState(selectedDate.getFullYear());
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const fetchDashboardData = async (date: Date) => {
     setIsLoading(true);
@@ -100,7 +107,19 @@ export default function DashboardPage() {
   };
 
   const handleResetMonth = () => {
-    setSelectedDate(new Date());
+    const now = new Date();
+    setSelectedDate(now);
+    setPickerYear(now.getFullYear());
+  };
+
+  const monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const handleMonthSelect = (monthIndex: number) => {
+    setSelectedDate(new Date(pickerYear, monthIndex, 1));
+    setIsPickerOpen(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -168,12 +187,61 @@ export default function DashboardPage() {
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <div className="min-w-[140px] text-center font-medium">
-              {selectedDate.toLocaleDateString(i18n.language === "pl" ? "pl-PL" : "en-US", {
-                month: "long",
-                year: "numeric",
-              })}
-            </div>
+            <DropdownMenu
+              open={isPickerOpen}
+              onOpenChange={(open) => {
+                setIsPickerOpen(open);
+                if (open) setPickerYear(selectedDate.getFullYear());
+              }}
+            >
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="min-w-[140px] font-medium hover:bg-accent/50 focus-visible:ring-0">
+                  {selectedDate.toLocaleDateString(i18n.language === "pl" ? "pl-PL" : "en-US", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="p-3 w-64">
+                <div className="flex items-center justify-between mb-4">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPickerYear(prev => prev - 1); }}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <div className="font-semibold text-sm">{pickerYear}</div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPickerYear(prev => prev + 1); }}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {monthNames.map((month, index) => {
+                    const isSelected = selectedDate.getMonth() === index && selectedDate.getFullYear() === pickerYear;
+                    return (
+                      <Button
+                        key={month}
+                        variant={isSelected ? "default" : "ghost"}
+                        className="h-9 w-full text-xs font-medium"
+                        onClick={() => handleMonthSelect(index)}
+                      >
+                        {i18n.language === "pl"
+                          ? new Date(2000, index).toLocaleDateString("pl-PL", { month: "short" })
+                          : month
+                        }
+                      </Button>
+                    );
+                  })}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               variant="ghost"
               size="icon"
@@ -203,7 +271,7 @@ export default function DashboardPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 px-2">
             <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
               {t('dashboard.totalMonthlyCost')}
             </CardTitle>
@@ -217,7 +285,7 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 px-2">
             <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
               {t('dashboard.totalYearlyCost')}
             </CardTitle>
@@ -226,12 +294,12 @@ export default function DashboardPage() {
             </div> */}
           </CardHeader>
           <CardContent>
-            <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalYearlyCost)}</div>
+            <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalYearlyCost, 'USD', 0)}</div>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 px-2">
             <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
               {t('dashboard.monthlyPayments')}
             </CardTitle>
@@ -245,7 +313,7 @@ export default function DashboardPage() {
         </Card>
 
         <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2 px-4">
+          <CardHeader className="flex flex-row items-center justify-between pb-2 px-2">
             <CardTitle className="text-md font-medium text-muted-foreground text-center w-full">
               {t('dashboard.activeSubscriptions')}
             </CardTitle>
@@ -319,8 +387,8 @@ export default function DashboardPage() {
                 <div
                   key={payment.id}
                   className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 ${payment.status === "done"
-                      ? "border-dashed bg-muted opacity-70"
-                      : "bg-card hover:bg-accent/50"
+                    ? "border-dashed bg-muted opacity-70"
+                    : "bg-card hover:bg-accent/50"
                     }`}
                 >
                   <div className="flex items-center gap-4 flex-1">
@@ -409,7 +477,7 @@ export default function DashboardPage() {
                     boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                   }}
                   formatter={(value: any, name?: string) => [
-                    `$${Number(value).toFixed(2)}`,
+                    `$${Number(value || 0).toFixed(2)}`,
                     name
                   ]}
                 />
@@ -485,7 +553,7 @@ export default function DashboardPage() {
                   </Pie>
                   <Tooltip
                     formatter={(value: any, name?: string) => [
-                      `$${Number(value).toFixed(2)}`,
+                      `$${Number(value || 0).toFixed(2)}`,
                       t(`subscriptions.modal.categories.${name || ''}`, { defaultValue: name })
                     ]}
                   />
@@ -505,8 +573,8 @@ export default function DashboardPage() {
                       border: "1px solid #e2e8f0",
                       borderRadius: "8px",
                     }}
-                    labelFormatter={(label) => t(`subscriptions.modal.categories.${label}`, { defaultValue: label })}
-                    formatter={(value: any) => [`$${Number(value).toFixed(2)}`, t("subscriptions.modal.amount")]}
+                    labelFormatter={(label: any) => t(`subscriptions.modal.categories.${label}`, { defaultValue: label })}
+                    formatter={(value: any) => [`$${Number(value || 0).toFixed(2)}`, t("subscriptions.modal.amount")]}
                   />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                     {categoryData.map((entry, index) => (

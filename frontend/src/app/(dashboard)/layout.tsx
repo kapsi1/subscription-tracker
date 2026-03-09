@@ -264,7 +264,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </header>
 
-      <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 lg:max-w-7xl lg:mx-auto justify-items-center">
+      <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 lg:max-w-10xl lg:mx-auto justify-items-center">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <LoadingState message={t("common.loading")} />
