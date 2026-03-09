@@ -2,7 +2,6 @@ import {
   IsString,
   IsNumber,
   IsPositive,
-  IsISO4217CurrencyCode,
   IsEnum,
   IsInt,
   Min,
@@ -21,10 +20,6 @@ export class UpdateSubscriptionDto {
   @IsNumber()
   @IsPositive()
   amount?: number;
-
-  @IsOptional()
-  @IsISO4217CurrencyCode()
-  currency?: string;
 
   @IsOptional()
   @IsEnum(BillingCycle)

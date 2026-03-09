@@ -1,0 +1,22 @@
+[
+  { "code": "USD", "name": "US Dollar", "flag": "🇺🇸", "countryCode": "US" },
+  { "code": "EUR", "name": "Euro", "flag": "🇪🇺", "countryCode": "EU" },
+  { "code": "PLN", "name": "Polish Złoty", "flag": "🇵🇱", "countryCode": "PL" },
+  { "code": "GBP", "name": "British Pound", "flag": "🇬🇧", "countryCode": "GB" },
+  { "code": "JPY", "name": "Japanese Yen", "flag": "🇯🇵", "countryCode": "JP" },
+  { "code": "CHF", "name": "Swiss Franc", "flag": "🇨🇭", "countryCode": "CH" },
+  { "code": "CAD", "name": "Canadian Dollar", "flag": "🇨🇦", "countryCode": "CA" },
+  { "code": "AUD", "name": "Australian Dollar", "flag": "🇦🇺", "countryCode": "AU" },
+  { "code": "DKK", "name": "Danish Krone", "flag": "🇩🇰", "countryCode": "DK" },
+  { "code": "NOK", "name": "Norwegian Krone", "flag": "🇳🇴", "countryCode": "NO" },
+  { "code": "SEK", "name": "Swedish Krona", "flag": "🇸🇪", "countryCode": "SE" },
+  { "code": "CZK", "name": "Czech Koruna", "flag": "🇨🇿", "countryCode": "CZ" },
+  { "code": "HUF", "name": "Hungarian Forint", "flag": "🇭🇺", "countryCode": "HU" },
+  { "code": "BRL", "name": "Brazilian Real", "flag": "🇧🇷", "countryCode": "BR" },
+  { "code": "MXN", "name": "Mexican Peso", "flag": "🇲🇽", "countryCode": "MX" },
+  { "code": "INR", "name": "Indian Rupee", "flag": "🇮🇳", "countryCode": "IN" },
+  { "code": "CNY", "name": "Chinese Yuan", "flag": "🇨🇳", "countryCode": "CN" },
+  { "code": "KRW", "name": "South Korean Won", "flag": "🇰🇷", "countryCode": "KR" },
+  { "code": "SGD", "name": "Singapore Dollar", "flag": "🇸🇬", "countryCode": "SG" },
+  { "code": "NZD", "name": "New Zealand Dollar", "flag": "🇳🇿", "countryCode": "NZ" }
+]

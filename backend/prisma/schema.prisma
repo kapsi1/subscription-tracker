@@ -33,6 +33,7 @@ model User {
   dashboardSortBy        String         @default("date")
   dashboardSortOrder     String         @default("asc")
   showPaidPayments       Boolean        @default(true)
+  currency               String         @default("USD")
 }
 
 enum BillingCycle {

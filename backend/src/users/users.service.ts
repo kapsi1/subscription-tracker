@@ -35,10 +35,24 @@ export class UsersService {
   }
 
   async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
-    return this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { id },
       data,
     });
+
+    if (data.currency && typeof data.currency === 'string') {
+      await this.prisma.subscription.updateMany({
+        where: { userId: id },
+        data: { currency: data.currency },
+      });
+      
+      await this.prisma.paymentHistory.updateMany({
+        where: { subscription: { userId: id } },
+        data: { currency: data.currency },
+      });
+    }
+
+    return user;
   }
 
   async savePushSubscription(userId: string, endpoint: string, p256dh: string, auth: string) {

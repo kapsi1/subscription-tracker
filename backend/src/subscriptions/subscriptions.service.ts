@@ -39,7 +39,7 @@ export class SubscriptionsService {
         userId,
         name: createDto.name,
         amount: createDto.amount,
-        currency: createDto.currency,
+        currency: user.currency,
         billingCycle: createDto.billingCycle,
         intervalDays: createDto.intervalDays || null,
         category: createDto.category,
@@ -103,7 +103,7 @@ export class SubscriptionsService {
         userId,
         name: sub.name,
         amount: sub.amount,
-        currency: sub.currency,
+        currency: user.currency,
         billingCycle: sub.billingCycle,
         intervalDays: sub.intervalDays || null,
         category: sub.category,
@@ -162,12 +162,15 @@ export class SubscriptionsService {
       );
     }
 
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+
     return this.prisma.subscription.update({
       where: { id },
       data: {
         ...(updateDto.name && { name: updateDto.name }),
         ...(updateDto.amount !== undefined && { amount: updateDto.amount }),
-        ...(updateDto.currency && { currency: updateDto.currency }),
+        currency: user.currency,
         ...(updateDto.category && { category: updateDto.category }),
         ...(updateDto.isActive !== undefined && {
           isActive: updateDto.isActive,

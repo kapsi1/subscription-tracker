@@ -66,4 +66,8 @@ export class UpdateSettingsDto {
   @IsOptional()
   @IsBoolean()
   showPaidPayments?: boolean;
+
+  @IsOptional()
+  @IsString()
+  currency?: string;
 }

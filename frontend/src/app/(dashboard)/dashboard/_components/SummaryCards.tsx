@@ -10,6 +10,7 @@ interface SummaryCardsProps {
     totalMonthlyCost: number;
     totalYearlyCost: number;
     activeSubscriptions: number;
+    currency: string;
   };
   monthlyPaymentsCount: number;
 }
@@ -31,7 +32,7 @@ export function SummaryCards({ summary, monthlyPaymentsCount }: SummaryCardsProp
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalMonthlyCost)}</div>
+          <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalMonthlyCost, summary.currency)}</div>
         </CardContent>
       </Card>
 
@@ -47,7 +48,7 @@ export function SummaryCards({ summary, monthlyPaymentsCount }: SummaryCardsProp
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalYearlyCost, 'USD', 0)}</div>
+          <div className="text-4xl text-center font-semibold">{formatCurrency(summary.totalYearlyCost, summary.currency, 0)}</div>
         </CardContent>
       </Card>
 

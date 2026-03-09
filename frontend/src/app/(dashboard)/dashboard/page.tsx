@@ -215,9 +215,9 @@ export default function DashboardPage() {
 
       <MonthlyPayments monthlyPayments={monthlyPayments} />
 
-      <MonthlyForecast forecast={forecast} />
+      <MonthlyForecast forecast={forecast} currency={summary.currency} />
 
-      <CostByCategory categoryBreakdown={summary.categoryBreakdown} />
+      <CostByCategory categoryBreakdown={summary.categoryBreakdown} currency={summary.currency} />
     </div>
   );
 }

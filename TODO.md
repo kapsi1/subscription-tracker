@@ -298,12 +298,18 @@ For any new feature add unit and E2E tests
 - [x] Add buttons to switch the month to previous and next, and display the current month and year. Implement month switching. The whole dashboard should be showing data for the selected month, except 12-month forecast chart.
 - [x] Make the 12-month forecast chart full-width on large screen width. In forecast chart for each column, under month names, add a circle with a hover effect (like the color chooser in the top nav bar). Background should be transparent by default, and accent color on hover. Inside the circle there should be a number of payments done that month. Hovering over the circle shows a html tooltip with a list of payments for this month (date, name, cost)
 - [ ] Billing cycle -> custom does nothing
-- [ ] Only one currency should be allowed. In settings, add a currency selector. It should be a dropdown with a list of currencies. Each row should show currency code, name and flag. There should be an input field for currency code or name. Validate on backend. Selected currency should be used for all subscriptions. Remove the currency selector from subscription form.
+- [x] Only one currency should be allowed. In settings, add a currency selector. It should be a dropdown with a list of currencies. Each row should show currency code, name and flag. There should be an input field for currency code or name. Design UI and make it look in line with the rest of the app. Validate on backend. Selected currency should be used for all subscriptions. Remove the currency selector in the subscription form.
 - [ ] Support multiple currencies. Add a toggle in settings, that enables multiple currencies. When toggle is enabled, the currency selected in the currency selector should be the target currency for conversion. This currency will be what all other currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. The subscription add/edit form should have a currency selector (same as in settings). Use an external service to convert currencies. Show me a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
+
+To consider: what happens when we disable the toggle after adding some subscriptions with different currencies? 
+
 - [ ] If user is logged with a Google account, show their profile picture in corner, instead of initials
 - [ ] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
 - [ ] Review translations for spelling, grammar, consistency, capitalization and style.
 - [ ] Review code for security vulnerabilities and best practices.
 - [ ] Review code for performance issues and best practices.
 - [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types.
-- [ ] Bug: can't scroll the payments list in the 12-month forecast tooltip
+- [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
+- [ ] Check for and remove unused code and translations
+- [ ] Refactor settings page: split it into multiple components, by section
+- [ ] Add a language selector to the login/register pages

@@ -2,7 +2,6 @@ import {
   IsString,
   IsNumber,
   IsPositive,
-  IsISO4217CurrencyCode,
   IsEnum,
   IsInt,
   Min,
@@ -19,9 +18,6 @@ export class CreateSubscriptionDto {
   @IsNumber()
   @IsPositive()
   amount!: number;
-
-  @IsISO4217CurrencyCode()
-  currency!: string;
 
   @IsEnum(BillingCycle)
   billingCycle!: BillingCycle;

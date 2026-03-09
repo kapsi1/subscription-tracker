@@ -7,11 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Bell, Mail, Webhook, Save, PiggyBank, Smartphone, SendHorizonal, UserRound } from "lucide-react";
+import { Bell, Mail, Webhook, Save, PiggyBank, Smartphone, SendHorizonal, UserRound, Globe, Search, ChevronDown } from "lucide-react";
 import api from "@/lib/api";
 import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from "@/lib/push";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/components/auth-provider";
+import { CURRENCIES } from "@subscription-tracker/shared";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/components/ui/utils";
+import { Flag } from "@/components/flags";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
@@ -30,6 +34,7 @@ export default function SettingsPage() {
     weeklyReport: true,
     monthlyBudget: "",
     pushEnabled: false,
+    currency: "USD",
   });
   const [profile, setProfile] = useState({
     name: "",
@@ -38,6 +43,8 @@ export default function SettingsPage() {
     updatedAt: "",
   });
   const [testDelay, setTestDelay] = useState("0");
+  const [searchCurrency, setSearchCurrency] = useState("");
+  const [isCurrencyPopoverOpen, setIsCurrencyPopoverOpen] = useState(false);
   const [testEmailLanguage, setTestEmailLanguage] = useState<"en" | "pl">("en");
   const [testBudgetEmailLanguage, setTestBudgetEmailLanguage] = useState<"en" | "pl">("en");
   const [isSendingTest, setIsSendingTest] = useState(false);
@@ -69,6 +76,7 @@ export default function SettingsPage() {
             dailyDigest: response.data.dailyDigest,
             weeklyReport: response.data.weeklyReport,
             pushEnabled: false,
+            currency: response.data.currency || "USD",
           };
           setSettings((prev) => ({
             ...prev,
@@ -142,6 +150,7 @@ export default function SettingsPage() {
       webhookSecret: settings.webhookSecret,
       dailyDigest: settings.dailyDigest,
       weeklyReport: settings.weeklyReport,
+      currency: settings.currency,
     };
 
     const serializedPayload = JSON.stringify(payload);
@@ -325,7 +334,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="w-full max-w-4xl space-y-6">
+    <div className="w-full max-w-2xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-semibold">{t('settings.title')}</h1>
@@ -404,6 +413,99 @@ export default function SettingsPage() {
 
       {activeTab === "preferences" && (
       <>
+      {/* Localization Settings */}
+      <Card className="shadow-sm">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+              <Globe className="w-5 h-5 text-indigo-600" />
+            </div>
+            <div>
+              <CardTitle>{t('settings.localization.title')}</CardTitle>
+              <CardDescription>{t('settings.localization.desc')}</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="currency">{t('settings.localization.currency')}</Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              {t('settings.localization.currencyDesc')}
+            </p>
+            
+            <Popover open={isCurrencyPopoverOpen} onOpenChange={setIsCurrencyPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={isCurrencyPopoverOpen}
+                  className="w-full justify-between dark:bg-input/30"
+                >
+                  <span className="flex items-center gap-2">
+                    {settings.currency ? (
+                      <>
+                        <Flag countryCode={CURRENCIES.find((c) => c.code === settings.currency)?.countryCode || 'US'} />
+                        <span>{settings.currency}</span>
+                        <span className="text-muted-foreground font-normal">- {CURRENCIES.find((c) => c.code === settings.currency)?.name}</span>
+                      </>
+                    ) : (
+                      "Select currency..."
+                    )}
+                  </span>
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-(--radix-popover-trigger-width) p-0" align="start">
+                <div className="p-2 border-b">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      placeholder={t('settings.localization.searchCurrency')}
+                      value={searchCurrency}
+                      onChange={(e) => setSearchCurrency(e.target.value)}
+                      className="pl-8 h-9 text-sm focus-visible:ring-1"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+                <div className="max-h-[300px] overflow-y-auto p-1">
+                  {CURRENCIES.filter(c => 
+                    c.code.toLowerCase().includes(searchCurrency.toLowerCase()) || 
+                    c.name.toLowerCase().includes(searchCurrency.toLowerCase())
+                  ).map((c) => (
+                    <div
+                      key={c.code}
+                      role="option"
+                      aria-selected={settings.currency === c.code}
+                      className={cn(
+                        "flex items-center gap-2 p-2 rounded-sm hover:bg-accent cursor-pointer text-sm transition-colors",
+                        settings.currency === c.code && "bg-accent"
+                      )}
+                      onClick={() => {
+                        setSettings({ ...settings, currency: c.code });
+                        setIsCurrencyPopoverOpen(false);
+                        setSearchCurrency("");
+                      }}
+                    >
+                      <Flag countryCode={c.countryCode} />
+                      <span className="font-medium">{c.code}</span>
+                      <span className="text-muted-foreground text-xs truncate">- {c.name}</span>
+                    </div>
+                  ))}
+                  {CURRENCIES.filter(c => 
+                    c.code.toLowerCase().includes(searchCurrency.toLowerCase()) || 
+                    c.name.toLowerCase().includes(searchCurrency.toLowerCase())
+                  ).length === 0 && (
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      No currency found.
+                    </div>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Email Notifications */}
       <Card className="shadow-sm">

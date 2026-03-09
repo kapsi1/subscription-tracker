@@ -17,11 +17,14 @@ import {
   Bar,
 } from "recharts";
 
+import { formatCurrency } from "@/lib/utils";
+
 interface CostByCategoryProps {
   categoryBreakdown: Record<string, number>;
+  currency?: string;
 }
 
-export function CostByCategory({ categoryBreakdown }: CostByCategoryProps) {
+export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCategoryProps) {
   const { t } = useTranslation();
   const [selectedChart, setSelectedChart] = useState<"pie" | "bar">("pie");
 
@@ -71,7 +74,7 @@ export function CostByCategory({ categoryBreakdown }: CostByCategoryProps) {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={(entry) => `${t(`subscriptions.modal.categories.${entry.name}`)}: $${entry.value.toFixed(2)}`}
+                label={(entry) => `${t(`subscriptions.modal.categories.${entry.name}`)}: ${formatCurrency(entry.value, currency)}`}
                 outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
@@ -82,7 +85,7 @@ export function CostByCategory({ categoryBreakdown }: CostByCategoryProps) {
               </Pie>
               <Tooltip
                 formatter={(value: any, name?: string) => [
-                  `$${Number(value || 0).toFixed(2)}`,
+                  formatCurrency(Number(value || 0), currency),
                   t(`subscriptions.modal.categories.${name || ''}`, { defaultValue: name })
                 ]}
               />
@@ -95,7 +98,10 @@ export function CostByCategory({ categoryBreakdown }: CostByCategoryProps) {
                 stroke="#64748b"
                 tickFormatter={(value) => t(`subscriptions.modal.categories.${value}`, { defaultValue: value })}
               />
-              <YAxis stroke="#64748b" />
+              <YAxis 
+                stroke="#64748b"
+                tickFormatter={(value) => formatCurrency(value, currency, 0)}
+              />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "white",
@@ -103,7 +109,7 @@ export function CostByCategory({ categoryBreakdown }: CostByCategoryProps) {
                   borderRadius: "8px",
                 }}
                 labelFormatter={(label: any) => t(`subscriptions.modal.categories.${label}`, { defaultValue: label })}
-                formatter={(value: any) => [`$${Number(value || 0).toFixed(2)}`, t("subscriptions.modal.amount")]}
+                formatter={(value: any) => [formatCurrency(Number(value || 0), currency), t("subscriptions.modal.amount")]}
               />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                 {categoryData.map((entry, index) => (

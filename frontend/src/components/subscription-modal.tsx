@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "./auth-provider";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +20,6 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Switch } from "./ui/switch";
-import api from "@/lib/api";
 
 export interface Subscription {
   id: string;
@@ -57,7 +57,6 @@ const billingCycles = [
   { label: "Yearly", value: "yearly" },
   { label: "Custom", value: "custom" },
 ];
-const LAST_CURRENCY_KEY = "last_subscription_currency";
 
 export function SubscriptionModal({
   open,
@@ -66,10 +65,10 @@ export function SubscriptionModal({
   onSave,
 }: SubscriptionModalProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     amount: "",
-    currency: "USD", // Will be updated in useEffect
     billingCycle: "monthly",
     category: "Other",
     nextBillingDate: new Date().toISOString().split("T")[0],
@@ -81,25 +80,11 @@ export function SubscriptionModal({
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    const fetchDefaults = async () => {
-      try {
-        const response = await api.get("/users/me");
-        setFormData(prev => ({
-          ...prev,
-          reminderEnabled: response.data.defaultReminderEnabled,
-          reminderDays: response.data.defaultReminderDays.toString(),
-        }));
-      } catch (error) {
-        console.error("Failed to fetch user defaults", error);
-      }
-    };
-
     if (subscription && open) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: subscription.name,
         amount: subscription.amount.toString(),
-        currency: subscription.currency,
         billingCycle: subscription.billingCycle,
         category: subscription.category,
         nextBillingDate: subscription.nextBillingDate 
@@ -109,33 +94,25 @@ export function SubscriptionModal({
         reminderDays: (subscription.reminderDays ?? 3).toString(),
       });
     } else if (!subscription && open) {
-      const lastCurrency = localStorage.getItem(LAST_CURRENCY_KEY) || "USD";
       setFormData({
         name: "",
         amount: "",
-        currency: lastCurrency,
         billingCycle: "monthly",
         category: "Other",
         nextBillingDate: new Date().toISOString().split("T")[0],
-        reminderEnabled: true,
-        reminderDays: "3",
+        reminderEnabled: user?.defaultReminderEnabled ?? true,
+        reminderDays: (user?.defaultReminderDays ?? 3).toString(),
       });
       setIsSubmitted(false);
       setErrors({});
-      fetchDefaults();
     }
-  }, [subscription, open]);
+  }, [subscription, open, user]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.name.trim()) newErrors.name = "nameRequired";
     if (!formData.amount || isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
       newErrors.amount = "amountRequired";
-    }
-    if (!formData.currency.trim()) {
-      newErrors.currency = "currencyRequired";
-    } else if (formData.currency.length !== 3) {
-      newErrors.currency = "invalidCurrency";
     }
     if (!formData.nextBillingDate) {
       newErrors.nextBillingDate = "nextBillingDateRequired";
@@ -161,12 +138,10 @@ export function SubscriptionModal({
 
     setIsSaving(true);
     try {
-      localStorage.setItem(LAST_CURRENCY_KEY, formData.currency);
       await onSave({
         ...(subscription?.id ? { id: subscription.id } : {}),
         name: formData.name,
         amount: parseFloat(formData.amount),
-        currency: formData.currency,
         billingCycle: formData.billingCycle,
         category: formData.category,
         nextBillingDate: formData.nextBillingDate,
@@ -174,14 +149,7 @@ export function SubscriptionModal({
         reminderDays: parseInt(formData.reminderDays),
       });
     } catch (err: any) {
-      const backendMessage = err.response?.data?.message;
-      const isCurrencyError = Array.isArray(backendMessage) 
-        ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
-        : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
-
-      if (isCurrencyError) {
-        setErrors(prev => ({ ...prev, currency: "invalidCurrency" }));
-      }
+      // Backend handles currency
     } finally {
       setIsSaving(false);
     }
@@ -225,58 +193,30 @@ export function SubscriptionModal({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="amount">{t("subscriptions.modal.amount")}</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  value={formData.amount}
-                  onChange={(e) => {
-                    setFormData({ ...formData, amount: e.target.value });
-                    if (errors.amount) {
-                      const newErrors = { ...errors };
-                      delete newErrors.amount;
-                      setErrors(newErrors);
-                    }
-                  }}
-                  aria-invalid={isSubmitted && !!errors.amount}
-                />
-                {isSubmitted && errors.amount && (
-                  <p className="text-xs font-medium text-destructive">
-                    {t(`subscriptions.modal.errors.${errors.amount}`)}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="currency">{t("subscriptions.modal.currency")}</Label>
-                <Input
-                  id="currency"
-                  placeholder="USD"
-                  value={formData.currency}
-                  onChange={(e) => {
-                    const value = e.target.value.toUpperCase();
-                    setFormData({ ...formData, currency: value });
-                    if (errors.currency) {
-                      const newErrors = { ...errors };
-                      delete newErrors.currency;
-                      setErrors(newErrors);
-                    }
-                  }}
-                  aria-invalid={isSubmitted && !!errors.currency}
-                  maxLength={3}
-                  className="uppercase"
-                />
-                {isSubmitted && errors.currency && (
-                  <p className="text-xs font-medium text-destructive">
-                    {t(`subscriptions.modal.errors.${errors.currency}`)}
-                  </p>
-                )}
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="amount">{t("subscriptions.modal.amount")}</Label>
+              <Input
+                id="amount"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+                value={formData.amount}
+                onChange={(e) => {
+                  setFormData({ ...formData, amount: e.target.value });
+                  if (errors.amount) {
+                    const newErrors = { ...errors };
+                    delete newErrors.amount;
+                    setErrors(newErrors);
+                  }
+                }}
+                aria-invalid={isSubmitted && !!errors.amount}
+              />
+              {isSubmitted && errors.amount && (
+                <p className="text-xs font-medium text-destructive">
+                  {t(`subscriptions.modal.errors.${errors.amount}`)}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">

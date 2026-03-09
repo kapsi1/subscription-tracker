@@ -174,11 +174,17 @@ export class DashboardService {
       );
     }
 
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { currency: true },
+    });
+
     return {
       totalMonthlyCost,
       totalYearlyCost: Number(paidThisYear._sum.amount ?? 0) + upcomingThisYear,
       activeSubscriptions: subscriptions.length,
       categoryBreakdown,
+      currency: user?.currency || 'USD',
     };
   }
 
@@ -315,6 +321,12 @@ export class DashboardService {
       'Dec',
     ];
 
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { currency: true },
+    });
+    const userCurrency = user?.currency || 'USD';
+
     // Create bucket for each upcoming month
     for (let i = 0; i < months; i++) {
       const targetDate = new Date(now.getFullYear(), now.getMonth() + i, 1);
@@ -323,7 +335,7 @@ export class DashboardService {
         month: monthNames[targetDate.getMonth()],
         year: targetDate.getFullYear(),
         amount: 0,
-        currency: 'USD', // simplistic assumption for multi-currency
+        currency: userCurrency,
         payments: [] as any[],
       });
     }

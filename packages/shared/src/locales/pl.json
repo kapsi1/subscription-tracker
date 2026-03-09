@@ -131,7 +131,6 @@
       "serviceName": "Nazwa usługi",
       "servicePlaceholder": "np. Netflix, Spotify",
       "amount": "Kwota",
-      "currency": "Waluta",
       "billingCycle": "Cykl rozliczeniowy",
       "category": "Kategoria",
       "nextBillingDate": "Data następnej płatności",
@@ -159,8 +158,6 @@
       "errors": {
         "nameRequired": "Nazwa usługi jest wymagana",
         "amountRequired": "Kwota musi być większa od 0",
-        "currencyRequired": "Kod waluty jest wymagany",
-        "invalidCurrency": "Wprowadź prawidłowy 3-literowy kod waluty (ISO 4217)",
         "nextBillingDateRequired": "Data następnej płatności jest wymagana",
         "reminderDaysRequired": "Liczba dni przypomnienia musi wynosić od 0 do 30"
       }
@@ -241,6 +238,13 @@
         "daysDesc": "Nowe subskrypcje będą ustawione na przypomnienie tyle dni przed terminem płatności",
         "beforePayment": "dni przed płatnością"
       }
+    },
+    "localization": {
+      "title": "Lokalizacja",
+      "desc": "Ustawienia regionalne i wyświetlania",
+      "currency": "Domyślna Waluta",
+      "currencyDesc": "Ta waluta będzie używana dla wszystkich Twoich subskrypcji",
+      "searchCurrency": "Szukaj waluty..."
     },
     "budget": {
       "title": "Limity Budżetu",

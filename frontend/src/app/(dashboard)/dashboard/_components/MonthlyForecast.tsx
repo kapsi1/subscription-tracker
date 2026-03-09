@@ -14,11 +14,14 @@ import {
   Line,
 } from "recharts";
 
+import { formatCurrency } from "@/lib/utils";
+
 interface MonthlyForecastProps {
   forecast: any[];
+  currency?: string;
 }
 
-const CustomTooltip = ({ active, payload, label, t, i18n }: any) => {
+const CustomTooltip = ({ active, payload, label, t, i18n, currency = "USD" }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const monthlySpending = payload.find((p: any) => p.dataKey === 'amount')?.value;
@@ -34,57 +37,23 @@ const CustomTooltip = ({ active, payload, label, t, i18n }: any) => {
           </span>
         </div>
         
-        <div className="space-y-0.5 mb-2">
+        <div className="space-y-0.5">
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">{t("dashboard.monthly")}</span>
-            <span className="font-bold text-primary">${Number(monthlySpending || 0).toFixed(2)}</span>
+            <span className="font-bold text-primary">{formatCurrency(Number(monthlySpending || 0), currency)}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-muted-foreground">{t("dashboard.cumulative")}</span>
-            <span className="font-bold text-chart-bar">${Number(cumulativeSpending || 0).toFixed(2)}</span>
+            <span className="font-bold text-chart-bar">{formatCurrency(Number(cumulativeSpending || 0), currency)}</span>
           </div>
         </div>
-
-        {payments.length > 0 && (
-          <div className="mt-1 flex flex-col min-h-0">
-            <ul className="space-y-0.5 max-h-32 overflow-y-auto custom-scrollbar pr-1 border-t pt-1.5">
-              {[...payments]
-                .sort((a, b) => {
-                  const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
-                  if (dateDiff !== 0) return dateDiff;
-                  return a.amount - b.amount;
-                })
-                .map((p: any) => (
-                  <li 
-                    key={p.id} 
-                    className="flex justify-between items-center gap-2 px-1 py-0.5 rounded hover:bg-primary/10 transition-colors cursor-default group/item text-[11px]"
-                  >
-                    <div className="flex flex-col min-w-0">
-                      <span className="truncate font-semibold text-foreground leading-tight" title={p.name}>
-                        {p.name}
-                      </span>
-                      <span className="text-[9px] text-muted-foreground group-hover/item:text-foreground/70 transition-colors">
-                        {new Date(p.date).toLocaleDateString(i18n.language === "pl" ? "pl-PL" : "en-US", {
-                          day: "numeric",
-                          month: "short",
-                        })}
-                      </span>
-                    </div>
-                    <span className="shrink-0 font-bold text-primary whitespace-nowrap">
-                      ${Number(p.amount).toFixed(2)}
-                    </span>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
       </div>
     );
   }
   return null;
 };
 
-export function MonthlyForecast({ forecast }: MonthlyForecastProps) {
+export function MonthlyForecast({ forecast, currency = "USD" }: MonthlyForecastProps) {
   const { t, i18n } = useTranslation();
 
   return (
@@ -111,7 +80,7 @@ export function MonthlyForecast({ forecast }: MonthlyForecastProps) {
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `$${value}`}
+              tickFormatter={(value) => formatCurrency(value, currency, 0)}
             />
             <YAxis
               yAxisId="right"
@@ -120,10 +89,10 @@ export function MonthlyForecast({ forecast }: MonthlyForecastProps) {
               fontSize={10}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `$${value}`}
+              tickFormatter={(value) => formatCurrency(value, currency, 0)}
             />
             <Tooltip
-              content={<CustomTooltip t={t} i18n={i18n} />}
+              content={<CustomTooltip t={t} i18n={i18n} currency={currency} />}
               cursor={{ fill: 'var(--primary)', opacity: 0.05 }}
             />
             <Legend iconType="circle" />
