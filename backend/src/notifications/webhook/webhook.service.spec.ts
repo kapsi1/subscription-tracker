@@ -76,6 +76,9 @@ describe('WebhookService', () => {
   });
 
   it('should throw BadRequestException for local URLs (SSRF protection)', async () => {
+    const prevEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'production';
+
     await expect(
       service.sendAlert('http://localhost:3000/callback', undefined, 'Test', 1, 1, 'USD'),
     ).rejects.toThrow('Webhook URL points to an internal network');
@@ -87,6 +90,8 @@ describe('WebhookService', () => {
     await expect(
       service.sendAlert('http://192.168.1.1/callback', undefined, 'Test', 1, 1, 'USD'),
     ).rejects.toThrow('Webhook URL points to an internal network');
+
+    process.env.NODE_ENV = prevEnv;
   });
 
   it('should throw error if axios fails', async () => {

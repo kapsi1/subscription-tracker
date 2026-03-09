@@ -1,0 +1,4 @@
+.next/dev/types/app/(dashboard)/dashboard/page.ts(2,24): error TS2306: File 'C:/dev/subscription-tracker/frontend/src/app/(dashboard)/dashboard/page.tsx' is not a module.
+.next/dev/types/app/(dashboard)/dashboard/page.ts(7,29): error TS2306: File 'C:/dev/subscription-tracker/frontend/src/app/(dashboard)/dashboard/page.tsx' is not a module.
+.next/dev/types/validator.ts(42,39): error TS2306: File 'C:/dev/subscription-tracker/frontend/src/app/(dashboard)/dashboard/page.tsx' is not a module.
+.next/types/validator.ts(42,39): error TS2306: File 'C:/dev/subscription-tracker/frontend/src/app/(dashboard)/dashboard/page.tsx' is not a module.

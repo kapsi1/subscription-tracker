@@ -7,7 +7,7 @@ describe('SubscriptionsController', () => {
   let controller: SubscriptionsController;
   let serviceMock: Record<string, jest.Mock>;
 
-  const mockReq = { user: { userId: 'user-1' } };
+  const mockReq = { user: { userId: 'user-1' } } as any;
 
   const mockSubscription = {
     id: 'sub-1',

@@ -1,12 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { WebhookService } from '../notifications/webhook/webhook.service';
 
 describe('UsersService', () => {
   let service: UsersService;
   let prismaMock: {
     user: Record<string, jest.Mock>;
     pushSubscription: Record<string, jest.Mock>;
+  };
+
+  const mockWebhookService = {
+    // mock methods if necessary
   };
 
   const mockUser = {
@@ -34,6 +39,7 @@ describe('UsersService', () => {
       providers: [
         UsersService,
         { provide: PrismaService, useValue: prismaMock },
+        { provide: WebhookService, useValue: mockWebhookService },
       ],
     }).compile();
 

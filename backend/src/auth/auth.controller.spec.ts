@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { ConfigService } from '@nestjs/config';
 
 describe('AuthController', () => {
   let controller: AuthController;
   let authServiceMock: Record<string, jest.Mock>;
+  let configServiceMock: Record<string, jest.Mock>;
 
   const mockTokens = {
     accessToken: 'access-token',
@@ -17,17 +19,23 @@ describe('AuthController', () => {
       login: jest.fn().mockResolvedValue(mockTokens),
       refreshTokens: jest.fn().mockResolvedValue(mockTokens),
     };
+    configServiceMock = {
+      getOrThrow: jest.fn().mockReturnValue('http://localhost:3000'),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [{ provide: AuthService, useValue: authServiceMock }],
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: ConfigService, useValue: configServiceMock },
+      ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
   });
 
   it('should register a user', async () => {
-    const dto = { email: 'a@b.com', password: 'password123' };
+    const dto = { name: 'Test User', email: 'a@b.com', password: 'password123' };
     const result = await controller.register(dto);
 
     expect(authServiceMock.register).toHaveBeenCalledWith(dto);

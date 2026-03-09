@@ -23,6 +23,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "greeting": "Hello, {{name}}!",
     "subtitle": "Track and manage your subscription costs",
     "manageSubscriptions": "Manage Subscriptions",
     "totalMonthlyCost": "Total Monthly Cost",
@@ -149,6 +150,12 @@
   },
   "settings": {
     "title": "Settings",
+    "profile": {
+      "title": "Account Profile",
+      "desc": "Update your personal information",
+      "name": "Full Name",
+      "namePlaceholder": "Enter your full name"
+    },
     "notifications": {
       "email": {
         "title": "Email Notifications",
@@ -222,6 +229,7 @@
     "subscriptionAlert": "Subscription Alert",
     "upcomingRenewal": "Upcoming Subscription Renewal",
     "greeting": "Hello.",
+    "greetingWithName": "Hello, {{name}}.",
     "reminder": "This is a friendly reminder regarding your <strong>{{name}}</strong> subscription.",
     "amount": "Amount",
     "renewingIn": "Renewing In",

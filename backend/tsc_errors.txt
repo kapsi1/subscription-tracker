@@ -1,0 +1,6 @@
+src/auth/auth.controller.spec.ts(31,46): error TS2345: Argument of type '{ email: string; password: string; }' is not assignable to parameter of type 'RegisterDto'.
+  Property 'name' is missing in type '{ email: string; password: string; }' but required in type 'RegisterDto'.
+src/auth/auth.service.spec.ts(71,45): error TS2345: Argument of type '{ email: string; password: string; }' is not assignable to parameter of type 'RegisterDto'.
+  Property 'name' is missing in type '{ email: string; password: string; }' but required in type 'RegisterDto'.
+src/auth/auth.service.spec.ts(90,26): error TS2345: Argument of type '{ email: string; password: string; }' is not assignable to parameter of type 'RegisterDto'.
+  Property 'name' is missing in type '{ email: string; password: string; }' but required in type 'RegisterDto'.

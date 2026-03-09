@@ -10,6 +10,15 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 
+interface GoogleProfile {
+  googleId: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  picture?: string;
+  accessToken: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -18,8 +27,9 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async validateGoogleUser(googleProfile: any) {
-    const { googleId, email } = googleProfile;
+  async validateGoogleUser(googleProfile: GoogleProfile) {
+    const { googleId, email, firstName, lastName } = googleProfile;
+    const name = [firstName, lastName].filter(Boolean).join(' ');
 
     let user = await this.usersService.findByGoogleId(googleId);
 
@@ -31,12 +41,14 @@ export class AuthService {
         // User exists by email - link Google account
         user = await this.usersService.update(user.id, {
           googleId: googleId,
+          name: user.name || name,
         });
       } else {
         // New user entirely
         user = await this.usersService.create({
           email: email,
           googleId: googleId,
+          name: name,
         });
       }
     }
@@ -56,6 +68,7 @@ export class AuthService {
 
     const user = await this.usersService.create({
       email: registerDto.email,
+      name: registerDto.name,
       passwordHash,
     });
 

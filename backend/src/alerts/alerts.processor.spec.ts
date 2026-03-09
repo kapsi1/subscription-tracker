@@ -18,7 +18,10 @@ describe('AlertsProcessor', () => {
     emailMock = { sendAlert: jest.fn() };
     webhookMock = { sendAlert: jest.fn() };
     webPushMock = { sendNotification: jest.fn() };
-    prismaMock = { pushSubscription: { findMany: jest.fn(), delete: jest.fn() } };
+    prismaMock = { 
+      pushSubscription: { findMany: jest.fn(), delete: jest.fn() },
+      user: { findUnique: jest.fn().mockResolvedValue({ language: 'en', accentColor: 'Indigo', theme: 'system' }) },
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -56,6 +59,9 @@ describe('AlertsProcessor', () => {
       3,
       15,
       'USD',
+      'en',
+      'Indigo',
+      'system',
     );
     expect(webhookMock.sendAlert).not.toHaveBeenCalled();
   });

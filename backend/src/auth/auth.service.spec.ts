@@ -69,6 +69,7 @@ describe('AuthService', () => {
         .mockReturnValueOnce(mockTokens.refreshToken);
 
       const result = await service.register({
+        name: 'Test User',
         email: 'test@example.com',
         password: 'password123',
       });
@@ -78,6 +79,7 @@ describe('AuthService', () => {
       );
       expect(usersServiceMock.create).toHaveBeenCalledWith({
         email: 'test@example.com',
+        name: 'Test User',
         passwordHash: 'hashed-pw',
       });
       expect(result).toEqual(mockTokens);
@@ -88,6 +90,7 @@ describe('AuthService', () => {
 
       await expect(
         service.register({
+          name: 'Test User',
           email: 'test@example.com',
           password: 'password123',
         }),

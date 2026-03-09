@@ -23,6 +23,7 @@
   },
   "dashboard": {
     "title": "Panel główny",
+    "greeting": "Cześć, {{name}}!",
     "subtitle": "Śledź i zarządzaj kosztami subskrypcji",
     "manageSubscriptions": "Zarządzaj subskrypcjami",
     "totalMonthlyCost": "Miesięczny koszt całkowity",
@@ -150,6 +151,12 @@
   },
   "settings": {
     "title": "Ustawienia",
+    "profile": {
+      "title": "Profil Konta",
+      "desc": "Zaktualizuj swoje dane osobowe",
+      "name": "Imię i Nazwisko",
+      "namePlaceholder": "Wprowadź swoje imię i nazwisko"
+    },
     "notifications": {
       "email": {
         "title": "Powiadomienia E-mail",
@@ -223,6 +230,7 @@
     "subscriptionAlert": "Alert subskrypcji",
     "upcomingRenewal": "Nadchodzące odnowienie subskrypcji",
     "greeting": "Cześć.",
+    "greetingWithName": "Cześć, {{name}}.",
     "reminder": "To przypomnienie o Twojej subskrypcji <strong>{{name}}</strong>.",
     "amount": "Kwota",
     "renewingIn": "Odnowienie za",

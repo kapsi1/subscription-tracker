@@ -39,6 +39,7 @@ describe('SubscriptionsService', () => {
       },
       subscription: {
         create: jest.fn().mockResolvedValue(mockSubscription),
+        createMany: jest.fn().mockResolvedValue({ count: 1 }),
         findMany: jest.fn().mockResolvedValue([mockSubscription]),
         findFirst: jest.fn().mockResolvedValue(mockSubscription),
         update: jest.fn().mockResolvedValue(mockSubscription),
@@ -189,7 +190,7 @@ describe('SubscriptionsService', () => {
       expect((prismaMock as any).user.findUnique).toHaveBeenCalledWith({
         where: { id: userId },
       });
-      expect(prismaMock.subscription.create).toHaveBeenCalled();
+      expect(prismaMock.subscription.createMany).toHaveBeenCalled();
       expect(result.count).toBe(1);
       expect(result.message).toContain('1 subscriptions');
     });
