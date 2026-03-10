@@ -3,9 +3,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { AlertType, type Prisma, type Subscription } from '@prisma/client';
 import type { Queue } from 'bullmq';
-import type { DashboardService } from '../dashboard/dashboard.service';
-import type { PaymentsService } from '../payments/payments.service';
-import type { PrismaService } from '../prisma/prisma.service';
+import { DashboardService } from '../dashboard/dashboard.service';;
+import { PaymentsService } from '../payments/payments.service';;
+import { PrismaService } from '../prisma/prisma.service';;
 import type { AlertJobData } from './alerts.types';
 
 type AlertWithSub = Prisma.AlertGetPayload<{

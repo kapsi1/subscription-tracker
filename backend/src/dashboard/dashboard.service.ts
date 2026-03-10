@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BillingCycle, type Subscription } from '@prisma/client';
-import type { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';;
 
 export interface ForecastPayment {
   id: string;

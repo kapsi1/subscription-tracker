@@ -9,12 +9,12 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import type { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';;
 import { AuthGuard } from '@nestjs/passport';
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
-import type { AuthService } from './auth.service';
+import { AuthService } from './auth.service';;
 import type { LoginDto } from './dto/login.dto';
 import type { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';

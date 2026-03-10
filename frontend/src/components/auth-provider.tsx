@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import api from '@/lib/api';
 
-export interface User {
+interface User {
   id: string;
   email: string;
   name: string | null;
@@ -28,12 +28,12 @@ export interface User {
   avatarUrl: string | null;
 }
 
-export interface LoginCredentials {
+interface LoginCredentials {
   email: string;
   password?: string;
 }
 
-export interface RegisterCredentials {
+interface RegisterCredentials {
   email: string;
   name: string;
   password?: string;

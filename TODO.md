@@ -314,7 +314,7 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Find and fix compiler & linter errors and warnings.
 - [ ] Find functionalities with missing or incomplete tests and add them
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
-- [ ] Check for and remove unused code and translations
+- [x] Check for and remove unused code and translations
 - [x] Refactor settings page: split it into multiple components, by section
 - [x] Add a language selector to the login/register pages
 - [ ] Add more translations for major languages

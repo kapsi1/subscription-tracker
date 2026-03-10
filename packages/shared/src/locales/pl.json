@@ -2,13 +2,11 @@
   "auth": {
     "title": "Monitor kosztów subskrypcji",
     "login": {
-      "title": "Logowanie",
       "subtitle": "Zaloguj się, aby zarządzać swoimi subskrypcjami",
       "submit": "Zaloguj się",
       "switch": "Przełącz na rejestrację"
     },
     "register": {
-      "title": "Utwórz konto",
       "subtitle": "Utwórz konto, aby rozpocząć",
       "submit": "Utwórz konto",
       "switch": "Przełącz na logowanie"
@@ -35,12 +33,6 @@
   "common": {
     "loading": "Ładowanie...",
     "error": "Wystąpił błąd",
-    "save": "Zapisz",
-    "cancel": "Anuluj",
-    "delete": "Usuń",
-    "edit": "Edytuj",
-    "add": "Dodaj",
-    "close": "Zamknij",
     "previous": "Poprzedni",
     "next": "Następny",
     "connectionError": "Błąd połączenia",
@@ -53,8 +45,7 @@
     "dashboard": "Panel główny",
     "subscriptions": "Subskrypcje",
     "settings": "Ustawienia",
-    "logout": "Wyloguj się",
-    "profile": "Mój profil"
+    "logout": "Wyloguj się"
   },
   "dashboard": {
     "title": "Panel główny",
@@ -63,12 +54,8 @@
     "manageSubscriptions": "Zarządzaj subskrypcjami",
     "totalMonthlyCost": "Miesięczny koszt całkowity",
     "totalYearlyCost": "Roczny koszt całkowity",
-    "upcomingPayments": "Nadchodzące płatności",
     "activeSubscriptions": "Aktywne subskrypcje",
-    "currentlyTracked": "Obecnie śledzone",
     "thisMonth": "W tym miesiącu",
-    "projectedAnnual": "Przewidywane koszty roczne",
-    "next30Days": "W ciągu najbliższych 30 dni",
     "forecast": "Prognoza 12-miesięczna",
     "forecastDesc": "Prognozowane wydatki miesięczne",
     "cumulativeSpending": "Skumulowane wydatki",
@@ -79,9 +66,6 @@
     "categoryBreakdownDesc": "Podział miesięczny",
     "pie": "Kołowy",
     "bar": "Słupkowy",
-    "upcomingPaymentsTitle": "Nadchodzące płatności",
-    "upcomingPaymentsDesc": "Daty następnych rozliczeń",
-    "noUpcomingPayments": "Brak nadchodzących płatności w ciągu najbliższych 30 dni.",
     "monthlyPayments": "Płatności w tym miesiącu",
     "monthlyPaymentsTitle": "Płatności w tym miesiącu",
     "monthlyPaymentsDesc": "Opłacone i zaplanowane płatności na bieżący miesiąc",
@@ -106,38 +90,20 @@
   },
   "colors": {
     "Indigo": "Indygowy",
-    "Crimson": "Karmazynowy",
-    "Rose": "Różany",
-    "Lavender": "Lawendowy",
-    "Cobalt": "Kobaltowy",
-    "Navy": "Granatowy",
-    "Mint": "Miętowy",
-    "Forest": "Leśny",
-    "Sage": "Szałwiowy",
-    "Amber": "Bursztynowy",
-    "Gold": "Złoty",
-    "Terracotta": "Terakota",
-    "Coffee": "Kawowy",
-    "Sand": "Piaskowy",
-    "Slate": "Łupkowy",
-    "Charcoal": "Węglowy"
+    "Crimson": "Karmazynowy"
   },
   "subscriptions": {
     "title": "Subskrypcje",
     "subtitle": "Zarządzaj swoimi subskrypcjami",
-    "paymentCount_one": "{{count}} płatność",
     "paymentCount_few": "{{count}} płatności",
     "paymentCount_many": "{{count}} płatności",
-    "paymentCount_other": "{{count}} płatności",
     "import": "Importuj",
     "export": "Eksportuj",
     "add": "Dodaj subskrypcję",
     "search": "Szukaj subskrypcji po nazwie lub kategorii...",
     "all": "Wszystkie subskrypcje",
-    "foundCount_one": "Znaleziono {{count}} subskrypcję",
     "foundCount_few": "Znaleziono {{count}} subskrypcje",
     "foundCount_many": "Znaleziono {{count}} subskrypcji",
-    "foundCount_other": "Znaleziono {{count}} subskrypcji",
     "noFound": "Nie znaleziono subskrypcji",
     "noFoundDesc": "Spróbuj zmienić parametry wyszukiwania",
     "getStarted": "Zacznij od dodania swojej pierwszej subskrypcji",
@@ -146,8 +112,7 @@
       "amount": "Kwota",
       "cycle": "Cykl rozliczeniowy",
       "next": "Następna płatność",
-      "category": "Kategoria",
-      "actions": "Akcje"
+      "category": "Kategoria"
     },
     "deleteConfirm": "Czy na pewno chcesz usunąć tę subskrypcję?",
     "deleteSuccess": "Subskrypcja została pomyślnie usunięta",
@@ -188,17 +153,6 @@
         "Services": "Usługi",
         "Education": "Edukacja",
         "Other": "Inne"
-      },
-      "billingCycles": {
-        "monthly": "Miesięcznie",
-        "yearly": "Rocznie",
-        "custom": "Niestandardowe"
-      },
-      "errors": {
-        "nameRequired": "Nazwa usługi jest wymagana",
-        "amountRequired": "Kwota musi być większa od 0",
-        "nextBillingDateRequired": "Data następnej płatności jest wymagana",
-        "reminderDaysRequired": "Liczba dni przypomnienia musi wynosić od 0 do 30"
       }
     }
   },
@@ -216,7 +170,6 @@
       "memberSince": "Członek od",
       "lastUpdated": "Ostatnia aktualizacja",
       "save": "Zapisz profil",
-      "saveSuccess": "Profil został zaktualizowany",
       "saveError": "Nie udało się zapisać profilu"
     },
     "notifications": {
@@ -292,8 +245,6 @@
       "help": "Pozostaw puste, jeśli nie chcesz alertów budżetowych"
     },
     "save": "Zapisz ustawienia",
-    "savePreferences": "Zapisz preferencje",
-    "saveSuccess": "Ustawienia zapisane pomyślnie",
     "loadError": "Nie udało się załadować ustawień"
   },
   "emails": {

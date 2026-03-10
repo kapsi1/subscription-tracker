@@ -4,7 +4,7 @@ import type { RequestWithUser } from '../common/interfaces/request.interface';
 import type { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import type { ImportSubscriptionsDto } from './dto/import-subscription.dto';
 import type { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import type { SubscriptionsService } from './subscriptions.service';
+import { SubscriptionsService } from './subscriptions.service';;
 
 @UseGuards(JwtAuthGuard)
 @Controller('subscriptions')

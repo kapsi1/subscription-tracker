@@ -16,12 +16,12 @@ import {
 import { Throttle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
-import type { EmailService } from '../notifications/email/email.service';
-import type { WebPushService } from '../notifications/webpush/webpush.service';
-import type { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../notifications/email/email.service';;
+import { WebPushService } from '../notifications/webpush/webpush.service';;
+import { PrismaService } from '../prisma/prisma.service';;
 import type { PushSubscriptionDto } from './dto/push-subscription.dto';
 import type { UpdateSettingsDto } from './dto/update-settings.dto';
-import type { UsersService } from './users.service';
+import { UsersService } from './users.service';;
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)

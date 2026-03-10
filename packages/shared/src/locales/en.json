@@ -2,13 +2,11 @@
   "auth": {
     "title": "Subscription Cost Tracker",
     "login": {
-      "title": "Sign In",
       "subtitle": "Sign in to manage your subscriptions",
       "submit": "Sign In",
       "switch": "Switch to Register"
     },
     "register": {
-      "title": "Create Account",
       "subtitle": "Create an account to get started",
       "submit": "Create Account",
       "switch": "Switch to Login"
@@ -40,12 +38,6 @@
     "backendTimeout": "The backend did not respond within 15 seconds. Please try again.",
     "tryAgain": "Try Again",
     "redirectingToLogin": "Redirecting to login...",
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "add": "Add",
-    "close": "Close",
     "previous": "Previous",
     "next": "Next"
   },
@@ -53,8 +45,7 @@
     "dashboard": "Dashboard",
     "subscriptions": "Subscriptions",
     "settings": "Settings",
-    "logout": "Log Out",
-    "profile": "My Profile"
+    "logout": "Log Out"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -63,13 +54,9 @@
     "manageSubscriptions": "Manage Subscriptions",
     "totalMonthlyCost": "Total Monthly Cost",
     "totalYearlyCost": "Total Yearly Cost",
-    "upcomingPayments": "Upcoming Payments",
     "monthlyPayments": "This Month's Payments",
     "activeSubscriptions": "Active Subscriptions",
-    "currentlyTracked": "Currently tracked",
     "thisMonth": "This month",
-    "projectedAnnual": "Projected annual spend",
-    "next30Days": "Next 30 days",
     "forecast": "12-Month Forecast",
     "forecastDesc": "Projected monthly spending",
     "cumulativeSpending": "Cumulative Spending",
@@ -80,9 +67,6 @@
     "categoryBreakdownDesc": "Monthly breakdown",
     "pie": "Pie",
     "bar": "Bar",
-    "upcomingPaymentsTitle": "Upcoming Payments",
-    "upcomingPaymentsDesc": "Your next billing dates",
-    "noUpcomingPayments": "No upcoming payments in the next 30 days.",
     "monthlyPaymentsTitle": "This Month's Payments",
     "monthlyPaymentsDesc": "Completed and scheduled payments for the current month",
     "noMonthlyPayments": "No payments for this month yet.",
@@ -106,34 +90,16 @@
   },
   "colors": {
     "Indigo": "Indigo",
-    "Crimson": "Crimson",
-    "Rose": "Rose",
-    "Lavender": "Lavender",
-    "Cobalt": "Cobalt",
-    "Navy": "Navy",
-    "Mint": "Mint",
-    "Forest": "Forest",
-    "Sage": "Sage",
-    "Amber": "Amber",
-    "Gold": "Gold",
-    "Terracotta": "Terracotta",
-    "Coffee": "Coffee",
-    "Sand": "Sand",
-    "Slate": "Slate",
-    "Charcoal": "Charcoal"
+    "Crimson": "Crimson"
   },
   "subscriptions": {
     "title": "Subscriptions",
     "subtitle": "Manage all your recurring subscriptions",
-    "paymentCount_one": "{{count}} payment",
-    "paymentCount_other": "{{count}} payments",
     "import": "Import",
     "export": "Export",
     "add": "Add Subscription",
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
-    "foundCount_one": "{{count}} subscription found",
-    "foundCount_other": "{{count}} subscriptions found",
     "noFound": "No subscriptions found",
     "noFoundDesc": "Try adjusting your search query",
     "getStarted": "Get started by adding your first subscription",
@@ -142,8 +108,7 @@
       "amount": "Amount",
       "cycle": "Billing Cycle",
       "next": "Next Billing",
-      "category": "Category",
-      "actions": "Actions"
+      "category": "Category"
     },
     "deleteConfirm": "Are you sure you want to delete this subscription?",
     "deleteSuccess": "Subscription deleted successfully",
@@ -184,17 +149,6 @@
         "Services": "Services",
         "Education": "Education",
         "Other": "Other"
-      },
-      "billingCycles": {
-        "monthly": "Monthly",
-        "yearly": "Yearly",
-        "custom": "Custom"
-      },
-      "errors": {
-        "nameRequired": "Service name is required",
-        "amountRequired": "Amount must be greater than 0",
-        "nextBillingDateRequired": "Next billing date is required",
-        "reminderDaysRequired": "Reminder days must be between 0 and 30"
       }
     }
   },
@@ -212,7 +166,6 @@
       "memberSince": "Member since",
       "lastUpdated": "Last updated",
       "save": "Save Profile",
-      "saveSuccess": "Profile updated successfully",
       "saveError": "Failed to save profile"
     },
     "notifications": {
@@ -288,8 +241,6 @@
       "help": "Leave blank if you don't want budget alerts"
     },
     "save": "Save Settings",
-    "savePreferences": "Save Preferences",
-    "saveSuccess": "Settings saved successfully",
     "loadError": "Failed to load settings"
   },
   "emails": {

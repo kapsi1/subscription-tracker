@@ -1,4 +1,4 @@
-import { TerminusModule } from '@nestjs/terminus';
+import { HealthCheckService } from '@nestjs/terminus';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { HealthController } from './health.controller';
 import { PrismaHealthIndicator } from './indicators/prisma.health';
@@ -11,9 +11,20 @@ describe('HealthController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TerminusModule],
       controllers: [HealthController],
       providers: [
+        {
+          provide: HealthCheckService,
+          useValue: {
+            check: jest.fn().mockImplementation(async (indicators) => {
+              const results = [];
+              for (const ind of indicators) {
+                results.push(await ind());
+              }
+              return { status: 'ok', info: Object.assign({}, ...results) };
+            }),
+          },
+        },
         {
           provide: PrismaHealthIndicator,
           useValue: {
