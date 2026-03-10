@@ -1,11 +1,10 @@
-﻿import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
+﻿import { Injectable, Logger } from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
+import { COLORS, type ColorsConfig, LOCALES } from "@subscription-tracker/shared";
+import * as nodemailer from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
-import { COLORS, LOCALES, ColorsConfig } from '@subscription-tracker/shared';
-
-type AppTheme = 'light' | 'dark' | 'system';
+type AppTheme = "light" | "dark" | "system";
 
 interface EmailColors {
   appBg: string;
@@ -21,18 +20,17 @@ interface EmailColors {
 const DEFAULT_ACCENT = COLORS.Indigo;
 const ACCENT_DEFINITIONS: ColorsConfig = COLORS;
 
-
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private transporter: nodemailer.Transporter;
 
   constructor(private readonly configService: ConfigService) {
-    const host = this.configService.get<string>('SMTP_HOST', 'localhost');
-    const port = this.getNumberEnv('SMTP_PORT', 1025);
-    const secure = this.getBooleanEnv('SMTP_SECURE', port === 465);
-    const user = this.configService.get<string>('SMTP_USER')?.trim();
-    const pass = this.configService.get<string>('SMTP_PASS');
+    const host = this.configService.get<string>("SMTP_HOST", "localhost");
+    const port = this.getNumberEnv("SMTP_PORT", 1025);
+    const secure = this.getBooleanEnv("SMTP_SECURE", port === 465);
+    const user = this.configService.get<string>("SMTP_USER")?.trim();
+    const pass = this.configService.get<string>("SMTP_PASS");
 
     const transportOptions: SMTPTransport.Options = { host, port, secure };
 
@@ -42,9 +40,7 @@ export class EmailService {
 
     this.transporter = nodemailer.createTransport(transportOptions);
 
-    this.logger.log(
-      `[SMTP] Transport configured (host=${host}, port=${port}, secure=${secure})`,
-    );
+    this.logger.log(`[SMTP] Transport configured (host=${host}, port=${port}, secure=${secure})`);
   }
 
   private getNumberEnv(key: string, fallback: number): number {
@@ -57,21 +53,25 @@ export class EmailService {
   private getBooleanEnv(key: string, fallback: boolean): boolean {
     const raw = this.configService.get<string>(key);
     if (!raw) return fallback;
-    return raw.trim().toLowerCase() === 'true';
+    return raw.trim().toLowerCase() === "true";
   }
 
   private resolveTheme(theme?: string): AppTheme {
-    if (theme === 'light' || theme === 'dark' || theme === 'system') {
+    if (theme === "light" || theme === "dark" || theme === "system") {
       return theme;
     }
-    return 'system';
+    return "system";
   }
 
   private hexToRgb(hex: string): { r: number; g: number; b: number } {
-    const sanitized = hex.replace('#', '').trim();
-    const fullHex = sanitized.length === 3
-      ? sanitized.split('').map((c) => c + c).join('')
-      : sanitized;
+    const sanitized = hex.replace("#", "").trim();
+    const fullHex =
+      sanitized.length === 3
+        ? sanitized
+            .split("")
+            .map((c) => c + c)
+            .join("")
+        : sanitized;
     const r = Number.parseInt(fullHex.slice(0, 2), 16);
     const g = Number.parseInt(fullHex.slice(2, 4), 16);
     const b = Number.parseInt(fullHex.slice(4, 6), 16);
@@ -83,7 +83,7 @@ export class EmailService {
     const b = this.hexToRgb(hexB);
     const ratioA = 1 - ratioB;
     const mix = (x: number, y: number) => Math.round(x * ratioA + y * ratioB);
-    const toHex = (v: number) => v.toString(16).padStart(2, '0');
+    const toHex = (v: number) => v.toString(16).padStart(2, "0");
     return `#${toHex(mix(a.r, b.r))}${toHex(mix(a.g, b.g))}${toHex(mix(a.b, b.b))}`;
   }
 
@@ -92,37 +92,40 @@ export class EmailService {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
-  private getEmailColors(accentColor: string | undefined, mode: 'light' | 'dark'): EmailColors {
-    const accent = ACCENT_DEFINITIONS[accentColor ?? ''] ?? DEFAULT_ACCENT;
+  private getEmailColors(accentColor: string | undefined, mode: "light" | "dark"): EmailColors {
+    const accent = ACCENT_DEFINITIONS[accentColor ?? ""] ?? DEFAULT_ACCENT;
 
-    if (mode === 'dark') {
+    if (mode === "dark") {
       return {
         appBg: accent.darkBg,
-        cardBg: this.mixHex(accent.darkBg, '#ffffff', 0.04),
+        cardBg: this.mixHex(accent.darkBg, "#ffffff", 0.04),
         border: this.toRgba(accent.darkPrimary, 0.3),
         primary: accent.darkPrimary,
         accentBg: accent.darkAccent,
-        text: '#f8fafc',
-        muted: '#94a3b8',
-        danger: '#ef4444',
+        text: "#f8fafc",
+        muted: "#94a3b8",
+        danger: "#ef4444",
       };
     }
 
     return {
       appBg: accent.lightBg,
-      cardBg: this.mixHex('#ffffff', accent.lightPrimary, 0.02),
+      cardBg: this.mixHex("#ffffff", accent.lightPrimary, 0.02),
       border: this.toRgba(accent.lightPrimary, 0.2),
       primary: accent.lightPrimary,
       accentBg: accent.lightAccent,
-      text: '#0f172a',
-      muted: '#64748b',
-      danger: '#dc2626',
+      text: "#0f172a",
+      muted: "#64748b",
+      danger: "#dc2626",
     };
   }
 
-  private buildThemeCss(accentColor: string | undefined, theme: AppTheme): { css: string; colorScheme: string } {
-    const light = this.getEmailColors(accentColor, 'light');
-    const dark = this.getEmailColors(accentColor, 'dark');
+  private buildThemeCss(
+    accentColor: string | undefined,
+    theme: AppTheme,
+  ): { css: string; colorScheme: string } {
+    const light = this.getEmailColors(accentColor, "light");
+    const dark = this.getEmailColors(accentColor, "dark");
 
     const lightCss = `
       html, .email-root { background: ${light.appBg}; color: ${light.text}; }
@@ -146,12 +149,12 @@ export class EmailService {
       .email-danger-topbar-bg { background: ${dark.danger}; }
     `;
 
-    if (theme === 'dark') {
-      return { css: darkCss, colorScheme: 'dark' };
+    if (theme === "dark") {
+      return { css: darkCss, colorScheme: "dark" };
     }
 
-    if (theme === 'light') {
-      return { css: lightCss, colorScheme: 'light' };
+    if (theme === "light") {
+      return { css: lightCss, colorScheme: "light" };
     }
 
     return {
@@ -161,11 +164,15 @@ export class EmailService {
           ${darkCss}
         }
       `,
-      colorScheme: 'light dark',
+      colorScheme: "light dark",
     };
   }
 
-  private buildEmailDocument(bodyHtml: string, accentColor: string | undefined, theme: AppTheme): string {
+  private buildEmailDocument(
+    bodyHtml: string,
+    accentColor: string | undefined,
+    theme: AppTheme,
+  ): string {
     const { css, colorScheme } = this.buildThemeCss(accentColor, theme);
 
     return `
@@ -260,11 +267,11 @@ export class EmailService {
 
   private escapeHtml(value: string): string {
     return value
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   async sendAlert(
@@ -273,7 +280,7 @@ export class EmailService {
     daysBefore: number,
     amount: number,
     currency: string,
-    language: 'en' | 'pl' = 'en',
+    language: "en" | "pl" = "en",
     accentColor?: string,
     theme?: string,
   ) {
@@ -282,16 +289,16 @@ export class EmailService {
     const safeSubscriptionName = this.escapeHtml(subscriptionName);
     const subject = `${locale.emails.upcomingRenewal}: ${subscriptionName}`;
 
-    const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const appUrl = this.configService.get<string>("FRONTEND_URL", "http://localhost:3000");
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`
+      "Subscription Tracker",
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
     );
 
-    const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+    const logInText = language === "pl" ? "zaloguj się do panelu" : "log in to your dashboard";
     const managePromptHtml = locale.emails.managePrompt.replace(
       logInText,
-      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`
+      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
     );
 
     const bodyHtml = `
@@ -302,7 +309,7 @@ export class EmailService {
               <div class="email-content">
                 <h2 class="email-title">${locale.emails.subscriptionAlert}</h2>
                 <p class="email-greeting">${locale.emails.greeting}</p>
-                <p class="email-text">${locale.emails.reminder.replace('{{name}}', safeSubscriptionName)}</p>
+                <p class="email-text">${locale.emails.reminder.replace("{{name}}", safeSubscriptionName)}</p>
                 <div class="email-highlight">
                   <p class="email-metric"><strong>${locale.emails.amount}:</strong> <span class="email-amount">${amount} ${currency}</span></p>
                   <p class="email-metric"><strong>${locale.emails.renewingIn}:</strong> ${daysBefore} ${locale.emails.days}</p>
@@ -320,16 +327,14 @@ export class EmailService {
     try {
       await this.transporter.sendMail({
         from: this.configService.get<string>(
-          'SMTP_FROM',
+          "SMTP_FROM",
           '"Subscription Tracker" <alerts@subscription-tracker.local>',
         ),
         to: email,
         subject,
         html: htmlTemplate,
       });
-      this.logger.log(
-        `[SMTP] Successfully sent warning email to ${email} for ${subscriptionName}`,
-      );
+      this.logger.log(`[SMTP] Successfully sent warning email to ${email} for ${subscriptionName}`);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       this.logger.error(
@@ -346,21 +351,23 @@ export class EmailService {
     currency: string,
     accentColor?: string,
     theme?: string,
-    language: 'en' | 'pl' = 'en',
+    language: "en" | "pl" = "en",
   ) {
     const locale = LOCALES[language];
     const themeMode = this.resolveTheme(theme);
 
-    const appUrl = this.configService.get<string>('APP_URL') || this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const appUrl =
+      this.configService.get<string>("APP_URL") ||
+      this.configService.get<string>("FRONTEND_URL", "http://localhost:3000");
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`
+      "Subscription Tracker",
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
     );
 
-    const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+    const logInText = language === "pl" ? "zaloguj się do panelu" : "log in to your dashboard";
     const managePromptHtml = locale.emails.managePrompt.replace(
       logInText,
-      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`
+      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
     );
 
     const bodyHtml = `
@@ -389,21 +396,17 @@ export class EmailService {
     try {
       await this.transporter.sendMail({
         from: this.configService.get<string>(
-          'SMTP_FROM',
+          "SMTP_FROM",
           '"Subscription Tracker" <alerts@subscription-tracker.local>',
         ),
         to: email,
         subject: locale.emails.budgetAlert,
         html: htmlTemplate,
       });
-      this.logger.log(
-        `[SMTP] Successfully sent budget alert email to ${email}`,
-      );
+      this.logger.log(`[SMTP] Successfully sent budget alert email to ${email}`);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(
-        `[SMTP] Failed to send budget alert email to ${email}: ${message}`,
-      );
+      this.logger.error(`[SMTP] Failed to send budget alert email to ${email}: ${message}`);
       throw error;
     }
   }
@@ -413,45 +416,46 @@ export class EmailService {
     stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number },
     paidYesterday: { name: string; amount: number; currency: string }[],
     currency: string,
-    language: 'en' | 'pl' = 'en',
+    language: "en" | "pl" = "en",
     accentColor?: string,
     theme?: string,
   ) {
     const locale = LOCALES[language];
     const themeMode = this.resolveTheme(theme);
 
-    const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const appUrl = this.configService.get<string>("FRONTEND_URL", "http://localhost:3000");
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`
+      "Subscription Tracker",
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
     );
 
-    const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+    const logInText = language === "pl" ? "zaloguj się do panelu" : "log in to your dashboard";
     const managePromptHtml = locale.emails.managePrompt.replace(
       logInText,
-      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`
+      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
     );
 
-    const emails = locale.emails as Record<string, string>;
+    const emails = locale.emails;
+    const digest = emails.digest;
 
-    let paidYesterdayHtml = '';
+    let paidYesterdayHtml = "";
     if (paidYesterday.length > 0) {
       const items = paidYesterday
         .map(
           (p) =>
             `<li style="margin-bottom: 8px;"><strong>${this.escapeHtml(p.name)}</strong>: ${p.amount.toFixed(2)} ${p.currency}</li>`,
         )
-        .join('');
+        .join("");
       paidYesterdayHtml = `
         <div style="margin-top: 20px;">
-          <h3 style="font-size: 20px; margin-bottom: 12px;">${emails.paidYesterday}</h3>
+          <h3 style="font-size: 20px; margin-bottom: 12px;">${digest.paidYesterday}</h3>
           <ul style="padding-left: 20px; margin: 0;">${items}</ul>
         </div>
       `;
     } else {
       paidYesterdayHtml = `
         <div style="margin-top: 20px;">
-          <p class="email-text email-muted">${emails.noPaymentsPaidYesterday}</p>
+          <p class="email-text email-muted">${digest.noPaymentsPaidYesterday}</p>
         </div>
       `;
     }
@@ -463,12 +467,12 @@ export class EmailService {
             <div class="email-topbar-bg"></div>
             <div class="email-content">
               <h2 class="email-title">${emails.dailyDigestTitle}</h2>
-              <p class="email-greeting">${locale.emails.greeting}</p>
-              <p class="email-text">${emails.digestSummary}</p>
+              <p class="email-greeting">${emails.greeting}</p>
+              <p class="email-text">${digest.summary}</p>
               <div class="email-highlight">
-                <p class="email-metric"><strong>${emails.totalActive}:</strong> ${stats.totalActive}</p>
-                <p class="email-metric"><strong>${emails.upcomingThisWeek}:</strong> ${stats.upcomingThisWeek}</p>
-                <p class="email-metric"><strong>${emails.totalMonthly}:</strong> <span class="email-amount">${stats.totalMonthly.toFixed(2)} ${currency}</span></p>
+                <p class="email-metric"><strong>${digest.totalActive}:</strong> ${stats.totalActive}</p>
+                <p class="email-metric"><strong>${digest.upcomingThisWeek}:</strong> ${stats.upcomingThisWeek}</p>
+                <p class="email-metric"><strong>${digest.totalMonthly}:</strong> <span class="email-amount">${stats.totalMonthly.toFixed(2)} ${currency}</span></p>
               </div>
               ${paidYesterdayHtml}
               <p class="email-text" style="margin-top: 24px;">${managePromptHtml}</p>
@@ -484,7 +488,7 @@ export class EmailService {
     try {
       await this.transporter.sendMail({
         from: this.configService.get<string>(
-          'SMTP_FROM',
+          "SMTP_FROM",
           '"Subscription Tracker" <alerts@subscription-tracker.local>',
         ),
         to: email,
@@ -503,26 +507,27 @@ export class EmailService {
     email: string,
     stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number },
     currency: string,
-    language: 'en' | 'pl' = 'en',
+    language: "en" | "pl" = "en",
     accentColor?: string,
     theme?: string,
   ) {
     const locale = LOCALES[language];
     const themeMode = this.resolveTheme(theme);
 
-    const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const appUrl = this.configService.get<string>("FRONTEND_URL", "http://localhost:3000");
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`
+      "Subscription Tracker",
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
     );
 
-    const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+    const logInText = language === "pl" ? "zaloguj się do panelu" : "log in to your dashboard";
     const managePromptHtml = locale.emails.managePrompt.replace(
       logInText,
-      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`
+      `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
     );
 
-    const emails = locale.emails as Record<string, string>;
+    const emails = locale.emails;
+    const digest = emails.digest;
 
     const bodyHtml = `
       <div class="email-root">
@@ -531,12 +536,12 @@ export class EmailService {
             <div class="email-topbar-bg"></div>
             <div class="email-content">
               <h2 class="email-title">${emails.weeklyReportTitle}</h2>
-              <p class="email-greeting">${locale.emails.greeting}</p>
-              <p class="email-text">${emails.digestSummary}</p>
+              <p class="email-greeting">${emails.greeting}</p>
+              <p class="email-text">${digest.summary}</p>
               <div class="email-highlight">
-                <p class="email-metric"><strong>${emails.totalActive}:</strong> ${stats.totalActive}</p>
-                <p class="email-metric"><strong>${emails.upcomingThisWeek}:</strong> ${stats.upcomingThisWeek}</p>
-                <p class="email-metric"><strong>${emails.totalMonthly}:</strong> <span class="email-amount">${stats.totalMonthly.toFixed(2)} ${currency}</span></p>
+                <p class="email-metric"><strong>${digest.totalActive}:</strong> ${stats.totalActive}</p>
+                <p class="email-metric"><strong>${digest.upcomingThisWeek}:</strong> ${stats.upcomingThisWeek}</p>
+                <p class="email-metric"><strong>${digest.totalMonthly}:</strong> <span class="email-amount">${stats.totalMonthly.toFixed(2)} ${currency}</span></p>
               </div>
               <p class="email-text">${managePromptHtml}</p>
               <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
@@ -551,7 +556,7 @@ export class EmailService {
     try {
       await this.transporter.sendMail({
         from: this.configService.get<string>(
-          'SMTP_FROM',
+          "SMTP_FROM",
           '"Subscription Tracker" <alerts@subscription-tracker.local>',
         ),
         to: email,

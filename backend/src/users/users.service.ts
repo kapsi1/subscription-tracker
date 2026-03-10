@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User, Prisma } from '@prisma/client';
 import { WebhookService } from '../notifications/webhook/webhook.service';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly webhookService: WebhookService,
@@ -35,12 +37,14 @@ export class UsersService {
   }
 
   async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+    this.logger.log(`Updating settings for user ${id}: ${Object.keys(data).join(', ')}`);
     const user = await this.prisma.user.update({
       where: { id },
       data,
     });
 
     if (data.currency && typeof data.currency === 'string') {
+      this.logger.log(`Performing bulk currency update to ${data.currency} for user ${id}`);
       await this.prisma.subscription.updateMany({
         where: { userId: id },
         data: { currency: data.currency },
@@ -56,6 +60,7 @@ export class UsersService {
   }
 
   async savePushSubscription(userId: string, endpoint: string, p256dh: string, auth: string) {
+    this.logger.log(`Saving push subscription for user ${userId}`);
     return this.prisma.pushSubscription.upsert({
       where: { endpoint },
       update: { userId, p256dh, auth },
@@ -64,6 +69,7 @@ export class UsersService {
   }
 
   async deletePushSubscription(userId: string, endpoint: string) {
+    this.logger.log(`Deleting push subscription for user ${userId}`);
     return this.prisma.pushSubscription.deleteMany({
       where: { userId, endpoint },
     });
@@ -78,5 +84,39 @@ export class UsersService {
       19.99,
       'USD',
     );
+  }
+
+  async remove(id: string): Promise<void> {
+    this.logger.warn(`Deleting user account: ${id}`);
+    
+    await this.prisma.$transaction(async (tx) => {
+      // Manual cascade (since schema doesn't have onDelete: Cascade)
+      // 1. Delete payment history
+      await tx.paymentHistory.deleteMany({
+        where: { subscription: { userId: id } },
+      });
+
+      // 2. Delete alerts
+      await tx.alert.deleteMany({
+        where: { subscription: { userId: id } },
+      });
+
+      // 3. Delete subscriptions
+      await tx.subscription.deleteMany({
+        where: { userId: id },
+      });
+
+      // 4. Delete push subscriptions
+      await tx.pushSubscription.deleteMany({
+        where: { userId: id },
+      });
+
+      // 5. Finally delete the user
+      await tx.user.delete({
+        where: { id },
+      });
+    });
+    
+    this.logger.log(`Successfully deleted user account: ${id}`);
   }
 }

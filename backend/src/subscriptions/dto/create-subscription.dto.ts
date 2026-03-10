@@ -10,6 +10,7 @@ import {
   IsBoolean,
   IsArray,
   ValidateNested,
+  IsISO4217CurrencyCode,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { BillingCycle } from '@prisma/client';
@@ -48,6 +49,7 @@ export class CreateSubscriptionDto {
 
   @IsOptional()
   @IsString()
+  @IsISO4217CurrencyCode()
   currency?: string;
 
   @IsOptional()
@@ -67,6 +69,7 @@ export class PaymentHistoryDto {
   amount!: number;
 
   @IsString()
+  @IsISO4217CurrencyCode()
   currency!: string;
 
   @IsString()

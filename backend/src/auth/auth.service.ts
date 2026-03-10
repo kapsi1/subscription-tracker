@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
@@ -15,6 +16,8 @@ import { GoogleProfile } from './interfaces/google-profile.interface';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -79,10 +82,12 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const user = await this.usersService.findByEmail(loginDto.email);
     if (!user) {
+      this.logger.warn(`Failed login attempt: user not found (${loginDto.email})`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
     if (!user.passwordHash) {
+      this.logger.warn(`Failed login attempt: social-only account (${loginDto.email})`);
       throw new UnauthorizedException('Please login with Google');
     }
 
@@ -91,9 +96,11 @@ export class AuthService {
       user.passwordHash,
     );
     if (!isPasswordValid) {
+      this.logger.warn(`Failed login attempt: invalid password (${loginDto.email})`);
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    this.logger.log(`User logged in: ${user.email} (${user.id})`);
     return this.generateTokens(user.id, user.email);
   }
 

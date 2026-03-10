@@ -1,4 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
+import type { RequestWithUser } from '../common/interfaces/request.interface';
 import { DashboardController } from './dashboard.controller';
 import { DashboardService } from './dashboard.service';
 
@@ -6,7 +7,7 @@ describe('DashboardController', () => {
   let controller: DashboardController;
   let serviceMock: Record<string, jest.Mock>;
 
-  const mockReq = { user: { userId: 'user-1' } } as any;
+  const mockReq = { user: { userId: 'user-1' } } as unknown as RequestWithUser;
 
   const mockSummary = {
     totalMonthlyCost: 25,
@@ -15,9 +16,7 @@ describe('DashboardController', () => {
     categoryBreakdown: { Entertainment: 15, Cloud: 10 },
   };
 
-  const mockForecast = [
-    { month: 'Jan', year: 2025, amount: 25, currency: 'USD' },
-  ];
+  const mockForecast = [{ month: 'Jan', year: 2025, amount: 25, currency: 'USD' }];
 
   const mockMonthlyPayments = [
     {

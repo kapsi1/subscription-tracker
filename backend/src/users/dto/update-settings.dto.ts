@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Min, ValidateIf } from 'class-validator';
+import { IsBoolean, IsInt, IsISO4217CurrencyCode, IsNumber, IsOptional, IsString, IsUrl, Min, ValidateIf } from 'class-validator';
 
 export class UpdateSettingsDto {
   @IsOptional()
@@ -42,6 +42,7 @@ export class UpdateSettingsDto {
 
   @IsOptional()
   @IsString()
+  @IsUrl({ protocols: ['http', 'https'], require_tld: false })
   webhookUrl?: string;
 
   @IsOptional()
@@ -69,5 +70,6 @@ export class UpdateSettingsDto {
 
   @IsOptional()
   @IsString()
+  @IsISO4217CurrencyCode()
   currency?: string;
 }

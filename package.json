@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "pnpm -r build",
+    "build:shared": "cd packages/shared && pnpm build && cd ../..",
+    "build:backend": "cd backend && pnpm build && cd ../..",
+    "build:frontend": "cd frontend && pnpm build && cd ../..",
     "dev": "pnpm --filter @subscription-tracker/shared build && concurrently -n \"shared,backend,frontend\" -c \"magenta,blue,green\" \"pnpm --filter @subscription-tracker/shared dev\" \"pnpm --filter backend dev\" \"pnpm --filter next-app dev\"",
     "dev:shared": "pnpm --filter @subscription-tracker/shared dev",
     "dev:backend": "pnpm --filter backend dev",

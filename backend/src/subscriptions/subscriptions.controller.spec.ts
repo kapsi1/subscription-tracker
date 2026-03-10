@@ -1,13 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { BillingCycle } from '@prisma/client';
+import type { RequestWithUser } from '../common/interfaces/request.interface';
 import { SubscriptionsController } from './subscriptions.controller';
 import { SubscriptionsService } from './subscriptions.service';
-import { BillingCycle } from '@prisma/client';
 
 describe('SubscriptionsController', () => {
   let controller: SubscriptionsController;
   let serviceMock: Record<string, jest.Mock>;
 
-  const mockReq = { user: { userId: 'user-1' } } as any;
+  const mockReq = { user: { userId: 'user-1' } } as unknown as RequestWithUser;
 
   const mockSubscription = {
     id: 'sub-1',
@@ -27,7 +28,9 @@ describe('SubscriptionsController', () => {
       update: jest.fn().mockResolvedValue(mockSubscription),
       remove: jest.fn().mockResolvedValue(mockSubscription),
       export: jest.fn().mockResolvedValue({ subscriptions: [mockSubscription] }),
-      import: jest.fn().mockResolvedValue({ message: 'Successfully imported 1 subscriptions', count: 1 }),
+      import: jest
+        .fn()
+        .mockResolvedValue({ message: 'Successfully imported 1 subscriptions', count: 1 }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -89,7 +92,17 @@ describe('SubscriptionsController', () => {
   });
 
   it('should import subscriptions', async () => {
-    const dto = { subscriptions: [{ name: 'Test', amount: 10, currency: 'USD', billingCycle: BillingCycle.monthly, category: 'Other' }] };
+    const dto = {
+      subscriptions: [
+        {
+          name: 'Test',
+          amount: 10,
+          currency: 'USD',
+          billingCycle: BillingCycle.monthly,
+          category: 'Other',
+        },
+      ],
+    };
     const result = await controller.import(mockReq, dto as any);
 
     expect(serviceMock.import).toHaveBeenCalledWith('user-1', dto);

@@ -273,4 +273,10 @@ export class UsersController {
       throw new BadRequestException(`Test webhook failed: ${message}`);
     }
   }
+
+  @Delete('me')
+  async deleteMe(@Req() req: RequestWithUser) {
+    await this.usersService.remove(req.user.userId);
+    return { message: 'Account deleted successfully' };
+  }
 }
