@@ -1,4 +1,4 @@
-import { AlertType } from '@prisma/client';
+import type { AlertType } from '@prisma/client';
 
 export interface AlertJobData {
   alertId: string;
