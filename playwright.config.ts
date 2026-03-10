@@ -10,6 +10,8 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 
+const shouldManageWebServers = process.env.PLAYWRIGHT_DISABLE_WEBSERVER !== 'true';
+
 export default defineConfig({
   testDir: './e2e',
   /* Run tests in files in parallel */
@@ -40,22 +42,24 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: [
-    {
-      command: 'pnpm --filter backend dev',
-      url: 'http://localhost:3001',
-      reuseExistingServer: !process.env.CI,
-      env: {
-        ...process.env,
-        E2E_TESTING: 'true',
-      },
-      timeout: 30 * 1000,
-    },
-    {
-      command: 'pnpm --filter frontend dev',
-      url: 'http://localhost:3000',
-      reuseExistingServer: !process.env.CI,
-      timeout: 30 * 1000,
-    },
-  ],
+  webServer: shouldManageWebServers
+    ? [
+        {
+          command: 'pnpm --filter backend dev',
+          url: 'http://localhost:3001',
+          reuseExistingServer: !process.env.CI,
+          env: {
+            ...process.env,
+            E2E_TESTING: 'true',
+          },
+          timeout: 120 * 1000,
+        },
+        {
+          command: 'pnpm --filter frontend dev',
+          url: 'http://localhost:3000',
+          reuseExistingServer: !process.env.CI,
+          timeout: 120 * 1000,
+        },
+      ]
+    : undefined,
 });

@@ -1,7 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage } from 'node:http';
 import { BullModule } from '@nestjs/bullmq';
-import { type ExecutionContext, Injectable, type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
+import {
+  type ExecutionContext,
+  Injectable,
+  type MiddlewareConsumer,
+  Module,
+  type NestModule,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
