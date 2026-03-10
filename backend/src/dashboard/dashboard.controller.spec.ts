@@ -50,7 +50,7 @@ describe('DashboardController', () => {
   it('should return summary for user', async () => {
     const result = await controller.getSummary(mockReq);
 
-    expect(serviceMock.getSummary).toHaveBeenCalledWith('user-1');
+    expect(serviceMock.getSummary).toHaveBeenCalledWith('user-1', undefined, undefined);
     expect(result).toEqual(mockSummary);
   });
 
@@ -64,7 +64,7 @@ describe('DashboardController', () => {
   it('should return monthly payments for user', async () => {
     const result = await controller.getMonthlyPayments(mockReq);
 
-    expect(serviceMock.getMonthlyPayments).toHaveBeenCalledWith('user-1');
+    expect(serviceMock.getMonthlyPayments).toHaveBeenCalledWith('user-1', undefined, undefined);
     expect(result).toEqual(mockMonthlyPayments);
   });
 

@@ -8,6 +8,7 @@ import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { calculateNextBillingDate } from './utils/billing-date.util';
 import { Prisma, BillingCycle } from '@prisma/client';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class SubscriptionsService {
@@ -84,52 +85,63 @@ export class SubscriptionsService {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
-    const createdSubscriptions = await this.prisma.$transaction(
-      importDto.subscriptions.map((sub) => {
-        if (sub.billingCycle === BillingCycle.custom && !sub.intervalDays) {
-          throw new BadRequestException(
-            `intervalDays is required for custom billing cycle on subscription: ${sub.name}`,
+    const subscriptionsToCreate = importDto.subscriptions.map((sub) => {
+      if (sub.billingCycle === BillingCycle.custom && !sub.intervalDays) {
+        throw new BadRequestException(
+          `intervalDays is required for custom billing cycle on subscription: ${sub.name}`,
+        );
+      }
+
+      const id = crypto.randomUUID();
+      const nextBillingDate = sub.nextBillingDate
+        ? new Date(sub.nextBillingDate)
+        : calculateNextBillingDate(
+            sub.billingCycle,
+            new Date(),
+            sub.intervalDays,
           );
-        }
 
-        const nextBillingDate = sub.nextBillingDate
-          ? new Date(sub.nextBillingDate)
-          : calculateNextBillingDate(
-              sub.billingCycle,
-              new Date(),
-              sub.intervalDays,
-            );
+      return {
+        id,
+        userId,
+        name: sub.name,
+        amount: sub.amount,
+        currency: sub.currency || user.currency,
+        billingCycle: sub.billingCycle,
+        intervalDays: sub.intervalDays || null,
+        category: sub.category,
+        nextBillingDate,
+        reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
+        reminderDays: sub.reminderDays ?? user.defaultReminderDays,
+        isActive: sub.isActive ?? true,
+        payments: sub.payments || [],
+      };
+    });
 
-        return this.prisma.subscription.create({
-          data: {
-            userId,
-            name: sub.name,
-            amount: sub.amount,
-            currency: sub.currency || user.currency,
-            billingCycle: sub.billingCycle,
-            intervalDays: sub.intervalDays || null,
-            category: sub.category,
-            nextBillingDate,
-            reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
-            reminderDays: sub.reminderDays ?? user.defaultReminderDays,
-            isActive: sub.isActive ?? true,
-            payments: sub.payments
-              ? {
-                  create: sub.payments.map((p) => ({
-                    amount: p.amount,
-                    currency: p.currency,
-                    paidAt: new Date(p.paidAt),
-                  })),
-                }
-              : undefined,
-          },
+    await this.prisma.$transaction(async (tx) => {
+      await tx.subscription.createMany({
+        data: subscriptionsToCreate.map(({ payments, ...sub }) => sub),
+      });
+
+      const allPayments = subscriptionsToCreate.flatMap((sub) =>
+        sub.payments.map((p) => ({
+          subscriptionId: sub.id,
+          amount: p.amount,
+          currency: p.currency,
+          paidAt: new Date(p.paidAt),
+        })),
+      );
+
+      if (allPayments.length > 0) {
+        await tx.paymentHistory.createMany({
+          data: allPayments,
         });
-      }),
-    );
+      }
+    });
 
     return {
-      message: `Successfully imported ${createdSubscriptions.length} subscriptions`,
-      count: createdSubscriptions.length,
+      message: `Successfully imported ${subscriptionsToCreate.length} subscriptions`,
+      count: subscriptionsToCreate.length,
     };
   }
 

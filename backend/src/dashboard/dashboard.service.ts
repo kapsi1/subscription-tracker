@@ -139,46 +139,36 @@ export class DashboardService {
     const queryYear = year !== undefined ? Number(year) : now.getFullYear();
     const queryMonth = month !== undefined ? Number(month) : now.getMonth();
 
+    const monthStart = new Date(queryYear, queryMonth, 1);
+    const nextMonthStart = new Date(queryYear, queryMonth + 1, 1);
     const yearStart = new Date(queryYear, 0, 1);
     const nextYearStart = new Date(queryYear + 1, 0, 1);
 
-    const subscriptions = await this.prisma.subscription.findMany({
-      where: { userId, isActive: true },
-    });
-
-    const paymentsInMonth = await this.getMonthlyPayments(
-      userId,
-      queryMonth,
-      queryYear,
-    );
-
-    let totalMonthlyCost = 0;
-    const categoryBreakdown: Record<string, number> = {};
-
-    for (const p of paymentsInMonth) {
-      totalMonthlyCost += p.amount;
-      if (!categoryBreakdown[p.category]) {
-        categoryBreakdown[p.category] = 0;
-      }
-      categoryBreakdown[p.category] += p.amount;
-    }
-
-    const [paidThisYear] = await Promise.all([
+    const [subscriptions, paidThisMonth, paidThisYear, user] = await Promise.all([
+      this.prisma.subscription.findMany({
+        where: { userId, isActive: true },
+      }),
       this.prisma.paymentHistory.aggregate({
         where: {
-          paidAt: {
-            gte: yearStart,
-            lt: nextYearStart,
-          },
-          subscription: {
-            userId,
-          },
+          subscription: { userId },
+          paidAt: { gte: monthStart, lt: nextMonthStart },
         },
-        _sum: {
-          amount: true,
+        _sum: { amount: true },
+      }),
+      this.prisma.paymentHistory.aggregate({
+        where: {
+          subscription: { userId },
+          paidAt: { gte: yearStart, lt: nextYearStart },
         },
+        _sum: { amount: true },
+      }),
+      this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { currency: true },
       }),
     ]);
+
+    const { categoryBreakdown } = this.calculateCosts(subscriptions);
 
     let upcomingThisYear = 0;
     if (queryYear >= now.getFullYear()) {
@@ -191,13 +181,8 @@ export class DashboardService {
       );
     }
 
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { currency: true },
-    });
-
     return {
-      totalMonthlyCost,
+      totalMonthlyCost: Number(paidThisMonth._sum.amount ?? 0),
       totalYearlyCost: Number(paidThisYear._sum.amount ?? 0) + upcomingThisYear,
       activeSubscriptions: subscriptions.length,
       categoryBreakdown,

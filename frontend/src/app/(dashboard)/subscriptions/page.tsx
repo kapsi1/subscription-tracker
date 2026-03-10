@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
@@ -20,7 +21,6 @@ import { Subscription } from "@subscription-tracker/shared";
 import { LoadingState } from "@/components/loading-state";
 import { toast } from "sonner";
 import api from "@/lib/api";
-import { useRef } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -52,31 +52,75 @@ const subscriptionImportSchema = z.object({
 
 export default function SubscriptionsPage() {
   const { t } = useTranslation();
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Subscription;
     direction: "asc" | "desc";
   }>({ key: "nextBillingDate" as keyof Subscription, direction: "asc" });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    fetchSubscriptions();
-  }, []);
-
-  const fetchSubscriptions = async () => {
-    try {
+  const { data: subscriptions = [], isLoading: isFetchLoading } = useQuery<Subscription[]>({
+    queryKey: ['subscriptions'],
+    queryFn: async () => {
       const res = await api.get("/subscriptions");
-      setSubscriptions(res.data);
-    } catch (err: unknown) {
-      toast.error(t('subscriptions.loadError', { defaultValue: 'Failed to load subscriptions' }));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return res.data;
+    },
+  });
+
+  const [isImportLoading, setIsImportLoading] = useState(false);
+  const isLoading = isFetchLoading || isImportLoading;
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.delete(`/subscriptions/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      toast.success(t('subscriptions.deleteSuccess'));
+    },
+    onError: () => {
+      toast.error(t('subscriptions.deleteError'));
+    },
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async (subscription: Partial<Subscription>) => {
+      if (subscription.id) {
+        const { id, ...updateData } = subscription;
+        const res = await api.patch(`/subscriptions/${id}`, updateData);
+        return res.data;
+      } else {
+        const res = await api.post("/subscriptions", subscription);
+        return res.data;
+      }
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      
+      if (variables.id) {
+        toast.success(t('subscriptions.updateSuccess'));
+      } else {
+        toast.success(t('subscriptions.saveSuccess'));
+        sendGAEvent({ event: "add_subscription", value: "success" });
+      }
+      setModalOpen(false);
+    },
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string | string[] } } };
+      const backendMessage = error.response?.data?.message;
+      const isCurrencyError = Array.isArray(backendMessage) 
+        ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
+        : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
+
+      if (!isCurrencyError) {
+        toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
+      }
+      sendGAEvent({ event: "add_subscription", value: "failed" });
+    },
+  });
 
   const filteredSubscriptions = subscriptions.filter((sub) =>
     sub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -142,48 +186,11 @@ export default function SubscriptionsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm(t('subscriptions.deleteConfirm'))) return;
-    try {
-      await api.delete(`/subscriptions/${id}`);
-      setSubscriptions(subscriptions.filter((sub) => sub.id !== id));
-      toast.success(t('subscriptions.deleteSuccess'));
-    } catch (err) {
-      toast.error(t('subscriptions.deleteError'));
-    }
+    deleteMutation.mutate(id);
   };
 
   const handleSave = async (subscription: Partial<Subscription>) => {
-    try {
-      if (subscription.id) {
-        // Edit existing
-        const { id, ...updateData } = subscription;
-        const res = await api.patch(`/subscriptions/${id}`, updateData);
-        setSubscriptions(
-          subscriptions.map((sub) =>
-            sub.id === subscription.id ? res.data : sub
-          )
-        );
-        toast.success(t('subscriptions.updateSuccess'));
-      } else {
-        // Create new
-        const res = await api.post("/subscriptions", subscription);
-        setSubscriptions([...subscriptions, res.data]);
-        toast.success(t('subscriptions.saveSuccess'));
-        sendGAEvent({ event: "add_subscription", value: "success" });
-      }
-      setModalOpen(false);
-    } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string | string[] } } };
-      const backendMessage = error.response?.data?.message;
-      const isCurrencyError = Array.isArray(backendMessage) 
-        ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
-        : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
-
-      if (!isCurrencyError) {
-        toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
-      }
-      sendGAEvent({ event: "add_subscription", value: "failed" });
-      throw err; // Re-throw so modal can catch it
-    }
+    saveMutation.mutate(subscription);
   };
 
   const handleExport = async () => {
@@ -210,6 +217,7 @@ export default function SubscriptionsPage() {
 
     const reader = new FileReader();
     reader.onload = async (e) => {
+      setIsImportLoading(true);
       try {
         const content = e.target?.result as string;
         const json = JSON.parse(content);
@@ -225,8 +233,8 @@ export default function SubscriptionsPage() {
         sendGAEvent({ event: "import_subscriptions", value: "success" });
         
         // Refresh list
-        setIsLoading(true);
-        fetchSubscriptions();
+        queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       } catch (err: unknown) {
         if (err instanceof z.ZodError) {
           toast.error(t('subscriptions.importError') + ": Invalid file format");
@@ -234,6 +242,8 @@ export default function SubscriptionsPage() {
           toast.error(t('subscriptions.importError'));
         }
         sendGAEvent({ event: "import_subscriptions", value: "failed" });
+      } finally {
+        setIsImportLoading(false);
       }
       
       // Reset input

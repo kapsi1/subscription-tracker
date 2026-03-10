@@ -307,11 +307,12 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
 - [ ] Review translations for spelling, grammar, consistency, capitalization and style.
 - [ ] Review code for security vulnerabilities and best practices.
-- [ ] Review code for performance issues and best practices.
-- [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types.
+- [ ] Review code for performance issues and improvements
+- [x] Review code for "any" type usage in TypeScript and replace it with appropriate types.
 - [ ] Review code for areas that can be shortened or simplified.
 - [x] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
 - [x] Find and fix compiler & linter errors and warnings.
+- [ ] Find functionalities with missing or incomplete tests and add them
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
 - [ ] Check for and remove unused code and translations
 - [x] Refactor settings page: split it into multiple components, by section

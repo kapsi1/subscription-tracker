@@ -45,7 +45,16 @@ describe('SubscriptionsService', () => {
         update: jest.fn().mockResolvedValue(mockSubscription),
         delete: jest.fn().mockResolvedValue(mockSubscription),
       },
-    };
+      paymentHistory: {
+        createMany: jest.fn().mockResolvedValue({ count: 0 }),
+      },
+      $transaction: jest.fn().mockImplementation(async (callback) => {
+        if (typeof callback === 'function') {
+          return callback(prismaMock);
+        }
+        return callback;
+      }),
+    } as any;
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

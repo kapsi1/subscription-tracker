@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
@@ -21,20 +22,11 @@ import { CostByCategory } from "./_components/CostByCategory";
 import { SubscriptionModal } from "@/components/subscription-modal";
 import { DashboardSummary, ForecastItem, Subscription } from "@subscription-tracker/shared";
 
-
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const [summary, setSummary] = useState<DashboardSummary>({
-    totalMonthlyCost: 0,
-    totalYearlyCost: 0,
-    activeSubscriptions: 0,
-    categoryBreakdown: {},
-    currency: "USD",
-  });
-  const [forecast, setForecast] = useState<ForecastItem[]>([]);
-  const [monthlyPayments, setMonthlyPayments] = useState<MonthlyPayment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [pickerYear, setPickerYear] = useState(selectedDate.getFullYear());
   const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -43,40 +35,48 @@ export default function DashboardPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
 
-  const fetchDashboardData = async (date: Date) => {
-    setIsLoading(true);
-    try {
-      const month = date.getMonth();
-      const year = date.getFullYear();
+  const month = selectedDate.getMonth();
+  const year = selectedDate.getFullYear();
 
-      const [summaryRes, forecastRes, monthlyPaymentsRes] = await Promise.all([
-        api.get(`/dashboard/summary?month=${month}&year=${year}`),
-        api.get("/dashboard/forecast?months=12"),
-        api.get(`/dashboard/monthly-payments?month=${month}&year=${year}`),
-      ]);
+  // Queries
+  const { data: summary, isLoading: isSummaryLoading } = useQuery<DashboardSummary>({
+    queryKey: ['dashboard', 'summary', month, year],
+    queryFn: async () => {
+      const res = await api.get(`/dashboard/summary?month=${month}&year=${year}`);
+      return res.data;
+    },
+  });
 
-      setSummary(summaryRes.data);
+  const { data: rawForecast, isLoading: isForecastLoading } = useQuery<ForecastItem[]>({
+    queryKey: ['dashboard', 'forecast'],
+    queryFn: async () => {
+      const res = await api.get("/dashboard/forecast?months=12");
+      return res.data;
+    },
+  });
 
-      const forecastWithCumulative = summaryRes.data && (forecastRes.data as ForecastItem[]).reduce((acc: ForecastItem[], item: ForecastItem, index: number) => {
-        const previousCumulative = index > 0 ? (acc[index - 1].cumulativeAmount || 0) : 0;
-        acc.push({
-          ...item,
-          cumulativeAmount: previousCumulative + item.amount
-        });
-        return acc;
-      }, []);
-      setForecast(forecastWithCumulative || []);
-      setMonthlyPayments(monthlyPaymentsRes.data || []);
-    } catch (err: unknown) {
-      toast.error(t('common.error'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data: monthlyPayments = [], isLoading: isPaymentsLoading } = useQuery<MonthlyPayment[]>({
+    queryKey: ['dashboard', 'payments', month, year],
+    queryFn: async () => {
+      const res = await api.get(`/dashboard/monthly-payments?month=${month}&year=${year}`);
+      return res.data;
+    },
+  });
 
-  useEffect(() => {
-    fetchDashboardData(selectedDate);
-  }, [selectedDate]);
+  const forecast = useMemo(() => {
+    if (!summary || !rawForecast) return [];
+    
+    return rawForecast.reduce((acc: ForecastItem[], item: ForecastItem, index: number) => {
+      const previousCumulative = index > 0 ? (acc[index - 1].cumulativeAmount || 0) : 0;
+      acc.push({
+        ...item,
+        cumulativeAmount: previousCumulative + item.amount
+      });
+      return acc;
+    }, []);
+  }, [summary, rawForecast]);
+
+  const isLoading = isSummaryLoading || isForecastLoading || isPaymentsLoading;
 
   const handlePrevMonth = () => {
     setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1));
@@ -118,8 +118,9 @@ export default function DashboardPage() {
         const { id, ...updateData } = subscription;
         await api.patch(`/subscriptions/${id}`, updateData);
         toast.success(t('subscriptions.updateSuccess'));
-        // Refresh dashboard data
-        fetchDashboardData(selectedDate);
+        
+        // Invalidate queries to refresh data
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       }
       setModalOpen(false);
     } catch (err: unknown) {
@@ -130,6 +131,10 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return <LoadingState message={t('common.loading')} />;
+  }
+
+  if (!summary) {
+    return null;
   }
 
   const monthlyPaymentsDoneCount = monthlyPayments.filter(

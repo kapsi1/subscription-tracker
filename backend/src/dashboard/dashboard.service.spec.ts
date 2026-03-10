@@ -59,6 +59,10 @@ describe('DashboardService', () => {
       .mockResolvedValueOnce({
         _sum: { amount: 200 },
       });
+    prismaMock.paymentHistory.findMany.mockResolvedValue([]);
+    prismaMock.user = {
+      findUnique: jest.fn().mockResolvedValue({ currency: 'USD' }),
+    };
 
     const res = await service.getSummary('user-1');
     expect(res.totalMonthlyCost).toBe(44.5);
