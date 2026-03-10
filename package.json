@@ -18,7 +18,7 @@
     "e2e:ui": "playwright test --ui"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kamil Kapsiak",
   "license": "ISC",
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {

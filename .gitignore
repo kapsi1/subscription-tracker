@@ -113,6 +113,8 @@ dist
 # Biome cache
 .biome
 
+.claude
+
 *.log
 test_output.txt
 test_results.txt

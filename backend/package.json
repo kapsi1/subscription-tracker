@@ -1,8 +1,8 @@
 {
   "name": "backend",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
-  "author": "",
+  "author": "Kamil Kapsiak",
   "private": true,
   "packageManager": "pnpm@10.27.0",
   "license": "UNLICENSED",
