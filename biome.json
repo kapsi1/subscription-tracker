@@ -31,7 +31,8 @@
       "!**/node_modules/",
       "!**/frontend/.next/",
       "!**/backend/dist/",
-      "!**/backend/prisma/migrations/"
+      "!**/backend/prisma/migrations/",
+      "!**/frontend/src/app/globals.css"
     ]
   }
 }

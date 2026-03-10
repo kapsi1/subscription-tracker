@@ -77,19 +77,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [runBackendInitializationCheck]);
 
+  useEffect(() => {
+    // Only attempt one redirect per mount; skip if already on login page
+    if (
+      pathname !== '/login' &&
+      backendInitStatus === 'ready' &&
+      !isLoading &&
+      !isAuthenticated &&
+      !isRedirecting
+    ) {
+      setIsRedirecting(true);
+      router.replace('/login');
+    }
+  }, [backendInitStatus, isLoading, isAuthenticated, isRedirecting, router, pathname]);
+
   // Safety check: if we are somehow rendering this layout on the login page,
   // do nothing to prevent redirect loops.
   if (pathname === '/login') {
     return <>{children}</>;
   }
-
-  useEffect(() => {
-    // Only attempt one redirect per mount
-    if (backendInitStatus === 'ready' && !isLoading && !isAuthenticated && !isRedirecting) {
-      setIsRedirecting(true);
-      router.replace('/login');
-    }
-  }, [backendInitStatus, isLoading, isAuthenticated, isRedirecting, router]);
 
   const handleLogout = () => logout();
 

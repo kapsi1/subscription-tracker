@@ -92,6 +92,7 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                   <div
                     key={c.code}
                     role="option"
+                    tabIndex={0}
                     aria-selected={currency === c.code}
                     className={cn(
                       'flex items-center gap-2 p-2 rounded-sm hover:bg-accent cursor-pointer text-sm transition-colors',
@@ -101,6 +102,13 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                       setCurrency(c.code);
                       setIsCurrencyPopoverOpen(false);
                       setSearchCurrency('');
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setCurrency(c.code);
+                        setIsCurrencyPopoverOpen(false);
+                        setSearchCurrency('');
+                      }
                     }}
                   >
                     <Flag countryCode={c.countryCode} />

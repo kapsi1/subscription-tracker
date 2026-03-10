@@ -133,8 +133,8 @@ export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCa
                 fill="#8884d8"
                 dataKey="value"
               >
-                {categoryData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                {categoryData.map((entry) => (
+                  <Cell key={`cell-${entry.name}`} fill={entry.color} />
                 ))}
               </Pie>
               <Tooltip
@@ -173,8 +173,8 @@ export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCa
                 ]}
               />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                {categoryData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                {categoryData.map((entry) => (
+                  <Cell key={`cell-${entry.name}`} fill={entry.color} />
                 ))}
               </Bar>
             </BarChart>

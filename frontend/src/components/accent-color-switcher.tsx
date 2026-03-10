@@ -9,7 +9,7 @@ import {
 } from '@subscription-tracker/shared';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import {
@@ -38,44 +38,7 @@ export function AccentColorSwitcher() {
   const { theme, setTheme } = useTheme();
   const [currentAccent, setCurrentAccent] = useState<AccentColor>(ACCENT_COLORS[0]);
 
-  useEffect(() => {
-    // Check cache first for zero-flicker load
-    const cached = localStorage.getItem('app-accent-color');
-    if (cached) {
-      const found = ACCENT_COLORS.find((c) => c.name === cached);
-      if (found) {
-        setCurrentAccent(found);
-        applyAccentColor(found);
-      }
-    }
-
-    const fetchSettings = async () => {
-      try {
-        const response = await api.get('/users/me');
-        if (response.data.theme) {
-          setTheme(response.data.theme);
-        }
-        if (response.data.accentColor) {
-          const found = ACCENT_COLORS.find((c) => c.name === response.data.accentColor);
-          if (found) {
-            setCurrentAccent(found);
-            applyAccentColor(found);
-            localStorage.setItem('app-accent-color', found.name);
-          }
-        } else if (!cached) {
-          // Apply default if nothing found and no cache
-          applyAccentColor(ACCENT_COLORS[0]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch user settings', error);
-        if (!cached) applyAccentColor(ACCENT_COLORS[0]);
-      }
-    };
-
-    fetchSettings();
-  }, [applyAccentColor, setTheme]);
-
-  const applyAccentColor = (accent: AccentColor) => {
+  const applyAccentColor = useCallback((accent: AccentColor) => {
     let styleTag = document.getElementById('accent-color-styles');
     if (!styleTag) {
       styleTag = document.createElement('style');
@@ -122,7 +85,44 @@ export function AccentColorSwitcher() {
         --border: ${accent.darkPrimary}30;
       }
     `;
-  };
+  }, []);
+
+  useEffect(() => {
+    // Check cache first for zero-flicker load
+    const cached = localStorage.getItem('app-accent-color');
+    if (cached) {
+      const found = ACCENT_COLORS.find((c) => c.name === cached);
+      if (found) {
+        setCurrentAccent(found);
+        applyAccentColor(found);
+      }
+    }
+
+    const fetchSettings = async () => {
+      try {
+        const response = await api.get('/users/me');
+        if (response.data.theme) {
+          setTheme(response.data.theme);
+        }
+        if (response.data.accentColor) {
+          const found = ACCENT_COLORS.find((c) => c.name === response.data.accentColor);
+          if (found) {
+            setCurrentAccent(found);
+            applyAccentColor(found);
+            localStorage.setItem('app-accent-color', found.name);
+          }
+        } else if (!cached) {
+          // Apply default if nothing found and no cache
+          applyAccentColor(ACCENT_COLORS[0]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user settings', error);
+        if (!cached) applyAccentColor(ACCENT_COLORS[0]);
+      }
+    };
+
+    fetchSettings();
+  }, [applyAccentColor, setTheme]);
 
   const handleSelect = async (accent: AccentColor) => {
     setCurrentAccent(accent);
@@ -183,6 +183,7 @@ export function AccentColorSwitcher() {
           {ACCENT_COLORS.map((accent) => (
             <button
               key={accent.name}
+              type="button"
               onClick={() => handleSelect(accent)}
               title={t(`colors.${accent.name}`, { defaultValue: accent.name })}
               aria-label={t(`colors.${accent.name}`, { defaultValue: accent.name })}

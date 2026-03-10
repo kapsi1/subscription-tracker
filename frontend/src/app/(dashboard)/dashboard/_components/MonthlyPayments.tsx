@@ -161,10 +161,11 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
         ) : (
           <div className="space-y-3">
             {sortedMonthlyPayments.map((payment) => (
-              <div
+              <button
                 key={payment.id}
+                type="button"
                 onClick={() => onEdit?.(payment.subscriptionId)}
-                className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 cursor-pointer ${
+                className={`w-full text-left flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 cursor-pointer ${
                   payment.status === 'done'
                     ? 'border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80'
                     : 'bg-card hover:bg-accent/50'
@@ -215,7 +216,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                     <p className="text-sm text-muted-foreground">{formatDate(payment.date)}</p>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}
