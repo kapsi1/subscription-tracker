@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { PiggyBank, SendHorizonal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { Settings } from "@subscription-tracker/shared";
+import type { Settings } from "@subscription-tracker/shared";
 
 interface BudgetSectionProps {
   monthlyBudget: number | null | undefined;

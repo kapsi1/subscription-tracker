@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Bell } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { Settings } from "@subscription-tracker/shared";
+import type { Settings } from "@subscription-tracker/shared";
 
 interface ReminderSectionProps {
   defaultReminderEnabled: boolean;

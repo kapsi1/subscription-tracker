@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { AlertsProcessor } from './alerts.processor';
 import { EmailService } from '../notifications/email/email.service';
 import { WebhookService } from '../notifications/webhook/webhook.service';

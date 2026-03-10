@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import api from "@/lib/api";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/components/auth-provider";
-import { ProfileSection, ProfileData } from "../_components/ProfileSection";
+import { ProfileSection, type ProfileData } from "../_components/ProfileSection";
 
 export default function ProfilePage() {
   const { t } = useTranslation();

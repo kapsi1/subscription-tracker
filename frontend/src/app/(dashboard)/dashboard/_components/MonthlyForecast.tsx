@@ -14,7 +14,7 @@ import {
   Line,
 } from "recharts";
 import { formatCurrency } from "@/lib/utils";
-import { ForecastItem } from "@subscription-tracker/shared";
+import type { ForecastItem } from "@subscription-tracker/shared";
 import type { i18n as i18nType, TFunction } from "i18next";
 
 interface MonthlyForecastProps {

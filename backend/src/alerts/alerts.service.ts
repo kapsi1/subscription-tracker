@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { PrismaService } from '../prisma/prisma.service';
+import type { PrismaService } from '../prisma/prisma.service';
 import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
+import type { Queue } from 'bullmq';
 
-import { AlertType, Prisma, BillingCycle, Subscription } from '@prisma/client';
+import { AlertType, type Prisma, BillingCycle, type Subscription } from '@prisma/client';
 
-import { DashboardService } from '../dashboard/dashboard.service';
-import { PaymentsService } from '../payments/payments.service';
+import type { DashboardService } from '../dashboard/dashboard.service';
+import type { PaymentsService } from '../payments/payments.service';
 
 type AlertWithSub = Prisma.AlertGetPayload<{
   include: {

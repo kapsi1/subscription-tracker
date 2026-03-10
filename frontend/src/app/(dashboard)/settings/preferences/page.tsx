@@ -12,7 +12,7 @@ import { WebhookSection } from "../_components/WebhookSection";
 import { ReminderSection } from "../_components/ReminderSection";
 import { BudgetSection } from "../_components/BudgetSection";
 
-import { Settings } from "@subscription-tracker/shared";
+import type { Settings } from "@subscription-tracker/shared";
 
 export default function PreferencesPage() {
   const { t } = useTranslation();

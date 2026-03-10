@@ -17,7 +17,7 @@ import { Upload, Download, Plus, Pencil, Trash2, Search, Filter, ArrowUpDown, Ch
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/empty-state";
 import { SubscriptionModal } from "@/components/subscription-modal";
-import { Subscription } from "@subscription-tracker/shared";
+import type { Subscription } from "@subscription-tracker/shared";
 import { LoadingState } from "@/components/loading-state";
 import { toast } from "sonner";
 import api from "@/lib/api";

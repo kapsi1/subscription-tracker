@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JwtModule, JwtSignOptions } from '@nestjs/jwt';
+import { JwtModule, type JwtSignOptions } from '@nestjs/jwt';
 
 import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';

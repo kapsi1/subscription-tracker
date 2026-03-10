@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import type { PrismaService } from '../prisma/prisma.service';
 import { calculateNextBillingDate } from '../subscriptions/utils/billing-date.util';
-import { EmailService } from '../notifications/email/email.service';
-import { DashboardService } from '../dashboard/dashboard.service';
+import type { EmailService } from '../notifications/email/email.service';
+import type { DashboardService } from '../dashboard/dashboard.service';
 
 @Injectable()
 export class PaymentsService {

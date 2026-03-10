@@ -16,11 +16,11 @@ import { useTranslation } from "react-i18next";
 import { LoadingState } from "@/components/loading-state";
 import { useAuth } from "@/components/auth-provider";
 import { SummaryCards } from "./_components/SummaryCards";
-import { MonthlyPayments, MonthlyPayment } from "./_components/MonthlyPayments";
+import { MonthlyPayments, type MonthlyPayment } from "./_components/MonthlyPayments";
 import { MonthlyForecast } from "./_components/MonthlyForecast";
 import { CostByCategory } from "./_components/CostByCategory";
 import { SubscriptionModal } from "@/components/subscription-modal";
-import { DashboardSummary, ForecastItem, Subscription } from "@subscription-tracker/shared";
+import type { DashboardSummary, ForecastItem, Subscription } from "@subscription-tracker/shared";
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();

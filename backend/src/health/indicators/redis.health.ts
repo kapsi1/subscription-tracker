@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import type { ConfigService } from '@nestjs/config';
 import {
   HealthCheckError,
   HealthIndicator,
-  HealthIndicatorResult,
+  type HealthIndicatorResult,
 } from '@nestjs/terminus';
 import Redis from 'ioredis';
 

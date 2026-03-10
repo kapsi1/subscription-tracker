@@ -21,7 +21,7 @@ import {
 } from "./ui/select";
 import { Switch } from "./ui/switch";
 
-import { Subscription } from "@subscription-tracker/shared";
+import type { Subscription } from "@subscription-tracker/shared";
 
 interface SubscriptionModalProps {
   open: boolean;

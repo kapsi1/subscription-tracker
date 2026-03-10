@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
-import { ConfigService } from '@nestjs/config';
-import { GoogleProfile } from '../interfaces/google-profile.interface';
+import { Strategy, type VerifyCallback, type Profile } from 'passport-google-oauth20';
+import type { ConfigService } from '@nestjs/config';
+import type { GoogleProfile } from '../interfaces/google-profile.interface';
 
 
 @Injectable()

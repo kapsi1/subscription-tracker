@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { cn } from '@/components/ui/utils';
 
 interface FlagProps extends React.HTMLAttributes<HTMLImageElement> {

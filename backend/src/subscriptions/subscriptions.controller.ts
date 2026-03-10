@@ -9,10 +9,10 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { SubscriptionsService } from './subscriptions.service';
-import { CreateSubscriptionDto } from './dto/create-subscription.dto';
-import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import { ImportSubscriptionsDto } from './dto/import-subscription.dto';
+import type { SubscriptionsService } from './subscriptions.service';
+import type { CreateSubscriptionDto } from './dto/create-subscription.dto';
+import type { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import type { ImportSubscriptionsDto } from './dto/import-subscription.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { Request } from 'express';
 import type { RequestWithUser } from '../common/interfaces/request.interface';

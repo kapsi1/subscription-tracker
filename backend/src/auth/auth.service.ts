@@ -4,14 +4,14 @@ import {
   BadRequestException,
   Logger,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import type { ConfigService } from '@nestjs/config';
+import type { JwtService, JwtSignOptions } from '@nestjs/jwt';
+import type { UsersService } from '../users/users.service';
+import type { RegisterDto } from './dto/register.dto';
+import type { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 
-import { GoogleProfile } from './interfaces/google-profile.interface';
+import type { GoogleProfile } from './interfaces/google-profile.interface';
 
 
 @Injectable()

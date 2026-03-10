@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { HealthController } from './health.controller';
 import { HealthCheckService, TerminusModule } from '@nestjs/terminus';
 import { PrismaHealthIndicator } from './indicators/prisma.health';

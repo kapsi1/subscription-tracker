@@ -17,7 +17,7 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import api from "@/lib/api";
 
-import { COLORS, ColorsConfig, AccentColor as SharedAccentColor } from "@subscription-tracker/shared";
+import { COLORS, type ColorsConfig, type AccentColor as SharedAccentColor } from "@subscription-tracker/shared";
 
 interface AccentColor extends SharedAccentColor {
   name: string;

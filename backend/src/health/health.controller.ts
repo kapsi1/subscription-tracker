@@ -2,11 +2,11 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   HealthCheck,
-  HealthCheckService,
-  HealthCheckResult,
+  type HealthCheckService,
+  type HealthCheckResult,
 } from '@nestjs/terminus';
-import { PrismaHealthIndicator } from './indicators/prisma.health';
-import { RedisHealthIndicator } from './indicators/redis.health';
+import type { PrismaHealthIndicator } from './indicators/prisma.health';
+import type { RedisHealthIndicator } from './indicators/redis.health';
 
 @ApiTags('Health')
 @Controller('health')
