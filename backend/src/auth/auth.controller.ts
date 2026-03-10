@@ -69,6 +69,19 @@ export class AuthController {
     return this.authService.refreshTokens(refreshToken);
   }
 
+  @HttpCode(HttpStatus.OK)
+  @Post('verify')
+  async verify(@Body('token') token: string) {
+    return this.authService.verifyEmail(token);
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @HttpCode(HttpStatus.OK)
+  @Post('resend-verification')
+  async resendVerification(@Body('email') email: string) {
+    return this.authService.resendVerificationEmail(email);
+  }
+
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('logout')

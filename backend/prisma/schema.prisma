@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -35,6 +36,9 @@ model User {
   showPaidPayments       Boolean        @default(true)
   currency               String         @default("USD")
   avatarUrl              String?
+  isVerified             Boolean        @default(false)
+  verificationToken      String?        @unique
+  verificationTokenExpiresAt DateTime?
 }
 
 enum BillingCycle {

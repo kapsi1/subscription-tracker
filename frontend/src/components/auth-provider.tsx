@@ -37,6 +37,7 @@ interface RegisterCredentials {
   email: string;
   name: string;
   password?: string;
+  language: string;
 }
 
 interface AuthContextType {
@@ -45,6 +46,8 @@ interface AuthContextType {
   isLoading: boolean;
   login: (data: LoginCredentials) => Promise<void>;
   register: (data: RegisterCredentials) => Promise<void>;
+  verifyEmail: (token: string) => Promise<void>;
+  resendVerification: (email: string) => Promise<void>;
   logout: () => void;
   fetchUser: () => Promise<void>;
 }
@@ -55,6 +58,8 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   login: async () => {},
   register: async () => {},
+  verifyEmail: async () => {},
+  resendVerification: async () => {},
   logout: () => {},
   fetchUser: async () => {},
 });
@@ -124,14 +129,22 @@ export const AuthProvider = ({
   };
 
   const register = async (data: RegisterCredentials) => {
-    const res = await api.post('/auth/register', data);
-    const token = res.data.accessToken;
-    localStorage.setItem('accessToken', token);
+    await api.post('/auth/register', data);
+  };
+
+  const verifyEmail = async (token: string) => {
+    const res = await api.post('/auth/verify', { token });
+    const accessToken = res.data.accessToken;
+    localStorage.setItem('accessToken', accessToken);
     // biome-ignore lint/suspicious/noDocumentCookie: intentional SSR auth cookie
-    document.cookie = `accessToken=${token}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie = `accessToken=${accessToken}; path=/; max-age=31536000; SameSite=Lax`;
     if (res.data.refreshToken) localStorage.setItem('refreshToken', res.data.refreshToken);
     await fetchUser();
-    router.push('/dashboard');
+    setIsAuthenticated(true);
+  };
+
+  const resendVerification = async (email: string) => {
+    await api.post('/auth/resend-verification', { email });
   };
 
   const logout = () => {
@@ -146,7 +159,17 @@ export const AuthProvider = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, isLoading, login, register, logout, fetchUser }}
+      value={{
+        user,
+        isAuthenticated,
+        isLoading,
+        login,
+        register,
+        verifyEmail,
+        resendVerification,
+        logout,
+        fetchUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

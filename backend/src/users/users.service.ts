@@ -31,6 +31,12 @@ export class UsersService {
     });
   }
 
+  async findByVerificationToken(verificationToken: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: { verificationToken },
+    });
+  }
+
   async create(data: Prisma.UserCreateInput): Promise<User> {
     return this.prisma.user.create({
       data,

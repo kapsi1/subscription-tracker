@@ -4,7 +4,8 @@
     "login": {
       "subtitle": "Sign in to manage your subscriptions",
       "submit": "Sign In",
-      "switch": "Switch to Register"
+      "switch": "Switch to Register",
+      "resendVerification": "Resend verification email"
     },
     "register": {
       "subtitle": "Create an account to get started",
@@ -26,8 +27,16 @@
     "status": {
       "pleaseWait": "Please wait...",
       "loginSuccess": "Successfully logged in",
-      "registerSuccess": "Account created successfully",
-      "failed": "Authentication failed"
+      "registerSuccess": "Account created successfully. Please check your email to verify your account. The link is valid for 24 hours.",
+      "failed": "Authentication failed",
+      "notVerified": "Email not verified. Please check your inbox or resend the verification email.",
+      "verificationSent": "Verification email sent successfully",
+      "verificationFailed": "Verification failed. The link may be invalid or expired.",
+      "verificationSuccess": "Email verified successfully. You can now log in.",
+      "resendSuccess": "Verification email resent successfully",
+      "resendFailed": "Failed to resend verification email",
+      "registerSuccessTitle": "Check your email",
+      "registrationNextSteps": "Click the link in the email to verify your account and start managing your subscriptions."
     }
   },
   "common": {
@@ -38,6 +47,7 @@
     "backendTimeout": "The backend did not respond within 15 seconds. Please try again.",
     "tryAgain": "Try Again",
     "redirectingToLogin": "Redirecting to login...",
+    "redirectingToDashboard": "Redirecting to dashboard...",
     "previous": "Previous",
     "next": "Next"
   },
@@ -284,6 +294,13 @@
       "totalMonthly": "Total Monthly Cost",
       "paidYesterday": "Subscriptions Paid Yesterday",
       "noPaymentsPaidYesterday": "No subscriptions were paid yesterday."
+    },
+    "verification": {
+      "subject": "Verify your email - Subscription Tracker",
+      "title": "Email Verification",
+      "text": "Thank you for signing up for Subscription Tracker! To complete your registration and start managing your subscriptions, please verify your email address by clicking the button below. The link is valid for 24 hours:",
+      "button": "Verify Email",
+      "footer": "If you didn't create an account, you can safely ignore this email."
     }
   }
 }

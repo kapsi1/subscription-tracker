@@ -287,7 +287,7 @@ For any new feature add unit and E2E tests
 - [x] "Daily Digest" emails should be sent at midnight, when a subscription was paid a previous day.  They should include all subscriptions paid that day.
 - [x] Add user name field to registration and use it for personalized greetings in dashboard and emails.
 - [x] Show user's initials in the top right corner of the dashboard, instead of the logout button.  Clicking on it should open a dropdown with "Logout"
-- [ ] After registration send user a verification email and don't allow login until verified. Create a flow for verification including a way to resend the verification email.
+- [x] After registration send user a verification email and don't allow login until verified. Create a flow for verification including a way to resend the verification email.
 - [ ] Add a "Forgot Password" flow.
 - [x] Create user profile page. Make the profile page a tab in Settings page. Currents Settings page should be renamed to "Preferences".
 - [ ] Add Change Password and Change Email flow in user profile

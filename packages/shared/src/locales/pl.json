@@ -4,7 +4,8 @@
     "login": {
       "subtitle": "Zaloguj się, aby zarządzać swoimi subskrypcjami",
       "submit": "Zaloguj się",
-      "switch": "Przełącz na rejestrację"
+      "switch": "Przełącz na rejestrację",
+      "resendVerification": "Wyślij ponownie e-mail weryfikacyjny"
     },
     "register": {
       "subtitle": "Utwórz konto, aby rozpocząć",
@@ -26,8 +27,16 @@
     "status": {
       "pleaseWait": "Proszę czekać...",
       "loginSuccess": "Zalogowano pomyślnie",
-      "registerSuccess": "Konto zostało utworzone",
-      "failed": "Błąd uwierzytelniania"
+      "registerSuccess": "Konto zostało utworzone. Sprawdź swoją skrzynkę e-mail, aby zweryfikować konto. Link jest ważny przez 24 godziny.",
+      "failed": "Błąd uwierzytelniania",
+      "notVerified": "E-mail nie został zweryfikowany. Sprawdź skrzynkę lub wyślij ponownie e-mail weryfikacyjny.",
+      "verificationSent": "E-mail weryfikacyjny został wysłany",
+      "verificationFailed": "Weryfikacja nie powiodła się. Link może być nieprawidłowy lub wygasł.",
+      "verificationSuccess": "E-mail został pomyślnie zweryfikowany. Możesz się teraz zalogować.",
+      "resendSuccess": "E-mail weryfikacyjny został wysłany ponownie",
+      "resendFailed": "Nie udało się ponownie wysłać e-maila weryfikacyjnego",
+      "registerSuccessTitle": "Sprawdź swoją skrzynkę",
+      "registrationNextSteps": "Kliknij w link w wiadomości e-mail, aby zweryfikować konto i zacząć zarządzać swoimi subskrypcjami."
     }
   },
   "common": {
@@ -39,7 +48,8 @@
     "initializingApp": "Inicjalizacja aplikacji...",
     "backendTimeout": "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
     "tryAgain": "Spróbuj ponownie",
-    "redirectingToLogin": "Przekierowywanie do logowania..."
+    "redirectingToLogin": "Przekierowywanie do logowania...",
+    "redirectingToDashboard": "Przekierowanie do panelu..."
   },
   "nav": {
     "dashboard": "Panel główny",
@@ -288,6 +298,13 @@
       "totalMonthly": "Miesięczny koszt całkowity",
       "paidYesterday": "Subskrypcje opłacone wczoraj",
       "noPaymentsPaidYesterday": "Wczoraj nie opłacono żadnych subskrypcji."
+    },
+    "verification": {
+      "subject": "Zweryfikuj swój adres e-mail - Subscription Tracker",
+      "title": "Weryfikacja e-mail",
+      "text": "Dziękujemy za rejestrację w Subscription Tracker! Aby dokończyć rejestrację i zacząć zarządzać swoimi subskrypcjami, prosimy o zweryfikowanie adresu e-mail poprzez kliknięcie w poniższy przycisk. Link jest ważny przez 24 godziny:",
+      "button": "Zweryfikuj e-mail",
+      "footer": "Jeśli to nie Ty utworzyłeś konto, możesz bezpiecznie zignorować tę wiadomość."
     }
   }
 }

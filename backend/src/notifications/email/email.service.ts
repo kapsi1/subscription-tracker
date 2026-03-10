@@ -571,4 +571,71 @@ export class EmailService {
       throw error;
     }
   }
+
+  async sendVerificationEmail(
+    email: string,
+    name: string,
+    token: string,
+    language: 'en' | 'pl' = 'en',
+  ) {
+    const locale = LOCALES[language];
+    const emails = locale.emails;
+    const verification = emails.verification;
+    const themeMode = this.resolveTheme('system');
+
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const verificationUrl = `${frontendUrl}/verify-email?token=${token}`;
+
+    const appUrl = frontendUrl;
+    const teamNameHtml = locale.emails.teamName.replace(
+      'Subscription Tracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
+    );
+
+    const bodyHtml = `
+      <div class="email-root">
+        <div class="email-shell">
+          <div class="email-card">
+            <div class="email-topbar-bg"></div>
+            <div class="email-content">
+              <h2 class="email-title">${verification.title}</h2>
+              <p class="email-greeting">${emails.greetingWithName.replace('{{name}}', name || email)}</p>
+              <p class="email-text">${verification.text}</p>
+              
+              <div style="margin: 32px 0; text-align: center;">
+                <a href="${verificationUrl}" style="background-color: ${this.getEmailColors(undefined, 'light').primary}; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">
+                  ${verification.button}
+                </a>
+              </div>
+
+              <p class="email-text email-muted" style="font-size: 14px;">
+                ${verification.footer}
+              </p>
+              
+              <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const htmlTemplate = this.buildEmailDocument(bodyHtml, undefined, themeMode);
+
+    try {
+      await this.transporter.sendMail({
+        from: this.configService.get<string>(
+          'SMTP_FROM',
+          '"Subscription Tracker" <auth@subscription-tracker.local>',
+        ),
+        to: email,
+        subject: verification.subject,
+        html: htmlTemplate,
+      });
+      this.logger.log(`[SMTP] Successfully sent verification email to ${email}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`[SMTP] Failed to send verification email to ${email}: ${message}`);
+      throw error;
+    }
+  }
 }
