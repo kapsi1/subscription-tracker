@@ -7,10 +7,11 @@ import {
   type ColorsConfig,
   type AccentColor as SharedAccentColor,
 } from '@subscription-tracker/shared';
-import { Moon, Sun } from 'lucide-react';
+import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -35,8 +36,11 @@ const ACCENT_COLORS: AccentColor[] = Object.entries(COLORS as ColorsConfig).map(
 
 export function AccentColorSwitcher() {
   const { t } = useTranslation();
-  const { theme, setTheme } = useTheme();
+  const { user } = useAuth();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [currentAccent, setCurrentAccent] = useState<AccentColor>(ACCENT_COLORS[0]);
+  const [mounted, setMounted] = useState(false);
+  const isInitializedRef = useRef(false);
 
   const applyAccentColor = useCallback((accent: AccentColor) => {
     let styleTag = document.getElementById('accent-color-styles');
@@ -88,7 +92,9 @@ export function AccentColorSwitcher() {
   }, []);
 
   useEffect(() => {
-    // Check cache first for zero-flicker load
+    setMounted(true);
+
+    // Initial load from localStorage for zero-flicker (accent color only)
     const cached = localStorage.getItem('app-accent-color');
     if (cached) {
       const found = ACCENT_COLORS.find((c) => c.name === cached);
@@ -97,32 +103,31 @@ export function AccentColorSwitcher() {
         applyAccentColor(found);
       }
     }
+  }, [applyAccentColor]);
 
-    const fetchSettings = async () => {
-      try {
-        const response = await api.get('/users/me');
-        if (response.data.theme) {
-          setTheme(response.data.theme);
-        }
-        if (response.data.accentColor) {
-          const found = ACCENT_COLORS.find((c) => c.name === response.data.accentColor);
-          if (found) {
-            setCurrentAccent(found);
-            applyAccentColor(found);
-            localStorage.setItem('app-accent-color', found.name);
-          }
-        } else if (!cached) {
-          // Apply default if nothing found and no cache
-          applyAccentColor(ACCENT_COLORS[0]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch user settings', error);
-        if (!cached) applyAccentColor(ACCENT_COLORS[0]);
+  // Synchronize with user settings from backend ONCE
+  useEffect(() => {
+    if (!mounted || !user || isInitializedRef.current) return;
+
+    if (user.theme && (theme === 'system' || !theme)) {
+      // Only override if we are at default or uninitialized
+      // This prevents flickering if next-themes already loaded from localStorage
+      if (theme !== user.theme) {
+        setTheme(user.theme);
       }
-    };
+    }
 
-    fetchSettings();
-  }, [applyAccentColor, setTheme]);
+    if (user.accentColor) {
+      const found = ACCENT_COLORS.find((c) => c.name === user.accentColor);
+      if (found) {
+        setCurrentAccent(found);
+        applyAccentColor(found);
+        localStorage.setItem('app-accent-color', found.name);
+      }
+    }
+
+    isInitializedRef.current = true;
+  }, [mounted, user, theme, setTheme, applyAccentColor]);
 
   const handleSelect = async (accent: AccentColor) => {
     setCurrentAccent(accent);
@@ -136,7 +141,13 @@ export function AccentColorSwitcher() {
   };
 
   const toggleTheme = async () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    const currentTheme = theme || resolvedTheme || 'light';
+    let newTheme: string;
+    
+    if (currentTheme === 'light') newTheme = 'dark';
+    else if (currentTheme === 'dark') newTheme = 'system';
+    else newTheme = 'light';
+
     setTheme(newTheme);
     try {
       await api.patch('/users/settings', { theme: newTheme });
@@ -144,6 +155,8 @@ export function AccentColorSwitcher() {
       console.error('Failed to save theme setting', error);
     }
   };
+
+  if (!mounted) return null;
 
   return (
     <DropdownMenu>
@@ -159,7 +172,7 @@ export function AccentColorSwitcher() {
             className="w-4 h-4 rounded-full shadow-inner border border-white/20 transition-transform active:scale-90"
             style={{
               backgroundColor:
-                theme === 'dark' ? currentAccent.darkPrimary : currentAccent.lightPrimary,
+                resolvedTheme === 'dark' ? currentAccent.darkPrimary : currentAccent.lightPrimary,
             }}
           />
         </Button>
@@ -172,10 +185,24 @@ export function AccentColorSwitcher() {
             size="icon"
             onClick={toggleTheme}
             className="h-8 w-8 rounded-lg"
-            title={theme === 'dark' ? t('theme.light') : t('theme.dark')}
-            aria-label={theme === 'dark' ? t('theme.light') : t('theme.dark')}
+            title={
+              theme === 'light'
+                ? t('theme.dark')
+                : theme === 'dark'
+                  ? t('theme.system')
+                  : t('theme.light')
+            }
+            aria-label={
+              theme === 'light'
+                ? t('theme.dark')
+                : theme === 'dark'
+                  ? t('theme.system')
+                  : t('theme.light')
+            }
           >
-            {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            {theme === 'light' && <Sun className="h-4 w-4" />}
+            {theme === 'dark' && <Moon className="h-4 w-4" />}
+            {theme === 'system' && <Monitor className="h-4 w-4" />}
           </Button>
         </div>
         <DropdownMenuSeparator className="mb-3" />
@@ -194,7 +221,8 @@ export function AccentColorSwitcher() {
                   : 'hover:shadow-md',
               )}
               style={{
-                backgroundColor: theme === 'dark' ? accent.darkPrimary : accent.lightPrimary,
+                backgroundColor:
+                  resolvedTheme === 'dark' ? accent.darkPrimary : accent.lightPrimary,
               }}
             />
           ))}

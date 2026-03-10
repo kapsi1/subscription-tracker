@@ -17,7 +17,7 @@ export function Providers({
 }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
         <AuthProvider initialToken={initialToken}>
           <I18nProvider>
             {children}

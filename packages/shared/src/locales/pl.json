@@ -79,7 +79,8 @@
   },
   "theme": {
     "light": "Przełącz na tryb jasny",
-    "dark": "Przełącz na tryb ciemny"
+    "dark": "Przełącz na tryb ciemny",
+    "system": "Przełącz na motyw systemowy"
   },
   "language": {
     "switch": "Zmień język",
