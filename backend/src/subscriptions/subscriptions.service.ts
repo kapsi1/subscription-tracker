@@ -156,8 +156,12 @@ export class SubscriptionsService {
   }
 
   async update(userId: string, id: string, updateDto: UpdateSubscriptionDto) {
-    // Verify it exists AND belongs to user
-    const existing = await this.findOne(userId, id);
+    // Verify subscription exists AND belongs to user; also fetch user in parallel
+    const [existing, user] = await Promise.all([
+      this.findOne(userId, id),
+      this.prisma.user.findUnique({ where: { id: userId } }),
+    ]);
+    if (!user) throw new NotFoundException('User not found');
 
     const billingCycle = updateDto.billingCycle || existing.billingCycle;
     const intervalDays =
@@ -183,9 +187,6 @@ export class SubscriptionsService {
         intervalDays,
       );
     }
-
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw new NotFoundException('User not found');
 
     return this.prisma.subscription.update({
       where: { id },

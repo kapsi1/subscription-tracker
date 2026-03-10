@@ -4,10 +4,11 @@ import type { PrismaService } from '../prisma/prisma.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import type { Queue } from 'bullmq';
 
-import { AlertType, type Prisma, BillingCycle, type Subscription } from '@prisma/client';
+import { AlertType, type Prisma, type Subscription } from '@prisma/client';
 
 import type { DashboardService } from '../dashboard/dashboard.service';
 import type { PaymentsService } from '../payments/payments.service';
+import type { AlertJobData } from './alerts.types';
 
 type AlertWithSub = Prisma.AlertGetPayload<{
   include: {
@@ -24,19 +25,6 @@ type SubWithUser = Prisma.SubscriptionGetPayload<{
     user: true;
   };
 }>;
-
-interface AlertJobData {
-  alertId: string;
-  subscriptionId: string;
-  type: AlertType;
-  daysBefore: number;
-  userEmail: string;
-  subscriptionName: string;
-  amount: number;
-  currency: string;
-  webhookUrl?: string;
-  webhookSecret?: string;
-}
 
 @Injectable()
 export class AlertsService {
@@ -238,26 +226,25 @@ export class AlertsService {
       const summary = this.dashboardService.calculateCosts(userSubs);
 
       if (summary.totalMonthlyCost > monthlyBudget) {
-        // Enqueue budget alert email
-        await this.alertQueue.add(
-          'processBudgetAlert',
-          {
-            userEmail: user.email,
-            amount: summary.totalMonthlyCost,
-            budget: monthlyBudget,
-            currency: 'USD',
-          },
-          {
-            jobId: `budget-alert:${user.id}:${currentMonthStart.getTime()}`,
-            removeOnComplete: true,
-          }
-        );
-
-        // Update the last sent date
-        await this.prisma.user.update({
-          where: { id: user.id },
-          data: { lastBudgetAlertSentAt: now },
-        });
+        await Promise.all([
+          this.alertQueue.add(
+            'processBudgetAlert',
+            {
+              userEmail: user.email,
+              amount: summary.totalMonthlyCost,
+              budget: monthlyBudget,
+              currency: user.currency,
+            },
+            {
+              jobId: `budget-alert:${user.id}:${currentMonthStart.getTime()}`,
+              removeOnComplete: true,
+            },
+          ),
+          this.prisma.user.update({
+            where: { id: user.id },
+            data: { lastBudgetAlertSentAt: now },
+          }),
+        ]);
 
         countSent++;
       }

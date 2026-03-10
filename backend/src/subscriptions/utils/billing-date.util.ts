@@ -9,7 +9,6 @@ export function calculateNextBillingDate(
 
   if (billingCycle === BillingCycle.monthly) {
     const currentMonth = nextDate.getMonth();
-    const currentDay = nextDate.getDate();
 
     // Increment month
     nextDate.setMonth(currentMonth + 1);

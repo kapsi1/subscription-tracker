@@ -53,41 +53,28 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
     }
   }, [user]);
 
-  const saveSortSettings = async (sortBy: string, sortOrder: string) => {
+  const saveSettings = async (patch: Record<string, unknown>) => {
     try {
-      await api.patch("/users/settings", {
-        dashboardSortBy: sortBy,
-        dashboardSortOrder: sortOrder,
-      });
+      await api.patch("/users/settings", patch);
     } catch (err) {
-      console.error("Failed to save dashboard sort settings", err);
-    }
-  };
-
-  const saveShowPaidSetting = async (value: boolean) => {
-    try {
-      await api.patch("/users/settings", {
-        showPaidPayments: value,
-      });
-    } catch (err) {
-      console.error("Failed to save showPaid setting", err);
+      console.error("Failed to save settings", err);
     }
   };
 
   const handleSortByChange = (sortBy: "date" | "amount") => {
     setPaymentSortBy(sortBy);
-    saveSortSettings(sortBy, paymentSortDirection);
+    saveSettings({ dashboardSortBy: sortBy, dashboardSortOrder: paymentSortDirection });
   };
 
   const handleSortDirectionToggle = () => {
     const newDirection = paymentSortDirection === "asc" ? "desc" : "asc";
     setPaymentSortDirection(newDirection);
-    saveSortSettings(paymentSortBy, newDirection);
+    saveSettings({ dashboardSortBy: paymentSortBy, dashboardSortOrder: newDirection });
   };
 
   const handleToggleShowPaid = (checked: boolean) => {
     setShowPaid(checked);
-    saveShowPaidSetting(checked);
+    saveSettings({ showPaidPayments: checked });
   };
 
   const sortedMonthlyPayments = useMemo(() => {

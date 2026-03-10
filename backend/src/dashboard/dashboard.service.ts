@@ -75,13 +75,9 @@ export class DashboardService {
           total += amount;
         }
 
-        if (sub.billingCycle === BillingCycle.monthly) {
-          this.addMonthsClamped(billingDate, 1);
-        } else if (sub.billingCycle === BillingCycle.yearly) {
-          this.addYearsClamped(billingDate, 1);
-        } else if (sub.billingCycle === BillingCycle.custom && sub.intervalDays) {
-          billingDate.setDate(billingDate.getDate() + sub.intervalDays);
-        } else {
+        try {
+          this.incrementBillingDate(sub, billingDate);
+        } catch {
           break;
         }
       }
@@ -301,32 +297,19 @@ export class DashboardService {
   }
 
   async getForecast(userId: string, months: number = 12): Promise<ForecastItem[]> {
-    const subscriptions = await this.prisma.subscription.findMany({
-      where: { userId, isActive: true },
-    });
-    
+    const [subscriptions, user] = await Promise.all([
+      this.prisma.subscription.findMany({ where: { userId, isActive: true } }),
+      this.prisma.user.findUnique({ where: { id: userId }, select: { currency: true } }),
+    ]);
+
     const forecast: ForecastItem[] = [];
     const now = new Date();
 
     const monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
     ];
 
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { currency: true },
-    });
     const userCurrency = user?.currency || 'USD';
 
     // Create bucket for each upcoming month
@@ -375,30 +358,9 @@ export class DashboardService {
           });
         }
 
-        // Stepping to next billing date exactly like Subscriptions module logic
-        if (sub.billingCycle === BillingCycle.monthly) {
-          const m = currentBillingDate.getMonth();
-          currentBillingDate.setMonth(m + 1);
-          if (currentBillingDate.getMonth() !== (m + 1) % 12) {
-            currentBillingDate.setDate(0);
-          }
-        } else if (sub.billingCycle === BillingCycle.yearly) {
-          const y = currentBillingDate.getFullYear();
-          const m = currentBillingDate.getMonth();
-          const d = currentBillingDate.getDate();
-          currentBillingDate.setFullYear(y + 1);
-          if (m === 1 && d === 29 && currentBillingDate.getMonth() !== 1) {
-            currentBillingDate.setDate(0);
-          }
-        } else if (
-          sub.billingCycle === BillingCycle.custom &&
-          sub.intervalDays
-        ) {
-          currentBillingDate.setDate(
-            currentBillingDate.getDate() + sub.intervalDays,
-          );
-        } else {
-          // Fallback to prevent infinite loops if no clear cycle
+        try {
+          this.incrementBillingDate(sub, currentBillingDate);
+        } catch {
           break;
         }
       }

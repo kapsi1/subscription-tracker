@@ -24,7 +24,7 @@ import api from "@/lib/api";
 import { sendGAEvent } from "@next/third-parties/google";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { formatCurrency, getCategoryColor } from "@/lib/utils";
+import { formatCurrency, getCategoryColor, formatDate } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -254,17 +254,6 @@ export default function SubscriptionsPage() {
     reader.readAsText(file);
   };
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-  };
-
-  const formatBillingCycle = (cycle: string) => {
-    return cycle.charAt(0) + cycle.slice(1).toLowerCase();
-  };
-
-
   if (isLoading) {
     return <LoadingState message={t('common.loading')} />;
   }
@@ -413,7 +402,7 @@ export default function SubscriptionsPage() {
                       </TableCell>
                       <TableCell>{formatCurrency(subscription.amount, subscription.currency)}</TableCell>
                       <TableCell>{t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}</TableCell>
-                      <TableCell>{formatDate(subscription.nextBillingDate)}</TableCell>
+                      <TableCell>{subscription.nextBillingDate ? formatDate(subscription.nextBillingDate) : "N/A"}</TableCell>
                       <TableCell>
                         <Badge
                           variant="outline"

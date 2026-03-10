@@ -8,26 +8,7 @@ import type { PrismaService } from '../prisma/prisma.service';
 import { AlertType } from '@prisma/client';
 import type { ConfigService } from '@nestjs/config';
 import { EncryptionUtil } from '../common/utils/encryption.util';
-
-interface AlertJobData {
-  alertId: string;
-  subscriptionId: string;
-  type: AlertType;
-  daysBefore: number;
-  userEmail: string;
-  subscriptionName: string;
-  amount: number;
-  currency: string;
-  webhookUrl?: string;
-  webhookSecret?: string;
-}
-
-interface BudgetAlertJobData {
-  userEmail: string;
-  amount: number;
-  budget: number;
-  currency: string;
-}
+import type { AlertJobData, BudgetAlertJobData } from './alerts.types';
 
 @Processor('alertQueue')
 export class AlertsProcessor extends WorkerHost {
