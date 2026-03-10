@@ -8,6 +8,7 @@ describe('DashboardService', () => {
   let prismaMock: {
     subscription: { findMany: jest.Mock };
     paymentHistory: { aggregate: jest.Mock; findMany: jest.Mock };
+    user: { findUnique: jest.Mock };
   };
 
   beforeAll(() => {
@@ -27,6 +28,9 @@ describe('DashboardService', () => {
       paymentHistory: {
         aggregate: jest.fn(),
         findMany: jest.fn(),
+      },
+      user: {
+        findUnique: jest.fn(),
       },
     };
 
@@ -60,9 +64,7 @@ describe('DashboardService', () => {
         _sum: { amount: 200 },
       });
     prismaMock.paymentHistory.findMany.mockResolvedValue([]);
-    prismaMock.user = {
-      findUnique: jest.fn().mockResolvedValue({ currency: 'USD' }),
-    };
+    prismaMock.user.findUnique.mockResolvedValue({ currency: 'USD' });
 
     const res = await service.getSummary('user-1');
     expect(res.totalMonthlyCost).toBe(44.5);

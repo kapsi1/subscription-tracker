@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
+import { EmailService } from '../notifications/email/email.service';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 
@@ -13,11 +14,13 @@ describe('AuthService', () => {
   let usersServiceMock: Record<string, jest.Mock>;
   let jwtServiceMock: Record<string, jest.Mock>;
   let configServiceMock: Record<string, jest.Mock>;
+  let emailServiceMock: Record<string, jest.Mock>;
 
   const mockUser = {
     id: 'user-1',
     email: 'test@example.com',
     passwordHash: 'hashed-password',
+    isVerified: true,
   };
 
   const mockTokens = {
@@ -38,8 +41,18 @@ describe('AuthService', () => {
     };
 
     configServiceMock = {
-      get: jest.fn().mockReturnValue('test-secret'),
-      getOrThrow: jest.fn().mockReturnValue('test-secret'),
+      get: jest.fn().mockImplementation((key) => {
+        if (key === 'JWT_REFRESH_EXPIRES_IN') return '7d';
+        return 'test-secret';
+      }),
+      getOrThrow: jest.fn().mockImplementation((key) => {
+        if (key === 'JWT_REFRESH_SECRET') return 'refresh-secret';
+        return 'test-secret';
+      }),
+    };
+
+    emailServiceMock = {
+      sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -48,6 +61,7 @@ describe('AuthService', () => {
         { provide: UsersService, useValue: usersServiceMock },
         { provide: JwtService, useValue: jwtServiceMock },
         { provide: ConfigService, useValue: configServiceMock },
+        { provide: EmailService, useValue: emailServiceMock },
       ],
     }).compile();
 
@@ -72,15 +86,20 @@ describe('AuthService', () => {
         name: 'Test User',
         email: 'test@example.com',
         password: 'password123',
+        language: 'en',
       });
 
       expect(usersServiceMock.findByEmail).toHaveBeenCalledWith('test@example.com');
-      expect(usersServiceMock.create).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        name: 'Test User',
-        passwordHash: 'hashed-pw',
-      });
-      expect(result).toEqual(mockTokens);
+      expect(usersServiceMock.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: 'test@example.com',
+          name: 'Test User',
+          passwordHash: 'hashed-pw',
+          language: 'en',
+          isVerified: false,
+        }),
+      );
+      expect(result).toEqual({ message: 'Verification email sent' });
     });
 
     it('should throw BadRequestException when email already exists', async () => {
@@ -91,6 +110,7 @@ describe('AuthService', () => {
           name: 'Test User',
           email: 'test@example.com',
           password: 'password123',
+          language: 'en',
         }),
       ).rejects.toThrow(BadRequestException);
     });
@@ -147,7 +167,7 @@ describe('AuthService', () => {
       const result = await service.refreshTokens('valid-refresh-token');
 
       expect(jwtServiceMock.verify).toHaveBeenCalledWith('valid-refresh-token', {
-        secret: 'test-secret',
+        secret: 'refresh-secret',
       });
       expect(result).toEqual(mockTokens);
     });
