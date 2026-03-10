@@ -94,7 +94,7 @@ Import as `@subscription-tracker/shared`. Contains shared TypeScript interfaces,
 - Backend guards: `JwtAuthGuard` (Passport strategy) on protected controllers
 
 ### Biome Configuration
-Single quotes, 2-space indent, 100-char line width. Biome is the formatter/linter for all packages. `noExplicitAny` is disabled. Config is at the root `biome.json`.
+Single quotes, 2-space indent, 100-char line width. Biome is the formatter/linter for all packages. is disabled. Config is at the root `biome.json`.
 
 ### Environment
 Backend reads from `backend/.env`. Frontend reads `NEXT_PUBLIC_API_URL` (defaults to `http://127.0.0.1:3001`).
