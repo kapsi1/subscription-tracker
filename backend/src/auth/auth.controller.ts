@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/useImportType: causes 400 error on login */
 import {
   Body,
   Controller,
@@ -9,12 +10,12 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';;
+import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
-import { AuthService } from './auth.service';;
+import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';

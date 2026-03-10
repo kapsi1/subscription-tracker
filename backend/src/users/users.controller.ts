@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/useImportType: causes 400 error on login */
 import {
   BadRequestException,
   Body,
@@ -16,12 +17,12 @@ import {
 import { Throttle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
-import { EmailService } from '../notifications/email/email.service';;
-import { WebPushService } from '../notifications/webpush/webpush.service';;
-import { PrismaService } from '../prisma/prisma.service';;
+import { EmailService } from '../notifications/email/email.service';
+import { WebPushService } from '../notifications/webpush/webpush.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { PushSubscriptionDto } from './dto/push-subscription.dto';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
-import { UsersService } from './users.service';;
+import { UsersService } from './users.service';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
