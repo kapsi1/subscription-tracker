@@ -12,6 +12,8 @@
     "dev:shared": "pnpm --filter @subscription-tracker/shared dev",
     "dev:backend": "pnpm --filter backend dev",
     "dev:frontend": "pnpm --filter next-app dev",
+    "lint": "biome check .",
+    "lint:write": "biome check --write .",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui"
   },
@@ -20,6 +22,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.2.1",
     "concurrently": "^9.2.1",

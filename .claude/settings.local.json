@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/dev/subscription-tracker/backend/.env* -type f)",
+      "Bash(find /c/dev/subscription-tracker/frontend/.env* -type f)",
+      "Bash(find /c/dev/subscription-tracker/backend/src -type f -name *.guard.ts -o -name *.interceptor.ts -o -name *.filter.ts)",
+      "Bash(find c:devsubscription-tracker -maxdepth 3 -name package.json -not -path */node_modules/* ! -path */.pnpm/*)",
+      "Bash(find c:devsubscription-tracker -maxdepth 3 -type f \\\\\\(-name *.md -o -name *.json -o -name *.mjs -o -name *.cjs \\\\\\) ! -path */node_modules/* ! -path */.pnpm/* ! -path */.next/*)",
+      "Bash(grep -r \"eslint\" c:devsubscription-tracker --include=\"*.json\" --include=\"*.mjs\" --include=\"*.cjs\" --include=\"*.md\" --include=\"*.yml\" --include=\"*.yaml\" ! -path \"*/node_modules/*\" ! -path \"*/.pnpm/*\")",
+      "Bash(ls -la c:devsubscription-tracker.*lint*)",
+      "Bash(pnpm install:*)"
+    ]
+  }
+}
