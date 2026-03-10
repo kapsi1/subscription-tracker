@@ -1,21 +1,20 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { PiggyBank, SendHorizonal } from "lucide-react";
-import { useTranslation } from "react-i18next";
-
-import type { Settings } from "@subscription-tracker/shared";
+import type { Settings } from '@subscription-tracker/shared';
+import { PiggyBank, SendHorizonal } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface BudgetSectionProps {
   monthlyBudget: number | null | undefined;
   currency: string;
   onSettingsChange: (updates: Partial<Settings>) => void;
   showTestControls: boolean;
-  testBudgetEmailLanguage: "en" | "pl";
-  setTestBudgetEmailLanguage: (lang: "en" | "pl") => void;
+  testBudgetEmailLanguage: 'en' | 'pl';
+  setTestBudgetEmailLanguage: (lang: 'en' | 'pl') => void;
   onTestBudgetEmail: () => void;
   isSendingBudgetTestEmail: boolean;
   isSendingTestEmail: boolean;
@@ -43,9 +42,7 @@ export function BudgetSection({
           </div>
           <div>
             <CardTitle>{t('settings.budget.title')}</CardTitle>
-            <CardDescription>
-              {t('settings.budget.desc')}
-            </CardDescription>
+            <CardDescription>{t('settings.budget.desc')}</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -61,33 +58,33 @@ export function BudgetSection({
               step="0.01"
               placeholder="e.g. 50.00"
               className="max-w-32"
-              value={monthlyBudget ?? ""}
+              value={monthlyBudget ?? ''}
               onChange={(e) =>
-                onSettingsChange({ monthlyBudget: e.target.value === "" ? null : parseFloat(e.target.value) })
+                onSettingsChange({
+                  monthlyBudget: e.target.value === '' ? null : parseFloat(e.target.value),
+                })
               }
             />
           </div>
-          <p className="text-xs text-muted-foreground">
-            {t('settings.budget.help')}
-          </p>
+          <p className="text-xs text-muted-foreground">{t('settings.budget.help')}</p>
         </div>
         {showTestControls && (
           <div className="border-t pt-4 space-y-3">
-            <Label>{t("settings.notifications.email.testBudgetTitle")}</Label>
+            <Label>{t('settings.notifications.email.testBudgetTitle')}</Label>
             <p className="text-sm text-muted-foreground">
-              {t("settings.notifications.email.testBudgetDesc")}
+              {t('settings.notifications.email.testBudgetDesc')}
             </p>
 
             <div className="space-y-2">
-              <Label className="text-sm">{t("settings.notifications.email.testLanguage")}</Label>
+              <Label className="text-sm">{t('settings.notifications.email.testLanguage')}</Label>
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2 text-sm">
                   <input
                     type="radio"
                     name="testBudgetEmailLanguage"
                     value="en"
-                    checked={testBudgetEmailLanguage === "en"}
-                    onChange={() => setTestBudgetEmailLanguage("en")}
+                    checked={testBudgetEmailLanguage === 'en'}
+                    onChange={() => setTestBudgetEmailLanguage('en')}
                   />
                   English
                 </label>
@@ -96,8 +93,8 @@ export function BudgetSection({
                     type="radio"
                     name="testBudgetEmailLanguage"
                     value="pl"
-                    checked={testBudgetEmailLanguage === "pl"}
-                    onChange={() => setTestBudgetEmailLanguage("pl")}
+                    checked={testBudgetEmailLanguage === 'pl'}
+                    onChange={() => setTestBudgetEmailLanguage('pl')}
                   />
                   Polski
                 </label>
@@ -112,8 +109,8 @@ export function BudgetSection({
             >
               <SendHorizonal className="w-4 h-4" />
               {isSendingBudgetTestEmail
-                ? t("settings.notifications.email.testSending")
-                : t("settings.notifications.email.testBudgetSend")}
+                ? t('settings.notifications.email.testSending')
+                : t('settings.notifications.email.testBudgetSend')}
             </Button>
           </div>
         )}

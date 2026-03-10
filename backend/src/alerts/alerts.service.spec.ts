@@ -1,9 +1,9 @@
+import { getQueueToken } from '@nestjs/bullmq';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { AlertsService } from './alerts.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { PaymentsService } from '../payments/payments.service';
-import { getQueueToken } from '@nestjs/bullmq';
+import { PrismaService } from '../prisma/prisma.service';
+import { AlertsService } from './alerts.service';
 
 describe('AlertsService', () => {
   let service: AlertsService;

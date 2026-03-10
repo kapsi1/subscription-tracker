@@ -1,13 +1,11 @@
+import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import type { PrismaService } from '../prisma/prisma.service';
-import { InjectQueue } from '@nestjs/bullmq';
-import type { Queue } from 'bullmq';
-
 import { AlertType, type Prisma, type Subscription } from '@prisma/client';
-
+import type { Queue } from 'bullmq';
 import type { DashboardService } from '../dashboard/dashboard.service';
 import type { PaymentsService } from '../payments/payments.service';
+import type { PrismaService } from '../prisma/prisma.service';
 import type { AlertJobData } from './alerts.types';
 
 type AlertWithSub = Prisma.AlertGetPayload<{
@@ -45,7 +43,7 @@ export class AlertsService {
       event: 'alert_scheduler_start',
     });
 
-    const now = new Date();
+    const _now = new Date();
 
     // We check all active subscriptions with enabled alerts OR subscription-level reminders
     const alerts = (await this.prisma.alert.findMany({
@@ -192,7 +190,7 @@ export class AlertsService {
     });
 
     // Fetch all active subscriptions for these users in one query
-    const userIdsWithBudget = usersWithBudget.map(u => u.id);
+    const userIdsWithBudget = usersWithBudget.map((u) => u.id);
     const activeSubscriptions = await this.prisma.subscription.findMany({
       where: {
         userId: { in: userIdsWithBudget },
@@ -200,12 +198,14 @@ export class AlertsService {
       },
     });
 
-    const subsByUser = activeSubscriptions.reduce((acc, sub) => {
-      acc[sub.userId] = acc[sub.userId] || [];
-      acc[sub.userId].push(sub);
-      return acc;
-    }, {} as Record<string, Subscription[]>);
-
+    const subsByUser = activeSubscriptions.reduce(
+      (acc, sub) => {
+        acc[sub.userId] = acc[sub.userId] || [];
+        acc[sub.userId].push(sub);
+        return acc;
+      },
+      {} as Record<string, Subscription[]>,
+    );
 
     let countSent = 0;
 
@@ -214,10 +214,7 @@ export class AlertsService {
       const monthlyBudget = Number(user.monthlyBudget);
 
       // Check if already sent an alert this month
-      if (
-        user.lastBudgetAlertSentAt &&
-        user.lastBudgetAlertSentAt >= currentMonthStart
-      ) {
+      if (user.lastBudgetAlertSentAt && user.lastBudgetAlertSentAt >= currentMonthStart) {
         continue; // Alert already sent this month
       }
 

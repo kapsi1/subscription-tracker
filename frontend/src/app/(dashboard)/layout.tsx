@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { 
-  CreditCard, 
-  LayoutDashboard, 
-  ListChecks, 
-  Settings, 
-  LogOut,
-  UserRound,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CreditCard, LayoutDashboard, ListChecks, LogOut, Settings, UserRound } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes'; // Assuming this path
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AccentColorSwitcher } from '@/components/accent-color-switcher';
+import { useAuth } from '@/components/auth-provider';
+import { ErrorState } from '@/components/error-state'; // Assuming this path
+import { LanguageSelector } from '@/components/language-selector';
+import { LoadingState } from '@/components/loading-state';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,18 +19,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/components/auth-provider";
-import { useTranslation } from "react-i18next";
-import api from "@/lib/api";
-import { toast } from "sonner";
-import { UKFlag, PolandFlag } from "@/components/flags";
-import { cn } from "@/components/ui/utils";
-import { AccentColorSwitcher } from "@/components/accent-color-switcher";
-import { LanguageSelector } from "@/components/language-selector";
-import { LoadingState } from "@/components/loading-state";
-import { ErrorState } from "@/components/error-state"; // Assuming this path
-import { useTheme } from "next-themes"; // Assuming this path
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/components/ui/utils';
+import api from '@/lib/api';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -39,35 +30,37 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { t, i18n } = useTranslation();
 
-  const [backendInitStatus, setBackendInitStatus] = useState<"checking" | "ready" | "timeout">("ready");
+  const [backendInitStatus, setBackendInitStatus] = useState<'checking' | 'ready' | 'timeout'>(
+    'ready',
+  );
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const runBackendInitializationCheck = useCallback(() => {
-    setBackendInitStatus("checking");
+    setBackendInitStatus('checking');
 
     let isActive = true;
     const timeoutId = window.setTimeout(() => {
       if (isActive) {
-        setBackendInitStatus("timeout");
+        setBackendInitStatus('timeout');
       }
     }, 15000);
 
     api
-      .get("/health")
+      .get('/health')
       .then(() => {
         if (isActive) {
           window.clearTimeout(timeoutId);
-          setBackendInitStatus("ready");
+          setBackendInitStatus('ready');
           if (typeof window !== 'undefined') {
             sessionStorage.setItem('backend_ready', 'true');
           }
         }
       })
       .catch((err) => {
-        console.error("Health check failed", err);
+        console.error('Health check failed', err);
         if (isActive) {
           window.clearTimeout(timeoutId);
-          setBackendInitStatus("timeout");
+          setBackendInitStatus('timeout');
         }
       });
 
@@ -86,23 +79,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   // Safety check: if we are somehow rendering this layout on the login page,
   // do nothing to prevent redirect loops.
-  if (pathname === "/login") {
+  if (pathname === '/login') {
     return <>{children}</>;
   }
 
   useEffect(() => {
     // Only attempt one redirect per mount
-    if (backendInitStatus === "ready" && !isLoading && !isAuthenticated && !isRedirecting) {
+    if (backendInitStatus === 'ready' && !isLoading && !isAuthenticated && !isRedirecting) {
       setIsRedirecting(true);
-      router.replace("/login");
+      router.replace('/login');
     }
   }, [backendInitStatus, isLoading, isAuthenticated, isRedirecting, router]);
 
   const handleLogout = () => logout();
 
   const getUserInitials = () => {
-    const source = user?.name?.trim() || user?.email?.trim() || "";
-    if (!source) return "U";
+    const source = user?.name?.trim() || user?.email?.trim() || '';
+    if (!source) return 'U';
 
     const parts = source.split(/\s+/).filter(Boolean);
     if (parts.length >= 2) {
@@ -112,21 +105,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return source.slice(0, 2).toUpperCase();
   };
 
-
-  const title = "Subscription Tracker";
-  const currentLanguage = i18n.language || "en";
+  const title = 'Subscription Tracker';
+  const _currentLanguage = i18n.language || 'en';
 
   // 1. Initial health check failed
-  if (backendInitStatus === "timeout") {
+  if (backendInitStatus === 'timeout') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="w-full max-w-2xl px-4 text-center">
           <h1 className="text-5xl font-semibold tracking-tight">{title}</h1>
           <ErrorState
-            title={t("common.connectionError")}
-            message={t("common.backendTimeout")}
+            title={t('common.connectionError')}
+            message={t('common.backendTimeout')}
             onRetry={runBackendInitializationCheck}
-            retryLabel={t("common.tryAgain")}
+            retryLabel={t('common.tryAgain')}
             retryButtonClassName="bg-[#4F46E5] text-white border-transparent shadow-sm transition-shadow hover:bg-[#4338CA] hover:text-white hover:shadow-md"
           />
         </div>
@@ -140,14 +132,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="w-full max-w-2xl px-4 text-center">
           <h1 className="text-5xl font-semibold tracking-tight mb-8">{title}</h1>
-          {backendInitStatus === "checking" ? (
-             <LoadingState message={t("common.initializingApp")} />
+          {backendInitStatus === 'checking' ? (
+            <LoadingState message={t('common.initializingApp')} />
           ) : (
             <>
-              <LoadingState message={t("common.redirectingToLogin")} />
+              <LoadingState message={t('common.redirectingToLogin')} />
               <div className="mt-4">
                 <Button asChild variant="outline">
-                  <Link href="/login" prefetch={false}>Go to login</Link>
+                  <Link href="/login" prefetch={false}>
+                    Go to login
+                  </Link>
                 </Button>
               </div>
             </>
@@ -174,10 +168,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Button
                 variant="ghost"
                 className={cn(
-                  "gap-2 px-2 sm:px-3 transition-colors",
-                  pathname === "/dashboard" 
-                    ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  'gap-2 px-2 sm:px-3 transition-colors',
+                  pathname === '/dashboard'
+                    ? 'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}
                 size="sm"
               >
@@ -189,10 +183,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Button
                 variant="ghost"
                 className={cn(
-                  "gap-2 px-2 sm:px-3 transition-colors",
-                  pathname === "/subscriptions" 
-                    ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  'gap-2 px-2 sm:px-3 transition-colors',
+                  pathname === '/subscriptions'
+                    ? 'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}
                 size="sm"
               >
@@ -204,10 +198,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Button
                 variant="ghost"
                 className={cn(
-                  "gap-2 px-2 sm:px-3 transition-colors",
-                  pathname === "/settings" 
-                    ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  'gap-2 px-2 sm:px-3 transition-colors',
+                  pathname === '/settings'
+                    ? 'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}
                 size="sm"
               >
@@ -231,13 +225,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   {user?.avatarUrl ? (
                     <img
                       src={user.avatarUrl}
-                      alt={user.name || "User avatar"}
+                      alt={user.name || 'User avatar'}
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-xs font-semibold tracking-wide">
-                      {getUserInitials()}
-                    </span>
+                    <span className="text-xs font-semibold tracking-wide">{getUserInitials()}</span>
                   )}
                 </Button>
               </DropdownMenuTrigger>
@@ -245,9 +237,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{user?.name}</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {user?.email}
-                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -258,7 +248,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="gap-2 cursor-pointer text-destructive focus:text-destructive">
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="gap-2 cursor-pointer text-destructive focus:text-destructive"
+                >
                   <LogOut className="h-4 w-4" />
                   <span>{t('nav.logout')}</span>
                 </DropdownMenuItem>
@@ -271,9 +264,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 lg:max-w-10xl lg:mx-auto justify-items-center">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <LoadingState message={t("common.loading")} />
+            <LoadingState message={t('common.loading')} />
           </div>
-        ) : children}
+        ) : (
+          children
+        )}
       </main>
     </div>
   );

@@ -1,5 +1,5 @@
-import { calculateNextBillingDate } from './billing-date.util';
 import { BillingCycle } from '@prisma/client';
+import { calculateNextBillingDate } from './billing-date.util';
 
 describe('calculateNextBillingDate', () => {
   it('should correctly increment a simple monthly cycle', () => {

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { useAuth } from '@/components/auth-provider';
 
 export default function AuthCallback() {
@@ -16,7 +16,7 @@ export default function AuthCallback() {
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
       document.cookie = `accessToken=${accessToken}; path=/; max-age=31536000; SameSite=Lax`;
-      
+
       if (refreshToken) {
         localStorage.setItem('refreshToken', refreshToken);
       }

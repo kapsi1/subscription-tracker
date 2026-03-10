@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { DashboardSummary, ForecastItem, Subscription } from '@subscription-tracker/shared';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { useAuth } from '@/components/auth-provider';
+import { LoadingState } from '@/components/loading-state';
+import { SubscriptionModal } from '@/components/subscription-modal';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import api from "@/lib/api";
-import Link from "next/link";
-import { toast } from "sonner";
-import { useTranslation } from "react-i18next";
-import { LoadingState } from "@/components/loading-state";
-import { useAuth } from "@/components/auth-provider";
-import { SummaryCards } from "./_components/SummaryCards";
-import { MonthlyPayments, type MonthlyPayment } from "./_components/MonthlyPayments";
-import { MonthlyForecast } from "./_components/MonthlyForecast";
-import { CostByCategory } from "./_components/CostByCategory";
-import { SubscriptionModal } from "@/components/subscription-modal";
-import type { DashboardSummary, ForecastItem, Subscription } from "@subscription-tracker/shared";
+} from '@/components/ui/dropdown-menu';
+import api from '@/lib/api';
+import { CostByCategory } from './_components/CostByCategory';
+import { MonthlyForecast } from './_components/MonthlyForecast';
+import { type MonthlyPayment, MonthlyPayments } from './_components/MonthlyPayments';
+import { SummaryCards } from './_components/SummaryCards';
 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
@@ -50,7 +50,7 @@ export default function DashboardPage() {
   const { data: rawForecast, isLoading: isForecastLoading } = useQuery<ForecastItem[]>({
     queryKey: ['dashboard', 'forecast'],
     queryFn: async () => {
-      const res = await api.get("/dashboard/forecast?months=12");
+      const res = await api.get('/dashboard/forecast?months=12');
       return res.data;
     },
   });
@@ -65,12 +65,12 @@ export default function DashboardPage() {
 
   const forecast = useMemo(() => {
     if (!summary || !rawForecast) return [];
-    
+
     return rawForecast.reduce((acc: ForecastItem[], item: ForecastItem, index: number) => {
-      const previousCumulative = index > 0 ? (acc[index - 1].cumulativeAmount || 0) : 0;
+      const previousCumulative = index > 0 ? acc[index - 1].cumulativeAmount || 0 : 0;
       acc.push({
         ...item,
-        cumulativeAmount: previousCumulative + item.amount
+        cumulativeAmount: previousCumulative + item.amount,
       });
       return acc;
     }, []);
@@ -93,8 +93,18 @@ export default function DashboardPage() {
   };
 
   const monthNames = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   const handleMonthSelect = (monthIndex: number) => {
@@ -107,8 +117,10 @@ export default function DashboardPage() {
       const res = await api.get(`/subscriptions/${id}`);
       setEditingSubscription(res.data);
       setModalOpen(true);
-    } catch (err) {
-      toast.error(t('subscriptions.loadError', { defaultValue: 'Failed to load subscription details' }));
+    } catch (_err) {
+      toast.error(
+        t('subscriptions.loadError', { defaultValue: 'Failed to load subscription details' }),
+      );
     }
   };
 
@@ -118,7 +130,7 @@ export default function DashboardPage() {
         const { id, ...updateData } = subscription;
         await api.patch(`/subscriptions/${id}`, updateData);
         toast.success(t('subscriptions.updateSuccess'));
-        
+
         // Invalidate queries to refresh data
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       }
@@ -138,13 +150,10 @@ export default function DashboardPage() {
   }
 
   const monthlyPaymentsDoneCount = monthlyPayments.filter(
-    (payment) => payment.status === "done",
+    (payment) => payment.status === 'done',
   ).length;
 
-  const greetingName =
-    user?.name?.trim() ||
-    user?.email?.split("@")[0] ||
-    "there";
+  const greetingName = user?.name?.trim() || user?.email?.split('@')[0] || 'there';
 
   return (
     <div className="space-y-8">
@@ -152,12 +161,10 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <p className="text-sm text-muted-foreground">
-            {t("dashboard.greeting", { name: greetingName })}
+            {t('dashboard.greeting', { name: greetingName })}
           </p>
           <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
-          <p className="text-muted-foreground mt-1">
-            {t('dashboard.subtitle')}
-          </p>
+          <p className="text-muted-foreground mt-1">{t('dashboard.subtitle')}</p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="flex items-center gap-2 bg-muted/50 border rounded-lg p-1">
@@ -166,7 +173,7 @@ export default function DashboardPage() {
               size="icon"
               onClick={handlePrevMonth}
               className="h-8 w-8"
-              aria-label={t("common.previous")}
+              aria-label={t('common.previous')}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -178,10 +185,13 @@ export default function DashboardPage() {
               }}
             >
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="min-w-[140px] font-medium hover:bg-accent/50 focus-visible:ring-0">
-                  {selectedDate.toLocaleDateString(i18n.language === "pl" ? "pl-PL" : "en-US", {
-                    month: "long",
-                    year: "numeric",
+                <Button
+                  variant="ghost"
+                  className="min-w-[140px] font-medium hover:bg-accent/50 focus-visible:ring-0"
+                >
+                  {selectedDate.toLocaleDateString(i18n.language === 'pl' ? 'pl-PL' : 'en-US', {
+                    month: 'long',
+                    year: 'numeric',
                   })}
                 </Button>
               </DropdownMenuTrigger>
@@ -191,7 +201,11 @@ export default function DashboardPage() {
                     variant="ghost"
                     size="icon"
                     className="h-7 w-7"
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPickerYear(prev => prev - 1); }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setPickerYear((prev) => prev - 1);
+                    }}
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
@@ -200,25 +214,30 @@ export default function DashboardPage() {
                     variant="ghost"
                     size="icon"
                     className="h-7 w-7"
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPickerYear(prev => prev + 1); }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setPickerYear((prev) => prev + 1);
+                    }}
                   >
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   {monthNames.map((month, index) => {
-                    const isSelected = selectedDate.getMonth() === index && selectedDate.getFullYear() === pickerYear;
+                    const isSelected =
+                      selectedDate.getMonth() === index &&
+                      selectedDate.getFullYear() === pickerYear;
                     return (
                       <Button
                         key={month}
-                        variant={isSelected ? "default" : "ghost"}
+                        variant={isSelected ? 'default' : 'ghost'}
                         className="h-9 w-full text-xs font-medium"
                         onClick={() => handleMonthSelect(index)}
                       >
-                        {i18n.language === "pl"
-                          ? new Date(2000, index).toLocaleDateString("pl-PL", { month: "short" })
-                          : month
-                        }
+                        {i18n.language === 'pl'
+                          ? new Date(2000, index).toLocaleDateString('pl-PL', { month: 'short' })
+                          : month}
                       </Button>
                     );
                   })}
@@ -230,7 +249,7 @@ export default function DashboardPage() {
               size="icon"
               onClick={handleNextMonth}
               className="h-8 w-8"
-              aria-label={t("common.next")}
+              aria-label={t('common.next')}
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -240,13 +259,11 @@ export default function DashboardPage() {
               onClick={handleResetMonth}
               className="text-xs px-2 h-7 ml-1"
             >
-              {t("dashboard.thisMonth")}
+              {t('dashboard.thisMonth')}
             </Button>
           </div>
           <Link href="/subscriptions">
-            <Button className="gap-2 sm:w-auto">
-              {t('dashboard.manageSubscriptions')}
-            </Button>
+            <Button className="gap-2 sm:w-auto">{t('dashboard.manageSubscriptions')}</Button>
           </Link>
         </div>
       </div>
@@ -257,10 +274,7 @@ export default function DashboardPage() {
         monthlyPaymentsTotalCount={monthlyPayments.length}
       />
 
-      <MonthlyPayments 
-        monthlyPayments={monthlyPayments} 
-        onEdit={handleEditSubscription}
-      />
+      <MonthlyPayments monthlyPayments={monthlyPayments} onEdit={handleEditSubscription} />
 
       <MonthlyForecast forecast={forecast} currency={summary.currency} />
 

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Smartphone, SendHorizonal } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { SendHorizonal, Smartphone } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 interface PushNotificationsSectionProps {
   pushEnabled: boolean;
@@ -63,46 +63,54 @@ export function PushNotificationsSection({
         </div>
 
         {showTestControls && (
-        <div className="border-t pt-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <Label className="text-sm font-medium">Test Notification</Label>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-xs text-muted-foreground h-7"
-              onClick={onResetPush}
-            >
-              Reset & Clear
-            </Button>
-          </div>
-          {!pushEnabled && (
-            <p className="text-sm text-muted-foreground">Enable push notifications above if possible, or try sending anyway if you already allowed it.</p>
-          )}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="testDelay" className="text-sm text-muted-foreground whitespace-nowrap">Delay (s)</Label>
-              <Input
-                id="testDelay"
-                type="number"
-                min="0"
-                max="300"
-                className="max-w-20"
-                value={testDelay}
-                onChange={(e) => setTestDelay(e.target.value)}
-              />
+          <div className="border-t pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Test Notification</Label>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs text-muted-foreground h-7"
+                onClick={onResetPush}
+              >
+                Reset & Clear
+              </Button>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onTestPush}
-              disabled={isSendingTest}
-              className="gap-1.5"
-            >
-              <SendHorizonal className="w-4 h-4" />
-              {isSendingTest ? "Sending..." : "Send Test"}
-            </Button>
+            {!pushEnabled && (
+              <p className="text-sm text-muted-foreground">
+                Enable push notifications above if possible, or try sending anyway if you already
+                allowed it.
+              </p>
+            )}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Label
+                  htmlFor="testDelay"
+                  className="text-sm text-muted-foreground whitespace-nowrap"
+                >
+                  Delay (s)
+                </Label>
+                <Input
+                  id="testDelay"
+                  type="number"
+                  min="0"
+                  max="300"
+                  className="max-w-20"
+                  value={testDelay}
+                  onChange={(e) => setTestDelay(e.target.value)}
+                />
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onTestPush}
+                disabled={isSendingTest}
+                className="gap-1.5"
+              >
+                <SendHorizonal className="w-4 h-4" />
+                {isSendingTest ? 'Sending...' : 'Send Test'}
+              </Button>
+            </div>
           </div>
-        </div>
         )}
       </CardContent>
     </Card>

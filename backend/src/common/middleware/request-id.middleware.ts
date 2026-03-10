@@ -1,6 +1,6 @@
-import { Injectable, type NestMiddleware } from '@nestjs/common';
-import type { Request, Response, NextFunction } from 'express';
 import { randomUUID } from 'node:crypto';
+import { Injectable, type NestMiddleware } from '@nestjs/common';
+import type { NextFunction, Request, Response } from 'express';
 
 /**
  * Middleware that attaches a unique request ID to every incoming request.
@@ -14,12 +14,11 @@ import { randomUUID } from 'node:crypto';
 @Injectable()
 export class RequestIdMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
-    const id =
-      (req.headers['x-request-id'] as string | undefined) ?? randomUUID();
+    const id = (req.headers['x-request-id'] as string | undefined) ?? randomUUID();
 
     // pino-http reads `req.id` by default when genReqId is not configured,
     // but we also set it explicitly for clarity.
-    (req as unknown as Record<string, unknown>)['id'] = id;
+    (req as unknown as Record<string, unknown>).id = id;
 
     res.setHeader('X-Request-Id', id);
     next();

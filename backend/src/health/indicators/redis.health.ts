@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
-import {
-  HealthCheckError,
-  HealthIndicator,
-  type HealthIndicatorResult,
-} from '@nestjs/terminus';
+import { HealthCheckError, HealthIndicator, type HealthIndicatorResult } from '@nestjs/terminus';
 import Redis from 'ioredis';
 
 @Injectable()

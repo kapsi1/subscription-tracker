@@ -16,13 +16,18 @@
     "lineWidth": 100
   },
   "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    },
     "formatter": {
       "quoteStyle": "single"
     }
   },
   "files": {
     "includes": [
-      "**",
+      "backend/src/**",
+      "frontend/src/**",
+      "packages/shared/src/**",
       "!**/node_modules/",
       "!**/frontend/.next/",
       "!**/backend/dist/",

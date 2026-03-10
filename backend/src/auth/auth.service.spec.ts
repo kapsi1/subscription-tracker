@@ -1,10 +1,10 @@
-import { Test, type TestingModule } from '@nestjs/testing';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from './auth.service';
-import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { Test, type TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
+import { UsersService } from '../users/users.service';
+import { AuthService } from './auth.service';
 
 jest.mock('bcrypt');
 
@@ -74,9 +74,7 @@ describe('AuthService', () => {
         password: 'password123',
       });
 
-      expect(usersServiceMock.findByEmail).toHaveBeenCalledWith(
-        'test@example.com',
-      );
+      expect(usersServiceMock.findByEmail).toHaveBeenCalledWith('test@example.com');
       expect(usersServiceMock.create).toHaveBeenCalledWith({
         email: 'test@example.com',
         name: 'Test User',
@@ -129,9 +127,9 @@ describe('AuthService', () => {
       usersServiceMock.findByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(
-        service.login({ email: 'test@example.com', password: 'wrong' }),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login({ email: 'test@example.com', password: 'wrong' })).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 
@@ -148,12 +146,9 @@ describe('AuthService', () => {
 
       const result = await service.refreshTokens('valid-refresh-token');
 
-      expect(jwtServiceMock.verify).toHaveBeenCalledWith(
-        'valid-refresh-token',
-        {
-          secret: 'test-secret',
-        },
-      );
+      expect(jwtServiceMock.verify).toHaveBeenCalledWith('valid-refresh-token', {
+        secret: 'test-secret',
+      });
       expect(result).toEqual(mockTokens);
     });
 
@@ -162,18 +157,14 @@ describe('AuthService', () => {
         throw new Error('invalid token');
       });
 
-      await expect(service.refreshTokens('bad-token')).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(service.refreshTokens('bad-token')).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw UnauthorizedException when user not found', async () => {
       jwtServiceMock.verify.mockReturnValue({ sub: 'deleted-user' });
       usersServiceMock.findById.mockResolvedValue(null);
 
-      await expect(service.refreshTokens('orphan-token')).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(service.refreshTokens('orphan-token')).rejects.toThrow(UnauthorizedException);
     });
   });
 });

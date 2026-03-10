@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty, ValidateNested, IsOptional, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 class PushSubscriptionKeysDto {
   @IsString()

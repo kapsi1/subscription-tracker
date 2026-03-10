@@ -1,39 +1,38 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import { toast } from "sonner";
-import api from "@/lib/api";
-import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from "@/lib/push";
-import { useTranslation } from "react-i18next";
-import { LocalizationSection } from "../_components/LocalizationSection";
-import { EmailNotificationsSection } from "../_components/EmailNotificationsSection";
-import { PushNotificationsSection } from "../_components/PushNotificationsSection";
-import { WebhookSection } from "../_components/WebhookSection";
-import { ReminderSection } from "../_components/ReminderSection";
-import { BudgetSection } from "../_components/BudgetSection";
-
-import type { Settings } from "@subscription-tracker/shared";
+import type { Settings } from '@subscription-tracker/shared';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import api from '@/lib/api';
+import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from '@/lib/push';
+import { BudgetSection } from '../_components/BudgetSection';
+import { EmailNotificationsSection } from '../_components/EmailNotificationsSection';
+import { LocalizationSection } from '../_components/LocalizationSection';
+import { PushNotificationsSection } from '../_components/PushNotificationsSection';
+import { ReminderSection } from '../_components/ReminderSection';
+import { WebhookSection } from '../_components/WebhookSection';
 
 export default function PreferencesPage() {
   const { t } = useTranslation();
-  const showTestControls = process.env.NODE_ENV !== "production";
+  const showTestControls = process.env.NODE_ENV !== 'production';
   const [settings, setSettings] = useState<Settings>({
     defaultReminderEnabled: true,
     defaultReminderDays: 3,
     emailNotifications: true,
-    emailAddress: "",
+    emailAddress: '',
     webhookEnabled: false,
-    webhookUrl: "",
-    webhookSecret: "",
+    webhookUrl: '',
+    webhookSecret: '',
     dailyDigest: false,
     weeklyReport: true,
     monthlyBudget: null,
     pushEnabled: false,
-    currency: "USD",
+    currency: 'USD',
   });
-  const [testDelay, setTestDelay] = useState("0");
-  const [testEmailLanguage, setTestEmailLanguage] = useState<"en" | "pl">("en");
-  const [testBudgetEmailLanguage, setTestBudgetEmailLanguage] = useState<"en" | "pl">("en");
+  const [testDelay, setTestDelay] = useState('0');
+  const [testEmailLanguage, setTestEmailLanguage] = useState<'en' | 'pl'>('en');
+  const [testBudgetEmailLanguage, setTestBudgetEmailLanguage] = useState<'en' | 'pl'>('en');
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
   const [isSendingBudgetTestEmail, setIsSendingBudgetTestEmail] = useState(false);
@@ -48,20 +47,22 @@ export default function PreferencesPage() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await api.get("/users/me");
+        const response = await api.get('/users/me');
         const loadedSettings = {
           defaultReminderEnabled: response.data.defaultReminderEnabled,
-          defaultReminderDays: parseInt(response.data.defaultReminderDays) || 3,
+          defaultReminderDays: parseInt(response.data.defaultReminderDays, 10) || 3,
           emailAddress: response.data.email,
-          monthlyBudget: response.data.monthlyBudget ? parseFloat(response.data.monthlyBudget) : null,
+          monthlyBudget: response.data.monthlyBudget
+            ? parseFloat(response.data.monthlyBudget)
+            : null,
           emailNotifications: response.data.emailNotifications,
           webhookEnabled: response.data.webhookEnabled,
-          webhookUrl: response.data.webhookUrl || "",
-          webhookSecret: response.data.webhookSecret || "",
+          webhookUrl: response.data.webhookUrl || '',
+          webhookSecret: response.data.webhookSecret || '',
           dailyDigest: response.data.dailyDigest,
           weeklyReport: response.data.weeklyReport,
           pushEnabled: false,
-          currency: response.data.currency || "USD",
+          currency: response.data.currency || 'USD',
         };
         setSettings((prev) => ({
           ...prev,
@@ -80,7 +81,7 @@ export default function PreferencesPage() {
           currency: loadedSettings.currency,
         });
         hasLoadedSettingsRef.current = true;
-      } catch (error) {
+      } catch (_error) {
         toast.error(t('settings.loadError'));
       }
     };
@@ -92,11 +93,11 @@ export default function PreferencesPage() {
           if (registration) {
             const subscription = await registration.pushManager.getSubscription();
             if (subscription) {
-              setSettings(s => ({ ...s, pushEnabled: true }));
+              setSettings((s) => ({ ...s, pushEnabled: true }));
             }
           }
         } catch (e) {
-          console.error("Failed to check push subscription", e);
+          console.error('Failed to check push subscription', e);
         }
       }
     };
@@ -127,12 +128,12 @@ export default function PreferencesPage() {
     const timer = window.setTimeout(async () => {
       latestSaveAttemptRef.current = serializedPayload;
       try {
-        await api.patch("/users/settings", payload);
+        await api.patch('/users/settings', payload);
         if (latestSaveAttemptRef.current === serializedPayload) {
           lastSavedPreferencesRef.current = serializedPayload;
         }
       } catch (_error) {
-        toast.error(t("settings.saveError", { defaultValue: "Failed to save settings" }));
+        toast.error(t('settings.saveError', { defaultValue: 'Failed to save settings' }));
       }
     }, 500);
 
@@ -145,7 +146,7 @@ export default function PreferencesPage() {
       if (checked) {
         await registerServiceWorker();
         const sub = await subscribeToPush();
-        await api.post("/users/push-subscription", sub.toJSON());
+        await api.post('/users/push-subscription', sub.toJSON());
         setSettings((s) => ({ ...s, pushEnabled: true }));
         toast.success(t('settings.notifications.push.success'));
       } else {
@@ -153,7 +154,9 @@ export default function PreferencesPage() {
         if (registration) {
           const sub = await registration.pushManager.getSubscription();
           if (sub) {
-            await api.delete(`/users/push-subscription?endpoint=${encodeURIComponent(sub.endpoint)}`);
+            await api.delete(
+              `/users/push-subscription?endpoint=${encodeURIComponent(sub.endpoint)}`,
+            );
           }
         }
         await unsubscribeFromPush();
@@ -162,7 +165,7 @@ export default function PreferencesPage() {
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
-      toast.error(t('settings.notifications.push.error') + ": " + message);
+      toast.error(`${t('settings.notifications.push.error')}: ${message}`);
       setSettings((s) => ({ ...s, pushEnabled: false }));
     } finally {
       setIsTogglingPush(false);
@@ -170,28 +173,29 @@ export default function PreferencesPage() {
   };
 
   const handleResetPush = async () => {
-    if (!confirm("Are you sure? This will unregister the service worker and clear push settings.")) return;
+    if (!confirm('Are you sure? This will unregister the service worker and clear push settings.'))
+      return;
     try {
       const registrations = await navigator.serviceWorker.getRegistrations();
       for (const registration of registrations) {
         await registration.unregister();
       }
-      setSettings(s => ({ ...s, pushEnabled: false }));
-      toast.success("Push settings reset. Please refresh and try again.");
-    } catch (e) {
-      toast.error("Failed to reset push settings");
+      setSettings((s) => ({ ...s, pushEnabled: false }));
+      toast.success('Push settings reset. Please refresh and try again.');
+    } catch (_e) {
+      toast.error('Failed to reset push settings');
     }
   };
 
   const handleTestPush = async () => {
     setIsSendingTest(true);
     try {
-      const delaySeconds = Math.max(0, parseInt(testDelay) || 0);
-      const res = await api.post("/users/test-push", { delaySeconds });
+      const delaySeconds = Math.max(0, parseInt(testDelay, 10) || 0);
+      const res = await api.post('/users/test-push', { delaySeconds });
       toast.success(res.data.message);
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || "Failed to send test notification");
+      toast.error(err.response?.data?.message || 'Failed to send test notification');
     } finally {
       setIsSendingTest(false);
     }
@@ -200,11 +204,11 @@ export default function PreferencesPage() {
   const handleTestEmail = async () => {
     setIsSendingTestEmail(true);
     try {
-      const res = await api.post("/users/test-email", { lang: testEmailLanguage });
-      toast.success(res.data.message || t("settings.notifications.email.testSuccess"));
+      const res = await api.post('/users/test-email', { lang: testEmailLanguage });
+      toast.success(res.data.message || t('settings.notifications.email.testSuccess'));
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || t("settings.notifications.email.testError"));
+      toast.error(err.response?.data?.message || t('settings.notifications.email.testError'));
     } finally {
       setIsSendingTestEmail(false);
     }
@@ -213,11 +217,11 @@ export default function PreferencesPage() {
   const handleTestBudgetEmail = async () => {
     setIsSendingBudgetTestEmail(true);
     try {
-      const res = await api.post("/users/test-budget-email", { lang: testBudgetEmailLanguage });
-      toast.success(res.data.message || t("settings.notifications.email.testBudgetSuccess"));
+      const res = await api.post('/users/test-budget-email', { lang: testBudgetEmailLanguage });
+      toast.success(res.data.message || t('settings.notifications.email.testBudgetSuccess'));
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || t("settings.notifications.email.testBudgetError"));
+      toast.error(err.response?.data?.message || t('settings.notifications.email.testBudgetError'));
     } finally {
       setIsSendingBudgetTestEmail(false);
     }
@@ -226,11 +230,11 @@ export default function PreferencesPage() {
   const handleTestDailyDigest = async () => {
     setIsSendingDailyTest(true);
     try {
-      const res = await api.post("/users/test-daily-digest", { lang: testEmailLanguage });
-      toast.success(res.data.message || "Test daily digest sent");
+      const res = await api.post('/users/test-daily-digest', { lang: testEmailLanguage });
+      toast.success(res.data.message || 'Test daily digest sent');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || "Failed to send test daily digest");
+      toast.error(err.response?.data?.message || 'Failed to send test daily digest');
     } finally {
       setIsSendingDailyTest(false);
     }
@@ -239,11 +243,11 @@ export default function PreferencesPage() {
   const handleTestWeeklyReport = async () => {
     setIsSendingWeeklyTest(true);
     try {
-      const res = await api.post("/users/test-weekly-report", { lang: testEmailLanguage });
-      toast.success(res.data.message || "Test weekly report sent");
+      const res = await api.post('/users/test-weekly-report', { lang: testEmailLanguage });
+      toast.success(res.data.message || 'Test weekly report sent');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || "Failed to send test weekly report");
+      toast.error(err.response?.data?.message || 'Failed to send test weekly report');
     } finally {
       setIsSendingWeeklyTest(false);
     }
@@ -252,33 +256,33 @@ export default function PreferencesPage() {
   const handleTestWebhook = async () => {
     setIsSendingWebhookTest(true);
     try {
-      const res = await api.post("/users/test-webhook", { 
-        url: settings.webhookUrl || "",
-        secret: settings.webhookSecret || "" 
+      const res = await api.post('/users/test-webhook', {
+        url: settings.webhookUrl || '',
+        secret: settings.webhookSecret || '',
       });
-      toast.success(res.data.message || t("settings.notifications.webhook.testSuccess"));
+      toast.success(res.data.message || t('settings.notifications.webhook.testSuccess'));
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || t("settings.notifications.webhook.testError"));
+      toast.error(err.response?.data?.message || t('settings.notifications.webhook.testError'));
     } finally {
       setIsSendingWebhookTest(false);
     }
   };
 
   const handleSettingsChange = (updates: Partial<Settings>) => {
-    setSettings(prev => ({ ...prev, ...updates }));
+    setSettings((prev) => ({ ...prev, ...updates }));
   };
 
   return (
     <div className="space-y-6">
-      <LocalizationSection 
-        currency={settings.currency} 
-        setCurrency={(currency) => setSettings({ ...settings, currency })} 
+      <LocalizationSection
+        currency={settings.currency}
+        setCurrency={(currency) => setSettings({ ...settings, currency })}
       />
 
-      <EmailNotificationsSection 
+      <EmailNotificationsSection
         emailNotifications={settings.emailNotifications}
-        emailAddress={settings.emailAddress ?? ""}
+        emailAddress={settings.emailAddress ?? ''}
         dailyDigest={settings.dailyDigest}
         weeklyReport={settings.weeklyReport}
         onSettingsChange={handleSettingsChange}
@@ -291,11 +295,11 @@ export default function PreferencesPage() {
         isLoading={{
           email: isSendingTestEmail,
           daily: isSendingDailyTest,
-          weekly: isSendingWeeklyTest
+          weekly: isSendingWeeklyTest,
         }}
       />
 
-      <PushNotificationsSection 
+      <PushNotificationsSection
         pushEnabled={settings.pushEnabled ?? false}
         onPushToggle={handlePushToggle}
         isTogglingPush={isTogglingPush}
@@ -307,23 +311,23 @@ export default function PreferencesPage() {
         onResetPush={handleResetPush}
       />
 
-      <WebhookSection 
+      <WebhookSection
         webhookEnabled={settings.webhookEnabled}
-        webhookUrl={settings.webhookUrl ?? ""}
-        webhookSecret={settings.webhookSecret ?? ""}
+        webhookUrl={settings.webhookUrl ?? ''}
+        webhookSecret={settings.webhookSecret ?? ''}
         onSettingsChange={handleSettingsChange}
         showTestControls={showTestControls}
         onTestWebhook={handleTestWebhook}
         isSendingWebhookTest={isSendingWebhookTest}
       />
 
-      <ReminderSection 
+      <ReminderSection
         defaultReminderEnabled={settings.defaultReminderEnabled}
         defaultReminderDays={settings.defaultReminderDays}
         onSettingsChange={handleSettingsChange}
       />
 
-      <BudgetSection 
+      <BudgetSection
         monthlyBudget={settings.monthlyBudget}
         currency={settings.currency}
         onSettingsChange={handleSettingsChange}

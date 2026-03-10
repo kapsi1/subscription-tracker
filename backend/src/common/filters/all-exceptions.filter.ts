@@ -1,7 +1,7 @@
 import {
-  type ExceptionFilter,
-  Catch,
   type ArgumentsHost,
+  Catch,
+  type ExceptionFilter,
   HttpException,
   HttpStatus,
   Logger,
@@ -18,18 +18,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
 
     const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+      exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal server error';
+      exception instanceof HttpException ? exception.getResponse() : 'Internal server error';
 
-    const requestId = (request as unknown as Record<string, unknown>)['id'] as
-      | string
-      | undefined;
+    const requestId = (request as unknown as Record<string, unknown>).id as string | undefined;
 
     // Structured error logging with request context
     this.logger.error({
@@ -40,7 +34,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message:
         typeof message === 'string'
           ? message
-          : ((message as Record<string, unknown>)?.['message'] ?? message),
+          : ((message as Record<string, unknown>)?.message ?? message),
       stack: exception instanceof Error ? exception.stack : undefined,
     });
 
@@ -52,7 +46,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message:
         typeof message === 'string'
           ? message
-          : ((message as Record<string, unknown>)?.['message'] ?? message),
+          : ((message as Record<string, unknown>)?.message ?? message),
     });
   }
 }

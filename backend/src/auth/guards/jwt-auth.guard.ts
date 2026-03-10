@@ -1,4 +1,4 @@
-import { Injectable, type CanActivate, ExecutionContext } from '@nestjs/common';
+import { type CanActivate, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()

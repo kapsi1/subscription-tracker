@@ -1,19 +1,19 @@
+import { BillingCycle } from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
-  IsString,
-  IsNumber,
-  IsPositive,
+  IsArray,
+  IsBoolean,
   IsEnum,
   IsInt,
-  Min,
-  IsOptional,
-  ValidateIf,
-  IsBoolean,
-  IsArray,
-  ValidateNested,
   IsISO4217CurrencyCode,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Min,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { BillingCycle } from '@prisma/client';
 
 export class CreateSubscriptionDto {
   @IsString()

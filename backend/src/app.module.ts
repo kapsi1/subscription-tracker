@@ -1,26 +1,24 @@
-import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { BullModule } from '@nestjs/bullmq';
-import { ScheduleModule } from '@nestjs/schedule';
-import { LoggerModule } from 'nestjs-pino';
-import { ThrottlerModule } from '@nestjs/throttler';
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage } from 'node:http';
+import { BullModule } from '@nestjs/bullmq';
+import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { LoggerModule } from 'nestjs-pino';
+import { AlertsModule } from './alerts/alerts.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { SubscriptionsModule } from './subscriptions/subscriptions.module';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { AlertsModule } from './alerts/alerts.module';
-import { NotificationsModule } from './notifications/notifications.module';
-import { HealthModule } from './health/health.module';
-import { PaymentsModule } from './payments/payments.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
-
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { HealthModule } from './health/health.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { PaymentsModule } from './payments/payments.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -50,14 +48,11 @@ import { ThrottlerGuard } from '@nestjs/throttler';
       pinoHttp: {
         // Re-use X-Request-Id set by the RequestIdMiddleware, or generate one.
         genReqId: (req: IncomingMessage) =>
-          ((req as unknown as Record<string, unknown>)['id'] as string) ??
-          randomUUID(),
+          ((req as unknown as Record<string, unknown>).id as string) ?? randomUUID(),
 
         // Attach request ID to every log line under the `requestId` key.
         customProps: (req: IncomingMessage) => ({
-          requestId: (req as unknown as Record<string, unknown>)['id'] as
-            | string
-            | undefined,
+          requestId: (req as unknown as Record<string, unknown>).id as string | undefined,
         }),
 
         // Redact sensitive headers from logged requests.

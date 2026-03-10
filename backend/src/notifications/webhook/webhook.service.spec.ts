@@ -1,7 +1,7 @@
-import { Test, type TestingModule } from '@nestjs/testing';
-import { WebhookService } from './webhook.service';
-import axios from 'axios';
 import { BadRequestException } from '@nestjs/common';
+import { Test, type TestingModule } from '@nestjs/testing';
+import axios from 'axios';
+import { WebhookService } from './webhook.service';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -25,14 +25,7 @@ describe('WebhookService', () => {
   it('should successfully send a webhook without secret', async () => {
     mockedAxios.post.mockResolvedValueOnce({ data: {} });
 
-    await service.sendAlert(
-      'https://example.com/webhook',
-      undefined,
-      'Netflix',
-      3,
-      15.99,
-      'USD',
-    );
+    await service.sendAlert('https://example.com/webhook', undefined, 'Netflix', 3, 15.99, 'USD');
 
     expect(mockedAxios.post).toHaveBeenCalledWith(
       'https://example.com/webhook',
@@ -54,14 +47,7 @@ describe('WebhookService', () => {
     mockedAxios.post.mockResolvedValueOnce({ data: {} });
     const secret = 'my-secret';
 
-    await service.sendAlert(
-      'https://example.com/webhook',
-      secret,
-      'Spotify',
-      1,
-      9.99,
-      'EUR',
-    );
+    await service.sendAlert('https://example.com/webhook', secret, 'Spotify', 1, 9.99, 'EUR');
 
     expect(mockedAxios.post).toHaveBeenCalled();
     const headers = mockedAxios.post.mock.calls[0][2]?.headers as any;
@@ -70,9 +56,9 @@ describe('WebhookService', () => {
   });
 
   it('should throw BadRequestException for invalid URL', async () => {
-    await expect(
-      service.sendAlert('not-a-url', undefined, 'Test', 1, 1, 'USD'),
-    ).rejects.toThrow(BadRequestException);
+    await expect(service.sendAlert('not-a-url', undefined, 'Test', 1, 1, 'USD')).rejects.toThrow(
+      BadRequestException,
+    );
   });
 
   it('should throw BadRequestException for local URLs (SSRF protection)', async () => {

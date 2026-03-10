@@ -1,7 +1,7 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { ConfigService } from '@nestjs/config';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -53,9 +53,7 @@ describe('AuthController', () => {
   it('should refresh tokens', async () => {
     const result = await controller.refresh('some-refresh-token');
 
-    expect(authServiceMock.refreshTokens).toHaveBeenCalledWith(
-      'some-refresh-token',
-    );
+    expect(authServiceMock.refreshTokens).toHaveBeenCalledWith('some-refresh-token');
     expect(result).toEqual(mockTokens);
   });
 

@@ -1,28 +1,27 @@
 import {
-  Controller,
-  Get,
+  BadRequestException,
   Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  Logger,
+  NotFoundException,
   Patch,
   Post,
-  Delete,
   Query,
   Req,
   UseGuards,
-  NotFoundException,
-  BadRequestException,
-  ForbiddenException,
-  Logger,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import type { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import type { UpdateSettingsDto } from './dto/update-settings.dto';
-import type { PushSubscriptionDto } from './dto/push-subscription.dto';
+import type { RequestWithUser } from '../common/interfaces/request.interface';
+import type { EmailService } from '../notifications/email/email.service';
 import type { WebPushService } from '../notifications/webpush/webpush.service';
 import type { PrismaService } from '../prisma/prisma.service';
-import type { EmailService } from '../notifications/email/email.service';
-import type { RequestWithUser } from '../common/interfaces/request.interface';
-
+import type { PushSubscriptionDto } from './dto/push-subscription.dto';
+import type { UpdateSettingsDto } from './dto/update-settings.dto';
+import type { UsersService } from './users.service';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -54,18 +53,12 @@ export class UsersController {
   }
 
   @Patch('settings')
-  async updateSettings(
-    @Req() req: RequestWithUser,
-    @Body() updateSettingsDto: UpdateSettingsDto,
-  ) {
+  async updateSettings(@Req() req: RequestWithUser, @Body() updateSettingsDto: UpdateSettingsDto) {
     return this.usersService.update(req.user.userId, updateSettingsDto);
   }
 
   @Post('push-subscription')
-  async savePushSubscription(
-    @Req() req: RequestWithUser,
-    @Body() subDto: PushSubscriptionDto,
-  ) {
+  async savePushSubscription(@Req() req: RequestWithUser, @Body() subDto: PushSubscriptionDto) {
     return this.usersService.savePushSubscription(
       req.user.userId,
       subDto.endpoint,
@@ -75,19 +68,13 @@ export class UsersController {
   }
 
   @Delete('push-subscription')
-  async deletePushSubscription(
-    @Req() req: RequestWithUser,
-    @Query('endpoint') endpoint: string,
-  ) {
+  async deletePushSubscription(@Req() req: RequestWithUser, @Query('endpoint') endpoint: string) {
     return this.usersService.deletePushSubscription(req.user.userId, endpoint);
   }
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-push')
-  async testPush(
-    @Req() req: RequestWithUser,
-    @Body() body: { delaySeconds?: number },
-  ) {
+  async testPush(@Req() req: RequestWithUser, @Body() body: { delaySeconds?: number }) {
     this.assertTestEndpointsEnabled();
 
     const subs = await this.prisma.pushSubscription.findMany({
@@ -95,7 +82,9 @@ export class UsersController {
     });
 
     if (subs.length === 0) {
-      throw new BadRequestException('No push subscriptions found. Enable push notifications first.');
+      throw new BadRequestException(
+        'No push subscriptions found. Enable push notifications first.',
+      );
     }
 
     const delay = Math.max(0, Math.min(body.delaySeconds ?? 0, 300));
@@ -209,13 +198,14 @@ export class UsersController {
 
     const user = await this.usersService.findById(req.user.userId);
     if (!user) throw new NotFoundException('User not found');
-    if (!user.emailNotifications) throw new BadRequestException('Email notifications are disabled.');
+    if (!user.emailNotifications)
+      throw new BadRequestException('Email notifications are disabled.');
 
     const language = body?.lang === 'pl' ? 'pl' : 'en';
 
     await this.emailService.sendDailyDigest(
       user.email,
-      { totalActive: 5, totalMonthly: 125.50, upcomingThisWeek: 2 },
+      { totalActive: 5, totalMonthly: 125.5, upcomingThisWeek: 2 },
       [
         { name: 'Netflix', amount: 15.99, currency: 'USD' },
         { name: 'Spotify', amount: 9.99, currency: 'USD' },
@@ -226,7 +216,9 @@ export class UsersController {
       user.theme,
     );
 
-    return { message: language === 'pl' ? `Wysłano testowy dzienny przegląd.` : `Test daily digest sent.` };
+    return {
+      message: language === 'pl' ? `Wysłano testowy dzienny przegląd.` : `Test daily digest sent.`,
+    };
   }
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
@@ -236,28 +228,29 @@ export class UsersController {
 
     const user = await this.usersService.findById(req.user.userId);
     if (!user) throw new NotFoundException('User not found');
-    if (!user.emailNotifications) throw new BadRequestException('Email notifications are disabled.');
+    if (!user.emailNotifications)
+      throw new BadRequestException('Email notifications are disabled.');
 
     const language = body?.lang === 'pl' ? 'pl' : 'en';
 
     await this.emailService.sendWeeklyReport(
       user.email,
-      { totalActive: 5, totalMonthly: 125.50, upcomingThisWeek: 2 },
+      { totalActive: 5, totalMonthly: 125.5, upcomingThisWeek: 2 },
       'USD',
       language,
       user.accentColor,
       user.theme,
     );
 
-    return { message: language === 'pl' ? `Wysłano testowy raport tygodniowy.` : `Test weekly report sent.` };
+    return {
+      message:
+        language === 'pl' ? `Wysłano testowy raport tygodniowy.` : `Test weekly report sent.`,
+    };
   }
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('test-webhook')
-  async testWebhook(
-    @Req() req: RequestWithUser,
-    @Body() body: { url: string; secret?: string },
-  ) {
+  async testWebhook(@Req() req: RequestWithUser, @Body() body: { url: string; secret?: string }) {
     this.assertTestEndpointsEnabled();
 
     if (!body.url) {

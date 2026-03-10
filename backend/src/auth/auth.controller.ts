@@ -1,32 +1,28 @@
 import {
-  Controller,
-  Post,
   Body,
+  Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Post,
   Req,
   Res,
-  Get,
   UseGuards,
 } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
-import type { AuthService } from './auth.service';
-import type { RegisterDto } from './dto/register.dto';
-import type { LoginDto } from './dto/login.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { AuthGuard } from '@nestjs/passport';
-import type { Response, Request } from 'express';
-
 import type { ConfigService } from '@nestjs/config';
+import { AuthGuard } from '@nestjs/passport';
+import { Throttle } from '@nestjs/throttler';
+import type { Request, Response } from 'express';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
+import type { AuthService } from './auth.service';
+import type { LoginDto } from './dto/login.dto';
+import type { RegisterDto } from './dto/register.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import type { GoogleProfile } from './interfaces/google-profile.interface';
 
 type RequestWithGoogleProfile = Request & {
   user: GoogleProfile;
 };
-
-
-
 
 @Controller('auth')
 export class AuthController {
@@ -54,7 +50,6 @@ export class AuthController {
     );
   }
 
-
   @Throttle({ default: { limit: 100, ttl: 60000 } })
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
@@ -77,7 +72,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  async logout(@Req() req: RequestWithUser) {
+  async logout(@Req() _req: RequestWithUser) {
     // For JWTs, real logouts are usually handled client side by dropping tokens,
     // but a successful server response signals completion.
     return { message: 'Logged out successfully' };

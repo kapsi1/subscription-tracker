@@ -1,13 +1,13 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
+import type { ConfigService } from '@nestjs/config';
+import { AlertType } from '@prisma/client';
 import type { Job } from 'bullmq';
+import { EncryptionUtil } from '../common/utils/encryption.util';
 import type { EmailService } from '../notifications/email/email.service';
 import type { WebhookService } from '../notifications/webhook/webhook.service';
 import type { WebPushService } from '../notifications/webpush/webpush.service';
 import type { PrismaService } from '../prisma/prisma.service';
-import { AlertType } from '@prisma/client';
-import type { ConfigService } from '@nestjs/config';
-import { EncryptionUtil } from '../common/utils/encryption.util';
 import type { AlertJobData, BudgetAlertJobData } from './alerts.types';
 
 @Processor('alertQueue')
@@ -48,7 +48,9 @@ export class AlertsProcessor extends WorkerHost {
     if (encryptedSecret) {
       const encryptionSecret = this.configService.get<string>('WEBHOOK_SECRET_KEY');
       if (!encryptionSecret) {
-        throw new Error('WEBHOOK_SECRET_KEY must be set in the environment to process webhooks with secrets');
+        throw new Error(
+          'WEBHOOK_SECRET_KEY must be set in the environment to process webhooks with secrets',
+        );
       }
       webhookSecret = EncryptionUtil.decrypt(encryptedSecret, encryptionSecret);
     }
@@ -118,25 +120,27 @@ export class AlertsProcessor extends WorkerHost {
             data: { subscriptionId },
           };
 
-          const pushPromises = user.pushSubscriptions.map(sub =>
-            this.webPushService.sendNotification(
-              {
-                endpoint: sub.endpoint,
-                keys: { p256dh: sub.p256dh, auth: sub.auth },
-              },
-              payload
-            ).catch(err => {
-              // If subscription is invalid (e.g. 410 Gone), remove it
-              if (err.statusCode === 410 || err.statusCode === 404) {
-                this.logger.warn(`Push subscription expired. Removing ${sub.endpoint}`);
-                return this.prisma.pushSubscription.delete({ where: { id: sub.id } });
-              }
-              throw err;
-            })
+          const pushPromises = user.pushSubscriptions.map((sub) =>
+            this.webPushService
+              .sendNotification(
+                {
+                  endpoint: sub.endpoint,
+                  keys: { p256dh: sub.p256dh, auth: sub.auth },
+                },
+                payload,
+              )
+              .catch((err) => {
+                // If subscription is invalid (e.g. 410 Gone), remove it
+                if (err.statusCode === 410 || err.statusCode === 404) {
+                  this.logger.warn(`Push subscription expired. Removing ${sub.endpoint}`);
+                  return this.prisma.pushSubscription.delete({ where: { id: sub.id } });
+                }
+                throw err;
+              }),
           );
 
           await Promise.allSettled(pushPromises);
-          
+
           this.logger.log({
             msg: 'Web Push alerts sent successfully',
             event: 'alert_webpush_sent',
@@ -147,8 +151,7 @@ export class AlertsProcessor extends WorkerHost {
         }
       }
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       const errorStack = error instanceof Error ? error.stack : undefined;
 
       this.logger.error({

@@ -1,7 +1,7 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { DashboardService } from './dashboard.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { BillingCycle } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { DashboardService } from './dashboard.service';
 
 describe('DashboardService', () => {
   let service: DashboardService;
@@ -28,10 +28,7 @@ describe('DashboardService', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        DashboardService,
-        { provide: PrismaService, useValue: prismaMock },
-      ],
+      providers: [DashboardService, { provide: PrismaService, useValue: prismaMock }],
     }).compile();
 
     service = module.get<DashboardService>(DashboardService);
@@ -68,8 +65,8 @@ describe('DashboardService', () => {
     expect(res.totalMonthlyCost).toBe(44.5);
     // 200 paid year-to-date + (Apr-Dec monthly 9 * 15) + one yearly payment (120)
     expect(res.totalYearlyCost).toBe(455);
-    expect(res.categoryBreakdown['Cloud']).toBe(10);
-    expect(res.categoryBreakdown['Video']).toBe(15);
+    expect(res.categoryBreakdown.Cloud).toBe(10);
+    expect(res.categoryBreakdown.Video).toBe(15);
   });
 
   it('should return done and upcoming monthly payments sorted by date', async () => {

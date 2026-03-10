@@ -1,14 +1,12 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-
 import { LOCALES } from '@subscription-tracker/shared';
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
 
 const resources = {
   en: { translation: LOCALES.en },
   pl: { translation: LOCALES.pl },
 };
-
 
 i18n
   .use(LanguageDetector)

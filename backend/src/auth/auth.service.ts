@@ -1,18 +1,12 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  BadRequestException,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
 import type { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import type { UsersService } from '../users/users.service';
-import type { RegisterDto } from './dto/register.dto';
-import type { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
+import type { UsersService } from '../users/users.service';
+import type { LoginDto } from './dto/login.dto';
+import type { RegisterDto } from './dto/register.dto';
 
 import type { GoogleProfile } from './interfaces/google-profile.interface';
-
 
 @Injectable()
 export class AuthService {
@@ -60,7 +54,6 @@ export class AuthService {
     return this.generateTokens(user.id, user.email);
   }
 
-
   async register(registerDto: RegisterDto) {
     const existingUser = await this.usersService.findByEmail(registerDto.email);
     if (existingUser) {
@@ -91,10 +84,7 @@ export class AuthService {
       throw new UnauthorizedException('Please login with Google');
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      loginDto.password,
-      user.passwordHash,
-    );
+    const isPasswordValid = await bcrypt.compare(loginDto.password, user.passwordHash);
     if (!isPasswordValid) {
       this.logger.warn(`Failed login attempt: invalid password (${loginDto.email})`);
       throw new UnauthorizedException('Invalid credentials');
@@ -116,7 +106,7 @@ export class AuthService {
       }
 
       return this.generateTokens(user.id, user.email);
-    } catch (e) {
+    } catch (_e) {
       throw new UnauthorizedException('Invalid refresh token');
     }
   }

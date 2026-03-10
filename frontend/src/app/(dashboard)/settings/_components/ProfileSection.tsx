@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { UserRound } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { UserRound } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export interface ProfileData {
   name: string;
@@ -29,40 +29,40 @@ export function ProfileSection({ profile, setProfile }: ProfileSectionProps) {
             <UserRound className="w-5 h-5 text-orange-600" />
           </div>
           <div>
-            <CardTitle>{t("settings.profile.title")}</CardTitle>
-            <CardDescription>{t("settings.profile.desc")}</CardDescription>
+            <CardTitle>{t('settings.profile.title')}</CardTitle>
+            <CardDescription>{t('settings.profile.desc')}</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="profileName">{t("settings.profile.name")}</Label>
+          <Label htmlFor="profileName">{t('settings.profile.name')}</Label>
           <Input
             id="profileName"
             value={profile.name}
-            placeholder={t("settings.profile.namePlaceholder")}
+            placeholder={t('settings.profile.namePlaceholder')}
             onChange={(e) => setProfile({ ...profile, name: e.target.value })}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="profileEmail">{t("settings.notifications.email.address")}</Label>
+          <Label htmlFor="profileEmail">{t('settings.notifications.email.address')}</Label>
           <Input id="profileEmail" value={profile.email} disabled />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">
-              {t("settings.profile.memberSince", { defaultValue: "Member since" })}
+              {t('settings.profile.memberSince', { defaultValue: 'Member since' })}
             </p>
             <p className="text-sm font-medium">
-              {profile.createdAt ? new Date(profile.createdAt).toLocaleString() : "-"}
+              {profile.createdAt ? new Date(profile.createdAt).toLocaleString() : '-'}
             </p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">
-              {t("settings.profile.lastUpdated", { defaultValue: "Last updated" })}
+              {t('settings.profile.lastUpdated', { defaultValue: 'Last updated' })}
             </p>
             <p className="text-sm font-medium">
-              {profile.updatedAt ? new Date(profile.updatedAt).toLocaleString() : "-"}
+              {profile.updatedAt ? new Date(profile.updatedAt).toLocaleString() : '-'}
             </p>
           </div>
         </div>

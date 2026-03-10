@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Mail, SendHorizonal } from "lucide-react";
-import { useTranslation } from "react-i18next";
-
-import type { Settings } from "@subscription-tracker/shared";
+import type { Settings } from '@subscription-tracker/shared';
+import { Mail, SendHorizonal } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 interface EmailNotificationsSectionProps {
   emailNotifications: boolean;
@@ -17,8 +16,8 @@ interface EmailNotificationsSectionProps {
   weeklyReport: boolean;
   onSettingsChange: (updates: Partial<Settings>) => void;
   showTestControls: boolean;
-  testEmailLanguage: "en" | "pl";
-  setTestEmailLanguage: (lang: "en" | "pl") => void;
+  testEmailLanguage: 'en' | 'pl';
+  setTestEmailLanguage: (lang: 'en' | 'pl') => void;
   onTestEmail: () => void;
   onTestDailyDigest: () => void;
   onTestWeeklyReport: () => void;
@@ -69,9 +68,7 @@ export function EmailNotificationsSection({
           <Switch
             id="emailEnabled"
             checked={emailNotifications}
-            onCheckedChange={(checked) =>
-              onSettingsChange({ emailNotifications: checked })
-            }
+            onCheckedChange={(checked) => onSettingsChange({ emailNotifications: checked })}
           />
         </div>
 
@@ -84,9 +81,7 @@ export function EmailNotificationsSection({
                 type="email"
                 placeholder="you@example.com"
                 value={emailAddress}
-                onChange={(e) =>
-                  onSettingsChange({ emailAddress: e.target.value })
-                }
+                onChange={(e) => onSettingsChange({ emailAddress: e.target.value })}
               />
             </div>
 
@@ -101,9 +96,7 @@ export function EmailNotificationsSection({
                 <Switch
                   id="dailyDigest"
                   checked={dailyDigest}
-                  onCheckedChange={(checked) =>
-                    onSettingsChange({ dailyDigest: checked })
-                  }
+                  onCheckedChange={(checked) => onSettingsChange({ dailyDigest: checked })}
                 />
               </div>
             </div>
@@ -119,85 +112,85 @@ export function EmailNotificationsSection({
                 <Switch
                   id="weeklyReport"
                   checked={weeklyReport}
-                  onCheckedChange={(checked) =>
-                    onSettingsChange({ weeklyReport: checked })
-                  }
+                  onCheckedChange={(checked) => onSettingsChange({ weeklyReport: checked })}
                 />
               </div>
             </div>
 
             {showTestControls && (
-            <div className="border-t pt-4 space-y-3">
-              <Label>{t("settings.notifications.email.testTitle")}</Label>
-              <p className="text-sm text-muted-foreground">
-                {t("settings.notifications.email.testDesc")}
-              </p>
+              <div className="border-t pt-4 space-y-3">
+                <Label>{t('settings.notifications.email.testTitle')}</Label>
+                <p className="text-sm text-muted-foreground">
+                  {t('settings.notifications.email.testDesc')}
+                </p>
 
-              <div className="space-y-2">
-                <Label className="text-sm">{t("settings.notifications.email.testLanguage")}</Label>
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="radio"
-                      name="testEmailLanguage"
-                      value="en"
-                      checked={testEmailLanguage === "en"}
-                      onChange={() => setTestEmailLanguage("en")}
-                    />
-                    English
-                  </label>
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="radio"
-                      name="testEmailLanguage"
-                      value="pl"
-                      checked={testEmailLanguage === "pl"}
-                      onChange={() => setTestEmailLanguage("pl")}
-                    />
-                    Polski
-                  </label>
+                <div className="space-y-2">
+                  <Label className="text-sm">
+                    {t('settings.notifications.email.testLanguage')}
+                  </Label>
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="radio"
+                        name="testEmailLanguage"
+                        value="en"
+                        checked={testEmailLanguage === 'en'}
+                        onChange={() => setTestEmailLanguage('en')}
+                      />
+                      English
+                    </label>
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="radio"
+                        name="testEmailLanguage"
+                        value="pl"
+                        checked={testEmailLanguage === 'pl'}
+                        onChange={() => setTestEmailLanguage('pl')}
+                      />
+                      Polski
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onTestEmail}
+                    disabled={isLoading.email || isLoading.daily || isLoading.weekly}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {isLoading.email
+                      ? t('settings.notifications.email.testSending')
+                      : t('settings.notifications.email.testSend')}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onTestDailyDigest}
+                    disabled={isLoading.email || isLoading.daily || isLoading.weekly}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {isLoading.daily
+                      ? t('settings.notifications.email.testSending')
+                      : 'Test Daily Digest'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onTestWeeklyReport}
+                    disabled={isLoading.email || isLoading.daily || isLoading.weekly}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {isLoading.weekly
+                      ? t('settings.notifications.email.testSending')
+                      : 'Test Weekly Report'}
+                  </Button>
                 </div>
               </div>
-
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onTestEmail}
-                  disabled={isLoading.email || isLoading.daily || isLoading.weekly}
-                  className="gap-1.5"
-                >
-                  <SendHorizonal className="w-4 h-4" />
-                  {isLoading.email
-                    ? t("settings.notifications.email.testSending")
-                    : t("settings.notifications.email.testSend")}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onTestDailyDigest}
-                  disabled={isLoading.email || isLoading.daily || isLoading.weekly}
-                  className="gap-1.5"
-                >
-                  <SendHorizonal className="w-4 h-4" />
-                  {isLoading.daily
-                    ? t("settings.notifications.email.testSending")
-                    : "Test Daily Digest"}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onTestWeeklyReport}
-                  disabled={isLoading.email || isLoading.daily || isLoading.weekly}
-                  className="gap-1.5"
-                >
-                  <SendHorizonal className="w-4 h-4" />
-                  {isLoading.weekly
-                    ? t("settings.notifications.email.testSending")
-                    : "Test Weekly Report"}
-                </Button>
-              </div>
-            </div>
             )}
           </>
         )}

@@ -1,27 +1,20 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "./auth-provider";
+import type { Subscription } from '@subscription-tracker/shared';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from './auth-provider';
+import { Button } from './ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-} from "./ui/dialog";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { Switch } from "./ui/switch";
-
-import type { Subscription } from "@subscription-tracker/shared";
+} from './ui/dialog';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Switch } from './ui/switch';
 
 interface SubscriptionModalProps {
   open: boolean;
@@ -31,23 +24,23 @@ interface SubscriptionModalProps {
 }
 
 const categories = [
-  "Entertainment",
-  "Productivity",
-  "Cloud Services",
-  "Development",
-  "Professional",
-  "Health",
-  "Housing",
-  "Utilities",
-  "Services",
-  "Education",
-  "Other",
+  'Entertainment',
+  'Productivity',
+  'Cloud Services',
+  'Development',
+  'Professional',
+  'Health',
+  'Housing',
+  'Utilities',
+  'Services',
+  'Education',
+  'Other',
 ];
 
 const billingCycles = [
-  { label: "Monthly", value: "monthly" },
-  { label: "Yearly", value: "yearly" },
-  { label: "Custom", value: "custom" },
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Yearly', value: 'yearly' },
+  { label: 'Custom', value: 'custom' },
 ];
 
 export function SubscriptionModal({
@@ -59,13 +52,13 @@ export function SubscriptionModal({
   const { t } = useTranslation();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
-    name: "",
-    amount: "",
-    billingCycle: "monthly",
-    category: "Other",
-    nextBillingDate: new Date().toISOString().split("T")[0],
+    name: '',
+    amount: '',
+    billingCycle: 'monthly',
+    category: 'Other',
+    nextBillingDate: new Date().toISOString().split('T')[0],
     reminderEnabled: true,
-    reminderDays: "3",
+    reminderDays: '3',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -73,25 +66,24 @@ export function SubscriptionModal({
 
   useEffect(() => {
     if (subscription && open) {
-       
       setFormData({
         name: subscription.name,
         amount: subscription.amount.toString(),
         billingCycle: subscription.billingCycle,
         category: subscription.category,
-        nextBillingDate: subscription.nextBillingDate 
-          ? new Date(subscription.nextBillingDate).toISOString().split("T")[0]
-          : new Date().toISOString().split("T")[0],
+        nextBillingDate: subscription.nextBillingDate
+          ? new Date(subscription.nextBillingDate).toISOString().split('T')[0]
+          : new Date().toISOString().split('T')[0],
         reminderEnabled: subscription.reminderEnabled ?? true,
         reminderDays: (subscription.reminderDays ?? 3).toString(),
       });
     } else if (!subscription && open) {
       setFormData({
-        name: "",
-        amount: "",
-        billingCycle: "monthly",
-        category: "Other",
-        nextBillingDate: new Date().toISOString().split("T")[0],
+        name: '',
+        amount: '',
+        billingCycle: 'monthly',
+        category: 'Other',
+        nextBillingDate: new Date().toISOString().split('T')[0],
         reminderEnabled: user?.defaultReminderEnabled ?? true,
         reminderDays: (user?.defaultReminderDays ?? 3).toString(),
       });
@@ -102,20 +94,24 @@ export function SubscriptionModal({
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.name.trim()) newErrors.name = "nameRequired";
-    if (!formData.amount || isNaN(parseFloat(formData.amount)) || parseFloat(formData.amount) <= 0) {
-      newErrors.amount = "amountRequired";
+    if (!formData.name.trim()) newErrors.name = 'nameRequired';
+    if (
+      !formData.amount ||
+      Number.isNaN(parseFloat(formData.amount)) ||
+      parseFloat(formData.amount) <= 0
+    ) {
+      newErrors.amount = 'amountRequired';
     }
     if (!formData.nextBillingDate) {
-      newErrors.nextBillingDate = "nextBillingDateRequired";
+      newErrors.nextBillingDate = 'nextBillingDateRequired';
     }
     if (formData.reminderEnabled) {
-      const days = parseInt(formData.reminderDays);
-      if (isNaN(days) || days < 0 || days > 30) {
-        newErrors.reminderDays = "reminderDaysRequired";
+      const days = parseInt(formData.reminderDays, 10);
+      if (Number.isNaN(days) || days < 0 || days > 30) {
+        newErrors.reminderDays = 'reminderDaysRequired';
       }
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -123,7 +119,7 @@ export function SubscriptionModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
-    
+
     if (!validate()) {
       return;
     }
@@ -138,9 +134,9 @@ export function SubscriptionModal({
         category: formData.category,
         nextBillingDate: formData.nextBillingDate,
         reminderEnabled: formData.reminderEnabled,
-        reminderDays: parseInt(formData.reminderDays),
+        reminderDays: parseInt(formData.reminderDays, 10),
       });
-    } catch (err: unknown) {
+    } catch (_err: unknown) {
       // Backend handles currency
     } finally {
       setIsSaving(false);
@@ -152,21 +148,19 @@ export function SubscriptionModal({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {subscription ? t("subscriptions.modal.editTitle") : t("subscriptions.modal.addTitle")}
+            {subscription ? t('subscriptions.modal.editTitle') : t('subscriptions.modal.addTitle')}
           </DialogTitle>
           <DialogDescription>
-            {subscription
-              ? t("subscriptions.modal.editDesc")
-              : t("subscriptions.modal.addDesc")}
+            {subscription ? t('subscriptions.modal.editDesc') : t('subscriptions.modal.addDesc')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="name">{t("subscriptions.modal.serviceName")}</Label>
+              <Label htmlFor="name">{t('subscriptions.modal.serviceName')}</Label>
               <Input
                 id="name"
-                placeholder={t("subscriptions.modal.servicePlaceholder")}
+                placeholder={t('subscriptions.modal.servicePlaceholder')}
                 value={formData.name}
                 onChange={(e) => {
                   setFormData({ ...formData, name: e.target.value });
@@ -186,7 +180,7 @@ export function SubscriptionModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="amount">{t("subscriptions.modal.amount")}</Label>
+              <Label htmlFor="amount">{t('subscriptions.modal.amount')}</Label>
               <Input
                 id="amount"
                 type="number"
@@ -213,12 +207,10 @@ export function SubscriptionModal({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="billingCycle">{t("subscriptions.modal.billingCycle")}</Label>
+                <Label htmlFor="billingCycle">{t('subscriptions.modal.billingCycle')}</Label>
                 <Select
                   value={formData.billingCycle}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, billingCycle: value })
-                  }
+                  onValueChange={(value) => setFormData({ ...formData, billingCycle: value })}
                 >
                   <SelectTrigger id="billingCycle">
                     <SelectValue />
@@ -234,12 +226,10 @@ export function SubscriptionModal({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category">{t("subscriptions.modal.category")}</Label>
+                <Label htmlFor="category">{t('subscriptions.modal.category')}</Label>
                 <Select
                   value={formData.category}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, category: value })
-                  }
+                  onValueChange={(value) => setFormData({ ...formData, category: value })}
                 >
                   <SelectTrigger id="category">
                     <SelectValue />
@@ -256,7 +246,7 @@ export function SubscriptionModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nextBillingDate">{t("subscriptions.modal.nextBillingDate")}</Label>
+              <Label htmlFor="nextBillingDate">{t('subscriptions.modal.nextBillingDate')}</Label>
               <Input
                 id="nextBillingDate"
                 type="date"
@@ -280,9 +270,9 @@ export function SubscriptionModal({
 
             <div className="flex items-center justify-between border-t pt-4">
               <div className="space-y-0.5">
-                <Label htmlFor="reminderEnabled">{t("subscriptions.modal.reminders")}</Label>
+                <Label htmlFor="reminderEnabled">{t('subscriptions.modal.reminders')}</Label>
                 <p className="text-sm text-muted-foreground">
-                  {t("subscriptions.modal.remindersDesc")}
+                  {t('subscriptions.modal.remindersDesc')}
                 </p>
               </div>
               <Switch
@@ -296,7 +286,7 @@ export function SubscriptionModal({
 
             {formData.reminderEnabled && (
               <div className="space-y-2">
-                <Label htmlFor="reminderDays">{t("subscriptions.modal.reminderDays")}</Label>
+                <Label htmlFor="reminderDays">{t('subscriptions.modal.reminderDays')}</Label>
                 <Input
                   id="reminderDays"
                   type="number"
@@ -320,19 +310,18 @@ export function SubscriptionModal({
                 )}
               </div>
             )}
-
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              {t("subscriptions.modal.cancel")}
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              {t('subscriptions.modal.cancel')}
             </Button>
             <Button type="submit" disabled={isSaving}>
-              {isSaving ? t("common.loading") : (subscription ? t("subscriptions.modal.update") : t("subscriptions.modal.add"))}
+              {isSaving
+                ? t('common.loading')
+                : subscription
+                  ? t('subscriptions.modal.update')
+                  : t('subscriptions.modal.add')}
             </Button>
           </DialogFooter>
         </form>

@@ -1,7 +1,7 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { WebhookService } from '../notifications/webhook/webhook.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -116,7 +116,13 @@ describe('UsersService', () => {
 
   describe('pushSubscription', () => {
     it('should save push subscription', async () => {
-      const mockSub = { id: 1, userId: 'user-1', endpoint: 'http://test', p256dh: 'p256dh', auth: 'auth' };
+      const mockSub = {
+        id: 1,
+        userId: 'user-1',
+        endpoint: 'http://test',
+        p256dh: 'p256dh',
+        auth: 'auth',
+      };
       prismaMock.pushSubscription.upsert.mockResolvedValue(mockSub);
 
       const result = await service.savePushSubscription('user-1', 'http://test', 'p256dh', 'auth');

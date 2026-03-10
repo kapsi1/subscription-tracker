@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import api from '@/lib/api';
 
 export interface User {
@@ -13,19 +13,19 @@ export interface User {
   updatedAt: string;
   defaultReminderEnabled: boolean;
   defaultReminderDays: number;
-  monthlyBudget          : number | string | null;
-  lastBudgetAlertSentAt  : string | null;
-  theme                  : string;
-  accentColor            : string;
-  emailNotifications     : boolean;
-  webhookEnabled         : boolean;
-  webhookUrl             : string | null;
-  dailyDigest            : boolean;
-  weeklyReport           : boolean;
-  dashboardSortBy        : string;
-  dashboardSortOrder     : string;
-  showPaidPayments       : boolean;
-  avatarUrl              : string | null;
+  monthlyBudget: number | string | null;
+  lastBudgetAlertSentAt: string | null;
+  theme: string;
+  accentColor: string;
+  emailNotifications: boolean;
+  webhookEnabled: boolean;
+  webhookUrl: string | null;
+  dailyDigest: boolean;
+  weeklyReport: boolean;
+  dashboardSortBy: string;
+  dashboardSortOrder: string;
+  showPaidPayments: boolean;
+  avatarUrl: string | null;
 }
 
 export interface LoginCredentials {
@@ -38,7 +38,6 @@ export interface RegisterCredentials {
   name: string;
   password?: string;
 }
-
 
 interface AuthContextType {
   user: User | null;
@@ -60,7 +59,13 @@ const AuthContext = createContext<AuthContextType>({
   fetchUser: async () => {},
 });
 
-export const AuthProvider = ({ children, initialToken }: { children: React.ReactNode, initialToken?: string }) => {
+export const AuthProvider = ({
+  children,
+  initialToken,
+}: {
+  children: React.ReactNode;
+  initialToken?: string;
+}) => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -77,12 +82,12 @@ export const AuthProvider = ({ children, initialToken }: { children: React.React
       const res = await api.get('/users/me');
       setUser(res.data);
       setIsAuthenticated(true);
-    } catch (error) {
+    } catch (_error) {
       setUser(null);
       setIsAuthenticated(false);
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
   }, []);
 
@@ -97,7 +102,7 @@ export const AuthProvider = ({ children, initialToken }: { children: React.React
     const handleUnauthorized = () => {
       setUser(null);
       setIsAuthenticated(false);
-      document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       router.push('/login');
     };
 
@@ -128,14 +133,16 @@ export const AuthProvider = ({ children, initialToken }: { children: React.React
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     setUser(null);
     setIsAuthenticated(false);
     router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, register, logout, fetchUser }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, isLoading, login, register, logout, fetchUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

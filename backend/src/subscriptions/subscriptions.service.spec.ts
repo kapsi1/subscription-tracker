@@ -1,8 +1,8 @@
-import { Test, type TestingModule } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { SubscriptionsService } from './subscriptions.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { BillingCycle } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { SubscriptionsService } from './subscriptions.service';
 
 describe('SubscriptionsService', () => {
   let service: SubscriptionsService;
@@ -57,10 +57,7 @@ describe('SubscriptionsService', () => {
     } as any;
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        SubscriptionsService,
-        { provide: PrismaService, useValue: prismaMock },
-      ],
+      providers: [SubscriptionsService, { provide: PrismaService, useValue: prismaMock }],
     }).compile();
 
     service = module.get<SubscriptionsService>(SubscriptionsService);
@@ -100,9 +97,7 @@ describe('SubscriptionsService', () => {
         // intervalDays intentionally omitted
       };
 
-      await expect(service.create(userId, dto)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(service.create(userId, dto)).rejects.toThrow(BadRequestException);
     });
 
     it('should accept custom cycle with intervalDays', async () => {
@@ -209,9 +204,7 @@ describe('SubscriptionsService', () => {
 
       const importDto = { subscriptions: [] };
 
-      await expect(service.import(userId, importDto)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.import(userId, importDto)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw BadRequestException if custom cycle lacks intervalDays', async () => {
@@ -227,9 +220,7 @@ describe('SubscriptionsService', () => {
         ],
       } as any;
 
-      await expect(service.import(userId, importDto)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(service.import(userId, importDto)).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -246,9 +237,7 @@ describe('SubscriptionsService', () => {
     it('should throw NotFoundException when not found', async () => {
       prismaMock.subscription.findFirst.mockResolvedValue(null);
 
-      await expect(service.findOne(userId, 'nonexistent')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.findOne(userId, 'nonexistent')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -299,9 +288,7 @@ describe('SubscriptionsService', () => {
 
       const updateDto = { billingCycle: BillingCycle.custom };
 
-      await expect(service.update(userId, 'sub-1', updateDto)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(service.update(userId, 'sub-1', updateDto)).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -320,9 +307,7 @@ describe('SubscriptionsService', () => {
     it('should throw NotFoundException if subscription does not exist', async () => {
       prismaMock.subscription.findFirst.mockResolvedValue(null);
 
-      await expect(service.remove(userId, 'nonexistent')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.remove(userId, 'nonexistent')).rejects.toThrow(NotFoundException);
     });
   });
 });

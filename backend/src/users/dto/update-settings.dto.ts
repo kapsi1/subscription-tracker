@@ -1,4 +1,14 @@
-import { IsBoolean, IsInt, IsISO4217CurrencyCode, IsNumber, IsOptional, IsString, IsUrl, Min, ValidateIf } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsISO4217CurrencyCode,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Min,
+  ValidateIf,
+} from 'class-validator';
 
 export class UpdateSettingsDto {
   @IsOptional()

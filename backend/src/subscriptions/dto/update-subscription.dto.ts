@@ -1,15 +1,15 @@
+import { BillingCycle } from '@prisma/client';
 import {
-  IsString,
-  IsNumber,
-  IsPositive,
+  IsBoolean,
   IsEnum,
   IsInt,
-  Min,
+  IsNumber,
   IsOptional,
+  IsPositive,
+  IsString,
+  Min,
   ValidateIf,
-  IsBoolean,
 } from 'class-validator';
-import { BillingCycle } from '@prisma/client';
 
 export class UpdateSubscriptionDto {
   @IsOptional()

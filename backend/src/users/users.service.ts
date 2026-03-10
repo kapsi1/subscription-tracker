@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { PrismaService } from '../prisma/prisma.service';
-import type { User, Prisma } from '@prisma/client';
+import type { Prisma, User } from '@prisma/client';
 import type { WebhookService } from '../notifications/webhook/webhook.service';
+import type { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
@@ -49,7 +49,7 @@ export class UsersService {
         where: { userId: id },
         data: { currency: data.currency },
       });
-      
+
       await this.prisma.paymentHistory.updateMany({
         where: { subscription: { userId: id } },
         data: { currency: data.currency },
@@ -75,20 +75,13 @@ export class UsersService {
     });
   }
 
-  async testWebhook(userId: string, url: string, secret?: string) {
-    return this.webhookService.sendAlert(
-      url,
-      secret,
-      'Test Subscription',
-      3,
-      19.99,
-      'USD',
-    );
+  async testWebhook(_userId: string, url: string, secret?: string) {
+    return this.webhookService.sendAlert(url, secret, 'Test Subscription', 3, 19.99, 'USD');
   }
 
   async remove(id: string): Promise<void> {
     this.logger.warn(`Deleting user account: ${id}`);
-    
+
     await this.prisma.$transaction(async (tx) => {
       // Manual cascade (since schema doesn't have onDelete: Cascade)
       // 1. Delete payment history
@@ -116,7 +109,7 @@ export class UsersService {
         where: { id },
       });
     });
-    
+
     this.logger.log(`Successfully deleted user account: ${id}`);
   }
 }

@@ -1,10 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import {
-  HealthCheck,
-  type HealthCheckService,
-  type HealthCheckResult,
-} from '@nestjs/terminus';
+import { HealthCheck, type HealthCheckResult, type HealthCheckService } from '@nestjs/terminus';
 import type { PrismaHealthIndicator } from './indicators/prisma.health';
 import type { RedisHealthIndicator } from './indicators/redis.health';
 
@@ -27,8 +23,7 @@ export class HealthController {
   @HealthCheck()
   @ApiOperation({
     summary: 'Application health check',
-    description:
-      'Checks the health of the application and all its dependencies (database, Redis).',
+    description: 'Checks the health of the application and all its dependencies (database, Redis).',
   })
   check(): Promise<HealthCheckResult> {
     return this.health.check([

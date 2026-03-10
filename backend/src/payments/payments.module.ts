@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { PaymentsService } from './payments.service';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { PaymentsService } from './payments.service';
 
 @Module({
   imports: [DashboardModule, NotificationsModule],

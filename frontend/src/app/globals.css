@@ -5,20 +5,20 @@
 
 :root {
   --font-size: 16px;
-  --background: #F8FAFC;
+  --background: #f8fafc;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #4F46E5;
+  --primary: #4f46e5;
   --primary-foreground: #ffffff;
   --secondary: #f1f5f9;
   --secondary-foreground: #0f172a;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
   --accent: #e0e7ff;
-  --accent-foreground: #4F46E5;
+  --accent-foreground: #4f46e5;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #e2e8f0;
@@ -27,7 +27,7 @@
   --switch-background: #cbd5e1;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #4F46E5;
+  --ring: #4f46e5;
   --chart-1: #3b82f6; /* Keep fixed chart-1 */
   --chart-2: #8b5cf6;
   --chart-3: #ec4899;
@@ -36,12 +36,12 @@
   --radius: 0.75rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #0f172a;
-  --sidebar-primary: #4F46E5;
+  --sidebar-primary: #4f46e5;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f8fafc;
   --sidebar-accent-foreground: #0f172a;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: #4F46E5;
+  --sidebar-ring: #4f46e5;
   --text-2xl: 2.5rem;
 }
 
@@ -208,4 +208,3 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
 }
-

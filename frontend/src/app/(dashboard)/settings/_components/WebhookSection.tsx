@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Webhook, SendHorizonal } from "lucide-react";
-import { useTranslation } from "react-i18next";
-
-import type { Settings } from "@subscription-tracker/shared";
+import type { Settings } from '@subscription-tracker/shared';
+import { SendHorizonal, Webhook } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 interface WebhookSectionProps {
   webhookEnabled: boolean;
@@ -55,9 +54,7 @@ export function WebhookSection({
           <Switch
             id="webhookEnabled"
             checked={webhookEnabled}
-            onCheckedChange={(checked) =>
-              onSettingsChange({ webhookEnabled: checked })
-            }
+            onCheckedChange={(checked) => onSettingsChange({ webhookEnabled: checked })}
           />
         </div>
 
@@ -70,9 +67,7 @@ export function WebhookSection({
                 type="url"
                 placeholder="https://your-domain.com/webhook"
                 value={webhookUrl}
-                onChange={(e) =>
-                  onSettingsChange({ webhookUrl: e.target.value })
-                }
+                onChange={(e) => onSettingsChange({ webhookUrl: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
                 {t('settings.notifications.webhook.urlDesc')}
@@ -86,9 +81,7 @@ export function WebhookSection({
                 type="password"
                 placeholder="Secret key"
                 value={webhookSecret}
-                onChange={(e) =>
-                  onSettingsChange({ webhookSecret: e.target.value })
-                }
+                onChange={(e) => onSettingsChange({ webhookSecret: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
                 {t('settings.notifications.webhook.secretDesc')}
@@ -97,9 +90,9 @@ export function WebhookSection({
 
             {showTestControls && (
               <div className="border-t pt-4 space-y-3">
-                <Label>{t("settings.notifications.webhook.testTitle")}</Label>
+                <Label>{t('settings.notifications.webhook.testTitle')}</Label>
                 <p className="text-sm text-muted-foreground">
-                  {t("settings.notifications.webhook.testDesc")}
+                  {t('settings.notifications.webhook.testDesc')}
                 </p>
                 <Button
                   variant="outline"
@@ -110,8 +103,8 @@ export function WebhookSection({
                 >
                   <SendHorizonal className="w-4 h-4" />
                   {isSendingWebhookTest
-                    ? t("settings.notifications.webhook.testSending")
-                    : t("settings.notifications.webhook.testSend")}
+                    ? t('settings.notifications.webhook.testSending')
+                    : t('settings.notifications.webhook.testSend')}
                 </Button>
               </div>
             )}

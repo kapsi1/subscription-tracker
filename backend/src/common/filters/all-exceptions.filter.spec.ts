@@ -48,9 +48,7 @@ describe('AllExceptionsFilter', () => {
 
     filter.catch(exception, mockHost as any);
 
-    expect(mockResponse.status).toHaveBeenCalledWith(
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
+    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -60,7 +58,7 @@ describe('AllExceptionsFilter', () => {
   });
 
   it('should include requestId in response when present', () => {
-    mockRequest['id'] = 'req-123';
+    mockRequest.id = 'req-123';
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
 
     filter.catch(exception, mockHost as any);

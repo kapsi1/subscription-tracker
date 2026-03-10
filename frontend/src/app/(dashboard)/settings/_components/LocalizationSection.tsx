@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Globe, Search, ChevronDown } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { CURRENCIES } from "@subscription-tracker/shared";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/components/ui/utils";
-import { Flag } from "@/components/flags";
-import { useState } from "react";
+import { CURRENCIES } from '@subscription-tracker/shared';
+import { ChevronDown, Globe, Search } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flag } from '@/components/flags';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/components/ui/utils';
 
 interface LocalizationSectionProps {
   currency: string;
@@ -19,7 +19,7 @@ interface LocalizationSectionProps {
 
 export function LocalizationSection({ currency, setCurrency }: LocalizationSectionProps) {
   const { t } = useTranslation();
-  const [searchCurrency, setSearchCurrency] = useState("");
+  const [searchCurrency, setSearchCurrency] = useState('');
   const [isCurrencyPopoverOpen, setIsCurrencyPopoverOpen] = useState(false);
 
   return (
@@ -41,7 +41,7 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
           <p className="text-sm text-muted-foreground mb-4">
             {t('settings.localization.currencyDesc')}
           </p>
-          
+
           <Popover open={isCurrencyPopoverOpen} onOpenChange={setIsCurrencyPopoverOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -53,12 +53,18 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                 <span className="flex items-center gap-2">
                   {currency ? (
                     <>
-                      <Flag countryCode={CURRENCIES.find((c) => c.code === currency)?.countryCode || 'US'} />
+                      <Flag
+                        countryCode={
+                          CURRENCIES.find((c) => c.code === currency)?.countryCode || 'US'
+                        }
+                      />
                       <span>{currency}</span>
-                      <span className="text-muted-foreground font-normal">- {CURRENCIES.find((c) => c.code === currency)?.name}</span>
+                      <span className="text-muted-foreground font-normal">
+                        - {CURRENCIES.find((c) => c.code === currency)?.name}
+                      </span>
                     </>
                   ) : (
-                    "Select currency..."
+                    'Select currency...'
                   )}
                 </span>
                 <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -78,22 +84,23 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                 </div>
               </div>
               <div className="max-h-[300px] overflow-y-auto p-1">
-                {CURRENCIES.filter(c => 
-                  c.code.toLowerCase().includes(searchCurrency.toLowerCase()) || 
-                  c.name.toLowerCase().includes(searchCurrency.toLowerCase())
+                {CURRENCIES.filter(
+                  (c) =>
+                    c.code.toLowerCase().includes(searchCurrency.toLowerCase()) ||
+                    c.name.toLowerCase().includes(searchCurrency.toLowerCase()),
                 ).map((c) => (
                   <div
                     key={c.code}
                     role="option"
                     aria-selected={currency === c.code}
                     className={cn(
-                      "flex items-center gap-2 p-2 rounded-sm hover:bg-accent cursor-pointer text-sm transition-colors",
-                      currency === c.code && "bg-accent"
+                      'flex items-center gap-2 p-2 rounded-sm hover:bg-accent cursor-pointer text-sm transition-colors',
+                      currency === c.code && 'bg-accent',
                     )}
                     onClick={() => {
                       setCurrency(c.code);
                       setIsCurrencyPopoverOpen(false);
-                      setSearchCurrency("");
+                      setSearchCurrency('');
                     }}
                   >
                     <Flag countryCode={c.countryCode} />
@@ -101,9 +108,10 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                     <span className="text-muted-foreground text-xs truncate">- {c.name}</span>
                   </div>
                 ))}
-                {CURRENCIES.filter(c => 
-                  c.code.toLowerCase().includes(searchCurrency.toLowerCase()) || 
-                  c.name.toLowerCase().includes(searchCurrency.toLowerCase())
+                {CURRENCIES.filter(
+                  (c) =>
+                    c.code.toLowerCase().includes(searchCurrency.toLowerCase()) ||
+                    c.name.toLowerCase().includes(searchCurrency.toLowerCase()),
                 ).length === 0 && (
                   <div className="p-4 text-center text-sm text-muted-foreground">
                     No currency found.

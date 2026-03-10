@@ -1,5 +1,5 @@
-import { AlertCircle } from "lucide-react";
-import { Button } from "./ui/button";
+import { AlertCircle } from 'lucide-react';
+import { Button } from './ui/button';
 
 interface ErrorStateProps {
   title?: string;
@@ -10,10 +10,10 @@ interface ErrorStateProps {
 }
 
 export function ErrorState({
-  title = "Something went wrong",
+  title = 'Something went wrong',
   message,
   onRetry,
-  retryLabel = "Try Again",
+  retryLabel = 'Try Again',
   retryButtonClassName,
 }: ErrorStateProps) {
   return (

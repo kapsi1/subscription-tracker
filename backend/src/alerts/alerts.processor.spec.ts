@@ -1,11 +1,11 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { AlertsProcessor } from './alerts.processor';
+import { AlertType } from '@prisma/client';
 import { EmailService } from '../notifications/email/email.service';
 import { WebhookService } from '../notifications/webhook/webhook.service';
 import { WebPushService } from '../notifications/webpush/webpush.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { AlertType } from '@prisma/client';
-import { ConfigService } from '@nestjs/config';
+import { AlertsProcessor } from './alerts.processor';
 
 describe('AlertsProcessor', () => {
   let processor: AlertsProcessor;
@@ -18,9 +18,13 @@ describe('AlertsProcessor', () => {
     emailMock = { sendAlert: jest.fn() };
     webhookMock = { sendAlert: jest.fn() };
     webPushMock = { sendNotification: jest.fn() };
-    prismaMock = { 
+    prismaMock = {
       pushSubscription: { findMany: jest.fn(), delete: jest.fn() },
-      user: { findUnique: jest.fn().mockResolvedValue({ language: 'en', accentColor: 'Indigo', theme: 'system' }) },
+      user: {
+        findUnique: jest
+          .fn()
+          .mockResolvedValue({ language: 'en', accentColor: 'Indigo', theme: 'system' }),
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({

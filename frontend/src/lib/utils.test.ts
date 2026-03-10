@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { formatCurrency, formatDate, daysUntil, getCategoryColor } from './utils';
+import { describe, expect, it } from 'vitest';
+import { daysUntil, formatCurrency, formatDate, getCategoryColor } from './utils';
 
 describe('formatCurrency', () => {
   it('should format USD correctly', () => {

@@ -1,13 +1,12 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
-import { Bell } from "lucide-react";
-import { useTranslation } from "react-i18next";
-
-import type { Settings } from "@subscription-tracker/shared";
+import type { Settings } from '@subscription-tracker/shared';
+import { Bell } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 interface ReminderSectionProps {
   defaultReminderEnabled: boolean;
@@ -31,9 +30,7 @@ export function ReminderSection({
           </div>
           <div>
             <CardTitle>{t('settings.notifications.default.title')}</CardTitle>
-            <CardDescription>
-              {t('settings.notifications.default.desc')}
-            </CardDescription>
+            <CardDescription>{t('settings.notifications.default.desc')}</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -48,9 +45,7 @@ export function ReminderSection({
           <Switch
             id="defaultEnabled"
             checked={defaultReminderEnabled}
-            onCheckedChange={(checked) =>
-              onSettingsChange({ defaultReminderEnabled: checked })
-            }
+            onCheckedChange={(checked) => onSettingsChange({ defaultReminderEnabled: checked })}
           />
         </div>
 
@@ -65,7 +60,7 @@ export function ReminderSection({
               className="max-w-24"
               value={defaultReminderDays.toString()}
               onChange={(e) =>
-                onSettingsChange({ defaultReminderDays: parseInt(e.target.value) || 0 })
+                onSettingsChange({ defaultReminderDays: parseInt(e.target.value, 10) || 0 })
               }
             />
             <span className="text-sm text-muted-foreground">

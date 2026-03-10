@@ -1,6 +1,6 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
-import axios from 'axios';
 import { createHmac } from 'node:crypto';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import axios from 'axios';
 
 @Injectable()
 export class WebhookService {
@@ -17,10 +17,9 @@ export class WebhookService {
     let parsedUrl: URL;
     try {
       parsedUrl = new URL(url);
-    } catch (error: unknown) {
+    } catch (_error: unknown) {
       throw new BadRequestException('Invalid webhook URL');
     }
-
 
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
       throw new BadRequestException('Invalid webhook protocol');
@@ -28,8 +27,10 @@ export class WebhookService {
 
     const hostname = parsedUrl.hostname.toLowerCase();
     const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
-    const isPrivateIP = /^(127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|169\.254\.)/.test(hostname);
-    
+    const isPrivateIP = /^(127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|169\.254\.)/.test(
+      hostname,
+    );
+
     if (process.env.NODE_ENV === 'production' && (isLocalhost || isPrivateIP)) {
       this.logger.warn(`[WEBHOOK] Blocked attempt to call internal URL: ${url}`);
       throw new BadRequestException('Webhook URL points to an internal network');
@@ -48,22 +49,16 @@ export class WebhookService {
     };
 
     if (secret) {
-      const signature = createHmac('sha256', secret)
-        .update(JSON.stringify(payload))
-        .digest('hex');
+      const signature = createHmac('sha256', secret).update(JSON.stringify(payload)).digest('hex');
       headers['X-Webhook-Signature'] = signature;
     }
 
     try {
       await axios.post(url, payload, { headers });
-      this.logger.log(
-        `[WEBHOOK] Successfully sent request to ${url} for ${subscriptionName}`,
-      );
+      this.logger.log(`[WEBHOOK] Successfully sent request to ${url} for ${subscriptionName}`);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(
-        `[WEBHOOK] Failed to send request to ${url}: ${message}`,
-      );
+      this.logger.error(`[WEBHOOK] Failed to send request to ${url}: ${message}`);
       throw error;
     }
   }

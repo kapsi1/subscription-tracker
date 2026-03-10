@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { EmailService } from './email/email.service';
 import { WebhookService } from './webhook/webhook.service';
 import { WebPushService } from './webpush/webpush.service';
-
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [ConfigModule],

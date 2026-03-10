@@ -1,27 +1,18 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import * as crypto from 'node:crypto';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BillingCycle } from '@prisma/client';
 import type { PrismaService } from '../prisma/prisma.service';
 import type { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import type { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { calculateNextBillingDate } from './utils/billing-date.util';
-import { Prisma, BillingCycle } from '@prisma/client';
-import * as crypto from 'crypto';
 
 @Injectable()
 export class SubscriptionsService {
   constructor(private prisma: PrismaService) {}
 
   async create(userId: string, createDto: CreateSubscriptionDto) {
-    if (
-      createDto.billingCycle === BillingCycle.custom &&
-      !createDto.intervalDays
-    ) {
-      throw new BadRequestException(
-        'intervalDays is required for custom billing cycle',
-      );
+    if (createDto.billingCycle === BillingCycle.custom && !createDto.intervalDays) {
+      throw new BadRequestException('intervalDays is required for custom billing cycle');
     }
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
@@ -29,11 +20,7 @@ export class SubscriptionsService {
 
     const nextBillingDate = createDto.nextBillingDate
       ? new Date(createDto.nextBillingDate)
-      : calculateNextBillingDate(
-          createDto.billingCycle,
-          new Date(),
-          createDto.intervalDays,
-        );
+      : calculateNextBillingDate(createDto.billingCycle, new Date(), createDto.intervalDays);
 
     return this.prisma.subscription.create({
       data: {
@@ -45,8 +32,7 @@ export class SubscriptionsService {
         intervalDays: createDto.intervalDays || null,
         category: createDto.category,
         nextBillingDate,
-        reminderEnabled:
-          createDto.reminderEnabled ?? user.defaultReminderEnabled,
+        reminderEnabled: createDto.reminderEnabled ?? user.defaultReminderEnabled,
         reminderDays: createDto.reminderDays ?? user.defaultReminderDays,
       },
     });
@@ -78,10 +64,7 @@ export class SubscriptionsService {
     return { subscriptions };
   }
 
-  async import(
-    userId: string,
-    importDto: { subscriptions: CreateSubscriptionDto[] },
-  ) {
+  async import(userId: string, importDto: { subscriptions: CreateSubscriptionDto[] }) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
@@ -95,11 +78,7 @@ export class SubscriptionsService {
       const id = crypto.randomUUID();
       const nextBillingDate = sub.nextBillingDate
         ? new Date(sub.nextBillingDate)
-        : calculateNextBillingDate(
-            sub.billingCycle,
-            new Date(),
-            sub.intervalDays,
-          );
+        : calculateNextBillingDate(sub.billingCycle, new Date(), sub.intervalDays);
 
       return {
         id,
@@ -165,14 +144,10 @@ export class SubscriptionsService {
 
     const billingCycle = updateDto.billingCycle || existing.billingCycle;
     const intervalDays =
-      updateDto.intervalDays !== undefined
-        ? updateDto.intervalDays
-        : existing.intervalDays;
+      updateDto.intervalDays !== undefined ? updateDto.intervalDays : existing.intervalDays;
 
     if (billingCycle === BillingCycle.custom && !intervalDays) {
-      throw new BadRequestException(
-        'intervalDays is required for custom billing cycle',
-      );
+      throw new BadRequestException('intervalDays is required for custom billing cycle');
     }
 
     // If nextBillingDate is provided in DTO, use it.
@@ -181,11 +156,7 @@ export class SubscriptionsService {
     if (updateDto.nextBillingDate) {
       nextBillingDate = new Date(updateDto.nextBillingDate);
     } else if (updateDto.billingCycle || updateDto.intervalDays) {
-      nextBillingDate = calculateNextBillingDate(
-        billingCycle,
-        new Date(),
-        intervalDays,
-      );
+      nextBillingDate = calculateNextBillingDate(billingCycle, new Date(), intervalDays);
     }
 
     return this.prisma.subscription.update({

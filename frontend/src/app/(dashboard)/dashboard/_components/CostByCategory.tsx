@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
+  Bar,
   BarChart,
   CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Bar,
-} from "recharts";
+} from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency } from '@/lib/utils';
 
 interface CostByCategoryProps {
   categoryBreakdown: Record<string, number>;
@@ -34,9 +34,9 @@ interface PieLabelProps {
   value?: number;
 }
 
-export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCategoryProps) {
+export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCategoryProps) {
   const { t } = useTranslation();
-  const [selectedChart, setSelectedChart] = useState<"pie" | "bar">("pie");
+  const [selectedChart, setSelectedChart] = useState<'pie' | 'bar'>('pie');
 
   const categoryData = Object.keys(categoryBreakdown).map((key, index) => {
     const chartVar = `--chart-${(index % 5) + 1}`;
@@ -47,7 +47,15 @@ export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCa
     };
   });
 
-  const renderPieLabel = ({ cx, cy, midAngle, outerRadius, percent, name, value }: PieLabelProps) => {
+  const renderPieLabel = ({
+    cx,
+    cy,
+    midAngle,
+    outerRadius,
+    percent,
+    name,
+    value,
+  }: PieLabelProps) => {
     if (
       cx === undefined ||
       cy === undefined ||
@@ -75,7 +83,7 @@ export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCa
         y={y}
         fill="currentColor"
         fontSize={12}
-        textAnchor={x > cx ? "start" : "end"}
+        textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
       >
         {`${t(`subscriptions.modal.categories.${name}`, { defaultValue: name })}: ${formatCurrency(value, currency)}`}
@@ -93,17 +101,17 @@ export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCa
           </div>
           <div className="flex gap-1 bg-muted rounded-lg p-1">
             <Button
-              variant={selectedChart === "pie" ? "secondary" : "ghost"}
+              variant={selectedChart === 'pie' ? 'secondary' : 'ghost'}
               size="sm"
-              onClick={() => setSelectedChart("pie")}
+              onClick={() => setSelectedChart('pie')}
               className="h-7 text-xs"
             >
               {t('dashboard.pie')}
             </Button>
             <Button
-              variant={selectedChart === "bar" ? "secondary" : "ghost"}
+              variant={selectedChart === 'bar' ? 'secondary' : 'ghost'}
               size="sm"
-              onClick={() => setSelectedChart("bar")}
+              onClick={() => setSelectedChart('bar')}
               className="h-7 text-xs"
             >
               {t('dashboard.bar')}
@@ -113,7 +121,7 @@ export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCa
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          {selectedChart === "pie" ? (
+          {selectedChart === 'pie' ? (
             <PieChart>
               <Pie
                 data={categoryData}
@@ -132,7 +140,7 @@ export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCa
               <Tooltip
                 formatter={(value: any) => [
                   formatCurrency(Number(value || 0), currency),
-                  t("subscriptions.modal.amount")
+                  t('subscriptions.modal.amount'),
                 ]}
               />
             </PieChart>
@@ -142,20 +150,27 @@ export function CostByCategory({ categoryBreakdown, currency = "USD" }: CostByCa
               <XAxis
                 dataKey="name"
                 stroke="#64748b"
-                tickFormatter={(value) => t(`subscriptions.modal.categories.${value}`, { defaultValue: value })}
+                tickFormatter={(value) =>
+                  t(`subscriptions.modal.categories.${value}`, { defaultValue: value })
+                }
               />
-              <YAxis 
+              <YAxis
                 stroke="#64748b"
                 tickFormatter={(value) => formatCurrency(value, currency, 0)}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "8px",
+                  backgroundColor: 'white',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
                 }}
-                labelFormatter={(label: any) => t(`subscriptions.modal.categories.${label}`, { defaultValue: String(label) })}
-                formatter={(value: any) => [formatCurrency(Number(value || 0), currency), t("subscriptions.modal.amount")]}
+                labelFormatter={(label: any) =>
+                  t(`subscriptions.modal.categories.${label}`, { defaultValue: String(label) })
+                }
+                formatter={(value: any) => [
+                  formatCurrency(Number(value || 0), currency),
+                  t('subscriptions.modal.amount'),
+                ]}
               />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                 {categoryData.map((entry, index) => (

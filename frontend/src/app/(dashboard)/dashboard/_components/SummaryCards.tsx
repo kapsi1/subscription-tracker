@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Calendar, CreditCard, TrendingUp } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { formatCurrency } from "@/lib/utils";
-import type { ReactNode } from "react";
+import { Calendar, CreditCard, DollarSign, TrendingUp } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency } from '@/lib/utils';
 
 interface SummaryCardsProps {
   summary: {

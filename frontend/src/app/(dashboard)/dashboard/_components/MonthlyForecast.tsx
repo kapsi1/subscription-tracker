@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useTranslation } from "react-i18next";
+import type { ForecastItem } from '@subscription-tracker/shared';
+import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import {
-  ResponsiveContainer,
-  ComposedChart,
+  Bar,
   CartesianGrid,
+  ComposedChart,
+  Legend,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  Legend,
-  Bar,
-  Line,
-} from "recharts";
-import { formatCurrency } from "@/lib/utils";
-import type { ForecastItem } from "@subscription-tracker/shared";
-import type { i18n as i18nType, TFunction } from "i18next";
+} from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency } from '@/lib/utils';
 
 interface MonthlyForecastProps {
   forecast: ForecastItem[];
@@ -36,7 +36,7 @@ interface CustomTooltipProps {
   currency?: string;
 }
 
-const CustomTooltip = ({ active, payload, label, t, currency = "USD" }: CustomTooltipProps) => {
+const CustomTooltip = ({ active, payload, label, t, currency = 'USD' }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload as ForecastItem;
     const monthlySpending = payload.find((p) => p.dataKey === 'amount')?.value;
@@ -46,20 +46,26 @@ const CustomTooltip = ({ active, payload, label, t, currency = "USD" }: CustomTo
     return (
       <div className="z-100 min-w-[180px] max-w-[220px] rounded-md bg-card p-2 text-xs text-foreground border shadow-lg animate-in fade-in-0 zoom-in-95">
         <div className="flex justify-between items-baseline font-bold mb-1 border-b pb-1">
-          <span>{label} {data.year}</span>
+          <span>
+            {label} {data.year}
+          </span>
           <span className="text-[10px] font-medium opacity-70">
-            {t("subscriptions.paymentCount", { count: payments.length })}
+            {t('subscriptions.paymentCount', { count: payments.length })}
           </span>
         </div>
-        
+
         <div className="space-y-0.5">
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">{t("dashboard.monthly")}</span>
-            <span className="font-bold text-primary">{formatCurrency(Number(monthlySpending || 0), currency)}</span>
+            <span className="text-muted-foreground">{t('dashboard.monthly')}</span>
+            <span className="font-bold text-primary">
+              {formatCurrency(Number(monthlySpending || 0), currency)}
+            </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">{t("dashboard.cumulative")}</span>
-            <span className="font-bold text-chart-bar">{formatCurrency(Number(cumulativeSpending || 0), currency)}</span>
+            <span className="text-muted-foreground">{t('dashboard.cumulative')}</span>
+            <span className="font-bold text-chart-bar">
+              {formatCurrency(Number(cumulativeSpending || 0), currency)}
+            </span>
           </div>
         </div>
       </div>
@@ -68,7 +74,7 @@ const CustomTooltip = ({ active, payload, label, t, currency = "USD" }: CustomTo
   return null;
 };
 
-export function MonthlyForecast({ forecast, currency = "USD" }: MonthlyForecastProps) {
+export function MonthlyForecast({ forecast, currency = 'USD' }: MonthlyForecastProps) {
   const { t } = useTranslation();
 
   return (
@@ -114,7 +120,7 @@ export function MonthlyForecast({ forecast, currency = "USD" }: MonthlyForecastP
             <Bar
               yAxisId="right"
               dataKey="cumulativeAmount"
-              name={t("dashboard.cumulativeSpending")}
+              name={t('dashboard.cumulativeSpending')}
               fill="var(--chart-bar)"
               radius={[4, 4, 0, 0]}
               barSize={30}
@@ -123,10 +129,10 @@ export function MonthlyForecast({ forecast, currency = "USD" }: MonthlyForecastP
               yAxisId="left"
               type="monotone"
               dataKey="amount"
-              name={t("dashboard.monthlySpending")}
+              name={t('dashboard.monthlySpending')}
               stroke="var(--primary)"
               strokeWidth={3}
-              dot={{ fill: "var(--primary)", strokeWidth: 2, r: 4 }}
+              dot={{ fill: 'var(--primary)', strokeWidth: 2, r: 4 }}
               activeDot={{ r: 6, strokeWidth: 0 }}
             />
           </ComposedChart>

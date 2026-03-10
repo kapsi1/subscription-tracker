@@ -1,22 +1,17 @@
-"use client";
+'use client';
 
-import { useMemo, useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { CreditCard, ArrowUp, ArrowDown } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { formatCurrency, getCategoryColor } from "@/lib/utils";
-import { useAuth } from "@/components/auth-provider";
-import api from "@/lib/api";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ArrowDown, ArrowUp, CreditCard } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/components/auth-provider';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import api from '@/lib/api';
+import { formatCurrency, getCategoryColor } from '@/lib/utils';
 
 export type MonthlyPayment = {
   id: string;
@@ -26,7 +21,7 @@ export type MonthlyPayment = {
   amount: number;
   currency: string;
   date: string;
-  status: "done" | "upcoming";
+  status: 'done' | 'upcoming';
 };
 
 interface MonthlyPaymentsProps {
@@ -37,16 +32,16 @@ interface MonthlyPaymentsProps {
 export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProps) {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const [paymentSortBy, setPaymentSortBy] = useState<"date" | "amount">("date");
-  const [paymentSortDirection, setPaymentSortDirection] = useState<"asc" | "desc">("asc");
+  const [paymentSortBy, setPaymentSortBy] = useState<'date' | 'amount'>('date');
+  const [paymentSortDirection, setPaymentSortDirection] = useState<'asc' | 'desc'>('asc');
   const [showPaid, setShowPaid] = useState<boolean>(true);
 
   useEffect(() => {
     if (user?.dashboardSortBy) {
-      setPaymentSortBy(user.dashboardSortBy as "date" | "amount");
+      setPaymentSortBy(user.dashboardSortBy as 'date' | 'amount');
     }
     if (user?.dashboardSortOrder) {
-      setPaymentSortDirection(user.dashboardSortOrder as "asc" | "desc");
+      setPaymentSortDirection(user.dashboardSortOrder as 'asc' | 'desc');
     }
     if (user?.showPaidPayments !== undefined) {
       setShowPaid(user.showPaidPayments);
@@ -55,19 +50,19 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
 
   const saveSettings = async (patch: Record<string, unknown>) => {
     try {
-      await api.patch("/users/settings", patch);
+      await api.patch('/users/settings', patch);
     } catch (err) {
-      console.error("Failed to save settings", err);
+      console.error('Failed to save settings', err);
     }
   };
 
-  const handleSortByChange = (sortBy: "date" | "amount") => {
+  const handleSortByChange = (sortBy: 'date' | 'amount') => {
     setPaymentSortBy(sortBy);
     saveSettings({ dashboardSortBy: sortBy, dashboardSortOrder: paymentSortDirection });
   };
 
   const handleSortDirectionToggle = () => {
-    const newDirection = paymentSortDirection === "asc" ? "desc" : "asc";
+    const newDirection = paymentSortDirection === 'asc' ? 'desc' : 'asc';
     setPaymentSortDirection(newDirection);
     saveSettings({ dashboardSortBy: paymentSortBy, dashboardSortOrder: newDirection });
   };
@@ -78,30 +73,30 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
   };
 
   const sortedMonthlyPayments = useMemo(() => {
-    const filtered = showPaid 
-      ? monthlyPayments 
-      : monthlyPayments.filter(p => p.status !== "done");
+    const filtered = showPaid
+      ? monthlyPayments
+      : monthlyPayments.filter((p) => p.status !== 'done');
 
     return [...filtered].sort((a, b) => {
       const baseSort =
-        paymentSortBy === "date"
+        paymentSortBy === 'date'
           ? new Date(a.date).getTime() - new Date(b.date).getTime()
           : Number(a.amount) - Number(b.amount);
 
       if (baseSort !== 0) {
-        return paymentSortDirection === "asc" ? baseSort : -baseSort;
+        return paymentSortDirection === 'asc' ? baseSort : -baseSort;
       }
 
       const dateTieBreak = new Date(a.date).getTime() - new Date(b.date).getTime();
-      return paymentSortDirection === "asc" ? dateTieBreak : -dateTieBreak;
+      return paymentSortDirection === 'asc' ? dateTieBreak : -dateTieBreak;
     });
   }, [monthlyPayments, paymentSortBy, paymentSortDirection, showPaid]);
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return "";
+    if (!dateString) return '';
     const date = new Date(dateString);
-    const locale = i18n.language === "pl" ? "pl-PL" : "en-US";
-    return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
+    const locale = i18n.language === 'pl' ? 'pl-PL' : 'en-US';
+    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
   };
 
   return (
@@ -114,54 +109,50 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
           </div>
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <div className="flex items-center space-x-2 mr-2">
-              <Switch 
-                id="show-paid" 
-                checked={showPaid} 
-                onCheckedChange={handleToggleShowPaid}
-              />
+              <Switch id="show-paid" checked={showPaid} onCheckedChange={handleToggleShowPaid} />
               <Label htmlFor="show-paid" className="text-sm font-medium cursor-pointer">
-                {t("dashboard.showPaid")}
+                {t('dashboard.showPaid')}
               </Label>
             </div>
             <div className="flex gap-2">
-            <Button
-              type="button"
-              variant={paymentSortBy === "date" ? "secondary" : "outline"}
-              size="sm"
-              onClick={() => handleSortByChange("date")}
-            >
-              {t("dashboard.sortByDate")}
-            </Button>
-            <Button
-              type="button"
-              variant={paymentSortBy === "amount" ? "secondary" : "outline"}
-              size="sm"
-              onClick={() => handleSortByChange("amount")}
-            >
-              {t("dashboard.sortByAmount")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="px-3"
-              onClick={handleSortDirectionToggle}
-              aria-label={t(
-                paymentSortDirection === "asc"
-                  ? "dashboard.sortDirectionAsc"
-                  : "dashboard.sortDirectionDesc",
-              )}
-            >
-              {paymentSortDirection === "asc" ? (
-                <ArrowUp className="w-4 h-4" />
-              ) : (
-                <ArrowDown className="w-4 h-4" />
-              )}
-            </Button>
+              <Button
+                type="button"
+                variant={paymentSortBy === 'date' ? 'secondary' : 'outline'}
+                size="sm"
+                onClick={() => handleSortByChange('date')}
+              >
+                {t('dashboard.sortByDate')}
+              </Button>
+              <Button
+                type="button"
+                variant={paymentSortBy === 'amount' ? 'secondary' : 'outline'}
+                size="sm"
+                onClick={() => handleSortByChange('amount')}
+              >
+                {t('dashboard.sortByAmount')}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="px-3"
+                onClick={handleSortDirectionToggle}
+                aria-label={t(
+                  paymentSortDirection === 'asc'
+                    ? 'dashboard.sortDirectionAsc'
+                    : 'dashboard.sortDirectionDesc',
+                )}
+              >
+                {paymentSortDirection === 'asc' ? (
+                  <ArrowUp className="w-4 h-4" />
+                ) : (
+                  <ArrowDown className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </CardHeader>
+      </CardHeader>
       <CardContent>
         {sortedMonthlyPayments.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
@@ -173,10 +164,11 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
               <div
                 key={payment.id}
                 onClick={() => onEdit?.(payment.subscriptionId)}
-                className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 cursor-pointer ${payment.status === "done"
-                  ? "border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80"
-                  : "bg-card hover:bg-accent/50"
-                  }`}
+                className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 cursor-pointer ${
+                  payment.status === 'done'
+                    ? 'border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80'
+                    : 'bg-card hover:bg-accent/50'
+                }`}
               >
                 <div className="flex items-center gap-4 flex-1">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -196,8 +188,10 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
-                      {payment.status === "done" ? (
-                        <Badge variant="secondary" className="shrink-0">{t("dashboard.paymentDone")}</Badge>
+                      {payment.status === 'done' ? (
+                        <Badge variant="secondary" className="shrink-0">
+                          {t('dashboard.paymentDone')}
+                        </Badge>
                       ) : null}
                     </div>
                     <p className="text-sm text-muted-foreground">
@@ -207,8 +201,8 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                 </div>
                 <div className="flex items-center gap-4 sm:gap-6">
                   <div className="hidden sm:flex min-w-[120px] justify-end">
-                    <Badge 
-                      variant="outline" 
+                    <Badge
+                      variant="outline"
                       className={getCategoryColor(payment.category, 'dashboard')}
                     >
                       {t(`subscriptions.modal.categories.${payment.category}`)}
@@ -218,9 +212,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                     <p className="font-semibold">
                       {formatCurrency(payment.amount, payment.currency)}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatDate(payment.date)}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{formatDate(payment.date)}</p>
                   </div>
                 </div>
               </div>

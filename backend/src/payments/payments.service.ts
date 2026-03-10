@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
+import type { DashboardService } from '../dashboard/dashboard.service';
+import type { EmailService } from '../notifications/email/email.service';
 import type { PrismaService } from '../prisma/prisma.service';
 import { calculateNextBillingDate } from '../subscriptions/utils/billing-date.util';
-import type { EmailService } from '../notifications/email/email.service';
-import type { DashboardService } from '../dashboard/dashboard.service';
 
 @Injectable()
 export class PaymentsService {
@@ -22,7 +22,7 @@ export class PaymentsService {
     const now = new Date();
     // Start of "today" (midnight)
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
+
     // Start of "yesterday" (midnight)
     const yesterdayStart = new Date(todayStart);
     yesterdayStart.setDate(yesterdayStart.getDate() - 1);
@@ -49,7 +49,8 @@ export class PaymentsService {
       // The requirement says: "when a subscription was paid a previous day"
       // This implies we ONLY send it if there were payments.
     } else {
-      const paymentsByUser: Record<string, { name: string; amount: number; currency: string }[]> = {};
+      const paymentsByUser: Record<string, { name: string; amount: number; currency: string }[]> =
+        {};
 
       for (const sub of dueSubscriptions) {
         // Create payment history record
@@ -118,13 +119,13 @@ export class PaymentsService {
 
         for (const user of usersToNotify) {
           const paidYesterday = paymentsByUser[user.id] || [];
-          
+
           // Calculate summary stats using DashboardService
           const costSummary = this.dashboardService.calculateCosts(user.subscriptions);
-          
+
           // Count upcoming payments in the next 7 days
-          const upcomingCount = user.subscriptions.filter(s => 
-            s.nextBillingDate >= todayStart && s.nextBillingDate < oneWeekFromNow
+          const upcomingCount = user.subscriptions.filter(
+            (s) => s.nextBillingDate >= todayStart && s.nextBillingDate < oneWeekFromNow,
           ).length;
 
           const stats = {

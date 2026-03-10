@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
-import { AlertsService } from './alerts.service';
-import { AlertsProcessor } from './alerts.processor';
-import { NotificationsModule } from '../notifications/notifications.module';
+import { Module } from '@nestjs/common';
 import { DashboardModule } from '../dashboard/dashboard.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 import { PaymentsModule } from '../payments/payments.module';
+import { AlertsProcessor } from './alerts.processor';
+import { AlertsService } from './alerts.service';
 
 @Module({
   imports: [

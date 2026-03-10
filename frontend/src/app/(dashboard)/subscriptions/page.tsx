@@ -1,9 +1,30 @@
-"use client";
+'use client';
 
-import { useState, useRef } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { sendGAEvent } from '@next/third-parties/google';
+import type { Subscription } from '@subscription-tracker/shared';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  ArrowUpDown,
+  ChevronDown,
+  ChevronUp,
+  Download,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  Upload,
+} from 'lucide-react';
+import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { z } from 'zod';
+import { EmptyState } from '@/components/empty-state';
+import { LoadingState } from '@/components/loading-state';
+import { SubscriptionModal } from '@/components/subscription-modal';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -11,61 +32,49 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Upload, Download, Plus, Pencil, Trash2, Search, Filter, ArrowUpDown, ChevronUp, ChevronDown } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { EmptyState } from "@/components/empty-state";
-import { SubscriptionModal } from "@/components/subscription-modal";
-import type { Subscription } from "@subscription-tracker/shared";
-import { LoadingState } from "@/components/loading-state";
-import { toast } from "sonner";
-import api from "@/lib/api";
-import { sendGAEvent } from "@next/third-parties/google";
-import { useTranslation } from "react-i18next";
-import { z } from "zod";
-import { formatCurrency, getCategoryColor, formatDate } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import api from '@/lib/api';
+import { formatCurrency, formatDate, getCategoryColor } from '@/lib/utils';
 
 const subscriptionImportSchema = z.object({
   name: z.string().min(1),
   amount: z.number().positive(),
   currency: z.string().length(3),
-  billingCycle: z.enum(["monthly", "yearly", "custom"]),
+  billingCycle: z.enum(['monthly', 'yearly', 'custom']),
   intervalDays: z.number().positive().optional().nullable(),
   category: z.string().min(1),
   nextBillingDate: z.string().optional(),
   reminderEnabled: z.boolean().optional(),
   reminderDays: z.number().positive().optional(),
   isActive: z.boolean().optional(),
-  payments: z.array(z.object({
-    amount: z.number().positive(),
-    currency: z.string().length(3),
-    paidAt: z.string(),
-  })).optional(),
+  payments: z
+    .array(
+      z.object({
+        amount: z.number().positive(),
+        currency: z.string().length(3),
+        paidAt: z.string(),
+      }),
+    )
+    .optional(),
 });
 
 export default function SubscriptionsPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Subscription;
-    direction: "asc" | "desc";
-  }>({ key: "nextBillingDate" as keyof Subscription, direction: "asc" });
+    direction: 'asc' | 'desc';
+  }>({ key: 'nextBillingDate' as keyof Subscription, direction: 'asc' });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: subscriptions = [], isLoading: isFetchLoading } = useQuery<Subscription[]>({
     queryKey: ['subscriptions'],
     queryFn: async () => {
-      const res = await api.get("/subscriptions");
+      const res = await api.get('/subscriptions');
       return res.data;
     },
   });
@@ -92,52 +101,53 @@ export default function SubscriptionsPage() {
         const res = await api.patch(`/subscriptions/${id}`, updateData);
         return res.data;
       } else {
-        const res = await api.post("/subscriptions", subscription);
+        const res = await api.post('/subscriptions', subscription);
         return res.data;
       }
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      
+
       if (variables.id) {
         toast.success(t('subscriptions.updateSuccess'));
       } else {
         toast.success(t('subscriptions.saveSuccess'));
-        sendGAEvent({ event: "add_subscription", value: "success" });
+        sendGAEvent({ event: 'add_subscription', value: 'success' });
       }
       setModalOpen(false);
     },
     onError: (err: unknown) => {
       const error = err as { response?: { data?: { message?: string | string[] } } };
       const backendMessage = error.response?.data?.message;
-      const isCurrencyError = Array.isArray(backendMessage) 
+      const isCurrencyError = Array.isArray(backendMessage)
         ? backendMessage.some((m: string) => m.toLowerCase().includes('currency'))
         : typeof backendMessage === 'string' && backendMessage.toLowerCase().includes('currency');
 
       if (!isCurrencyError) {
         toast.error(t('subscriptions.saveError', { defaultValue: 'Failed to save subscription' }));
       }
-      sendGAEvent({ event: "add_subscription", value: "failed" });
+      sendGAEvent({ event: 'add_subscription', value: 'failed' });
     },
   });
 
-  const filteredSubscriptions = subscriptions.filter((sub) =>
-    sub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    sub.category.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredSubscriptions = subscriptions.filter(
+    (sub) =>
+      sub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      sub.category.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const sortedSubscriptions = [...filteredSubscriptions].sort((a, b) => {
     const key = sortConfig.key;
-    const direction = sortConfig.direction === "asc" ? 1 : -1;
+    const direction = sortConfig.direction === 'asc' ? 1 : -1;
 
     const aValue = a[key];
     const bValue = b[key];
 
     // Numeric comparison for amount
-    if (key === "amount") {
-      const aNum = typeof aValue === "number" ? aValue : parseFloat(aValue as string) || 0;
-      const bNum = typeof bValue === "number" ? bValue : parseFloat(bValue as string) || 0;
+    if (key === 'amount') {
+      const aNum = typeof aValue === 'number' ? aValue : parseFloat(aValue as string) || 0;
+      const bNum = typeof bValue === 'number' ? bValue : parseFloat(bValue as string) || 0;
       return (aNum - bNum) * direction;
     }
 
@@ -147,7 +157,7 @@ export default function SubscriptionsPage() {
     if (bValue === undefined || bValue === null) return -1;
 
     // String comparison for names and categories
-    if (typeof aValue === "string" && typeof bValue === "string") {
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
       return aValue.localeCompare(bValue) * direction;
     }
 
@@ -156,9 +166,9 @@ export default function SubscriptionsPage() {
   });
 
   const handleSort = (key: keyof Subscription) => {
-    let direction: "asc" | "desc" = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
     }
     setSortConfig({ key, direction });
   };
@@ -167,7 +177,7 @@ export default function SubscriptionsPage() {
     if (sortConfig.key !== key) {
       return <ArrowUpDown className="ml-2 h-4 w-4" />;
     }
-    return sortConfig.direction === "asc" ? (
+    return sortConfig.direction === 'asc' ? (
       <ChevronUp className="ml-2 h-4 w-4" />
     ) : (
       <ChevronDown className="ml-2 h-4 w-4" />
@@ -195,19 +205,21 @@ export default function SubscriptionsPage() {
 
   const handleExport = async () => {
     try {
-      const res = await api.get("/subscriptions/export");
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(res.data.subscriptions, null, 2));
-      const downloadAnchorNode = document.createElement("a");
-      downloadAnchorNode.setAttribute("href", dataStr);
-      downloadAnchorNode.setAttribute("download", "subscriptions.json");
+      const res = await api.get('/subscriptions/export');
+      const dataStr =
+        'data:text/json;charset=utf-8,' +
+        encodeURIComponent(JSON.stringify(res.data.subscriptions, null, 2));
+      const downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute('href', dataStr);
+      downloadAnchorNode.setAttribute('download', 'subscriptions.json');
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
       toast.success(t('subscriptions.exportSuccess'));
-      sendGAEvent({ event: "export_subscriptions", value: "success" });
-    } catch (err: unknown) {
+      sendGAEvent({ event: 'export_subscriptions', value: 'success' });
+    } catch (_err: unknown) {
       toast.error(t('subscriptions.exportError'));
-      sendGAEvent({ event: "export_subscriptions", value: "failed" });
+      sendGAEvent({ event: 'export_subscriptions', value: 'failed' });
     }
   };
 
@@ -221,34 +233,34 @@ export default function SubscriptionsPage() {
       try {
         const content = e.target?.result as string;
         const json = JSON.parse(content);
-        
+
         // Ensure it's an array
         const subscriptionsToImport = Array.isArray(json) ? json : json.subscriptions || [json];
-        
+
         // Validate with Zod before sending to the backend
         const validSubscriptions = z.array(subscriptionImportSchema).parse(subscriptionsToImport);
-        
-        await api.post("/subscriptions/import", { subscriptions: validSubscriptions });
+
+        await api.post('/subscriptions/import', { subscriptions: validSubscriptions });
         toast.success(t('subscriptions.importSuccess'));
-        sendGAEvent({ event: "import_subscriptions", value: "success" });
-        
+        sendGAEvent({ event: 'import_subscriptions', value: 'success' });
+
         // Refresh list
         queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       } catch (err: unknown) {
         if (err instanceof z.ZodError) {
-          toast.error(t('subscriptions.importError') + ": Invalid file format");
+          toast.error(`${t('subscriptions.importError')}: Invalid file format`);
         } else {
           toast.error(t('subscriptions.importError'));
         }
-        sendGAEvent({ event: "import_subscriptions", value: "failed" });
+        sendGAEvent({ event: 'import_subscriptions', value: 'failed' });
       } finally {
         setIsImportLoading(false);
       }
-      
+
       // Reset input
       if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+        fileInputRef.current.value = '';
       }
     };
     reader.readAsText(file);
@@ -264,9 +276,7 @@ export default function SubscriptionsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold">{t('subscriptions.title')}</h1>
-          <p className="text-muted-foreground mt-1">
-            {t('subscriptions.subtitle')}
-          </p>
+          <p className="text-muted-foreground mt-1">{t('subscriptions.subtitle')}</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           <input
@@ -276,7 +286,11 @@ export default function SubscriptionsPage() {
             ref={fileInputRef}
             onChange={handleImport}
           />
-          <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="gap-2 shrink-0">
+          <Button
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            className="gap-2 shrink-0"
+          >
             <Upload className="w-4 h-4" />
             {t('subscriptions.import')}
           </Button>
@@ -319,9 +333,7 @@ export default function SubscriptionsPage() {
             <EmptyState
               title={t('subscriptions.noFound')}
               description={
-                searchQuery
-                  ? t('subscriptions.noFoundDesc')
-                  : t('subscriptions.getStarted')
+                searchQuery ? t('subscriptions.noFoundDesc') : t('subscriptions.getStarted')
               }
               actionLabel={searchQuery ? undefined : t('subscriptions.add')}
               onAction={searchQuery ? undefined : handleAddNew}
@@ -331,49 +343,49 @@ export default function SubscriptionsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead 
+                    <TableHead
                       className="cursor-pointer hover:text-foreground transition-colors select-none"
-                      onClick={() => handleSort("name")}
+                      onClick={() => handleSort('name')}
                     >
                       <div className="flex items-center">
                         {t('subscriptions.table.service')}
-                        {getSortIcon("name")}
+                        {getSortIcon('name')}
                       </div>
                     </TableHead>
-                    <TableHead 
+                    <TableHead
                       className="cursor-pointer hover:text-foreground transition-colors select-none"
-                      onClick={() => handleSort("amount")}
+                      onClick={() => handleSort('amount')}
                     >
                       <div className="flex items-center">
                         {t('subscriptions.table.amount')}
-                        {getSortIcon("amount")}
+                        {getSortIcon('amount')}
                       </div>
                     </TableHead>
-                    <TableHead 
+                    <TableHead
                       className="cursor-pointer hover:text-foreground transition-colors select-none"
-                      onClick={() => handleSort("billingCycle")}
+                      onClick={() => handleSort('billingCycle')}
                     >
                       <div className="flex items-center">
                         {t('subscriptions.table.cycle')}
-                        {getSortIcon("billingCycle")}
+                        {getSortIcon('billingCycle')}
                       </div>
                     </TableHead>
-                    <TableHead 
+                    <TableHead
                       className="cursor-pointer hover:text-foreground transition-colors select-none"
-                      onClick={() => handleSort("nextBillingDate")}
+                      onClick={() => handleSort('nextBillingDate')}
                     >
                       <div className="flex items-center">
                         {t('subscriptions.table.next')}
-                        {getSortIcon("nextBillingDate")}
+                        {getSortIcon('nextBillingDate')}
                       </div>
                     </TableHead>
-                    <TableHead 
+                    <TableHead
                       className="cursor-pointer hover:text-foreground transition-colors select-none"
-                      onClick={() => handleSort("category")}
+                      onClick={() => handleSort('category')}
                     >
                       <div className="flex items-center">
                         {t('subscriptions.table.category')}
-                        {getSortIcon("category")}
+                        {getSortIcon('category')}
                       </div>
                     </TableHead>
                     <TableHead className="text-right"></TableHead>
@@ -381,8 +393,8 @@ export default function SubscriptionsPage() {
                 </TableHeader>
                 <TableBody>
                   {sortedSubscriptions.map((subscription) => (
-                    <TableRow 
-                      key={subscription.id} 
+                    <TableRow
+                      key={subscription.id}
                       className="hover:bg-accent/50 cursor-pointer group"
                       onClick={() => handleEdit(subscription)}
                     >
@@ -390,9 +402,7 @@ export default function SubscriptionsPage() {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <div className="truncate cursor-pointer">
-                                {subscription.name}
-                              </div>
+                              <div className="truncate cursor-pointer">{subscription.name}</div>
                             </TooltipTrigger>
                             <TooltipContent side="bottom" className="max-w-[300px] wrap-break-word">
                               {subscription.name}
@@ -400,9 +410,17 @@ export default function SubscriptionsPage() {
                           </Tooltip>
                         </TooltipProvider>
                       </TableCell>
-                      <TableCell>{formatCurrency(subscription.amount, subscription.currency)}</TableCell>
-                      <TableCell>{t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}</TableCell>
-                      <TableCell>{subscription.nextBillingDate ? formatDate(subscription.nextBillingDate) : "N/A"}</TableCell>
+                      <TableCell>
+                        {formatCurrency(subscription.amount, subscription.currency)}
+                      </TableCell>
+                      <TableCell>
+                        {t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}
+                      </TableCell>
+                      <TableCell>
+                        {subscription.nextBillingDate
+                          ? formatDate(subscription.nextBillingDate)
+                          : 'N/A'}
+                      </TableCell>
                       <TableCell>
                         <Badge
                           variant="outline"

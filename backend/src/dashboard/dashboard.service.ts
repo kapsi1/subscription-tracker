@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import type { PrismaService } from '../prisma/prisma.service';
 import { BillingCycle, type Subscription } from '@prisma/client';
+import type { PrismaService } from '../prisma/prisma.service';
 
 export interface ForecastPayment {
   id: string;
@@ -18,7 +18,6 @@ export interface ForecastItem {
   payments: ForecastPayment[];
 }
 
-
 @Injectable()
 export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
@@ -28,10 +27,7 @@ export class DashboardService {
       this.addMonthsClamped(billingDate, 1);
     } else if (subscription.billingCycle === BillingCycle.yearly) {
       this.addYearsClamped(billingDate, 1);
-    } else if (
-      subscription.billingCycle === BillingCycle.custom &&
-      subscription.intervalDays
-    ) {
+    } else if (subscription.billingCycle === BillingCycle.custom && subscription.intervalDays) {
       billingDate.setDate(billingDate.getDate() + subscription.intervalDays);
     } else {
       throw new Error('Invalid billing cycle configuration');
@@ -168,8 +164,7 @@ export class DashboardService {
 
     let upcomingThisYear = 0;
     if (queryYear >= now.getFullYear()) {
-      const startForUpcoming =
-        queryYear === now.getFullYear() ? now : yearStart;
+      const startForUpcoming = queryYear === now.getFullYear() ? now : yearStart;
       upcomingThisYear = this.calculateUpcomingAmountInRange(
         subscriptions,
         startForUpcoming,
@@ -306,8 +301,18 @@ export class DashboardService {
     const now = new Date();
 
     const monthNames = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
 
     const userCurrency = user?.currency || 'USD';
@@ -324,7 +329,6 @@ export class DashboardService {
         payments: [],
       });
     }
-
 
     // Go through each subscription and accurately step forward its next billing dates
     // to slot them into the correct forecast bucket.

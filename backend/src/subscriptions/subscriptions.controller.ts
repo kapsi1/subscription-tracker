@@ -1,21 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
-import type { SubscriptionsService } from './subscriptions.service';
-import type { CreateSubscriptionDto } from './dto/create-subscription.dto';
-import type { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import type { ImportSubscriptionsDto } from './dto/import-subscription.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import type { Request } from 'express';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
+import type { CreateSubscriptionDto } from './dto/create-subscription.dto';
+import type { ImportSubscriptionsDto } from './dto/import-subscription.dto';
+import type { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import type { SubscriptionsService } from './subscriptions.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('subscriptions')
@@ -23,14 +12,8 @@ export class SubscriptionsController {
   constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
   @Post()
-  create(
-    @Req() req: RequestWithUser,
-    @Body() createSubscriptionDto: CreateSubscriptionDto,
-  ) {
-    return this.subscriptionsService.create(
-      req.user.userId,
-      createSubscriptionDto,
-    );
+  create(@Req() req: RequestWithUser, @Body() createSubscriptionDto: CreateSubscriptionDto) {
+    return this.subscriptionsService.create(req.user.userId, createSubscriptionDto);
   }
 
   @Get('export')
@@ -39,14 +22,8 @@ export class SubscriptionsController {
   }
 
   @Post('import')
-  import(
-    @Req() req: RequestWithUser,
-    @Body() importSubscriptionsDto: ImportSubscriptionsDto,
-  ) {
-    return this.subscriptionsService.import(
-      req.user.userId,
-      importSubscriptionsDto,
-    );
+  import(@Req() req: RequestWithUser, @Body() importSubscriptionsDto: ImportSubscriptionsDto) {
+    return this.subscriptionsService.import(req.user.userId, importSubscriptionsDto);
   }
 
   @Get()
@@ -65,11 +42,7 @@ export class SubscriptionsController {
     @Param('id') id: string,
     @Body() updateSubscriptionDto: UpdateSubscriptionDto,
   ) {
-    return this.subscriptionsService.update(
-      req.user.userId,
-      id,
-      updateSubscriptionDto,
-    );
+    return this.subscriptionsService.update(req.user.userId, id, updateSubscriptionDto);
   }
 
   @Delete(':id')
@@ -77,4 +50,3 @@ export class SubscriptionsController {
     return this.subscriptionsService.remove(req.user.userId, id);
   }
 }
-
