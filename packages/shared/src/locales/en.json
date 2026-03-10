@@ -101,6 +101,7 @@
     "add": "Add Subscription",
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
+    "foundCount": "Found {{count}} subscriptions",
     "noFound": "No subscriptions found",
     "noFoundDesc": "Try adjusting your search query",
     "getStarted": "Get started by adding your first subscription",
@@ -144,12 +145,23 @@
         "Cloud Services": "Cloud Services",
         "Development": "Development",
         "Professional": "Professional",
-        "Health & Fitness": "Health & Fitness",
         "Housing": "Housing",
         "Utilities": "Utilities",
         "Services": "Services",
         "Education": "Education",
-        "Other": "Other"
+        "Other": "Other",
+        "Health": "Health & Fitness"
+      },
+      "errors": {
+        "nameRequired": "Service name is required",
+        "amountRequired": "Valid amount is required",
+        "nextBillingDateRequired": "Next billing date is required",
+        "reminderDaysRequired": "Reminder days must be between 0 and 30"
+      },
+      "billingCycles": {
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "custom": "Custom"
       }
     }
   },

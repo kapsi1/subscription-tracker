@@ -103,6 +103,7 @@
     "add": "Dodaj subskrypcję",
     "search": "Szukaj subskrypcji po nazwie lub kategorii...",
     "all": "Wszystkie subskrypcje",
+    "foundCount_one": "Znaleziono {{count}} subskrypcję",
     "foundCount_few": "Znaleziono {{count}} subskrypcje",
     "foundCount_many": "Znaleziono {{count}} subskrypcji",
     "noFound": "Nie znaleziono subskrypcji",
@@ -148,12 +149,23 @@
         "Cloud Services": "Usługi w chmurze",
         "Development": "Programowanie",
         "Professional": "Zawodowe",
-        "Health & Fitness": "Zdrowie i fitness",
         "Housing": "Mieszkanie",
         "Utilities": "Media",
         "Services": "Usługi",
         "Education": "Edukacja",
-        "Other": "Inne"
+        "Other": "Inne",
+        "Health": "Zdrowie i fitness"
+      },
+      "errors": {
+        "nameRequired": "Nazwa usługi jest wymagana",
+        "amountRequired": "Wymagana jest poprawna kwota",
+        "nextBillingDateRequired": "Data następnej płatności jest wymagana",
+        "reminderDaysRequired": "Dni przypomnienia muszą mieścić się w zakresie od 0 do 30"
+      },
+      "billingCycles": {
+        "monthly": "Miesięcznie",
+        "yearly": "Rocznie",
+        "custom": "Własny"
       }
     }
   },
