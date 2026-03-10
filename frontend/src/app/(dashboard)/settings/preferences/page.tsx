@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import api from '@/lib/api';
 import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from '@/lib/push';
+import { AppearanceSection } from '../_components/AppearanceSection';
 import { BudgetSection } from '../_components/BudgetSection';
 import { EmailNotificationsSection } from '../_components/EmailNotificationsSection';
 import { LocalizationSection } from '../_components/LocalizationSection';
@@ -275,6 +276,8 @@ export default function PreferencesPage() {
 
   return (
     <div className="space-y-6">
+      <AppearanceSection />
+
       <LocalizationSection
         currency={settings.currency}
         setCurrency={(currency) => setSettings({ ...settings, currency })}

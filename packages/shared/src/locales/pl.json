@@ -259,7 +259,22 @@
       "desc": "Ustawienia regionalne i wyświetlania",
       "currency": "Domyślna waluta",
       "currencyDesc": "Ta waluta będzie używana dla wszystkich Twoich subskrypcji",
+      "language": "Język aplikacji",
+      "languageDesc": "Wybierz preferowany język interfejsu",
       "searchCurrency": "Szukaj waluty..."
+    },
+    "appearance": {
+      "title": "Wygląd",
+      "desc": "Dostosuj wygląd aplikacji",
+      "theme": "Motyw",
+      "themeDesc": "Wybierz preferowany tryb kolorów",
+      "themes": {
+        "light": "Jasny motyw",
+        "dark": "Ciemny motyw",
+        "system": "Systemowy"
+      },
+      "accent": "Kolor akcentu",
+      "accentDesc": "Wybierz główny kolor interfejsu"
     },
     "budget": {
       "title": "Limity budżetu",

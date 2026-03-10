@@ -25,5 +25,9 @@ export const Flag = ({ countryCode, className }: FlagProps) => {
   );
 };
 
-export const UKFlag = () => <Flag countryCode="gb" />;
-export const PolandFlag = () => <Flag countryCode="pl" />;
+export const UKFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="gb" className={className} />
+);
+export const PolandFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="pl" className={className} />
+);

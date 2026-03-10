@@ -255,7 +255,22 @@
       "desc": "Regional and display settings",
       "currency": "Default Currency",
       "currencyDesc": "This currency will be used for all your subscriptions",
+      "language": "Application Language",
+      "languageDesc": "Select your preferred language for the interface",
       "searchCurrency": "Search currency..."
+    },
+    "appearance": {
+      "title": "Appearance",
+      "desc": "Customize how the application looks",
+      "theme": "Theme",
+      "themeDesc": "Select your preferred color mode",
+      "themes": {
+        "light": "Light Theme",
+        "dark": "Dark Theme",
+        "system": "System Theme"
+      },
+      "accent": "Accent Color",
+      "accentDesc": "Select a primary color for the interface"
     },
     "budget": {
       "title": "Budget Limits",

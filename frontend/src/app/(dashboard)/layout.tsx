@@ -6,10 +6,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AccentColorSwitcher } from '@/components/accent-color-switcher';
 import { useAuth } from '@/components/auth-provider';
 import { ErrorState } from '@/components/error-state'; // Assuming this path
-import { LanguageSelector } from '@/components/language-selector';
 import { LoadingState } from '@/components/loading-state';
 import { Button } from '@/components/ui/button';
 import {
@@ -217,9 +215,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </nav>
 
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
-            <AccentColorSwitcher />
-            <LanguageSelector />
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
