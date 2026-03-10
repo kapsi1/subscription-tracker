@@ -7,10 +7,14 @@ import { AlertsService } from './alerts.service';
 
 describe('AlertsService', () => {
   let service: AlertsService;
-  let prismaMock: any;
-  let queueMock: any;
-  let dashboardMock: any;
-  let paymentsMock: any;
+  let prismaMock: {
+    alert: { findMany: jest.Mock };
+    user: { findMany: jest.Mock; update: jest.Mock };
+    subscription: { findMany: jest.Mock };
+  };
+  let queueMock: { add: jest.Mock };
+  let dashboardMock: { getMonthlyTotal: jest.Mock; getSummary: jest.Mock };
+  let paymentsMock: { processPaymentsAndSendDigests: jest.Mock };
 
   beforeEach(async () => {
     prismaMock = {

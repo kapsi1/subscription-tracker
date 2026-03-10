@@ -138,7 +138,7 @@ export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCa
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: any) => [
+                formatter={(value: number | string) => [
                   formatCurrency(Number(value || 0), currency),
                   t('subscriptions.modal.amount'),
                 ]}
@@ -164,10 +164,10 @@ export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCa
                   border: '1px solid #e2e8f0',
                   borderRadius: '8px',
                 }}
-                labelFormatter={(label: any) =>
+                labelFormatter={(label: number | string) =>
                   t(`subscriptions.modal.categories.${label}`, { defaultValue: String(label) })
                 }
-                formatter={(value: any) => [
+                formatter={(value: number | string) => [
                   formatCurrency(Number(value || 0), currency),
                   t('subscriptions.modal.amount'),
                 ]}

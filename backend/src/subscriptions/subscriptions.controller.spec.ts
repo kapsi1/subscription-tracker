@@ -1,6 +1,7 @@
 import { Test, type TestingModule } from '@nestjs/testing';
 import { BillingCycle } from '@prisma/client';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
+import type { ImportSubscriptionsDto } from './dto/import-subscription.dto';
 import { SubscriptionsController } from './subscriptions.controller';
 import { SubscriptionsService } from './subscriptions.service';
 
@@ -103,7 +104,7 @@ describe('SubscriptionsController', () => {
         },
       ],
     };
-    const result = await controller.import(mockReq, dto as any);
+    const result = await controller.import(mockReq, dto as unknown as ImportSubscriptionsDto);
 
     expect(serviceMock.import).toHaveBeenCalledWith('user-1', dto);
     expect(result).toEqual({ message: 'Successfully imported 1 subscriptions', count: 1 });

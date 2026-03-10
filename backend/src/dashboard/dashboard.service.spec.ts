@@ -5,7 +5,10 @@ import { DashboardService } from './dashboard.service';
 
 describe('DashboardService', () => {
   let service: DashboardService;
-  let prismaMock: any;
+  let prismaMock: {
+    subscription: { findMany: jest.Mock };
+    paymentHistory: { aggregate: jest.Mock; findMany: jest.Mock };
+  };
 
   beforeAll(() => {
     jest.useFakeTimers();

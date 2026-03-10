@@ -1,18 +1,23 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { AlertType } from '@prisma/client';
+import type { Job } from 'bullmq';
 import { EmailService } from '../notifications/email/email.service';
 import { WebhookService } from '../notifications/webhook/webhook.service';
 import { WebPushService } from '../notifications/webpush/webpush.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AlertsProcessor } from './alerts.processor';
+import type { AlertJobData } from './alerts.types';
 
 describe('AlertsProcessor', () => {
   let processor: AlertsProcessor;
-  let emailMock: any;
-  let webhookMock: any;
-  let webPushMock: any;
-  let prismaMock: any;
+  let emailMock: { sendAlert: jest.Mock };
+  let webhookMock: { sendAlert: jest.Mock };
+  let webPushMock: { sendNotification: jest.Mock };
+  let prismaMock: {
+    pushSubscription: { findMany: jest.Mock; delete: jest.Mock };
+    user: { findUnique: jest.Mock };
+  };
 
   beforeEach(async () => {
     emailMock = { sendAlert: jest.fn() };
@@ -55,7 +60,7 @@ describe('AlertsProcessor', () => {
         amount: 15,
         currency: 'USD',
       },
-    } as any);
+    } as unknown as Job<AlertJobData, unknown, string>);
 
     expect(emailMock.sendAlert).toHaveBeenCalledWith(
       'a@a.com',
@@ -77,7 +82,7 @@ describe('AlertsProcessor', () => {
       processor.process({
         id: 'job-1',
         data: { type: AlertType.email },
-      } as any),
+      } as unknown as Job<AlertJobData, unknown, string>),
     ).rejects.toThrow('SMTP Error');
   });
 });

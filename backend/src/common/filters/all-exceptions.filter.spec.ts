@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { type ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { AllExceptionsFilter } from './all-exceptions.filter';
 
 describe('AllExceptionsFilter', () => {
@@ -31,7 +31,7 @@ describe('AllExceptionsFilter', () => {
   it('should handle HttpException with correct status and message', () => {
     const exception = new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    filter.catch(exception, mockHost as any);
+    filter.catch(exception, mockHost as unknown as ArgumentsHost);
 
     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.FORBIDDEN);
     expect(mockResponse.json).toHaveBeenCalledWith(
@@ -46,7 +46,7 @@ describe('AllExceptionsFilter', () => {
   it('should handle unknown errors with 500 status', () => {
     const exception = new Error('Something went wrong');
 
-    filter.catch(exception, mockHost as any);
+    filter.catch(exception, mockHost as unknown as ArgumentsHost);
 
     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
     expect(mockResponse.json).toHaveBeenCalledWith(
@@ -61,7 +61,7 @@ describe('AllExceptionsFilter', () => {
     mockRequest.id = 'req-123';
     const exception = new HttpException('Not Found', HttpStatus.NOT_FOUND);
 
-    filter.catch(exception, mockHost as any);
+    filter.catch(exception, mockHost as unknown as ArgumentsHost);
 
     expect(mockResponse.json).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -76,7 +76,7 @@ describe('AllExceptionsFilter', () => {
       HttpStatus.BAD_REQUEST,
     );
 
-    filter.catch(exception, mockHost as any);
+    filter.catch(exception, mockHost as unknown as ArgumentsHost);
 
     expect(mockResponse.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
     expect(mockResponse.json).toHaveBeenCalledWith(

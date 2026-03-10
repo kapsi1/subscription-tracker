@@ -1,3 +1,4 @@
+import type { ArgumentMetadata } from '@nestjs/common';
 import { SanitizePipe } from './sanitize.pipe';
 
 describe('SanitizePipe', () => {
@@ -9,7 +10,7 @@ describe('SanitizePipe', () => {
 
   it('should remove HTML tags from strings', () => {
     const input = '<script>alert("xss")</script>Hello <p>world</p>';
-    const output = pipe.transform(input, {} as any);
+    const output = pipe.transform(input, {} as ArgumentMetadata);
     expect(output).toBe('Hello world');
   });
 
@@ -21,7 +22,7 @@ describe('SanitizePipe', () => {
         text: '<i>Italic</i>',
       },
     };
-    const output = pipe.transform(input, {} as any);
+    const output = pipe.transform(input, {} as ArgumentMetadata);
     expect(output).toEqual({
       name: 'John',
       bio: 'Bio',
@@ -32,8 +33,8 @@ describe('SanitizePipe', () => {
   });
 
   it('should return non-string values as is', () => {
-    expect(pipe.transform(123, {} as any)).toBe(123);
-    expect(pipe.transform(true, {} as any)).toBe(true);
-    expect(pipe.transform(null, {} as any)).toBe(null);
+    expect(pipe.transform(123, {} as ArgumentMetadata)).toBe(123);
+    expect(pipe.transform(true, {} as ArgumentMetadata)).toBe(true);
+    expect(pipe.transform(null, {} as ArgumentMetadata)).toBe(null);
   });
 });

@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { RequestIdMiddleware } from './request-id.middleware';
 
 describe('RequestIdMiddleware', () => {
@@ -14,7 +15,7 @@ describe('RequestIdMiddleware', () => {
   });
 
   it('should generate a UUID when no X-Request-Id header is present', () => {
-    middleware.use(mockReq as any, mockRes as any, mockNext);
+    middleware.use(mockReq as unknown as Request, mockRes as unknown as Response, mockNext);
 
     expect(mockReq.id).toBeDefined();
     expect(typeof mockReq.id).toBe('string');
@@ -25,19 +26,19 @@ describe('RequestIdMiddleware', () => {
   it('should reuse the client-provided X-Request-Id header', () => {
     mockReq.headers = { 'x-request-id': 'client-request-123' };
 
-    middleware.use(mockReq as any, mockRes as any, mockNext);
+    middleware.use(mockReq as unknown as Request, mockRes as unknown as Response, mockNext);
 
     expect(mockReq.id).toBe('client-request-123');
   });
 
   it('should set X-Request-Id on the response', () => {
-    middleware.use(mockReq as any, mockRes as any, mockNext);
+    middleware.use(mockReq as unknown as Request, mockRes as unknown as Response, mockNext);
 
     expect(mockRes.setHeader).toHaveBeenCalledWith('X-Request-Id', mockReq.id);
   });
 
   it('should call next()', () => {
-    middleware.use(mockReq as any, mockRes as any, mockNext);
+    middleware.use(mockReq as unknown as Request, mockRes as unknown as Response, mockNext);
 
     expect(mockNext).toHaveBeenCalledTimes(1);
   });

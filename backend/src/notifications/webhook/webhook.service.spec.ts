@@ -50,7 +50,7 @@ describe('WebhookService', () => {
     await service.sendAlert('https://example.com/webhook', secret, 'Spotify', 1, 9.99, 'EUR');
 
     expect(mockedAxios.post).toHaveBeenCalled();
-    const headers = mockedAxios.post.mock.calls[0][2]?.headers as any;
+    const headers = mockedAxios.post.mock.calls[0][2]?.headers as Record<string, string>;
     expect(headers['X-Webhook-Signature']).toBeDefined();
     expect(headers['X-Webhook-Signature']).toHaveLength(64); // SHA256 hex
   });

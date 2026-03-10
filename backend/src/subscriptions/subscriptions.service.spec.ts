@@ -2,6 +2,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { BillingCycle } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import type { ImportSubscriptionsDto } from './dto/import-subscription.dto';
 import { SubscriptionsService } from './subscriptions.service';
 
 describe('SubscriptionsService', () => {
@@ -9,6 +10,8 @@ describe('SubscriptionsService', () => {
   let prismaMock: {
     subscription: Record<string, jest.Mock>;
     user: Record<string, jest.Mock>;
+    paymentHistory: Record<string, jest.Mock>;
+    $transaction: jest.Mock;
   };
 
   const userId = 'user-1';
@@ -54,7 +57,7 @@ describe('SubscriptionsService', () => {
         }
         return callback;
       }),
-    } as any;
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [SubscriptionsService, { provide: PrismaService, useValue: prismaMock }],
@@ -167,7 +170,7 @@ describe('SubscriptionsService', () => {
 
   describe('import', () => {
     beforeEach(() => {
-      (prismaMock as any).user = {
+      prismaMock.user = {
         findUnique: jest.fn().mockResolvedValue({
           id: userId,
           defaultReminderEnabled: true,
@@ -187,11 +190,11 @@ describe('SubscriptionsService', () => {
             category: 'Entertainment',
           },
         ],
-      } as any;
+      } as unknown as ImportSubscriptionsDto;
 
       const result = await service.import(userId, importDto);
 
-      expect((prismaMock as any).user.findUnique).toHaveBeenCalledWith({
+      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
         where: { id: userId },
       });
       expect(prismaMock.subscription.createMany).toHaveBeenCalled();
@@ -200,7 +203,7 @@ describe('SubscriptionsService', () => {
     });
 
     it('should throw NotFoundException if user not found during import', async () => {
-      (prismaMock as any).user.findUnique.mockResolvedValue(null);
+      prismaMock.user.findUnique.mockResolvedValue(null);
 
       const importDto = { subscriptions: [] };
 
@@ -218,7 +221,7 @@ describe('SubscriptionsService', () => {
             category: 'Entertainment',
           },
         ],
-      } as any;
+      } as unknown as ImportSubscriptionsDto;
 
       await expect(service.import(userId, importDto)).rejects.toThrow(BadRequestException);
     });

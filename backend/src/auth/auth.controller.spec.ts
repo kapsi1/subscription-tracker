@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
+import type { RequestWithUser } from '../common/interfaces/request.interface';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
@@ -58,7 +59,7 @@ describe('AuthController', () => {
   });
 
   it('should return success message on logout', async () => {
-    const req = { user: { userId: 'user-1' } } as any;
+    const req = { user: { userId: 'user-1' } } as unknown as RequestWithUser;
     const result = await controller.logout(req);
 
     expect(result).toEqual({ message: 'Logged out successfully' });

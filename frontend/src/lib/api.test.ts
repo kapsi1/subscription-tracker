@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // We need to test the interceptor behavior, so we import the configured instance
@@ -39,7 +39,7 @@ describe('api interceptors', () => {
     // Intercept the request config to verify header was set
     const config = await api.interceptors.request.handlers?.[0].fulfilled?.({
       headers: new axios.AxiosHeaders(),
-    } as any);
+    } as unknown as InternalAxiosRequestConfig);
 
     expect(config.headers.Authorization).toBe('Bearer test-token');
   });
@@ -49,7 +49,7 @@ describe('api interceptors', () => {
 
     const config = await api.interceptors.request.handlers?.[0].fulfilled?.({
       headers: new axios.AxiosHeaders(),
-    } as any);
+    } as unknown as InternalAxiosRequestConfig);
 
     expect(config.headers.Authorization).toBeUndefined();
   });
