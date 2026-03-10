@@ -48,7 +48,7 @@ const CustomTooltip = ({ active, payload, label, t, currency = "USD" }: CustomTo
         <div className="flex justify-between items-baseline font-bold mb-1 border-b pb-1">
           <span>{label} {data.year}</span>
           <span className="text-[10px] font-medium opacity-70">
-            {payments.length} {payments.length === 1 ? t('subscriptions.payment') : t('subscriptions.payments')}
+            {t("subscriptions.paymentCount", { count: payments.length })}
           </span>
         </div>
         

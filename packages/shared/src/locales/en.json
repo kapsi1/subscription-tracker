@@ -27,8 +27,8 @@
     },
     "status": {
       "pleaseWait": "Please wait...",
-      "loginSuccess": "Successfully logged in.",
-      "registerSuccess": "Account created successfully.",
+      "loginSuccess": "Successfully logged in",
+      "registerSuccess": "Account created successfully",
       "failed": "Authentication failed"
     }
   },
@@ -53,7 +53,7 @@
     "dashboard": "Dashboard",
     "subscriptions": "Subscriptions",
     "settings": "Settings",
-    "logout": "Log out",
+    "logout": "Log Out",
     "profile": "My Profile"
   },
   "dashboard": {
@@ -64,7 +64,7 @@
     "totalMonthlyCost": "Total Monthly Cost",
     "totalYearlyCost": "Total Yearly Cost",
     "upcomingPayments": "Upcoming Payments",
-    "monthlyPayments": "This Month Payments",
+    "monthlyPayments": "This Month's Payments",
     "activeSubscriptions": "Active Subscriptions",
     "currentlyTracked": "Currently tracked",
     "thisMonth": "This month",
@@ -83,7 +83,7 @@
     "upcomingPaymentsTitle": "Upcoming Payments",
     "upcomingPaymentsDesc": "Your next billing dates",
     "noUpcomingPayments": "No upcoming payments in the next 30 days.",
-    "monthlyPaymentsTitle": "This Month Payments",
+    "monthlyPaymentsTitle": "This Month's Payments",
     "monthlyPaymentsDesc": "Completed and scheduled payments for the current month",
     "noMonthlyPayments": "No payments for this month yet.",
     "paymentDone": "Done",
@@ -125,15 +125,15 @@
   "subscriptions": {
     "title": "Subscriptions",
     "subtitle": "Manage all your recurring subscriptions",
-    "payment": "payment",
-    "payments": "payments",
+    "paymentCount_one": "{{count}} payment",
+    "paymentCount_other": "{{count}} payments",
     "import": "Import",
     "export": "Export",
     "add": "Add Subscription",
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
-    "foundCount": "{{count}} subscription found",
-    "foundCount_plural": "{{count}} subscriptions found",
+    "foundCount_one": "{{count}} subscription found",
+    "foundCount_other": "{{count}} subscriptions found",
     "noFound": "No subscriptions found",
     "noFoundDesc": "Try adjusting your search query",
     "getStarted": "Get started by adding your first subscription",
@@ -178,7 +178,6 @@
         "Cloud Services": "Cloud Services",
         "Development": "Development",
         "Professional": "Professional",
-        "Health": "Health & Fitness",
         "Health & Fitness": "Health & Fitness",
         "Housing": "Housing",
         "Utilities": "Utilities",
@@ -235,9 +234,9 @@
         "testBudgetDesc": "Send a sample budget alert email using your selected language.",
         "testBudgetSend": "Send Test Budget Email",
         "testSending": "Sending...",
-        "testSuccess": "Test reminder email sent.",
+        "testSuccess": "Test reminder email sent",
         "testError": "Failed to send test email",
-        "testBudgetSuccess": "Test budget alert email sent.",
+        "testBudgetSuccess": "Test budget alert email sent",
         "testBudgetError": "Failed to send test budget email"
       },
       "push": {
@@ -262,7 +261,7 @@
         "testDesc": "Send a sample webhook to your configured URL and secret.",
         "testSend": "Send Test Webhook",
         "testSending": "Sending...",
-        "testSuccess": "Test webhook sent successfully.",
+        "testSuccess": "Test webhook sent successfully",
         "testError": "Failed to send test webhook"
       },
       "default": {
@@ -314,11 +313,13 @@
     "weeklyReportSubject": "Weekly Subscription Report",
     "dailyDigestTitle": "Daily Digest",
     "weeklyReportTitle": "Weekly Report",
-    "digestSummary": "Here is a quick summary of your active subscriptions and upcoming payments.",
-    "totalActive": "Active Subscriptions",
-    "upcomingThisWeek": "Upcoming This Week",
-    "totalMonthly": "Total Monthly Cost",
-    "paidYesterday": "Subscriptions Paid Yesterday",
-    "noPaymentsPaidYesterday": "No subscriptions were paid yesterday."
+    "digest": {
+      "summary": "Here is a quick summary of your active subscriptions and upcoming payments.",
+      "totalActive": "Active Subscriptions",
+      "upcomingThisWeek": "Upcoming This Week",
+      "totalMonthly": "Total Monthly Cost",
+      "paidYesterday": "Subscriptions Paid Yesterday",
+      "noPaymentsPaidYesterday": "No subscriptions were paid yesterday."
+    }
   }
 }

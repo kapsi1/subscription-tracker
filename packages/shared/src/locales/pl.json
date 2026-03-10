@@ -1,20 +1,20 @@
 {
   "auth": {
-    "title": "Monitor Kosztów Subskrypcji",
+    "title": "Monitor kosztów subskrypcji",
     "login": {
       "title": "Logowanie",
       "subtitle": "Zaloguj się, aby zarządzać swoimi subskrypcjami",
       "submit": "Zaloguj się",
-      "switch": "Przełącz na Rejestrację"
+      "switch": "Przełącz na rejestrację"
     },
     "register": {
-      "title": "Utwórz Konto",
+      "title": "Utwórz konto",
       "subtitle": "Utwórz konto, aby rozpocząć",
-      "submit": "Utwórz Konto",
-      "switch": "Przełącz na Logowanie"
+      "submit": "Utwórz konto",
+      "switch": "Przełącz na logowanie"
     },
     "fields": {
-      "name": "Imię i Nazwisko",
+      "name": "Imię i nazwisko",
       "namePlaceholder": "Jan Kowalski",
       "email": "Email",
       "emailPlaceholder": "ty@example.com",
@@ -27,8 +27,8 @@
     },
     "status": {
       "pleaseWait": "Proszę czekać...",
-      "loginSuccess": "Zalogowano pomyślnie.",
-      "registerSuccess": "Konto zostało utworzone.",
+      "loginSuccess": "Zalogowano pomyślnie",
+      "registerSuccess": "Konto zostało utworzone",
       "failed": "Błąd uwierzytelniania"
     }
   },
@@ -44,7 +44,7 @@
     "previous": "Poprzedni",
     "next": "Następny",
     "connectionError": "Błąd połączenia",
-    "initializingApp": "Inicjalizowanie aplikacji...",
+    "initializingApp": "Inicjalizacja aplikacji...",
     "backendTimeout": "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
     "tryAgain": "Spróbuj ponownie",
     "redirectingToLogin": "Przekierowywanie do logowania..."
@@ -54,7 +54,7 @@
     "subscriptions": "Subskrypcje",
     "settings": "Ustawienia",
     "logout": "Wyloguj się",
-    "profile": "Mój Profil"
+    "profile": "Mój profil"
   },
   "dashboard": {
     "title": "Panel główny",
@@ -98,7 +98,7 @@
     "dark": "Przełącz na tryb ciemny"
   },
   "language": {
-    "switch": "Zmień Język",
+    "switch": "Zmień język",
     "en": "English",
     "pl": "Polski",
     "accentColor": "Kolor akcentu",
@@ -125,16 +125,19 @@
   "subscriptions": {
     "title": "Subskrypcje",
     "subtitle": "Zarządzaj swoimi subskrypcjami",
-    "payment": "płatność",
-    "payments": "płatności",
+    "paymentCount_one": "{{count}} płatność",
+    "paymentCount_few": "{{count}} płatności",
+    "paymentCount_many": "{{count}} płatności",
+    "paymentCount_other": "{{count}} płatności",
     "import": "Importuj",
     "export": "Eksportuj",
     "add": "Dodaj subskrypcję",
     "search": "Szukaj subskrypcji po nazwie lub kategorii...",
     "all": "Wszystkie subskrypcje",
-    "foundCount": "Znaleziono {{count}} subskrypcję",
-    "foundCount_plural": "Znaleziono {{count}} subskrypcje",
+    "foundCount_one": "Znaleziono {{count}} subskrypcję",
+    "foundCount_few": "Znaleziono {{count}} subskrypcje",
     "foundCount_many": "Znaleziono {{count}} subskrypcji",
+    "foundCount_other": "Znaleziono {{count}} subskrypcji",
     "noFound": "Nie znaleziono subskrypcji",
     "noFoundDesc": "Spróbuj zmienić parametry wyszukiwania",
     "getStarted": "Zacznij od dodania swojej pierwszej subskrypcji",
@@ -179,7 +182,6 @@
         "Cloud Services": "Usługi w chmurze",
         "Development": "Programowanie",
         "Professional": "Zawodowe",
-        "Health": "Zdrowie i fitness",
         "Health & Fitness": "Zdrowie i fitness",
         "Housing": "Mieszkanie",
         "Utilities": "Media",
@@ -207,26 +209,26 @@
       "preferences": "Preferencje"
     },
     "profile": {
-      "title": "Profil Konta",
+      "title": "Profil konta",
       "desc": "Zaktualizuj swoje dane osobowe",
-      "name": "Imię i Nazwisko",
+      "name": "Imię i nazwisko",
       "namePlaceholder": "Wprowadź swoje imię i nazwisko",
       "memberSince": "Członek od",
       "lastUpdated": "Ostatnia aktualizacja",
-      "save": "Zapisz Profil",
+      "save": "Zapisz profil",
       "saveSuccess": "Profil został zaktualizowany",
       "saveError": "Nie udało się zapisać profilu"
     },
     "notifications": {
       "email": {
-        "title": "Powiadomienia E-mail",
+        "title": "Powiadomienia e-mail",
         "desc": "Otrzymuj alerty pocztą elektroniczną",
-        "enable": "Włącz powiadomienia E-mail",
+        "enable": "Włącz powiadomienia e-mail",
         "enableDesc": "Wysyłaj przypomnienia o płatnościach na Twój e-mail",
-        "address": "Adres E-mail",
-        "daily": "Dzienny Przegląd",
+        "address": "Adres e-mail",
+        "daily": "Dzienny przegląd",
         "dailyDesc": "Otrzymuj podsumowanie dzisiejszych płatności",
-        "weekly": "Raport Tygodniowy",
+        "weekly": "Raport tygodniowy",
         "weeklyDesc": "Otrzymuj cotygodniowe podsumowanie swoich subskrypcji",
         "testTitle": "Testowy e-mail przypomnienia",
         "testDesc": "Wyślij próbny e-mail, aby sprawdzić konfigurację SMTP.",
@@ -236,42 +238,42 @@
         "testBudgetDesc": "Wyślij próbny alert budżetowy w wybranym języku.",
         "testBudgetSend": "Wyślij testowy alert budżetowy",
         "testSending": "Wysyłanie...",
-        "testSuccess": "Wysłano testowy e-mail przypomnienia.",
+        "testSuccess": "Wysłano testowy e-mail przypomnienia",
         "testError": "Nie udało się wysłać testowego e-maila",
-        "testBudgetSuccess": "Wysłano testowy e-mail alertu budżetowego.",
+        "testBudgetSuccess": "Wysłano testowy e-mail alertu budżetowego",
         "testBudgetError": "Nie udało się wysłać testowego alertu budżetowego"
       },
       "push": {
-        "title": "Powiadomienia Push w Przeglądarce",
+        "title": "Powiadomienia push w przeglądarce",
         "desc": "Otrzymuj alerty bezpośrednio w przeglądarce",
-        "enable": "Włącz Push w Przeglądarce",
+        "enable": "Włącz push w przeglądarce",
         "enableDesc": "Otrzymuj powiadomienia, nawet gdy nie korzystasz z aplikacji",
-        "success": "Powiadomienia Push włączone",
-        "disabled": "Powiadomienia Push wyłączone",
-        "error": "Nie udało się przełączyć powiadomień Push"
+        "success": "Powiadomienia push włączone",
+        "disabled": "Powiadomienia push wyłączone",
+        "error": "Nie udało się przełączyć powiadomień push"
       },
       "webhook": {
-        "title": "Integracja Webhook",
+        "title": "Integracja webhook",
         "desc": "Wysyłaj alerty do zewnętrznych serwisów",
-        "enable": "Włącz Webhooki",
+        "enable": "Włącz webhooki",
         "enableDesc": "Wysyłaj dane o płatnościach na swój URL webhooka",
-        "url": "URL Webhooka",
+        "url": "URL webhooka",
         "urlDesc": "Wyślemy żądanie POST ze szczegółami płatności na ten adres URL",
-        "secret": "Klucz tajny Webhooka",
+        "secret": "Klucz tajny webhooka",
         "secretDesc": "Opcjonalny klucz tajny do podpisywania żądań. Zostanie wysłany w nagłówku X-Webhook-Signature.",
-        "testTitle": "Testuj integrację Webhook",
+        "testTitle": "Testuj integrację webhook",
         "testDesc": "Wyślij przykładowe powiadomienie na skonfigurowany adres URL.",
-        "testSend": "Wyślij testowy Webhook",
+        "testSend": "Wyślij testowy webhook",
         "testSending": "Wysyłanie...",
-        "testSuccess": "Testowy webhook wysłany pomyślnie.",
+        "testSuccess": "Testowy webhook wysłany pomyślnie",
         "testError": "Nie udało się wysłać testowego webhooka"
       },
       "default": {
-        "title": "Domyślne Ustawienia Przypomnień",
+        "title": "Domyślne ustawienia przypomnień",
         "desc": "Domyślne ustawienia dla nowych subskrypcji",
-        "enable": "Domyślne Przypomnienia o Płatnościach",
+        "enable": "Domyślne przypomnienia o płatnościach",
         "enableDesc": "Włącz przypomnienia domyślnie dla nowych subskrypcji",
-        "days": "Domyślna Liczba Dni Przypomnienia",
+        "days": "Domyślna liczba dni przypomnienia",
         "daysDesc": "Nowe subskrypcje będą ustawione na przypomnienie tyle dni przed terminem płatności",
         "beforePayment": "dni przed płatnością"
       }
@@ -279,18 +281,18 @@
     "localization": {
       "title": "Lokalizacja",
       "desc": "Ustawienia regionalne i wyświetlania",
-      "currency": "Domyślna Waluta",
+      "currency": "Domyślna waluta",
       "currencyDesc": "Ta waluta będzie używana dla wszystkich Twoich subskrypcji",
       "searchCurrency": "Szukaj waluty..."
     },
     "budget": {
-      "title": "Limity Budżetu",
+      "title": "Limity budżetu",
       "desc": "Ustaw miesięczny budżet, aby otrzymać powiadomienie po jego przekroczeniu",
-      "label": "Miesięczny Budżet",
+      "label": "Miesięczny budżet",
       "help": "Pozostaw puste, jeśli nie chcesz alertów budżetowych"
     },
-    "save": "Zapisz Ustawienia",
-    "savePreferences": "Zapisz Preferencje",
+    "save": "Zapisz ustawienia",
+    "savePreferences": "Zapisz preferencje",
     "saveSuccess": "Ustawienia zapisane pomyślnie",
     "loadError": "Nie udało się załadować ustawień"
   },
@@ -313,13 +315,15 @@
     "budgetAlert": "Alert budżetowy: przekroczono limit miesięczny",
     "dailyDigestSubject": "Dzienny przegląd subskrypcji",
     "weeklyReportSubject": "Tygodniowy raport subskrypcji",
-    "dailyDigestTitle": "Dzienny Przegląd",
-    "weeklyReportTitle": "Raport Tygodniowy",
-    "digestSummary": "Oto krótkie podsumowanie Twoich aktywnych subskrypcji i nadchodzących płatności.",
-    "totalActive": "Aktywne subskrypcje",
-    "upcomingThisWeek": "Nadchodzące w tym tygodniu",
-    "totalMonthly": "Miesięczny koszt całkowity",
-    "paidYesterday": "Subskrypcje opłacone wczoraj",
-    "noPaymentsPaidYesterday": "Wczoraj nie opłacono żadnych subskrypcji."
+    "dailyDigestTitle": "Dzienny przegląd",
+    "weeklyReportTitle": "Raport tygodniowy",
+    "digest": {
+      "summary": "Oto krótkie podsumowanie Twoich aktywnych subskrypcji i nadchodzących płatności.",
+      "totalActive": "Aktywne subskrypcje",
+      "upcomingThisWeek": "Nadchodzące w tym tygodniu",
+      "totalMonthly": "Miesięczny koszt całkowity",
+      "paidYesterday": "Subskrypcje opłacone wczoraj",
+      "noPaymentsPaidYesterday": "Wczoraj nie opłacono żadnych subskrypcji."
+    }
   }
 }

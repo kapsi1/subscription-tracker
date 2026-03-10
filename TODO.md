@@ -305,7 +305,7 @@ To consider: what happens when we disable the toggle after adding some subscript
 
 - [x] If user is logged with a Google account, show their profile picture in corner, instead of initials. Also add a link to user profile page above the logout button. Settings page should have its subpages in url, so we can link to them.
 - [ ] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
-- [ ] Review translations for spelling, grammar, consistency, capitalization and style.
+- [x] Review translations for spelling, grammar, consistency, capitalization and style.
 - [ ] Review code for security vulnerabilities and best practices.
 - [ ] Review code for performance issues and improvements
 - [x] Review code for "any" type usage in TypeScript and replace it with appropriate types.
