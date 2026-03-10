@@ -19,8 +19,8 @@ import type { RequestWithUser } from '../common/interfaces/request.interface';
 import { EmailService } from '../notifications/email/email.service';;
 import { WebPushService } from '../notifications/webpush/webpush.service';;
 import { PrismaService } from '../prisma/prisma.service';;
-import type { PushSubscriptionDto } from './dto/push-subscription.dto';
-import type { UpdateSettingsDto } from './dto/update-settings.dto';
+import { PushSubscriptionDto } from './dto/push-subscription.dto';
+import { UpdateSettingsDto } from './dto/update-settings.dto';
 import { UsersService } from './users.service';;
 
 @Controller('users')

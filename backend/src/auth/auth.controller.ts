@@ -15,8 +15,8 @@ import { Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
 import { AuthService } from './auth.service';;
-import type { LoginDto } from './dto/login.dto';
-import type { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import type { GoogleProfile } from './interfaces/google-profile.interface';
 

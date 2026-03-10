@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
-import type { CreateSubscriptionDto } from './dto/create-subscription.dto';
-import type { ImportSubscriptionsDto } from './dto/import-subscription.dto';
-import type { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { CreateSubscriptionDto } from './dto/create-subscription.dto';
+import { ImportSubscriptionsDto } from './dto/import-subscription.dto';
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { SubscriptionsService } from './subscriptions.service';;
 
 @UseGuards(JwtAuthGuard)
