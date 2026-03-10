@@ -87,6 +87,7 @@ export const AuthProvider = ({
       setIsAuthenticated(false);
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      // biome-ignore lint/suspicious/noDocumentCookie: intentional SSR auth cookie
       document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
   }, []);
@@ -102,6 +103,7 @@ export const AuthProvider = ({
     const handleUnauthorized = () => {
       setUser(null);
       setIsAuthenticated(false);
+      // biome-ignore lint/suspicious/noDocumentCookie: intentional SSR auth cookie
       document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       router.push('/login');
     };
@@ -114,6 +116,7 @@ export const AuthProvider = ({
     const res = await api.post('/auth/login', data);
     const token = res.data.accessToken;
     localStorage.setItem('accessToken', token);
+    // biome-ignore lint/suspicious/noDocumentCookie: intentional SSR auth cookie
     document.cookie = `accessToken=${token}; path=/; max-age=31536000; SameSite=Lax`;
     if (res.data.refreshToken) localStorage.setItem('refreshToken', res.data.refreshToken);
     await fetchUser();
@@ -124,6 +127,7 @@ export const AuthProvider = ({
     const res = await api.post('/auth/register', data);
     const token = res.data.accessToken;
     localStorage.setItem('accessToken', token);
+    // biome-ignore lint/suspicious/noDocumentCookie: intentional SSR auth cookie
     document.cookie = `accessToken=${token}; path=/; max-age=31536000; SameSite=Lax`;
     if (res.data.refreshToken) localStorage.setItem('refreshToken', res.data.refreshToken);
     await fetchUser();
@@ -133,6 +137,7 @@ export const AuthProvider = ({
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    // biome-ignore lint/suspicious/noDocumentCookie: intentional SSR auth cookie
     document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     setUser(null);
     setIsAuthenticated(false);

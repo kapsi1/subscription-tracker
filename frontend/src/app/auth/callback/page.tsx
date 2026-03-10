@@ -15,6 +15,7 @@ export default function AuthCallback() {
 
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
+      // biome-ignore lint/suspicious/noDocumentCookie: intentional SSR auth cookie
       document.cookie = `accessToken=${accessToken}; path=/; max-age=31536000; SameSite=Lax`;
 
       if (refreshToken) {

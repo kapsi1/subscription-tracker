@@ -3,7 +3,7 @@ import { Logger } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
 import { AlertType } from '@prisma/client';
 import type { Job } from 'bullmq';
-import { EncryptionUtil } from '../common/utils/encryption.util';
+import { decrypt } from '../common/utils/encryption.util';
 import type { EmailService } from '../notifications/email/email.service';
 import type { WebhookService } from '../notifications/webhook/webhook.service';
 import type { WebPushService } from '../notifications/webpush/webpush.service';
@@ -52,7 +52,7 @@ export class AlertsProcessor extends WorkerHost {
           'WEBHOOK_SECRET_KEY must be set in the environment to process webhooks with secrets',
         );
       }
-      webhookSecret = EncryptionUtil.decrypt(encryptedSecret, encryptionSecret);
+      webhookSecret = decrypt(encryptedSecret, encryptionSecret);
     }
 
     this.logger.log({

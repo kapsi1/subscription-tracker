@@ -1,9 +1,9 @@
 'use client';
 
 import { CreditCard, LayoutDashboard, ListChecks, LogOut, Settings, UserRound } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes'; // Assuming this path
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccentColorSwitcher } from '@/components/accent-color-switcher';
@@ -26,7 +26,6 @@ import api from '@/lib/api';
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { t, i18n } = useTranslation();
 
@@ -229,9 +228,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   aria-label="User menu"
                 >
                   {user?.avatarUrl ? (
-                    <img
+                    <Image
+                      unoptimized
                       src={user.avatarUrl}
                       alt={user.name || 'User avatar'}
+                      width={36}
+                      height={36}
                       className="h-full w-full object-cover"
                     />
                   ) : (

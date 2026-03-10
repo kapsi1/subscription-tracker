@@ -1,11 +1,12 @@
-import type React from 'react';
+import Image from 'next/image';
 import { cn } from '@/components/ui/utils';
 
-interface FlagProps extends React.HTMLAttributes<HTMLImageElement> {
+interface FlagProps {
   countryCode: string;
+  className?: string;
 }
 
-export const Flag = ({ countryCode, className, ...props }: FlagProps) => {
+export const Flag = ({ countryCode, className }: FlagProps) => {
   // Map country codes to flagpedia SVGs or similar
   // flagpedia uses lowercase codes
   const code = countryCode.toLowerCase();
@@ -14,15 +15,12 @@ export const Flag = ({ countryCode, className, ...props }: FlagProps) => {
   const finalCode = code === 'eu' ? 'eu' : code;
 
   return (
-    <img
+    <Image
       src={`https://flagcdn.com/${finalCode}.svg`}
       alt={`${countryCode} Flag`}
-      className={cn(
-        'w-5 h-3.5 object-cover rounded-[1px] shadow-[0_0_0_1px_rgba(0,0,0,0.1)]',
-        className,
-      )}
-      loading="lazy"
-      {...props}
+      width={20}
+      height={14}
+      className={cn('object-cover rounded-[1px] shadow-[0_0_0_1px_rgba(0,0,0,0.1)]', className)}
     />
   );
 };
