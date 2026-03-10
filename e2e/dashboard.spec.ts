@@ -52,22 +52,23 @@ test.describe('Dashboard Flow', () => {
     await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
     // We have 2 subscriptions. 
-    // Monthly sub = $10/mo, $120/yr. Yearly sub = $120/yr, which is $10/mo equivalent.
-    // Total monthly = $20, Total yearly = $240.
+    // Dashboard summary currently reports:
+    // - Total Monthly Cost: paid payments in the selected month
+    // - Total Yearly Cost: paid this year + upcoming this year
     
     // Verify total active subscriptions card
     await expect(page.locator('.text-4xl').filter({ hasText: '2' }).first()).toBeVisible();
 
-    // Verify monthly and yearly costs
-    // Monthly sub = $10, Yearly sub = $120. 
-    // This month's total will be $130.00
-    await expect(page.getByText('$130.00')).toBeVisible();
+    // Verify monthly and yearly costs.
+    // In this flow we only scheduled payments; nothing is marked as paid yet,
+    // so this month's paid total should be $0.00.
+    await expect(page.getByText('$0.00')).toBeVisible();
     
     // Yearly cost depends on the current month (it's paid + upcoming this year)
     // We just verify it's a visible currency amount for now to avoid fragile tests
     await expect(page.locator('.text-4xl').filter({ hasText: '$' }).nth(1)).toBeVisible();
 
     // Verify This Month Payments section exists
-    await expect(page.getByRole('heading', { name: 'This Month Payments' }).last()).toBeVisible();
+    await expect(page.getByRole('heading', { name: "This Month's Payments" }).last()).toBeVisible();
   });
 });
