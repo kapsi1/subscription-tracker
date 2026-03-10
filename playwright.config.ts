@@ -45,6 +45,10 @@ export default defineConfig({
       command: 'pnpm --filter backend dev',
       url: 'http://localhost:3001',
       reuseExistingServer: !process.env.CI,
+      env: {
+        ...process.env,
+        E2E_TESTING: 'true',
+      },
       timeout: 30 * 1000,
     },
     {

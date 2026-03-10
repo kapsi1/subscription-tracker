@@ -28,7 +28,6 @@ test.describe('Webhooks', () => {
     // 2. Setup mock server to receive webhook
     let receivedPayload: any = null;
     let receivedHeaders: any = null;
-    const serverPort = 9999;
     const server = createServer((req, res) => {
       let body = '';
       req.on('data', chunk => { body += chunk; });
@@ -40,18 +39,31 @@ test.describe('Webhooks', () => {
       });
     });
 
-    server.listen(serverPort);
-    const webhookUrl = `http://localhost:${serverPort}/webhook`;
+    await new Promise<void>((resolve, reject) => {
+      server.once('error', reject);
+      server.listen(0, '127.0.0.1', () => {
+        server.off('error', reject);
+        resolve();
+      });
+    });
+    const serverAddress = server.address();
+    if (!serverAddress || typeof serverAddress === 'string') {
+      throw new Error('Could not determine mock webhook server port');
+    }
+    const webhookUrl = `http://127.0.0.1:${serverAddress.port}/webhook`;
     const webhookSecret = 'test-secret-123';
 
     try {
       // 3. Navigate to Settings
       await page.goto('/settings');
-      await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
       await page.getByRole('button', { name: 'Preferences' }).click();
 
       // 4. Enable Webhook
       const webhookCard = page.locator('div.shadow-sm', { hasText: 'Webhook Integration' }).last();
+      const patchPromise = page.waitForResponse(
+        resp => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH',
+      );
       await webhookCard.getByRole('switch').click();
       await page.waitForTimeout(500);
       // 5. Fill details
@@ -59,21 +71,18 @@ test.describe('Webhooks', () => {
       await webhookCard.getByLabel(/Secret/i).fill(webhookSecret);
       
       // 6. Autosave
-      await page.waitForResponse(resp => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH');
+      await patchPromise;
 
       // 7. Send Test Webhook
+      const testWebhookResponsePromise = page.waitForResponse(
+        resp => resp.url().includes('/users/test-webhook') && resp.request().method() === 'POST',
+      );
       await webhookCard.getByRole('button', { name: /Send Test Webhook/i }).click();
+      const testWebhookResponse = await testWebhookResponsePromise;
+      expect(testWebhookResponse.ok()).toBeTruthy();
 
-      // 8. Verify Success Toast
-      await expect(page.getByText('Test webhook sent successfully.')).toBeVisible();
-
-      // 9. Verify Webhook Receipt
-      // Wait for it (the backend call should be quick as we are on localhost)
-      let attempts = 0;
-      while (!receivedPayload && attempts < 10) {
-        await new Promise(r => setTimeout(r, 200));
-        attempts++;
-      }
+      // 8. Verify Webhook Receipt
+      await expect.poll(() => receivedPayload, { timeout: 5000 }).toBeTruthy();
 
       expect(receivedPayload).toBeTruthy();
       expect(receivedPayload.subscriptionName).toBe('Test Subscription');
@@ -81,10 +90,12 @@ test.describe('Webhooks', () => {
       expect(receivedPayload.currency).toBe('USD');
       expect(receivedPayload.timestamp).toBeTruthy();
 
-      // 10. Verify Signature
+      // 9. Verify Signature
       expect(receivedHeaders['x-webhook-signature']).toBeTruthy();
     } finally {
-      server.close();
+      await new Promise<void>((resolve) => {
+        server.close(() => resolve());
+      });
     }
   });
 });

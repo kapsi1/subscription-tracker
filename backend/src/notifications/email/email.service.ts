@@ -1,5 +1,6 @@
 ﻿import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';;
+import { ConfigService } from '@nestjs/config';
+
 import { COLORS, type ColorsConfig, LOCALES } from '@subscription-tracker/shared';
 import * as nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';

@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage } from 'node:http';
 import { BullModule } from '@nestjs/bullmq';
-import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
+import { type ExecutionContext, Injectable, type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -19,6 +19,17 @@ import { PaymentsModule } from './payments/payments.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { UsersModule } from './users/users.module';
+
+@Injectable()
+class E2EAwareThrottlerGuard extends ThrottlerGuard {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (process.env.E2E_TESTING === 'true') {
+      return true;
+    }
+
+    return super.canActivate(context) as Promise<boolean>;
+  }
+}
 
 @Module({
   imports: [
@@ -91,7 +102,7 @@ import { UsersModule } from './users/users.module';
     AppService,
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      useClass: E2EAwareThrottlerGuard,
     },
   ],
 })

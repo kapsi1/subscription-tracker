@@ -1,9 +1,12 @@
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';;
+import { ConfigService } from '@nestjs/config';
+
+import type { JwtSignOptions } from '@nestjs/jwt';
 import { JwtService } from '@nestjs/jwt';
-import type { JwtSignOptions } from '@nestjs/jwt';;
+
 import * as bcrypt from 'bcrypt';
-import { UsersService } from '../users/users.service';;
+import { UsersService } from '../users/users.service';
+
 import type { LoginDto } from './dto/login.dto';
 import type { RegisterDto } from './dto/register.dto';
 

@@ -1,7 +1,8 @@
 import * as crypto from 'node:crypto';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { BillingCycle } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';;
+import { PrismaService } from '../prisma/prisma.service';
+
 import type { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import type { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { calculateNextBillingDate } from './utils/billing-date.util';

@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/useImportType: causes 400 error on login */
 import {
   Body,
   Controller,

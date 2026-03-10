@@ -1,13 +1,18 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';;
+import { ConfigService } from '@nestjs/config';
+
 import { AlertType } from '@prisma/client';
 import type { Job } from 'bullmq';
 import { decrypt } from '../common/utils/encryption.util';
-import { EmailService } from '../notifications/email/email.service';;
-import { WebhookService } from '../notifications/webhook/webhook.service';;
-import { WebPushService } from '../notifications/webpush/webpush.service';;
-import { PrismaService } from '../prisma/prisma.service';;
+import { EmailService } from '../notifications/email/email.service';
+
+import { WebhookService } from '../notifications/webhook/webhook.service';
+
+import { WebPushService } from '../notifications/webpush/webpush.service';
+
+import { PrismaService } from '../prisma/prisma.service';
+
 import type { AlertJobData, BudgetAlertJobData } from './alerts.types';
 
 @Processor('alertQueue')
