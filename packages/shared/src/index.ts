@@ -21,6 +21,55 @@ export type AccentColor = {
 
 export type ColorsConfig = Record<string, AccentColor>;
 
+export const getAccentColor = (nameOrHex: string, definitions: ColorsConfig): AccentColor => {
+  if (definitions[nameOrHex]) {
+    return definitions[nameOrHex];
+  }
+
+  // Handle hex codes
+  if (nameOrHex.startsWith('#')) {
+    const hex = nameOrHex.trim();
+
+    const hexToRgb = (h: string) => {
+      const sanitized = h.replace('#', '');
+      const fullHex =
+        sanitized.length === 3
+          ? sanitized
+              .split('')
+              .map((c) => c + c)
+              .join('')
+          : sanitized;
+      const r = parseInt(fullHex.slice(0, 2), 16);
+      const g = parseInt(fullHex.slice(2, 4), 16);
+      const b = parseInt(fullHex.slice(4, 6), 16);
+      return { r, g, b };
+    };
+
+    const mix = (hA: string, hB: string, ratioB: number) => {
+      const a = hexToRgb(hA);
+      const b = hexToRgb(hB);
+      const ratioA = 1 - ratioB;
+      const m = (x: number, y: number) => Math.round(x * ratioA + y * ratioB);
+      const toH = (v: number) => v.toString(16).padStart(2, '0');
+      return `#${toH(m(a.r, b.r))}${toH(m(a.g, b.g))}${toH(m(a.b, b.b))}`;
+    };
+
+    return {
+      lightPrimary: hex,
+      darkPrimary: hex,
+      lightAccent: mix(hex, '#ffffff', 0.9),
+      darkAccent: mix(hex, '#000000', 0.7),
+      lightForeground: hex,
+      darkForeground: mix(hex, '#ffffff', 0.6),
+      chartBar: hex,
+      lightBg: mix(hex, '#ffffff', 0.96),
+      darkBg: mix(hex, '#000000', 0.94),
+    };
+  }
+
+  return definitions.Indigo; // Default
+};
+
 export type Currency = {
   code: string;
   name: string;

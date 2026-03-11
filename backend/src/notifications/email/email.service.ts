@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { COLORS, type ColorsConfig, LOCALES } from '@subscription-tracker/shared';
+import { COLORS, type ColorsConfig, getAccentColor, LOCALES } from '@subscription-tracker/shared';
 import * as nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 
@@ -18,7 +18,7 @@ interface EmailColors {
   danger: string;
 }
 
-const DEFAULT_ACCENT = COLORS.Indigo;
+const DEFAULT_ACCENT_NAME = 'Indigo';
 const ACCENT_DEFINITIONS: ColorsConfig = COLORS;
 
 @Injectable()
@@ -94,7 +94,7 @@ export class EmailService {
   }
 
   private getEmailColors(accentColor: string | undefined, mode: 'light' | 'dark'): EmailColors {
-    const accent = ACCENT_DEFINITIONS[accentColor ?? ''] ?? DEFAULT_ACCENT;
+    const accent = getAccentColor(accentColor || DEFAULT_ACCENT_NAME, ACCENT_DEFINITIONS);
 
     if (mode === 'dark') {
       return {
@@ -327,10 +327,12 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: this.configService.get<string>(
-          'SMTP_FROM',
-          '"Subscription Tracker" <alerts@subscription-tracker.local>',
-        ),
+        from:
+          this.configService.get<string>('SMTP_FROM_ALERTS') ||
+          this.configService.get<string>(
+            'SMTP_FROM',
+            '"Subscription Tracker" <alerts@subscription-tracker.local>',
+          ),
         to: email,
         subject,
         html: htmlTemplate,
@@ -396,10 +398,12 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: this.configService.get<string>(
-          'SMTP_FROM',
-          '"Subscription Tracker" <alerts@subscription-tracker.local>',
-        ),
+        from:
+          this.configService.get<string>('SMTP_FROM_ALERTS') ||
+          this.configService.get<string>(
+            'SMTP_FROM',
+            '"Subscription Tracker" <alerts@subscription-tracker.local>',
+          ),
         to: email,
         subject: locale.emails.budgetAlert,
         html: htmlTemplate,
@@ -488,10 +492,12 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: this.configService.get<string>(
-          'SMTP_FROM',
-          '"Subscription Tracker" <alerts@subscription-tracker.local>',
-        ),
+        from:
+          this.configService.get<string>('SMTP_FROM_ALERTS') ||
+          this.configService.get<string>(
+            'SMTP_FROM',
+            '"Subscription Tracker" <alerts@subscription-tracker.local>',
+          ),
         to: email,
         subject: emails.dailyDigestSubject,
         html: htmlTemplate,
@@ -556,10 +562,12 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: this.configService.get<string>(
-          'SMTP_FROM',
-          '"Subscription Tracker" <alerts@subscription-tracker.local>',
-        ),
+        from:
+          this.configService.get<string>('SMTP_FROM_ALERTS') ||
+          this.configService.get<string>(
+            'SMTP_FROM',
+            '"Subscription Tracker" <alerts@subscription-tracker.local>',
+          ),
         to: email,
         subject: emails.weeklyReportSubject,
         html: htmlTemplate,
@@ -623,10 +631,12 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: this.configService.get<string>(
-          'SMTP_FROM',
-          '"Subscription Tracker" <auth@subscription-tracker.local>',
-        ),
+        from:
+          this.configService.get<string>('SMTP_FROM_AUTH') ||
+          this.configService.get<string>(
+            'SMTP_FROM',
+            '"Subscription Tracker" <auth@subscription-tracker.local>',
+          ),
         to: email,
         subject: verification.subject,
         html: htmlTemplate,
@@ -690,10 +700,12 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: this.configService.get<string>(
-          'SMTP_FROM',
-          '"Subscription Tracker" <auth@subscription-tracker.local>',
-        ),
+        from:
+          this.configService.get<string>('SMTP_FROM_AUTH') ||
+          this.configService.get<string>(
+            'SMTP_FROM',
+            '"Subscription Tracker" <auth@subscription-tracker.local>',
+          ),
         to: email,
         subject: passwordReset.subject,
         html: htmlTemplate,

@@ -59,7 +59,9 @@
     "backendTimeout": "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
     "tryAgain": "Spróbuj ponownie",
     "redirectingToLogin": "Przekierowywanie do logowania...",
-    "redirectingToDashboard": "Przekierowanie do panelu..."
+    "redirectingToDashboard": "Przekierowanie do panelu...",
+    "save": "Zapisz",
+    "reset": "Resetuj"
   },
   "nav": {
     "dashboard": "Panel główny",
@@ -300,7 +302,13 @@
         "system": "Systemowy"
       },
       "accent": "Kolor akcentu",
-      "accentDesc": "Wybierz główny kolor interfejsu"
+      "accentDesc": "Wybierz główny kolor interfejsu",
+      "customColor": "Własny kolor",
+      "customColorHint": "Wybierz własny kolor",
+      "pickCustomColor": "Wybierz własny kolor",
+      "none": "Wybrano gotowy zestaw",
+      "saveSuccess": "Kolor akcentu został zaktualizowany",
+      "saveError": "Nie udało się zaktualizować koloru akcentu"
     },
     "budget": {
       "title": "Limity budżetu",

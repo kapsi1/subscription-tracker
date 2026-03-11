@@ -80,7 +80,9 @@ describe('CategorySection', () => {
     mockApi.post.mockResolvedValue({
       data: { id: 'cat-new', name: 'New Category', color: '#6366f1' },
     });
-    mockApi.post.mockResolvedValueOnce({ data: { id: 'cat-new', name: 'New Category', color: '#6366f1' } }); // for single post
+    mockApi.post.mockResolvedValueOnce({
+      data: { id: 'cat-new', name: 'New Category', color: '#6366f1' },
+    }); // for single post
     mockApi.post.mockResolvedValue({ data: [] }); // for /categories/reorder
     const { Wrapper } = createWrapper();
     render(<CategorySection />, { wrapper: Wrapper });
@@ -92,7 +94,7 @@ describe('CategorySection', () => {
     await act(async () => {
       fireEvent.click(addButton);
     });
-    
+
     const saveButton = screen.getByRole('button', { name: /settings.categories.save/i });
     await act(async () => {
       fireEvent.click(saveButton);

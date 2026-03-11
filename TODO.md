@@ -304,16 +304,18 @@ To consider: what happens when we disable the toggle after adding some subscript
 
 - [x] If user is logged with a Google account, show their profile picture in corner, instead of initials. Also add a link to user profile page above the logout button. Settings page should have its subpages in url, so we can link to them.
 - [x] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
+
 - [x] Review translations for spelling, grammar, consistency, capitalization and style.
 - [x] Review code for security vulnerabilities and best practices.
 - [x] Review code for performance issues and improvements
 - [x] Review code for "any" type usage in TypeScript and replace it with appropriate types.
 - [x] Review code for areas that can be shortened or simplified.
 - [x] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
+- [x] Check for and remove unused code and translations
 - [x] Find and fix compiler & linter errors and warnings.
 - [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
+
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
-- [x] Check for and remove unused code and translations
 - [x] Refactor settings page: split it into multiple components, by section
 - [x] Add a language selector to the login/register pages
 - [ ] Add more translations for major languages
@@ -325,6 +327,6 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Improve UI & UX on small screens
 - [ ] Make the tooltip  on Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
 - [x] Add "resend verification email" button to the Email Sent page
-- [ ] Replace the email "auth@subscription-tracker.local" with an environment variable
-- [ ] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
-- [ ] Add a custom color picker to the settings page, which should allow users to pick any color as accent color.
+- [x] Replace the email "auth@subscription-tracker.local" with an environment variable
+- [x] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
+- [x] Add a custom color picker to the settings page, which should allow users to pick any color as accent color.

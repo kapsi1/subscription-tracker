@@ -58,6 +58,8 @@
     "tryAgain": "Try Again",
     "redirectingToLogin": "Redirecting to login...",
     "redirectingToDashboard": "Redirecting to dashboard...",
+    "save": "Save",
+    "reset": "Reset",
     "previous": "Previous",
     "next": "Next"
   },
@@ -296,7 +298,13 @@
         "system": "System Theme"
       },
       "accent": "Accent Color",
-      "accentDesc": "Select a primary color for the interface"
+      "accentDesc": "Select a primary color for the interface",
+      "customColor": "Custom Color",
+      "customColorHint": "Pick a custom color",
+      "pickCustomColor": "Pick custom color",
+      "none": "Preset selected",
+      "saveSuccess": "Accent color updated",
+      "saveError": "Failed to update accent color"
     },
     "budget": {
       "title": "Budget Limits",
