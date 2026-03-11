@@ -138,6 +138,8 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
   );
 }
 
+const EMPTY_CATEGORIES: Category[] = [];
+
 export function CategorySection() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -146,7 +148,7 @@ export function CategorySection() {
   const [newCategoryId, setNewCategoryId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  const { data: serverCategories = [], isLoading } = useQuery<Category[]>({
+  const { data: serverCategories = EMPTY_CATEGORIES, isLoading } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: async () => {
       const res = await api.get('/categories');

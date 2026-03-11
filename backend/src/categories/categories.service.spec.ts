@@ -38,11 +38,12 @@ describe('CategoriesService', () => {
   let service: CategoriesService;
   let prismaMock: {
     category: Record<string, jest.Mock>;
+    subscription: Record<string, jest.Mock>;
   };
 
   const userId = 'user-1';
 
-  const mockCategory = { id: 'cat-1', name: 'Entertainment', color: '#a855f7' };
+  const mockCategory = { id: 'cat-1', name: 'Entertainment', color: '#a855f7', order: 0 };
 
   beforeEach(async () => {
     prismaMock = {
@@ -55,6 +56,9 @@ describe('CategoriesService', () => {
         update: jest.fn().mockResolvedValue({ ...mockCategory, name: 'Updated' }),
         delete: jest.fn().mockResolvedValue(mockCategory),
         deleteMany: jest.fn().mockResolvedValue({ count: 1 }),
+      },
+      subscription: {
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       },
     };
 
@@ -71,8 +75,8 @@ describe('CategoriesService', () => {
 
       expect(prismaMock.category.findMany).toHaveBeenCalledWith({
         where: { userId },
-        orderBy: { createdAt: 'asc' },
-        select: { id: true, name: true, color: true },
+        orderBy: { order: 'asc' },
+        select: { id: true, name: true, color: true, order: true },
       });
       expect(result).toEqual([mockCategory]);
     });
@@ -85,7 +89,7 @@ describe('CategoriesService', () => {
       const result = await service.findAll(userId);
 
       expect(prismaMock.category.createMany).toHaveBeenCalledWith({
-        data: DEFAULT_CATEGORIES.map((c) => ({ ...c, userId })),
+        data: DEFAULT_CATEGORIES.map((c, i) => ({ ...c, userId, order: i })),
         skipDuplicates: true,
       });
       expect(result).toHaveLength(DEFAULT_CATEGORIES.length);
@@ -108,8 +112,8 @@ describe('CategoriesService', () => {
         where: { userId_name: { userId, name: dto.name } },
       });
       expect(prismaMock.category.create).toHaveBeenCalledWith({
-        data: { ...dto, userId },
-        select: { id: true, name: true, color: true },
+        data: { ...dto, userId, order: 1 },
+        select: { id: true, name: true, color: true, order: true },
       });
       expect(result).toEqual(mockCategory);
     });
@@ -136,7 +140,7 @@ describe('CategoriesService', () => {
       expect(prismaMock.category.update).toHaveBeenCalledWith({
         where: { id: 'cat-1' },
         data: dto,
-        select: { id: true, name: true, color: true },
+        select: { id: true, name: true, color: true, order: true },
       });
       expect(result).toEqual({ ...mockCategory, name: 'Updated' });
     });
@@ -204,7 +208,7 @@ describe('CategoriesService', () => {
 
       expect(prismaMock.category.deleteMany).toHaveBeenCalledWith({ where: { userId } });
       expect(prismaMock.category.createMany).toHaveBeenCalledWith({
-        data: DEFAULT_CATEGORIES.map((c) => ({ ...c, userId })),
+        data: DEFAULT_CATEGORIES.map((c, i) => ({ ...c, userId, order: i })),
         skipDuplicates: true,
       });
       expect(result).toHaveLength(DEFAULT_CATEGORIES.length);

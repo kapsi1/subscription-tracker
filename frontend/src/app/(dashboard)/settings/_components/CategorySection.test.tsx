@@ -76,10 +76,12 @@ describe('CategorySection', () => {
     });
   });
 
-  it('calls POST /categories when Add Category button is clicked', async () => {
+  it('calls POST /categories when Add Category button is clicked and saved', async () => {
     mockApi.post.mockResolvedValue({
       data: { id: 'cat-new', name: 'New Category', color: '#6366f1' },
     });
+    mockApi.post.mockResolvedValueOnce({ data: { id: 'cat-new', name: 'New Category', color: '#6366f1' } }); // for single post
+    mockApi.post.mockResolvedValue({ data: [] }); // for /categories/reorder
     const { Wrapper } = createWrapper();
     render(<CategorySection />, { wrapper: Wrapper });
 
@@ -90,6 +92,11 @@ describe('CategorySection', () => {
     await act(async () => {
       fireEvent.click(addButton);
     });
+    
+    const saveButton = screen.getByRole('button', { name: /settings.categories.save/i });
+    await act(async () => {
+      fireEvent.click(saveButton);
+    });
 
     await waitFor(() => {
       expect(mockApi.post).toHaveBeenCalledWith('/categories', {
@@ -99,8 +106,9 @@ describe('CategorySection', () => {
     });
   });
 
-  it('calls DELETE /categories/:id when delete button is clicked', async () => {
+  it('calls DELETE /categories/:id when delete button is clicked and saved', async () => {
     mockApi.delete.mockResolvedValue({});
+    mockApi.post.mockResolvedValue({ data: [] }); // for /categories/reorder
     const { Wrapper } = createWrapper();
     render(<CategorySection />, { wrapper: Wrapper });
 
@@ -115,6 +123,11 @@ describe('CategorySection', () => {
 
     await act(async () => {
       fireEvent.click(trashButtons[0]);
+    });
+
+    const saveButton = screen.getByRole('button', { name: /settings.categories.save/i });
+    await act(async () => {
+      fireEvent.click(saveButton);
     });
 
     await waitFor(() => {
@@ -161,10 +174,11 @@ describe('CategorySection', () => {
     vi.unstubAllGlobals();
   });
 
-  it('calls PATCH /categories/:id when a category name is changed and blurred', async () => {
+  it('calls PATCH /categories/:id when a category name is changed, blurred, and saved', async () => {
     mockApi.patch.mockResolvedValue({
       data: { id: 'cat-1', name: 'Movies', color: '#a855f7' },
     });
+    mockApi.post.mockResolvedValue({ data: [] }); // for /categories/reorder
     const { Wrapper } = createWrapper();
     render(<CategorySection />, { wrapper: Wrapper });
 
@@ -175,6 +189,11 @@ describe('CategorySection', () => {
     await act(async () => {
       fireEvent.change(input, { target: { value: 'Movies' } });
       fireEvent.blur(input);
+    });
+
+    const saveButton = screen.getByRole('button', { name: /settings.categories.save/i });
+    await act(async () => {
+      fireEvent.click(saveButton);
     });
 
     await waitFor(() => {
