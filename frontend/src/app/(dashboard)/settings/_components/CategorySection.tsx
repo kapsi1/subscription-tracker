@@ -310,6 +310,10 @@ export function CategorySection() {
               sensors={sensors}
               collisionDetection={closestCenter}
               modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+              autoScroll={{
+                // Prevent DndKit from auto-scrolling the entire page when dragging near edges
+                canScroll: (element) => element.tagName !== 'BODY' && element.tagName !== 'HTML',
+              }}
               onDragStart={handleDragStart}
               onDragEnd={handleDragEnd}
               onDragCancel={handleDragCancel}

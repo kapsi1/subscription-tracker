@@ -41,7 +41,7 @@ describe('api interceptors', () => {
       headers: new axios.AxiosHeaders(),
     } as unknown as InternalAxiosRequestConfig);
 
-    expect(config.headers.Authorization).toBe('Bearer test-token');
+    expect(config?.headers.Authorization).toBe('Bearer test-token');
   });
 
   it('should not attach Authorization header when no token', async () => {
@@ -51,7 +51,7 @@ describe('api interceptors', () => {
       headers: new axios.AxiosHeaders(),
     } as unknown as InternalAxiosRequestConfig);
 
-    expect(config.headers.Authorization).toBeUndefined();
+    expect(config?.headers.Authorization).toBeUndefined();
   });
 
   it('should clear token and dispatch event on 401', async () => {
