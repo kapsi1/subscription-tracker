@@ -55,3 +55,25 @@ export async function cleanupUser(email: string) {
     await client.end();
   }
 }
+
+/**
+ * Gets the password reset token for a user from the database.
+ */
+export async function getUserResetToken(email: string): Promise<string | null> {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5433/subscription_tracker?schema=public',
+  });
+  await client.connect();
+  try {
+    const res = await client.query('SELECT "passwordResetToken" FROM "User" WHERE email = $1', [email]);
+    if (res.rows.length === 0) {
+      return null;
+    }
+    return res.rows[0].passwordResetToken;
+  } catch (error) {
+    console.error(`Failed to get reset token for ${email}:`, error);
+    return null;
+  } finally {
+    await client.end();
+  }
+}

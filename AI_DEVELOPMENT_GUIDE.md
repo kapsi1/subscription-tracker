@@ -57,6 +57,48 @@ The project is a **pnpm monorepo** using a modern TypeScript stack:
 4. **Auth Flow**: Uses JWT (localStorage + Cookies). If auth fails in E2E, check `x-e2e-testing` header or `process.env.E2E_TESTING`.
 5. **Prisma**: Always run `npx prisma generate` after schema changes.
 
+## 🌍 Translations (i18n)
+
+The app supports **English (`en`)** and **Polish (`pl`)**, using `react-i18next` + `i18next` on the frontend and direct locale object access on the backend.
+
+### Architecture
+
+- **Single source of truth**: All translation strings live in `packages/shared/src/locales/`. Both frontend and backend import from there via `@subscription-tracker/shared`.
+- **Frontend**: `i18next` with `i18next-browser-languagedetector` (reads from `localStorage`, falls back to browser language, then `en`).
+- **Backend**: No i18n library — the email service imports `LOCALES` directly and selects strings by language key.
+- **Persistence**: The user's language preference is stored in the database (`user.language`) and synced to the frontend i18n instance on login via `I18nProvider`.
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `packages/shared/src/locales/en.json` | English translations (UI + emails) |
+| `packages/shared/src/locales/pl.json` | Polish translations (UI + emails) |
+
+### Usage Patterns
+
+**Frontend — component:**
+```typescript
+const { t, i18n } = useTranslation();
+t('auth.status.loginSuccess')   // access a nested key
+i18n.changeLanguage('pl')       // switch language
+```
+
+**Backend — email service:**
+```typescript
+import { LOCALES } from '@subscription-tracker/shared';
+const strings = LOCALES[language];  // 'en' | 'pl'
+```
+
+### Translation Key Structure (top-level namespaces)
+
+`auth` · `common` · `nav` · `dashboard` · `theme` · `language` · `colors` · `subscriptions` · `settings` · `emails`
+
+### AI Tips
+
+- To add a new string, add it to **both** `en.json` and `pl.json` in `packages/shared/src/locales/`, then rebuild shared (`pnpm run build:shared`).
+- To add a new language, add a locale file under `packages/shared/src/locales/`, export it from `packages/shared/src/index.ts`, and register it in `frontend/src/lib/i18n.ts`.
+
 ## 🔍 Key Files to Check First
 - `CLAUDE.md`: Quick command reference and simplified architecture.
 - `package.json` (root): Workspace script definitions.
