@@ -125,6 +125,7 @@ export function AppearanceSection() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [currentAccent, setCurrentAccent] = useState<AccentColorType>(ACCENT_COLORS[0]);
   const [lastSavedAccentName, setLastSavedAccentName] = useState<string>('Indigo');
+  const [recentColors, setRecentColors] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const isInitializedRef = useRef(false);
@@ -132,6 +133,14 @@ export function AppearanceSection() {
   useEffect(() => {
     setMounted(true);
     const cached = localStorage.getItem('app-accent-color');
+    const history = localStorage.getItem('app-accent-history');
+    if (history) {
+      try {
+        setRecentColors(JSON.parse(history).slice(0, 4));
+      } catch (e) {
+        console.error('Failed to parse color history', e);
+      }
+    }
     if (cached) {
       setLastSavedAccentName(cached);
       if (cached.startsWith('#')) {
@@ -150,6 +159,10 @@ export function AppearanceSection() {
 
   useEffect(() => {
     if (!mounted || !user || isInitializedRef.current) return;
+
+    if (user.recentAccentColors && user.recentAccentColors.length > 0) {
+      setRecentColors(user.recentAccentColors.slice(0, 4));
+    }
 
     if (user.accentColor) {
       if (user.accentColor.startsWith('#')) {
@@ -199,6 +212,24 @@ export function AppearanceSection() {
     }
   }, []);
 
+  const handleRevert = useCallback(() => {
+    if (lastSavedAccentName.startsWith('#')) {
+      const custom = {
+        ...getAccentColor(lastSavedAccentName, COLORS as ColorsConfig),
+        name: lastSavedAccentName,
+      };
+      setCurrentAccent(custom);
+      applyAccentColor(custom);
+    } else {
+      const found = ACCENT_COLORS.find((c) => c.name === lastSavedAccentName);
+      if (found) {
+        setCurrentAccent(found);
+        applyAccentColor(found);
+      }
+    }
+    setIsDirty(false);
+  }, [lastSavedAccentName]);
+
   const lastUpdateRef = useRef<number>(0);
   const handleCustomColorChange = useCallback(
     (hex: string) => {
@@ -221,11 +252,24 @@ export function AppearanceSection() {
   const handleSaveCustomColor = useCallback(async () => {
     if (!currentAccent.name) return;
     const hex = currentAccent.name;
+
+    // Update history
+    let updatedHistory: string[] = [];
+    setRecentColors((prev) => {
+      const filtered = prev.filter((c) => c !== hex);
+      updatedHistory = [hex, ...filtered].slice(0, 4);
+      localStorage.setItem('app-accent-history', JSON.stringify(updatedHistory));
+      return updatedHistory;
+    });
+
     setLastSavedAccentName(hex);
     setIsDirty(false);
     localStorage.setItem('app-accent-color', hex);
     try {
-      await api.patch('/users/settings', { accentColor: hex });
+      await api.patch('/users/settings', {
+        accentColor: hex,
+        recentAccentColors: updatedHistory,
+      });
       toast.success(t('settings.appearance.saveSuccess'));
     } catch (error) {
       console.error('Failed to save custom accent color', error);
@@ -288,52 +332,99 @@ export function AppearanceSection() {
           <div className="h-px bg-border/50 my-2" />
 
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Pipette className="w-4 h-4 text-muted-foreground" />
-              <Label>{t('settings.appearance.customColor')}</Label>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="relative group">
-                <input
-                  type="color"
-                  value={currentAccent.name?.startsWith('#') ? currentAccent.name : '#4F46E5'}
-                  onChange={(e) => handleCustomColorChange(e.target.value)}
-                  className="w-12 h-12 rounded-xl cursor-pointer border-2 border-border bg-card p-1 transition-all hover:border-primary/50"
-                  title={t('settings.appearance.pickCustomColor')}
-                />
+            <div className="flex flex-col sm:flex-row sm:items-end gap-8">
+              {/* Custom Picker Group */}
+              <div className="flex-1 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Pipette className="w-4 h-4 text-muted-foreground" />
+                  <Label>{t('settings.appearance.customColor')}</Label>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="relative group">
+                    <input
+                      type="color"
+                      value={
+                        currentAccent.name?.startsWith('#')
+                          ? currentAccent.name
+                          : resolvedTheme === 'dark'
+                            ? currentAccent.darkPrimary
+                            : currentAccent.lightPrimary
+                      }
+                      onChange={(e) => handleCustomColorChange(e.target.value)}
+                      className="w-12 h-12 rounded-full cursor-pointer border-2 border-border bg-card p-0 overflow-hidden transition-all hover:border-primary/50 shadow-sm [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-full"
+                      title={t('settings.appearance.pickCustomColor')}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-bold uppercase tracking-wider">
+                      {currentAccent.name?.startsWith('#')
+                        ? currentAccent.name
+                        : t(`colors.${currentAccent.name}`, {
+                            defaultValue: currentAccent.name,
+                          })}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {t('settings.appearance.customColorHint')}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col flex-1">
-                <span className="text-sm font-semibold uppercase tracking-wider">
-                  {currentAccent.name?.startsWith('#')
-                    ? currentAccent.name
-                    : t('settings.appearance.none')}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {t('settings.appearance.customColorHint')}
-                </span>
+
+              {/* Recent Colors Group */}
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <Label>{t('settings.appearance.recentColors')}</Label>
+                </div>
+                <div className="flex items-center gap-3">
+                  {Array.from({ length: 4 }).map((_, i) => {
+                    const hex = recentColors[i] || '#000000';
+                    const key = `recent-${i}-${hex}`;
+                    const hasColor = !!recentColors[i];
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => hasColor && handleCustomColorChange(hex)}
+                        disabled={!hasColor}
+                        className={cn(
+                          'w-12 h-12 rounded-full border-2 border-border/50 shadow-sm transition-all',
+                          hasColor
+                            ? 'hover:scale-110 active:scale-95 cursor-pointer hover:border-muted-foreground/30'
+                            : 'cursor-default opacity-20',
+                        )}
+                        style={{ backgroundColor: hex }}
+                        title={hasColor ? hex : undefined}
+                      />
+                    );
+                  })}
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                {isDirty && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleSaveCustomColor}
-                    className="gap-2 text-primary hover:text-primary hover:bg-primary/10"
-                  >
-                    <Save className="w-3.5 h-3.5" />
-                    {t('common.save')}
-                  </Button>
-                )}
-                {currentAccent.name?.startsWith('#') && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleAccentSelect(ACCENT_COLORS[0])}
-                    className="gap-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    {t('common.reset')}
-                  </Button>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end h-12 min-w-[170px] mt-auto">
+                {isDirty ? (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleSaveCustomColor}
+                      className="gap-2 text-primary hover:text-primary hover:bg-primary/10"
+                    >
+                      <Save className="w-3.5 h-3.5" />
+                      {t('common.save')}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRevert}
+                      className="gap-2 text-muted-foreground hover:text-foreground"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      {t('common.reset')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="h-9" /> /* Maintain vertical space */
                 )}
               </div>
             </div>

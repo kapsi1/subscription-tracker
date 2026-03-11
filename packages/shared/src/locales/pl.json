@@ -113,7 +113,21 @@
   },
   "colors": {
     "Indigo": "Indygowy",
-    "Crimson": "Karmazynowy"
+    "Crimson": "Karmazynowy",
+    "Rose": "Różany",
+    "Lavender": "Lawendowy",
+    "Cobalt": "Kobaltowy",
+    "Navy": "Granatowy",
+    "Mint": "Miętowy",
+    "Forest": "Leśny",
+    "Sage": "Szałwiowy",
+    "Amber": "Bursztynowy",
+    "Gold": "Złoty",
+    "Terracotta": "Terakota",
+    "Coffee": "Kawowy",
+    "Sand": "Piaskowy",
+    "Slate": "Łupkowy",
+    "Charcoal": "Węglowy"
   },
   "subscriptions": {
     "title": "Subskrypcje",
@@ -306,6 +320,7 @@
       "customColor": "Własny kolor",
       "customColorHint": "Wybierz własny kolor",
       "pickCustomColor": "Wybierz własny kolor",
+      "recentColors": "Ostatnie kolory",
       "none": "Wybrano gotowy zestaw",
       "saveSuccess": "Kolor akcentu został zaktualizowany",
       "saveError": "Nie udało się zaktualizować koloru akcentu"

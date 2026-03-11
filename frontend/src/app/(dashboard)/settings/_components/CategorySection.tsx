@@ -54,10 +54,18 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
     opacity: isDragging ? 0.5 : 1,
   };
 
+  const updateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     setName(category.name);
     setColor(category.color);
   }, [category.name, category.color]);
+
+  useEffect(() => {
+    return () => {
+      if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (autoFocus) {
@@ -78,7 +86,13 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
 
   const handleColorChange = (value: string) => {
     setColor(value);
-    onUpdate(category.id, { name: name.trim() || category.name, color: value });
+
+    // Debounce the parent update to avoid infinite re-render loops
+    // and performance issues when dragging the color picker
+    if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
+    updateTimerRef.current = setTimeout(() => {
+      onUpdate(category.id, { name: name.trim() || category.name, color: value });
+    }, 100);
   };
 
   return (

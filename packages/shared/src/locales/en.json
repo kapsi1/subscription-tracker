@@ -302,6 +302,7 @@
       "customColor": "Custom Color",
       "customColorHint": "Pick a custom color",
       "pickCustomColor": "Pick custom color",
+      "recentColors": "Recent Colors",
       "none": "Preset selected",
       "saveSuccess": "Accent color updated",
       "saveError": "Failed to update accent color"

@@ -330,3 +330,7 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Replace the email "auth@subscription-tracker.local" with an environment variable
 - [x] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
 - [x] Add a custom color picker to the settings page, which should allow users to pick any color as accent color.
+- [ ] Add a find/filter functionality to settings. Show an input field at the top of the settings page, which should allow users to find/filter settings by any string. If something is typed into the input, show setting sections that contain that string, and hide the rest. If the input is empty, show all sections. In displayed sections, highlight the string that matched the filter. Add a button to clear the filter. Add unit and E2E tests.
+- [ ] Make backgrounds color gradients
+- [ ] Rethink and unify save strategy for settings
+- [ ] Add another accent color, maybe calculate from the existing one.

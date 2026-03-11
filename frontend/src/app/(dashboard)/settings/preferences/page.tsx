@@ -277,12 +277,12 @@ export default function PreferencesPage() {
 
   return (
     <div className="space-y-6">
-      <AppearanceSection />
-
       <LocalizationSection
         currency={settings.currency}
         setCurrency={(currency) => setSettings({ ...settings, currency })}
       />
+
+      <AppearanceSection />
 
       <CategorySection />
 

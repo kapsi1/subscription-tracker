@@ -43,6 +43,10 @@ export class UpdateSettingsDto {
   accentColor?: string;
 
   @IsOptional()
+  @IsString({ each: true })
+  recentAccentColors?: string[];
+
+  @IsOptional()
   @IsBoolean()
   emailNotifications?: boolean;
 

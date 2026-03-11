@@ -17,6 +17,7 @@ interface User {
   lastBudgetAlertSentAt: string | null;
   theme: string;
   accentColor: string;
+  recentAccentColors: string[];
   emailNotifications: boolean;
   webhookEnabled: boolean;
   webhookUrl: string | null;

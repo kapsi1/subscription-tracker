@@ -25,6 +25,7 @@ model User {
   pushSubscriptions      PushSubscription[]
   theme                  String         @default("system")
   accentColor            String         @default("Indigo")
+  recentAccentColors     String[]       @default([])
   emailNotifications     Boolean        @default(true)
   webhookEnabled         Boolean        @default(false)
   webhookUrl             String?

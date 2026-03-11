@@ -22,17 +22,27 @@ export const applyAccentColor = (nameOrHex: string | AccentColorType) => {
 
   // Clear any old direct inline styles that might interfere with theme switching
   const legacyVars = [
-    '--primary', '--accent', '--accent-foreground', '--ring', '--chart-bar',
-    '--sidebar-primary', '--sidebar-ring', '--background', '--card', '--secondary', '--border', '--muted'
+    '--primary',
+    '--accent',
+    '--accent-foreground',
+    '--ring',
+    '--chart-bar',
+    '--sidebar-primary',
+    '--sidebar-ring',
+    '--background',
+    '--card',
+    '--secondary',
+    '--border',
+    '--muted',
   ];
   for (const v of legacyVars) {
     root.style.removeProperty(v);
   }
 
   // Set the "raw" dynamic values as inline properties on the root element.
-  // We use intermediate variables so that we don't block the standard CSS selectors 
+  // We use intermediate variables so that we don't block the standard CSS selectors
   // (like .dark) from doing their job via the mapping style tag.
-  
+
   // Light values
   root.style.setProperty('--lp', accent.lightPrimary);
   root.style.setProperty('--la', accent.lightAccent);
@@ -54,7 +64,7 @@ export const applyAccentColor = (nameOrHex: string | AccentColorType) => {
   root.style.setProperty('--db', `${accent.darkPrimary}30`);
   root.style.setProperty('--dcb', `${accent.chartBar}aa`);
 
-  // Ensure the mapping style tag exists. 
+  // Ensure the mapping style tag exists.
   // This tag maps the standard variables to our dynamic sources.
   let styleTag = document.getElementById('accent-mapping-styles');
   if (!styleTag) {
