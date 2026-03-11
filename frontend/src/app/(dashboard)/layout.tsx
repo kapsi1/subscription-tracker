@@ -20,6 +20,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/components/ui/utils';
 import api from '@/lib/api';
+import { AccentColorSwitcher } from '@/components/accent-color-switcher';
+import { LanguageSelector } from '@/components/language-selector';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -215,6 +217,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </nav>
 
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
+            <LanguageSelector />
+            <AccentColorSwitcher />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

@@ -31,6 +31,10 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    /* Add E2E header to allow backend to recognize test requests even if server is reused */
+    extraHTTPHeaders: {
+      'x-e2e-testing': 'true',
+    },
   },
 
   /* Configure projects for major browsers */
@@ -52,13 +56,13 @@ export default defineConfig({
             ...process.env,
             E2E_TESTING: 'true',
           },
-          timeout: 120 * 1000,
+          timeout: 30 * 1000,
         },
         {
           command: 'pnpm --filter frontend dev',
           url: 'http://localhost:3000',
           reuseExistingServer: !process.env.CI,
-          timeout: 120 * 1000,
+          timeout: 30 * 1000,
         },
       ]
     : undefined,

@@ -96,7 +96,15 @@ Import as `@subscription-tracker/shared`. Contains shared TypeScript interfaces,
 ### Biome Configuration
 Single quotes, 2-space indent, 100-char line width. Biome is the formatter/linter for all packages. is disabled. Config is at the root `biome.json`.
 
+### E2E Testing
+- Playwright tests run against the dev environment (`pnpm run e2e`)
+- Custom script `scripts/run-e2e.mjs` handles shared build and server check
+- **Bypass Mechanism**: For tests to pass (bypass email verification), the backend must be in E2E mode.
+  - This is active if `process.env.E2E_TESTING === 'true'` (set by `run-e2e.mjs` if it starts the server).
+  - Alternatively, the backend respects the `x-e2e-testing: true` header in non-production environments. This allows reusing an already running dev server for tests.
+  - Playwright is configured to send this header globally.
+
 ### Environment
 Backend reads from `backend/.env`. Frontend reads `NEXT_PUBLIC_API_URL` (defaults to `http://127.0.0.1:3001`).
 
-Key backend env vars: `DATABASE_URL`, `REDIS_HOST`, `REDIS_PORT`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `SMTP_*`, Google OAuth credentials.
+Key backend env vars: `DATABASE_URL`, `REDIS_HOST`, `REDIS_PORT`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `SMTP_*`, Google OAuth credentials, `E2E_TESTING`.

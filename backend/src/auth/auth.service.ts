@@ -68,14 +68,29 @@ export class AuthService {
     return this.generateTokens(user.id, user.email);
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto, isE2EOverride = false) {
     const existingUser = await this.usersService.findByEmail(registerDto.email);
     if (existingUser) {
       throw new BadRequestException('Email already in use');
     }
 
+    const isE2ETesting = isE2EOverride || this.configService.get<string>('E2E_TESTING') === 'true' || process.env.E2E_TESTING === 'true';
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(registerDto.password, salt);
+
+    if (isE2ETesting) {
+      // In E2E testing mode, auto-verify the user and return tokens directly
+      const user = await this.usersService.create({
+        email: registerDto.email,
+        name: registerDto.name,
+        passwordHash,
+        isVerified: true,
+        language: registerDto.language,
+      });
+      this.logger.log(`E2E: Auto-verified user on registration: ${user.email}`);
+      return this.generateTokens(user.id, user.email);
+    }
+
     const verificationToken = randomUUID();
 
     const user = await this.usersService.create({

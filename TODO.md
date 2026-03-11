@@ -269,7 +269,6 @@ For any new feature add unit and E2E tests
 - [ ] API documentation
 - [ ] Setup instructions
 - [ ] Environment variables documentation
-- [ ] ADR (Architecture Decision Records)
 
 # 7. Additional
 - [ ] Push notifications not working on Opera
@@ -324,3 +323,5 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] In All Subscriptions table, make the column headers clickable (add cursor-pointer class), and clicking them sort the table. Show up/down chevrons next to column name, to show sort order. Default order is Next Billing / ascending (chronological).
 - [x] Make the category background colors in /subscriptions more muted. Use the same colors for categories in dashboard. For light theme make backgrounds of category badges in dashboard darker. Make text color same as surrounding text color.
 - [ ] Improve UI & UX on small screens
+- [ ] Make the tooltip  on Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
+- [x] Add "resend verification email" button to the Email Sent page

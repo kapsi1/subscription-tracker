@@ -34,6 +34,7 @@ async function bootstrap() {
       Boolean,
     ) as string[],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-e2e-testing'],
   });
 
   // Global validation pipe

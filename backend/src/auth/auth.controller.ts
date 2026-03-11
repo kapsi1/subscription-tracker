@@ -52,8 +52,9 @@ export class AuthController {
 
   @Throttle({ default: { limit: 100, ttl: 60000 } })
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Req() req: Request, @Body() registerDto: RegisterDto) {
+    const isE2E = req.headers['x-e2e-testing'] === 'true' && process.env.NODE_ENV !== 'production';
+    return this.authService.register(registerDto, isE2E);
   }
 
   @Throttle({ default: { limit: 100, ttl: 60000 } })

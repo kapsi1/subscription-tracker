@@ -29,7 +29,12 @@ import { UsersModule } from './users/users.module';
 @Injectable()
 class E2EAwareThrottlerGuard extends ThrottlerGuard {
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (process.env.E2E_TESTING === 'true') {
+    const req = context.switchToHttp().getRequest();
+    const isE2EHeader = req.headers['x-e2e-testing'] === 'true';
+    const isE2EEnv = process.env.E2E_TESTING === 'true';
+    const isNotProd = process.env.NODE_ENV !== 'production';
+
+    if (isE2EEnv || (isE2EHeader && isNotProd)) {
       return true;
     }
 

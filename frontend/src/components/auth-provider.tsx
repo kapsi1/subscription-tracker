@@ -129,7 +129,17 @@ export const AuthProvider = ({
   };
 
   const register = async (data: RegisterCredentials) => {
-    await api.post('/auth/register', data);
+    const res = await api.post('/auth/register', data);
+    if (res.data.accessToken) {
+      // E2E testing mode: backend auto-verified and returned tokens directly
+      const token = res.data.accessToken;
+      localStorage.setItem('accessToken', token);
+      // biome-ignore lint/suspicious/noDocumentCookie: intentional SSR auth cookie
+      document.cookie = `accessToken=${token}; path=/; max-age=31536000; SameSite=Lax`;
+      if (res.data.refreshToken) localStorage.setItem('refreshToken', res.data.refreshToken);
+      await fetchUser();
+      router.push('/dashboard');
+    }
   };
 
   const verifyEmail = async (token: string) => {

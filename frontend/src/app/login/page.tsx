@@ -91,10 +91,28 @@ export default function LoginPage() {
                 {t('auth.status.registerSuccess')}
               </CardDescription>
             </div>
-            <div className="pt-4">
+            <div className="pt-4 space-y-4">
               <p className="text-sm text-muted-foreground">
                 {t('auth.status.registrationNextSteps')}
               </p>
+              <div className="flex flex-col space-y-2">
+                <Button
+                  variant="outline"
+                  onClick={handleResendVerification}
+                  disabled={isLoading}
+                >
+                  {isLoading ? t('auth.status.pleaseWait') : t('auth.login.resendVerification')}
+                </Button>
+                <Button
+                  variant="link"
+                  onClick={() => {
+                    setIsRegistered(false);
+                    setIsLogin(true);
+                  }}
+                >
+                  {t('auth.register.switch')}
+                </Button>
+              </div>
             </div>
           </CardContent>
         ) : (
