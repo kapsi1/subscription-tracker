@@ -17,6 +17,7 @@ import { AlertsModule } from './alerts/alerts.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { HealthModule } from './health/health.module';
@@ -104,6 +105,7 @@ class E2EAwareThrottlerGuard extends ThrottlerGuard {
     SubscriptionsModule,
     DashboardModule,
     AlertsModule,
+    CategoriesModule,
     NotificationsModule,
     HealthModule,
     PaymentsModule,

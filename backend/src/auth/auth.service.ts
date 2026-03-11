@@ -74,7 +74,10 @@ export class AuthService {
       throw new BadRequestException('Email already in use');
     }
 
-    const isE2ETesting = isE2EOverride || this.configService.get<string>('E2E_TESTING') === 'true' || process.env.E2E_TESTING === 'true';
+    const isE2ETesting =
+      isE2EOverride ||
+      this.configService.get<string>('E2E_TESTING') === 'true' ||
+      process.env.E2E_TESTING === 'true';
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(registerDto.password, salt);
 
@@ -228,10 +231,7 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired password reset token');
     }
 
-    if (
-      user.passwordResetTokenExpiresAt &&
-      user.passwordResetTokenExpiresAt < new Date()
-    ) {
+    if (user.passwordResetTokenExpiresAt && user.passwordResetTokenExpiresAt < new Date()) {
       throw new BadRequestException('Password reset token has expired');
     }
 
@@ -249,7 +249,6 @@ export class AuthService {
   }
 
   async refreshTokens(refreshToken: string) {
-
     try {
       const payload = this.jwtService.verify(refreshToken, {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),

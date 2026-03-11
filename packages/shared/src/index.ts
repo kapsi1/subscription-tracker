@@ -29,3 +29,17 @@ export type Currency = {
 };
 
 export * from './types';
+
+export const DEFAULT_CATEGORIES: Array<{ name: string; color: string }> = [
+  { name: 'Entertainment', color: '#a855f7' },
+  { name: 'Productivity', color: '#3b82f6' },
+  { name: 'Cloud Services', color: '#06b6d4' },
+  { name: 'Development', color: '#22c55e' },
+  { name: 'Professional', color: '#f97316' },
+  { name: 'Health', color: '#f43f5e' },
+  { name: 'Housing', color: '#f59e0b' },
+  { name: 'Utilities', color: '#6366f1' },
+  { name: 'Services', color: '#14b8a6' },
+  { name: 'Education', color: '#eab308' },
+  { name: 'Other', color: '#64748b' },
+];

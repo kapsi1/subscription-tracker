@@ -279,7 +279,7 @@ For any new feature add unit and E2E tests
 - [ ] Budget threshold alerts
 - [x] Google Auth
 - [ ] Custom billing cycle
-- [ ] Category management
+- [x] Add category management. In settings, add a category management section. In this section, show a list of categories. Each row should have a color swatch, category name (editable in place), color picker (editable in place), and a delete button. Add a button to add a new category. This should add a new row with an empty name and default color, and focus on the name field. Add a button to reset categories to default values.
 - [x] Currency management
 - [x] Payment history
 - [x] When adding or saving subscription, check all fields for validity and show error messages
@@ -303,7 +303,7 @@ For any new feature add unit and E2E tests
 To consider: what happens when we disable the toggle after adding some subscriptions with different currencies? 
 
 - [x] If user is logged with a Google account, show their profile picture in corner, instead of initials. Also add a link to user profile page above the logout button. Settings page should have its subpages in url, so we can link to them.
-- [ ] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
+- [x] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
 - [x] Review translations for spelling, grammar, consistency, capitalization and style.
 - [x] Review code for security vulnerabilities and best practices.
 - [x] Review code for performance issues and improvements
@@ -311,7 +311,7 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Review code for areas that can be shortened or simplified.
 - [x] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
 - [x] Find and fix compiler & linter errors and warnings.
-- [ ] Find functionalities with missing or incomplete tests and add them
+- [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
 - [x] Check for and remove unused code and translations
 - [x] Refactor settings page: split it into multiple components, by section

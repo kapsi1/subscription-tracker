@@ -1,14 +1,9 @@
-import {
-  COLORS,
-  type ColorsConfig,
-} from '@subscription-tracker/shared';
+import { COLORS, type ColorsConfig } from '@subscription-tracker/shared';
 
-export const ACCENT_COLORS = Object.entries(COLORS as ColorsConfig).map(
-  ([name, values]) => ({
-    name,
-    ...values,
-  }),
-);
+export const ACCENT_COLORS = Object.entries(COLORS as ColorsConfig).map(([name, values]) => ({
+  name,
+  ...values,
+}));
 
 export type AccentColorType = (typeof ACCENT_COLORS)[0];
 

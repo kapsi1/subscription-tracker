@@ -10,13 +10,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
 import { LanguageSelector } from '@/components/language-selector';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -89,9 +83,7 @@ function ResetPasswordContent() {
           <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
           <p className="text-lg font-medium">{t('auth.status.passwordResetSuccess')}</p>
           <p className="text-sm text-muted-foreground">{t('common.redirectingToLogin')}</p>
-          <Button onClick={() => router.push('/login')}>
-            {t('auth.login.submit')}
-          </Button>
+          <Button onClick={() => router.push('/login')}>{t('auth.login.submit')}</Button>
         </CardContent>
       </Card>
     );

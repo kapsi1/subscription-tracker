@@ -6,8 +6,10 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AccentColorSwitcher } from '@/components/accent-color-switcher';
 import { useAuth } from '@/components/auth-provider';
 import { ErrorState } from '@/components/error-state'; // Assuming this path
+import { LanguageSelector } from '@/components/language-selector';
 import { LoadingState } from '@/components/loading-state';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,8 +22,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/components/ui/utils';
 import api from '@/lib/api';
-import { AccentColorSwitcher } from '@/components/accent-color-switcher';
-import { LanguageSelector } from '@/components/language-selector';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

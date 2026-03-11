@@ -1,5 +1,7 @@
 'use client';
 
+import type { Category } from '@subscription-tracker/shared';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowDown, ArrowUp, CreditCard } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import api from '@/lib/api';
-import { formatCurrency, getCategoryColor } from '@/lib/utils';
+import { formatCurrency, getCategoryStyle } from '@/lib/utils';
 
 export type MonthlyPayment = {
   id: string;
@@ -35,6 +37,17 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
   const [paymentSortBy, setPaymentSortBy] = useState<'date' | 'amount'>('date');
   const [paymentSortDirection, setPaymentSortDirection] = useState<'asc' | 'desc'>('asc');
   const [showPaid, setShowPaid] = useState<boolean>(true);
+
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await api.get('/categories');
+      return res.data;
+    },
+  });
+
+  const getCategoryColor = (name: string) =>
+    categories.find((c) => c.name === name)?.color ?? '#64748b';
 
   useEffect(() => {
     if (user?.dashboardSortBy) {
@@ -204,9 +217,11 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                   <div className="hidden sm:flex min-w-[120px] justify-end">
                     <Badge
                       variant="outline"
-                      className={getCategoryColor(payment.category, 'dashboard')}
+                      style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
                     >
-                      {t(`subscriptions.modal.categories.${payment.category}`)}
+                      {t(`subscriptions.modal.categories.${payment.category}`, {
+                        defaultValue: payment.category,
+                      })}
                     </Badge>
                   </div>
                   <div className="text-right min-w-[90px]">

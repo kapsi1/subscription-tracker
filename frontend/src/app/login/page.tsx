@@ -76,7 +76,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background to-secondary px-4 relative">
-
       <Card className="w-full max-w-md shadow-lg border-2">
         {isRegistered ? (
           <CardContent className="pt-12 pb-12 text-center space-y-6">
@@ -86,7 +85,9 @@ export default function LoginPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <CardTitle className="text-3xl font-bold">{t('auth.status.registerSuccessTitle')}</CardTitle>
+              <CardTitle className="text-3xl font-bold">
+                {t('auth.status.registerSuccessTitle')}
+              </CardTitle>
               <CardDescription className="text-lg text-muted-foreground whitespace-pre-wrap">
                 {t('auth.status.registerSuccess')}
               </CardDescription>
@@ -96,11 +97,7 @@ export default function LoginPage() {
                 {t('auth.status.registrationNextSteps')}
               </p>
               <div className="flex flex-col space-y-2">
-                <Button
-                  variant="outline"
-                  onClick={handleResendVerification}
-                  disabled={isLoading}
-                >
+                <Button variant="outline" onClick={handleResendVerification} disabled={isLoading}>
                   {isLoading ? t('auth.status.pleaseWait') : t('auth.login.resendVerification')}
                 </Button>
                 <Button

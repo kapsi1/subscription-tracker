@@ -45,6 +45,21 @@ export function daysUntil(dateString: string): number {
 }
 
 /**
+ * Get inline style for a category badge from a hex color
+ */
+export function getCategoryStyle(
+  hexColor: string,
+  variant: 'default' | 'dashboard' = 'default',
+): React.CSSProperties {
+  const bgAlpha = variant === 'dashboard' ? '33' : '1a';
+  const borderAlpha = variant === 'dashboard' ? '55' : '33';
+  return {
+    backgroundColor: `${hexColor}${bgAlpha}`,
+    borderColor: `${hexColor}${borderAlpha}`,
+  };
+}
+
+/**
  * Get category badge color classes
  */
 export function getCategoryColor(

@@ -66,22 +66,23 @@ export function AppearanceSection() {
     }
   };
 
-  if (!mounted) return (
-    <Card className="shadow-sm">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Palette className="w-5 h-5 text-primary" />
+  if (!mounted)
+    return (
+      <Card className="shadow-sm">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Palette className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle>{t('settings.appearance.title')}</CardTitle>
+              <CardDescription>{t('settings.appearance.desc')}</CardDescription>
+            </div>
           </div>
-          <div>
-            <CardTitle>{t('settings.appearance.title')}</CardTitle>
-            <CardDescription>{t('settings.appearance.desc')}</CardDescription>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="h-40" />
-    </Card>
-  );
+        </CardHeader>
+        <CardContent className="h-40" />
+      </Card>
+    );
 
   return (
     <Card className="shadow-sm">
@@ -100,9 +101,7 @@ export function AppearanceSection() {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>{t('settings.appearance.theme')}</Label>
-            <p className="text-sm text-muted-foreground">
-              {t('settings.appearance.themeDesc')}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('settings.appearance.themeDesc')}</p>
             <div className="grid grid-cols-3 gap-3 mt-2">
               {[
                 { id: 'light', icon: Sun, label: t('settings.appearance.themes.light') },
@@ -120,14 +119,22 @@ export function AppearanceSection() {
                       : 'bg-card hover:bg-muted hover:border-muted-foreground/30',
                   )}
                 >
-                  <tMode.icon className={cn(
-                    'w-5 h-5 transition-colors',
-                    theme === tMode.id ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
-                  )} />
-                  <span className={cn(
-                    'text-xs font-medium transition-colors',
-                    theme === tMode.id ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
-                  )}>
+                  <tMode.icon
+                    className={cn(
+                      'w-5 h-5 transition-colors',
+                      theme === tMode.id
+                        ? 'text-primary'
+                        : 'text-muted-foreground group-hover:text-foreground',
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      'text-xs font-medium transition-colors',
+                      theme === tMode.id
+                        ? 'text-primary'
+                        : 'text-muted-foreground group-hover:text-foreground',
+                    )}
+                  >
                     {tMode.label}
                   </span>
                 </button>
@@ -139,9 +146,7 @@ export function AppearanceSection() {
 
           <div className="space-y-2">
             <Label>{t('settings.appearance.accent')}</Label>
-            <p className="text-sm text-muted-foreground">
-              {t('settings.appearance.accentDesc')}
-            </p>
+            <p className="text-sm text-muted-foreground">{t('settings.appearance.accentDesc')}</p>
             <div className="grid grid-cols-4 sm:grid-cols-8 gap-3 mt-2">
               {ACCENT_COLORS.map((accent) => (
                 <button

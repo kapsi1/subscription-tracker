@@ -206,7 +206,9 @@ describe('AuthService', () => {
         }),
       );
       expect(emailServiceMock.sendPasswordResetEmail).toHaveBeenCalled();
-      expect(result).toEqual({ message: 'If that email is registered, a reset link has been sent' });
+      expect(result).toEqual({
+        message: 'If that email is registered, a reset link has been sent',
+      });
     });
 
     it('should return the same message for non-existent user (no email enumeration)', async () => {
@@ -216,7 +218,9 @@ describe('AuthService', () => {
 
       expect(usersServiceMock.update).not.toHaveBeenCalled();
       expect(emailServiceMock.sendPasswordResetEmail).not.toHaveBeenCalled();
-      expect(result).toEqual({ message: 'If that email is registered, a reset link has been sent' });
+      expect(result).toEqual({
+        message: 'If that email is registered, a reset link has been sent',
+      });
     });
 
     it('should return the same message for social-only account (no password)', async () => {
@@ -226,7 +230,9 @@ describe('AuthService', () => {
       const result = await service.forgotPassword('google@example.com');
 
       expect(usersServiceMock.update).not.toHaveBeenCalled();
-      expect(result).toEqual({ message: 'If that email is registered, a reset link has been sent' });
+      expect(result).toEqual({
+        message: 'If that email is registered, a reset link has been sent',
+      });
     });
   });
 

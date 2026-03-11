@@ -58,6 +58,13 @@ export interface DashboardSummary {
   currency: string;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  color: string;
+  order: number;
+}
+
 export enum BillingCycle {
   monthly = 'monthly',
   yearly = 'yearly',

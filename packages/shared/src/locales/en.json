@@ -260,6 +260,22 @@
         "beforePayment": "days before payment"
       }
     },
+    "categories": {
+      "title": "Category Management",
+      "desc": "Customize categories for your subscriptions",
+      "addCategory": "Add Category",
+      "resetToDefaults": "Reset to Defaults",
+      "resetConfirm": "This will delete all your custom categories and restore the defaults. Are you sure?",
+      "namePlaceholder": "Category name",
+      "saveError": "Failed to save category",
+      "deleteError": "Failed to delete category",
+      "resetError": "Failed to reset categories",
+      "resetSuccess": "Categories reset to defaults",
+      "noName": "Category name cannot be empty",
+      "save": "Save",
+      "revert": "Revert",
+      "saveSuccess": "Categories saved"
+    },
     "localization": {
       "title": "Localization",
       "desc": "Regional and display settings",

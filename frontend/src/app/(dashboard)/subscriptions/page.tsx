@@ -1,7 +1,7 @@
 'use client';
 
 import { sendGAEvent } from '@next/third-parties/google';
-import type { Subscription } from '@subscription-tracker/shared';
+import type { Category, Subscription } from '@subscription-tracker/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowUpDown,
@@ -35,7 +35,7 @@ import {
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import api from '@/lib/api';
-import { formatCurrency, formatDate, getCategoryColor } from '@/lib/utils';
+import { formatCurrency, formatDate, getCategoryStyle } from '@/lib/utils';
 
 const subscriptionImportSchema = z.object({
   name: z.string().min(1),
@@ -78,6 +78,17 @@ export default function SubscriptionsPage() {
       return res.data;
     },
   });
+
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await api.get('/categories');
+      return res.data;
+    },
+  });
+
+  const getCategoryColor = (name: string) =>
+    categories.find((c) => c.name === name)?.color ?? '#64748b';
 
   const [isImportLoading, setIsImportLoading] = useState(false);
   const isLoading = isFetchLoading || isImportLoading;
@@ -424,9 +435,11 @@ export default function SubscriptionsPage() {
                       <TableCell>
                         <Badge
                           variant="outline"
-                          className={getCategoryColor(subscription.category)}
+                          style={getCategoryStyle(getCategoryColor(subscription.category))}
                         >
-                          {t(`subscriptions.modal.categories.${subscription.category}`)}
+                          {t(`subscriptions.modal.categories.${subscription.category}`, {
+                            defaultValue: subscription.category,
+                          })}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">

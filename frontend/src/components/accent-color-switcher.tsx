@@ -143,7 +143,7 @@ export function AccentColorSwitcher() {
   const toggleTheme = async () => {
     const currentTheme = theme || resolvedTheme || 'light';
     let newTheme: string;
-    
+
     if (currentTheme === 'light') newTheme = 'dark';
     else if (currentTheme === 'dark') newTheme = 'system';
     else newTheme = 'light';

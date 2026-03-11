@@ -1,6 +1,8 @@
-import type { Subscription } from '@subscription-tracker/shared';
+import type { Category, Subscription } from '@subscription-tracker/shared';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import api from '@/lib/api';
 import { useAuth } from './auth-provider';
 import { Button } from './ui/button';
 import {
@@ -23,20 +25,6 @@ interface SubscriptionModalProps {
   onSave: (subscription: Partial<Subscription>) => Promise<void>;
 }
 
-const categories = [
-  'Entertainment',
-  'Productivity',
-  'Cloud Services',
-  'Development',
-  'Professional',
-  'Health',
-  'Housing',
-  'Utilities',
-  'Services',
-  'Education',
-  'Other',
-];
-
 const billingCycles = [
   { label: 'Monthly', value: 'monthly' },
   { label: 'Yearly', value: 'yearly' },
@@ -51,6 +39,14 @@ export function SubscriptionModal({
 }: SubscriptionModalProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
+
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await api.get('/categories');
+      return res.data;
+    },
+  });
   const [formData, setFormData] = useState({
     name: '',
     amount: '',
@@ -232,12 +228,37 @@ export function SubscriptionModal({
                   onValueChange={(value) => setFormData({ ...formData, category: value })}
                 >
                   <SelectTrigger id="category">
-                    <SelectValue />
+                    <SelectValue>
+                      {(() => {
+                        const cat = categories.find((c) => c.name === formData.category);
+                        return (
+                          <span className="flex items-center gap-2">
+                            {cat && (
+                              <span
+                                className="inline-block w-3 h-3 rounded-full shrink-0"
+                                style={{ backgroundColor: cat.color }}
+                              />
+                            )}
+                            {t(`subscriptions.modal.categories.${formData.category}`, {
+                              defaultValue: formData.category,
+                            })}
+                          </span>
+                        );
+                      })()}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {t(`subscriptions.modal.categories.${category}`)}
+                      <SelectItem key={category.name} value={category.name}>
+                        <span className="flex items-center gap-2">
+                          <span
+                            className="inline-block w-3 h-3 rounded-full shrink-0"
+                            style={{ backgroundColor: category.color }}
+                          />
+                          {t(`subscriptions.modal.categories.${category.name}`, {
+                            defaultValue: category.name,
+                          })}
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>

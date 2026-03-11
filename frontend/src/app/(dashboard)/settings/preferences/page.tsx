@@ -8,6 +8,7 @@ import api from '@/lib/api';
 import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from '@/lib/push';
 import { AppearanceSection } from '../_components/AppearanceSection';
 import { BudgetSection } from '../_components/BudgetSection';
+import { CategorySection } from '../_components/CategorySection';
 import { EmailNotificationsSection } from '../_components/EmailNotificationsSection';
 import { LocalizationSection } from '../_components/LocalizationSection';
 import { PushNotificationsSection } from '../_components/PushNotificationsSection';
@@ -282,6 +283,8 @@ export default function PreferencesPage() {
         currency={settings.currency}
         setCurrency={(currency) => setSettings({ ...settings, currency })}
       />
+
+      <CategorySection />
 
       <EmailNotificationsSection
         emailNotifications={settings.emailNotifications}

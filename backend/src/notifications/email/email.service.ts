@@ -640,7 +640,6 @@ export class EmailService {
   }
 
   async sendPasswordResetEmail(
-
     email: string,
     name: string,
     token: string,
@@ -707,4 +706,3 @@ export class EmailService {
     }
   }
 }
-

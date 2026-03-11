@@ -41,6 +41,20 @@ model User {
   verificationTokenExpiresAt DateTime?
   passwordResetToken     String?        @unique
   passwordResetTokenExpiresAt DateTime?
+  categories             Category[]
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  color     String   @default("#6366f1")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, name])
+  @@index([userId])
 }
 
 enum BillingCycle {
