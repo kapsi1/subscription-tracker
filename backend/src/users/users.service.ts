@@ -37,6 +37,12 @@ export class UsersService {
     });
   }
 
+  async findByPasswordResetToken(passwordResetToken: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: { passwordResetToken },
+    });
+  }
+
   async create(data: Prisma.UserCreateInput): Promise<User> {
     return this.prisma.user.create({
       data,

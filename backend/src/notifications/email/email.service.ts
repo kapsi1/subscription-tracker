@@ -1,4 +1,4 @@
-﻿import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { COLORS, type ColorsConfig, LOCALES } from '@subscription-tracker/shared';
@@ -638,4 +638,73 @@ export class EmailService {
       throw error;
     }
   }
+
+  async sendPasswordResetEmail(
+
+    email: string,
+    name: string,
+    token: string,
+    language: 'en' | 'pl' = 'en',
+  ) {
+    const locale = LOCALES[language];
+    const emails = locale.emails;
+    const passwordReset = emails.passwordReset;
+    const themeMode = this.resolveTheme('system');
+
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
+    const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
+
+    const appUrl = frontendUrl;
+    const teamNameHtml = locale.emails.teamName.replace(
+      'Subscription Tracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
+    );
+
+    const bodyHtml = `
+      <div class="email-root">
+        <div class="email-shell">
+          <div class="email-card">
+            <div class="email-topbar-bg"></div>
+            <div class="email-content">
+              <h2 class="email-title">${passwordReset.title}</h2>
+              <p class="email-greeting">${emails.greetingWithName.replace('{{name}}', name || email)}</p>
+              <p class="email-text">${passwordReset.text}</p>
+              
+              <div style="margin: 32px 0; text-align: center;">
+                <a href="${resetUrl}" style="background-color: ${this.getEmailColors(undefined, 'light').primary}; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">
+                  ${passwordReset.button}
+                </a>
+              </div>
+
+              <p class="email-text email-muted" style="font-size: 14px;">
+                ${passwordReset.footer}
+              </p>
+              
+              <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const htmlTemplate = this.buildEmailDocument(bodyHtml, undefined, themeMode);
+
+    try {
+      await this.transporter.sendMail({
+        from: this.configService.get<string>(
+          'SMTP_FROM',
+          '"Subscription Tracker" <auth@subscription-tracker.local>',
+        ),
+        to: email,
+        subject: passwordReset.subject,
+        html: htmlTemplate,
+      });
+      this.logger.log(`[SMTP] Successfully sent password reset email to ${email}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`[SMTP] Failed to send password reset email to ${email}: ${message}`);
+      throw error;
+    }
+  }
 }
+

@@ -192,7 +192,64 @@ export class AuthService {
     return { message: 'Verification email resent' };
   }
 
+  async forgotPassword(email: string) {
+    // Always return the same response to prevent email enumeration attacks
+    const user = await this.usersService.findByEmail(email);
+    if (!user || !user.passwordHash) {
+      // Don't reveal whether user exists or is a social-only account
+      return { message: 'If that email is registered, a reset link has been sent' };
+    }
+
+    const resetToken = randomUUID();
+    const resetTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await this.usersService.update(user.id, {
+      passwordResetToken: resetToken,
+      passwordResetTokenExpiresAt: resetTokenExpiresAt,
+    });
+
+    try {
+      await this.emailService.sendPasswordResetEmail(
+        user.email,
+        user.name || '',
+        resetToken,
+        user.language as 'en' | 'pl',
+      );
+    } catch (error) {
+      this.logger.error(`Failed to send password reset email to ${user.email}: ${error}`);
+    }
+
+    return { message: 'If that email is registered, a reset link has been sent' };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const user = await this.usersService.findByPasswordResetToken(token);
+    if (!user) {
+      throw new BadRequestException('Invalid or expired password reset token');
+    }
+
+    if (
+      user.passwordResetTokenExpiresAt &&
+      user.passwordResetTokenExpiresAt < new Date()
+    ) {
+      throw new BadRequestException('Password reset token has expired');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+
+    await this.usersService.update(user.id, {
+      passwordHash,
+      passwordResetToken: null,
+      passwordResetTokenExpiresAt: null,
+    });
+
+    this.logger.log(`Password reset successful for user: ${user.email}`);
+    return { message: 'Password reset successfully' };
+  }
+
   async refreshTokens(refreshToken: string) {
+
     try {
       const payload = this.jwtService.verify(refreshToken, {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),

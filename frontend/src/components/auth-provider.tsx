@@ -48,6 +48,8 @@ interface AuthContextType {
   register: (data: RegisterCredentials) => Promise<void>;
   verifyEmail: (token: string) => Promise<void>;
   resendVerification: (email: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (token: string, password: string) => Promise<void>;
   logout: () => void;
   fetchUser: () => Promise<void>;
 }
@@ -60,6 +62,8 @@ const AuthContext = createContext<AuthContextType>({
   register: async () => {},
   verifyEmail: async () => {},
   resendVerification: async () => {},
+  forgotPassword: async () => {},
+  resetPassword: async () => {},
   logout: () => {},
   fetchUser: async () => {},
 });
@@ -157,6 +161,14 @@ export const AuthProvider = ({
     await api.post('/auth/resend-verification', { email });
   };
 
+  const forgotPassword = async (email: string) => {
+    await api.post('/auth/forgot-password', { email });
+  };
+
+  const resetPassword = async (token: string, password: string) => {
+    await api.post('/auth/reset-password', { token, password });
+  };
+
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -177,6 +189,8 @@ export const AuthProvider = ({
         register,
         verifyEmail,
         resendVerification,
+        forgotPassword,
+        resetPassword,
         logout,
         fetchUser,
       }}

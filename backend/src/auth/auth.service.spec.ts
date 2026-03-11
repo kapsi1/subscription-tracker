@@ -32,7 +32,9 @@ describe('AuthService', () => {
     usersServiceMock = {
       findByEmail: jest.fn(),
       findById: jest.fn(),
+      findByPasswordResetToken: jest.fn(),
       create: jest.fn(),
+      update: jest.fn(),
     };
 
     jwtServiceMock = {
@@ -53,6 +55,7 @@ describe('AuthService', () => {
 
     emailServiceMock = {
       sendVerificationEmail: jest.fn().mockResolvedValue(undefined),
+      sendPasswordResetEmail: jest.fn().mockResolvedValue(undefined),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -185,6 +188,93 @@ describe('AuthService', () => {
       usersServiceMock.findById.mockResolvedValue(null);
 
       await expect(service.refreshTokens('orphan-token')).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('forgotPassword', () => {
+    it('should send reset email for existing user with password', async () => {
+      usersServiceMock.findByEmail.mockResolvedValue(mockUser);
+      usersServiceMock.update.mockResolvedValue(mockUser);
+
+      const result = await service.forgotPassword('test@example.com');
+
+      expect(usersServiceMock.update).toHaveBeenCalledWith(
+        'user-1',
+        expect.objectContaining({
+          passwordResetToken: expect.any(String),
+          passwordResetTokenExpiresAt: expect.any(Date),
+        }),
+      );
+      expect(emailServiceMock.sendPasswordResetEmail).toHaveBeenCalled();
+      expect(result).toEqual({ message: 'If that email is registered, a reset link has been sent' });
+    });
+
+    it('should return the same message for non-existent user (no email enumeration)', async () => {
+      usersServiceMock.findByEmail.mockResolvedValue(null);
+
+      const result = await service.forgotPassword('nonexistent@example.com');
+
+      expect(usersServiceMock.update).not.toHaveBeenCalled();
+      expect(emailServiceMock.sendPasswordResetEmail).not.toHaveBeenCalled();
+      expect(result).toEqual({ message: 'If that email is registered, a reset link has been sent' });
+    });
+
+    it('should return the same message for social-only account (no password)', async () => {
+      const socialUser = { ...mockUser, passwordHash: null };
+      usersServiceMock.findByEmail.mockResolvedValue(socialUser);
+
+      const result = await service.forgotPassword('google@example.com');
+
+      expect(usersServiceMock.update).not.toHaveBeenCalled();
+      expect(result).toEqual({ message: 'If that email is registered, a reset link has been sent' });
+    });
+  });
+
+  describe('resetPassword', () => {
+    const resetToken = 'valid-reset-token';
+    const mockUserWithResetToken = {
+      ...mockUser,
+      passwordResetToken: resetToken,
+      passwordResetTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour in future
+    };
+
+    it('should reset password for valid token', async () => {
+      usersServiceMock.findByPasswordResetToken.mockResolvedValue(mockUserWithResetToken);
+      (bcrypt.genSalt as jest.Mock).mockResolvedValue('salt');
+      (bcrypt.hash as jest.Mock).mockResolvedValue('new-hashed-pw');
+      usersServiceMock.update.mockResolvedValue(mockUser);
+
+      const result = await service.resetPassword(resetToken, 'newpassword123');
+
+      expect(usersServiceMock.update).toHaveBeenCalledWith(
+        'user-1',
+        expect.objectContaining({
+          passwordHash: 'new-hashed-pw',
+          passwordResetToken: null,
+          passwordResetTokenExpiresAt: null,
+        }),
+      );
+      expect(result).toEqual({ message: 'Password reset successfully' });
+    });
+
+    it('should throw BadRequestException for invalid token', async () => {
+      usersServiceMock.findByPasswordResetToken.mockResolvedValue(null);
+
+      await expect(service.resetPassword('bad-token', 'newpassword')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw BadRequestException for expired token', async () => {
+      const expiredUser = {
+        ...mockUserWithResetToken,
+        passwordResetTokenExpiresAt: new Date(Date.now() - 1000), // 1 second in the past
+      };
+      usersServiceMock.findByPasswordResetToken.mockResolvedValue(expiredUser);
+
+      await expect(service.resetPassword(resetToken, 'newpassword')).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 });

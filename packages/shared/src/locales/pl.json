@@ -5,7 +5,8 @@
       "subtitle": "Zaloguj się, aby zarządzać swoimi subskrypcjami",
       "submit": "Zaloguj się",
       "switch": "Przełącz na rejestrację",
-      "resendVerification": "Wyślij ponownie e-mail weryfikacyjny"
+      "resendVerification": "Wyślij ponownie e-mail weryfikacyjny",
+      "forgotPassword": "Zapomniałem hasła"
     },
     "register": {
       "subtitle": "Utwórz konto, aby rozpocząć",
@@ -18,7 +19,10 @@
       "email": "Email",
       "emailPlaceholder": "ty@example.com",
       "password": "Hasło",
-      "passwordPlaceholder": "••••••••"
+      "passwordPlaceholder": "••••••••",
+      "newPassword": "Nowe hasło",
+      "confirmPassword": "Potwierdź nowe hasło",
+      "confirmPasswordPlaceholder": "••••••••"
     },
     "social": {
       "title": "Lub kontynuuj przez",
@@ -36,7 +40,13 @@
       "resendSuccess": "E-mail weryfikacyjny został wysłany ponownie",
       "resendFailed": "Nie udało się ponownie wysłać e-maila weryfikacyjnego",
       "registerSuccessTitle": "Sprawdź swoją skrzynkę",
-      "registrationNextSteps": "Kliknij w link w wiadomości e-mail, aby zweryfikować konto i zacząć zarządzać swoimi subskrypcjami."
+      "registrationNextSteps": "Kliknij w link w wiadomości e-mail, aby zweryfikować konto i zacząć zarządzać swoimi subskrypcjami.",
+      "forgotPasswordEmailSentTitle": "Sprawdź swoją skrzynkę",
+      "forgotPasswordEmailSent": "Jeśli konto o podanym adresie e-mail istnieje, wysłaliśmy link do resetowania hasła. Sprawdź swoją skrzynkę. Link jest ważny przez 1 godzinę.",
+      "passwordResetSuccess": "Hasło zostało zresetowane. Możesz się teraz zalogować przy użyciu nowego hasła.",
+      "passwordResetFailed": "Resetowanie hasła nie powiodło się. Link może być nieprawidłowy lub wygasł.",
+      "passwordResetRequesting": "Wysyłanie linku...",
+      "passwordsDoNotMatch": "Hasła nie są zgodne."
     }
   },
   "common": {
@@ -320,6 +330,13 @@
       "text": "Dziękujemy za rejestrację w Subscription Tracker! Aby dokończyć rejestrację i zacząć zarządzać swoimi subskrypcjami, prosimy o zweryfikowanie adresu e-mail poprzez kliknięcie w poniższy przycisk. Link jest ważny przez 24 godziny:",
       "button": "Zweryfikuj e-mail",
       "footer": "Jeśli to nie Ty utworzyłeś konto, możesz bezpiecznie zignorować tę wiadomość."
+    },
+    "passwordReset": {
+      "subject": "Zresetuj hasło - Subscription Tracker",
+      "title": "Resetowanie hasła",
+      "text": "Otrzymaliśmy prośbę o zresetowanie hasła. Kliknij poniższy przycisk, aby ustawić nowe hasło. Link jest ważny przez 1 godzinę:",
+      "button": "Zresetuj hasło",
+      "footer": "Jeśli nie prosiłeś o zresetowanie hasła, możesz bezpiecznie zignorować tę wiadomość. Twoje hasło nie zostanie zmienione."
     }
   }
 }

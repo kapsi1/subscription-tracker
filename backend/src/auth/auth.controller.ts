@@ -17,6 +17,8 @@ import type { RequestWithUser } from '../common/interfaces/request.interface';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import type { GoogleProfile } from './interfaces/google-profile.interface';
 
@@ -81,6 +83,20 @@ export class AuthController {
   @Post('resend-verification')
   async resendVerification(@Body('email') email: string) {
     return this.authService.resendVerificationEmail(email);
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @HttpCode(HttpStatus.OK)
+  @Post('forgot-password')
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @HttpCode(HttpStatus.OK)
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.authService.resetPassword(resetPasswordDto.token, resetPasswordDto.password);
   }
 
   @UseGuards(JwtAuthGuard)

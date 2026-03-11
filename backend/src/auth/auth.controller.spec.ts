@@ -19,6 +19,8 @@ describe('AuthController', () => {
       register: jest.fn().mockResolvedValue(mockTokens),
       login: jest.fn().mockResolvedValue(mockTokens),
       refreshTokens: jest.fn().mockResolvedValue(mockTokens),
+      forgotPassword: jest.fn().mockResolvedValue({ message: 'sent' }),
+      resetPassword: jest.fn().mockResolvedValue({ message: 'reset' }),
     };
     configServiceMock = {
       getOrThrow: jest.fn().mockReturnValue('http://localhost:3000'),
@@ -36,10 +38,11 @@ describe('AuthController', () => {
   });
 
   it('should register a user', async () => {
-    const dto = { name: 'Test User', email: 'a@b.com', password: 'password123' };
-    const result = await controller.register(dto);
+    const dto = { name: 'Test User', email: 'a@b.com', password: 'password123', language: 'en' };
+    const mockReq = { headers: {} } as unknown as import('express').Request;
+    const result = await controller.register(mockReq, dto);
 
-    expect(authServiceMock.register).toHaveBeenCalledWith(dto);
+    expect(authServiceMock.register).toHaveBeenCalledWith(dto, false);
     expect(result).toEqual(mockTokens);
   });
 

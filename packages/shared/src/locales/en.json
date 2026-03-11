@@ -5,7 +5,8 @@
       "subtitle": "Sign in to manage your subscriptions",
       "submit": "Sign In",
       "switch": "Switch to Register",
-      "resendVerification": "Resend verification email"
+      "resendVerification": "Resend verification email",
+      "forgotPassword": "Forgot password?"
     },
     "register": {
       "subtitle": "Create an account to get started",
@@ -18,7 +19,10 @@
       "email": "Email",
       "emailPlaceholder": "you@example.com",
       "password": "Password",
-      "passwordPlaceholder": "••••••••"
+      "passwordPlaceholder": "••••••••",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "••••••••"
     },
     "social": {
       "title": "Or continue with",
@@ -36,7 +40,13 @@
       "resendSuccess": "Verification email resent successfully",
       "resendFailed": "Failed to resend verification email",
       "registerSuccessTitle": "Check your email",
-      "registrationNextSteps": "Click the link in the email to verify your account and start managing your subscriptions."
+      "registrationNextSteps": "Click the link in the email to verify your account and start managing your subscriptions.",
+      "forgotPasswordEmailSentTitle": "Check your email",
+      "forgotPasswordEmailSent": "If an account exists for that email address, we've sent a password reset link. Please check your inbox. The link is valid for 1 hour.",
+      "passwordResetSuccess": "Password reset successfully. You can now log in with your new password.",
+      "passwordResetFailed": "Password reset failed. The link may be invalid or expired.",
+      "passwordResetRequesting": "Sending reset link...",
+      "passwordsDoNotMatch": "Passwords do not match."
     }
   },
   "common": {
@@ -316,6 +326,13 @@
       "text": "Thank you for signing up for Subscription Tracker! To complete your registration and start managing your subscriptions, please verify your email address by clicking the button below. The link is valid for 24 hours:",
       "button": "Verify Email",
       "footer": "If you didn't create an account, you can safely ignore this email."
+    },
+    "passwordReset": {
+      "subject": "Reset your password - Subscription Tracker",
+      "title": "Password Reset",
+      "text": "We received a request to reset your password. Click the button below to create a new password. The link is valid for 1 hour:",
+      "button": "Reset Password",
+      "footer": "If you didn't request a password reset, you can safely ignore this email. Your password will not be changed."
     }
   }
 }

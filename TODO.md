@@ -325,3 +325,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Improve UI & UX on small screens
 - [ ] Make the tooltip  on Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
 - [x] Add "resend verification email" button to the Email Sent page
+- [ ] Replace the email "auth@subscription-tracker.local" with an environment variable
