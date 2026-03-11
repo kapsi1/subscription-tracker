@@ -39,7 +39,9 @@ test.describe('Authentication Flow', () => {
       }
     });
 
-    await page.goto('/');
+    await page.goto('/').catch(e => {
+      if (!e.message.includes('ERR_ABORTED')) throw e;
+    });
     await page.waitForURL('**/login', { timeout: 30_000 });
 
     await expect(page).toHaveURL(/\/login/);

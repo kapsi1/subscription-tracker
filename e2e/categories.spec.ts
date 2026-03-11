@@ -116,10 +116,13 @@ test.describe.serial('Category Management', () => {
 
     await expectCategoryExists(page, 'Movies and TV');
 
+    await page.waitForTimeout(1000); // Wait for React cache invalidation and re-renders to settle
+
     // Rename back to avoid affecting other tests
     const renamed = await getCategoryInput(page, 'Movies and TV');
     await renamed.fill('Entertainment');
     await renamed.blur();
+    await page.keyboard.press('Tab'); // robust blur
 
     const patchPromise2 = page.waitForResponse(
       (r) => r.url().includes('/categories/') && r.request().method() === 'PATCH',
