@@ -327,3 +327,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Add "resend verification email" button to the Email Sent page
 - [ ] Replace the email "auth@subscription-tracker.local" with an environment variable
 - [ ] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
+- [ ] Add a custom color picker to the settings page, which should allow users to pick any color as accent color.

@@ -208,9 +208,6 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                         </Badge>
                       ) : null}
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      {t(`subscriptions.modal.categories.${payment.category}`)}
-                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 sm:gap-6">
