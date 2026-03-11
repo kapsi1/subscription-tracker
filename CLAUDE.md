@@ -1,6 +1,7 @@
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+For a detailed architecture overview and AI optimization tips, see [AI_DEVELOPMENT_GUIDE.md](./AI_DEVELOPMENT_GUIDE.md).
 
 ## Repository Structure
 
