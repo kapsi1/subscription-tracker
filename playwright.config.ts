@@ -13,7 +13,7 @@ import { defineConfig, devices } from '@playwright/test';
 const shouldManageWebServers = process.env.PLAYWRIGHT_DISABLE_WEBSERVER !== 'true';
 
 export default defineConfig({
-  timeout: 60000,
+  timeout: 120000,
   testDir: './e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,

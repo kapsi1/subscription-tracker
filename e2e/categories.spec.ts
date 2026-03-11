@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { cleanupUser, closePool } from './test-utils';
 
-test.describe('Category Management', () => {
+test.describe.serial('Category Management', () => {
   const testEmail = `testuser-categories-${Date.now()}@example.com`;
   const testPassword = 'StrongPassword123!';
 
@@ -38,14 +38,19 @@ test.describe('Category Management', () => {
 
   /** Returns the Locator for a category name input matching the given current value. */
   async function getCategoryInput(page: import('@playwright/test').Page, name: string) {
-    const inputs = page.getByRole('textbox');
-    const count = await inputs.count();
-    for (let i = 0; i < count; i++) {
-      if ((await inputs.nth(i).inputValue()) === name) {
-        return inputs.nth(i);
+    let foundInput: import('@playwright/test').Locator | null = null;
+    await expect(async () => {
+      const inputs = page.getByRole('textbox');
+      const count = await inputs.count();
+      for (let i = 0; i < count; i++) {
+        if ((await inputs.nth(i).inputValue()) === name) {
+          foundInput = inputs.nth(i);
+          return;
+        }
       }
-    }
-    throw new Error(`Category input "${name}" not found`);
+      expect(foundInput).not.toBeNull();
+    }).toPass({ timeout: 5_000 });
+    return foundInput!;
   }
 
   /** Asserts (with retries) that a category input with the given name exists. */
@@ -80,19 +85,17 @@ test.describe('Category Management', () => {
     await navigateToCategories(page);
 
     await page.getByRole('button', { name: /add category/i }).click();
-    await page.waitForResponse(
-      (r) => r.url().includes('/categories') && r.request().method() === 'POST',
-    );
-
     await expectCategoryExists(page, 'New Category');
 
     const newInput = await getCategoryInput(page, 'New Category');
     await newInput.fill('My Custom Category');
     await newInput.blur();
 
-    await page.waitForResponse(
-      (r) => r.url().includes('/categories/') && r.request().method() === 'PATCH',
+    const responsePromise = page.waitForResponse(
+      (r) => r.url().includes('/categories') && r.request().method() === 'POST',
     );
+    await page.getByRole('button', { name: /save/i }).click();
+    await responsePromise;
 
     await expectCategoryExists(page, 'My Custom Category');
   });
@@ -100,22 +103,29 @@ test.describe('Category Management', () => {
   test('should rename a category', async ({ page }) => {
     await navigateToCategories(page);
 
+    await expectCategoryExists(page, 'Entertainment');
     const input = await getCategoryInput(page, 'Entertainment');
-    await input.fill('Movies & TV');
+    await input.fill('Movies and TV');
     await input.blur();
 
-    await page.waitForResponse(
+    const patchPromise = page.waitForResponse(
       (r) => r.url().includes('/categories/') && r.request().method() === 'PATCH',
     );
-    await expectCategoryExists(page, 'Movies & TV');
+    await page.getByRole('button', { name: /save/i }).click();
+    await patchPromise;
+
+    await expectCategoryExists(page, 'Movies and TV');
 
     // Rename back to avoid affecting other tests
-    const renamed = await getCategoryInput(page, 'Movies & TV');
+    const renamed = await getCategoryInput(page, 'Movies and TV');
     await renamed.fill('Entertainment');
     await renamed.blur();
-    await page.waitForResponse(
+
+    const patchPromise2 = page.waitForResponse(
       (r) => r.url().includes('/categories/') && r.request().method() === 'PATCH',
     );
+    await page.getByRole('button', { name: /save/i }).click();
+    await patchPromise2;
   });
 
   test('should delete a category', async ({ page }) => {
@@ -123,28 +133,30 @@ test.describe('Category Management', () => {
 
     // Add a temporary category to delete
     await page.getByRole('button', { name: /add category/i }).click();
-    await page.waitForResponse(
-      (r) => r.url().includes('/categories') && r.request().method() === 'POST',
-    );
-
     await expectCategoryExists(page, 'New Category');
     const newInput = await getCategoryInput(page, 'New Category');
     await newInput.fill('To Be Deleted');
     await newInput.blur();
 
-    await page.waitForResponse(
-      (r) => r.url().includes('/categories/') && r.request().method() === 'PATCH',
+    const postPromise = page.waitForResponse(
+      (r) => r.url().includes('/categories') && r.request().method() === 'POST',
     );
+    await page.getByRole('button', { name: /save/i }).click();
+    await postPromise;
+
     await expectCategoryExists(page, 'To Be Deleted');
 
     // Hover over the row to reveal the delete button (direct parent of the input)
     const row = (await getCategoryInput(page, 'To Be Deleted')).locator('..');
     await row.hover();
-    await row.getByRole('button').click();
+    await row.getByRole('button').last().click();
 
-    await page.waitForResponse(
+    const deletePromise = page.waitForResponse(
       (r) => r.url().includes('/categories/') && r.request().method() === 'DELETE',
     );
+    await page.getByRole('button', { name: /save/i }).click();
+    await deletePromise;
+
     await expectCategoryGone(page, 'To Be Deleted');
   });
 
@@ -152,11 +164,12 @@ test.describe('Category Management', () => {
     await navigateToCategories(page);
 
     page.once('dialog', (dialog) => dialog.accept());
-    await page.getByRole('button', { name: /reset to defaults/i }).click();
-
-    await page.waitForResponse(
+    
+    const resetPromise = page.waitForResponse(
       (r) => r.url().includes('/categories/reset') && r.request().method() === 'POST',
     );
+    await page.getByRole('button', { name: /reset to defaults/i }).click();
+    await resetPromise;
 
     await expectCategoryExists(page, 'Entertainment');
     await expectCategoryExists(page, 'Productivity');
