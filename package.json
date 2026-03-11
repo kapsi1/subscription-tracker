@@ -15,7 +15,8 @@
     "lint": "biome check .",
     "lint:write": "biome check --write .",
     "e2e": "node scripts/run-e2e.mjs",
-    "e2e:ui": "node scripts/run-e2e.mjs --ui"
+    "e2e:ui": "node scripts/run-e2e.mjs --ui",
+    "test:all": "node scripts/test-all.mjs"
   },
   "keywords": [],
   "author": "Kamil Kapsiak",

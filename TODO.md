@@ -326,3 +326,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Make the tooltip  on Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
 - [x] Add "resend verification email" button to the Email Sent page
 - [ ] Replace the email "auth@subscription-tracker.local" with an environment variable
+- [ ] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
