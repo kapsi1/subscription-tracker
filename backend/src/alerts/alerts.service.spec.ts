@@ -82,7 +82,7 @@ describe('AlertsService', () => {
       'processAlert',
       expect.objectContaining({ alertId: 'a1', subscriptionName: 'Netflix' }),
       expect.objectContaining({
-        jobId: expect.stringContaining('alert:a1:sub:s1'),
+        jobId: expect.stringContaining('alert-a1-sub-s1'),
       }),
     );
   });

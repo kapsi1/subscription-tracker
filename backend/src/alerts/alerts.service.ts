@@ -134,7 +134,7 @@ export class AlertsService {
     thresholdDate.setDate(thresholdDate.getDate() + daysBefore);
 
     if (sub.nextBillingDate <= thresholdDate && sub.nextBillingDate >= now) {
-      const jobId = `alert:${alertId}:sub:${sub.id}:${sub.nextBillingDate.getTime()}`;
+      const jobId = `alert-${alertId}-sub-${sub.id}-${sub.nextBillingDate.getTime()}`;
 
       await this.alertQueue.add(
         'processAlert',
@@ -236,7 +236,7 @@ export class AlertsService {
               currency: user.currency,
             },
             {
-              jobId: `budget-alert:${user.id}:${currentMonthStart.getTime()}`,
+              jobId: `budget-alert-${user.id}-${currentMonthStart.getTime()}`,
               removeOnComplete: true,
             },
           ),
