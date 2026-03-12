@@ -36,9 +36,9 @@ test.describe('Change Password and Change Email', () => {
     await expect(page.getByRole('heading', { name: 'Change Password' })).toBeVisible();
 
     const newPassword = 'NewPassword456!';
-    await page.getByLabel('Current Password').fill(testPassword);
-    await page.getByLabel('New Password').fill(newPassword);
-    await page.getByLabel('Confirm New Password').fill(newPassword);
+    await page.locator('#currentPassword').fill(testPassword);
+    await page.locator('#newPassword').fill(newPassword);
+    await page.locator('#confirmNewPassword').fill(newPassword);
     await page.getByRole('button', { name: 'Change Password' }).click();
 
     await expect(page.getByText('Password changed successfully')).toBeVisible({ timeout: 5000 });
@@ -56,12 +56,14 @@ test.describe('Change Password and Change Email', () => {
     await registerAndLogin(page, email);
 
     await page.goto('/settings/profile');
-    await page.getByLabel('Current Password').fill('wrongpassword');
-    await page.getByLabel('New Password').fill('NewPassword456!');
-    await page.getByLabel('Confirm New Password').fill('NewPassword456!');
+    await page.locator('#currentPassword').fill('wrongpassword');
+    await page.locator('#newPassword').fill('NewPassword456!');
+    await page.locator('#confirmNewPassword').fill('NewPassword456!');
     await page.getByRole('button', { name: 'Change Password' }).click();
 
     await expect(page.getByText('Current password is incorrect')).toBeVisible({ timeout: 5000 });
+    // Ensure we're still on the profile page (not logged out)
+    await expect(page).toHaveURL(/\/settings\/profile/);
   });
 
   test('should show error when new passwords do not match', async ({ page }) => {
@@ -69,9 +71,9 @@ test.describe('Change Password and Change Email', () => {
     await registerAndLogin(page, email);
 
     await page.goto('/settings/profile');
-    await page.getByLabel('Current Password').fill(testPassword);
-    await page.getByLabel('New Password').fill('NewPassword456!');
-    await page.getByLabel('Confirm New Password').fill('DifferentPassword789!');
+    await page.locator('#currentPassword').fill(testPassword);
+    await page.locator('#newPassword').fill('NewPassword456!');
+    await page.locator('#confirmNewPassword').fill('DifferentPassword789!');
     await page.getByRole('button', { name: 'Change Password' }).click();
 
     await expect(page.getByText('New passwords do not match')).toBeVisible({ timeout: 5000 });
@@ -85,8 +87,8 @@ test.describe('Change Password and Change Email', () => {
     await page.goto('/settings/profile');
     await expect(page.getByRole('heading', { name: 'Change Email' })).toBeVisible();
 
-    await page.getByLabel('New Email Address').fill(newEmail);
-    await page.getByLabel('Current Password').last().fill(testPassword);
+    await page.locator('#newEmail').fill(newEmail);
+    await page.locator('#changeEmailPassword').fill(testPassword);
     await page.getByRole('button', { name: 'Change Email' }).click();
 
     await expect(page.getByText('Email changed successfully')).toBeVisible({ timeout: 5000 });
@@ -98,11 +100,13 @@ test.describe('Change Password and Change Email', () => {
     await registerAndLogin(page, email);
 
     await page.goto('/settings/profile');
-    await page.getByLabel('New Email Address').fill(newEmail);
-    await page.getByLabel('Current Password').last().fill('wrongpassword');
+    await page.locator('#newEmail').fill(newEmail);
+    await page.locator('#changeEmailPassword').fill('wrongpassword');
     await page.getByRole('button', { name: 'Change Email' }).click();
 
     await expect(page.getByText('Current password is incorrect')).toBeVisible({ timeout: 5000 });
+    // Ensure we're still on the profile page (not logged out)
+    await expect(page).toHaveURL(/\/settings\/profile/);
   });
 
   test('should show error when new email is already in use', async ({ page }) => {
@@ -121,8 +125,8 @@ test.describe('Change Password and Change Email', () => {
 
     // Try to change email to the first user's email
     await page.goto('/settings/profile');
-    await page.getByLabel('New Email Address').fill(email1);
-    await page.getByLabel('Current Password').last().fill(testPassword);
+    await page.locator('#newEmail').fill(email1);
+    await page.locator('#changeEmailPassword').fill(testPassword);
     await page.getByRole('button', { name: 'Change Email' }).click();
 
     await expect(page.getByText('This email address is already in use')).toBeVisible({ timeout: 5000 });
