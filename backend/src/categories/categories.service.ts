@@ -13,11 +13,30 @@ export class CategoriesService {
     let categories = await this.prisma.category.findMany({
       where: { userId },
       orderBy: { order: 'asc' },
-      select: { id: true, name: true, color: true, order: true },
+      select: { id: true, name: true, color: true, icon: true, order: true },
     });
 
     if (categories.length === 0) {
       categories = await this.createDefaults(userId);
+    } else {
+      // Patch missing or legacy icons for existing users
+      // This is a one-time fix for existing users after the icon update
+      const legacyIcon = 'Tool';
+      const toPatch = categories.filter((c) => !c.icon || c.icon === legacyIcon);
+
+      if (toPatch.length > 0) {
+        for (const cat of toPatch) {
+          const defaultCat = DEFAULT_CATEGORIES.find((dc) => dc.name === cat.name);
+          if (defaultCat) {
+            await this.prisma.category.update({
+              where: { id: cat.id },
+              data: { icon: defaultCat.icon },
+            });
+            // Update the local object so it's returned correctly in this request
+            cat.icon = defaultCat.icon;
+          }
+        }
+      }
     }
 
     return categories;
@@ -40,7 +59,7 @@ export class CategoriesService {
 
     return this.prisma.category.create({
       data: { ...dto, userId, order: nextOrder },
-      select: { id: true, name: true, color: true, order: true },
+      select: { id: true, name: true, color: true, icon: true, order: true },
     });
   }
 
@@ -60,7 +79,7 @@ export class CategoriesService {
     const updated = await this.prisma.category.update({
       where: { id },
       data: dto,
-      select: { id: true, name: true, color: true, order: true },
+      select: { id: true, name: true, color: true, icon: true, order: true },
     });
 
     if (dto.name && dto.name !== category.name) {
@@ -103,7 +122,7 @@ export class CategoriesService {
     return this.prisma.category.findMany({
       where: { userId },
       orderBy: { order: 'asc' },
-      select: { id: true, name: true, color: true, order: true },
+      select: { id: true, name: true, color: true, icon: true, order: true },
     });
   }
 }

@@ -11,9 +11,11 @@ import {
   Pencil,
   Plus,
   Search,
+  Tag,
   Trash2,
   Upload,
 } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -89,6 +91,9 @@ export default function SubscriptionsPage() {
 
   const getCategoryColor = (name: string) =>
     categories.find((c) => c.name === name)?.color ?? '#64748b';
+
+  const getCategoryIcon = (name: string) =>
+    categories.find((c) => c.name === name)?.icon ?? 'Tag';
 
   const [isImportLoading, setIsImportLoading] = useState(false);
   const isLoading = isFetchLoading || isImportLoading;
@@ -435,8 +440,14 @@ export default function SubscriptionsPage() {
                       <TableCell>
                         <Badge
                           variant="outline"
+                          className="gap-1.5"
                           style={getCategoryStyle(getCategoryColor(subscription.category))}
                         >
+                          {(() => {
+                            const iconName = getCategoryIcon(subscription.category);
+                            const Icon = LucideIcons[iconName as keyof typeof LucideIcons] as LucideIcons.LucideIcon;
+                            return Icon ? <Icon className="w-3.5 h-3.5" /> : <Tag className="w-3.5 h-3.5" />;
+                          })()}
                           {t(`subscriptions.modal.categories.${subscription.category}`, {
                             defaultValue: subscription.category,
                           })}

@@ -30,8 +30,8 @@ const mockApi = api as unknown as {
 };
 
 const mockCategories = [
-  { id: 'cat-1', name: 'Entertainment', color: '#a855f7' },
-  { id: 'cat-2', name: 'Productivity', color: '#3b82f6' },
+  { id: 'cat-1', name: 'Entertainment', color: '#a855f7', icon: 'Play' },
+  { id: 'cat-2', name: 'Productivity', color: '#3b82f6', icon: 'CheckSquare' },
 ];
 
 function createWrapper() {
@@ -104,6 +104,7 @@ describe('CategorySection', () => {
       expect(mockApi.post).toHaveBeenCalledWith('/categories', {
         name: 'New Category',
         color: '#6366f1',
+        icon: 'Tag',
       });
     });
   });
@@ -202,6 +203,7 @@ describe('CategorySection', () => {
       expect(mockApi.patch).toHaveBeenCalledWith('/categories/cat-1', {
         name: 'Movies',
         color: '#a855f7',
+        icon: 'Play', // Assuming 'Play' is the mock icon or we need to check mockCategories
       });
     });
   });

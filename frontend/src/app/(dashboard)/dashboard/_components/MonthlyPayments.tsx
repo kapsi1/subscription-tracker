@@ -2,7 +2,8 @@
 
 import type { Category } from '@subscription-tracker/shared';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowDown, ArrowUp, CreditCard } from 'lucide-react';
+import { ArrowDown, ArrowUp, CreditCard, Tag } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/components/auth-provider';
@@ -48,6 +49,9 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
 
   const getCategoryColor = (name: string) =>
     categories.find((c) => c.name === name)?.color ?? '#64748b';
+
+  const getCategoryIcon = (name: string) =>
+    categories.find((c) => c.name === name)?.icon ?? 'Tag';
 
   useEffect(() => {
     if (user?.dashboardSortBy) {
@@ -185,8 +189,20 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                 }`}
               >
                 <div className="flex items-center gap-4 flex-1">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <CreditCard className="w-5 h-5 text-primary" />
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center border"
+                    style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
+                  >
+                    {(() => {
+                      const iconName = getCategoryIcon(payment.category);
+                      const Icon = LucideIcons[iconName as keyof typeof LucideIcons] as LucideIcons.LucideIcon;
+                      const color = getCategoryColor(payment.category);
+                      return Icon ? (
+                        <Icon className="w-5 h-5" style={{ color }} />
+                      ) : (
+                        <CreditCard className="w-5 h-5" style={{ color }} />
+                      );
+                    })()}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 max-w-full">
@@ -214,8 +230,14 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                   <div className="hidden sm:flex min-w-[120px] justify-end">
                     <Badge
                       variant="outline"
+                      className="gap-1.5"
                       style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
                     >
+                      {(() => {
+                        const iconName = getCategoryIcon(payment.category);
+                        const Icon = LucideIcons[iconName as keyof typeof LucideIcons] as LucideIcons.LucideIcon;
+                        return Icon ? <Icon className="w-3.5 h-3.5" /> : <Tag className="w-3.5 h-3.5" />;
+                      })()}
                       {t(`subscriptions.modal.categories.${payment.category}`, {
                         defaultValue: payment.category,
                       })}

@@ -2,60 +2,119 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id           String         @id @default(uuid())
-  email        String         @unique
-  name         String?
-  passwordHash String?
-  googleId     String?        @unique
-  language     String         @default("en")
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  subscriptions Subscription[]
-  defaultReminderEnabled Boolean @default(true)
-  defaultReminderDays    Int     @default(3)
-  monthlyBudget          Decimal?
+  id                     String             @id @default(uuid())
+  email                  String             @unique
+  passwordHash           String?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  defaultReminderDays    Int                @default(3)
+  defaultReminderEnabled Boolean            @default(true)
   lastBudgetAlertSentAt  DateTime?
-  pushSubscriptions      PushSubscription[]
-  theme                  String         @default("system")
-  accentColor            String         @default("Indigo")
-  recentAccentColors     String[]       @default([])
-  emailNotifications     Boolean        @default(true)
-  webhookEnabled         Boolean        @default(false)
+  monthlyBudget          Decimal?
+  language               String             @default("en")
+  accentColor            String             @default("Indigo")
+  dailyDigest            Boolean            @default(false)
+  emailNotifications     Boolean            @default(true)
+  theme                  String             @default("system")
+  webhookEnabled         Boolean            @default(false)
   webhookUrl             String?
+  weeklyReport           Boolean            @default(true)
   webhookSecret          String?
-  dailyDigest            Boolean        @default(false)
-  weeklyReport           Boolean        @default(true)
-  dashboardSortBy        String         @default("date")
-  dashboardSortOrder     String         @default("asc")
-  showPaidPayments       Boolean        @default(true)
-  currency               String         @default("USD")
+  googleId               String?            @unique
+  name                   String?
+  dashboardSortBy        String             @default("date")
+  dashboardSortOrder     String             @default("asc")
+  showPaidPayments       Boolean            @default(true)
+  currency               String             @default("USD")
   avatarUrl              String?
-  isVerified             Boolean        @default(false)
-  verificationToken      String?        @unique
+  isVerified             Boolean            @default(false)
+  verificationToken      String?            @unique
   verificationTokenExpiresAt DateTime?
-  passwordResetToken     String?        @unique
+  passwordResetToken     String?            @unique
   passwordResetTokenExpiresAt DateTime?
   categories             Category[]
+  pushSubscriptions      PushSubscription[]
+  subscriptions          Subscription[]
 }
 
 model Category {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name      String
   color     String   @default("#6366f1")
-  order     Int      @default(0)
+  icon      String?
   createdAt DateTime @default(now())
+  order     Int      @default(0)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, name])
   @@index([userId])
+}
+
+model Subscription {
+  id              String           @id @default(uuid())
+  userId          String
+  name            String
+  amount          Decimal
+  currency        String
+  billingCycle    BillingCycle
+  intervalDays    Int?
+  nextBillingDate DateTime
+  category        String
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  reminderDays    Int              @default(3)
+  reminderEnabled Boolean          @default(true)
+  alerts          Alert[]
+  payments        PaymentHistory[]
+  user            User             @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([nextBillingDate])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Alert {
+  id             String       @id @default(uuid())
+  subscriptionId String
+  type           AlertType
+  daysBefore     Int
+  isEnabled      Boolean      @default(true)
+  webhookSecret  String?
+  webhookUrl     String?
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+
+  @@index([subscriptionId])
+}
+
+model PaymentHistory {
+  id             String       @id @default(uuid())
+  subscriptionId String
+  amount         Decimal
+  currency       String
+  paidAt         DateTime     @default(now())
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+
+  @@index([subscriptionId])
+  @@index([paidAt])
 }
 
 enum BillingCycle {
@@ -64,68 +123,8 @@ enum BillingCycle {
   custom
 }
 
-model Subscription {
-  id              String         @id @default(uuid())
-  userId          String
-  user            User           @relation(fields: [userId], references: [id])
-  name            String
-  amount          Decimal
-  currency        String
-  billingCycle    BillingCycle
-  intervalDays    Int?
-  nextBillingDate DateTime
-  category        String
-  isActive        Boolean        @default(true)
-  reminderEnabled Boolean        @default(true)
-  reminderDays    Int            @default(3)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  alerts          Alert[]
-  payments        PaymentHistory[]
-
-  @@index([userId])
-  @@index([nextBillingDate])
-}
-
 enum AlertType {
   email
   webhook
   webpush
-}
-
-model PushSubscription {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  endpoint  String   @unique
-  p256dh    String
-  auth      String
-  createdAt DateTime @default(now())
-
-  @@index([userId])
-}
-
-model Alert {
-  id             String       @id @default(uuid())
-  subscriptionId String
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
-  type           AlertType
-  daysBefore     Int
-  isEnabled      Boolean      @default(true)
-  webhookUrl     String?
-  webhookSecret  String?
-
-  @@index([subscriptionId])
-}
-
-model PaymentHistory {
-  id             String       @id @default(uuid())
-  subscriptionId String
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
-  amount         Decimal
-  currency       String
-  paidAt         DateTime     @default(now())
-
-  @@index([subscriptionId])
-  @@index([paidAt])
 }

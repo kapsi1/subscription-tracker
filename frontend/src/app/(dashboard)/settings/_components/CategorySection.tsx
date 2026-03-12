@@ -22,6 +22,7 @@ import { GripVertical, Layers, Plus, RotateCcw, Save, Trash2, Undo2 } from 'luci
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { IconPicker } from '@/components/IconPicker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -33,7 +34,7 @@ function isNewCategory(id: string) {
 
 interface CategoryRowProps {
   category: Category;
-  onUpdate: (id: string, updates: Partial<Pick<Category, 'name' | 'color'>>) => void;
+  onUpdate: (id: string, updates: Partial<Pick<Category, 'name' | 'color' | 'icon'>>) => void;
   onDelete: (id: string) => void;
   autoFocus?: boolean;
 }
@@ -111,6 +112,13 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
       >
         <GripVertical className="w-4 h-4" />
       </button>
+
+      {/* Icon Picker */}
+      <IconPicker
+        value={category.icon}
+        onChange={(icon) => onUpdate(category.id, { icon })}
+        color={color}
+      />
 
       {/* Color swatch + picker */}
       <label className="relative shrink-0 cursor-pointer" title="Pick color">
@@ -218,6 +226,7 @@ export function CategorySection() {
       id: tempId,
       name: 'New Category',
       color: '#6366f1',
+      icon: 'Tag',
       order: localCategories.length,
     };
     setLocalCategories((prev) => [...prev, newCat]);
@@ -225,7 +234,7 @@ export function CategorySection() {
     setIsDirty(true);
   };
 
-  const handleUpdate = (id: string, updates: Partial<Pick<Category, 'name' | 'color'>>) => {
+  const handleUpdate = (id: string, updates: Partial<Category>) => {
     setLocalCategories((prev) => prev.map((c) => (c.id === id ? { ...c, ...updates } : c)));
     setIsDirty(true);
   };
@@ -262,7 +271,7 @@ export function CategorySection() {
       // 2. Create new categories, collect real IDs
       const toCreate = localCategories.filter((c) => isNewCategory(c.id));
       const created = await Promise.all(
-        toCreate.map((c) => api.post('/categories', { name: c.name, color: c.color })),
+        toCreate.map((c) => api.post('/categories', { name: c.name, color: c.color, icon: c.icon })),
       );
       const idMap = new Map<string, string>();
       for (let i = 0; i < toCreate.length; i++) {
@@ -273,10 +282,10 @@ export function CategorySection() {
       const toUpdate = localCategories.filter((c) => {
         if (isNewCategory(c.id)) return false;
         const original = serverCategories.find((s) => s.id === c.id);
-        return original && (original.name !== c.name || original.color !== c.color);
+        return original && (original.name !== c.name || original.color !== c.color || original.icon !== c.icon);
       });
       await Promise.all(
-        toUpdate.map((c) => api.patch(`/categories/${c.id}`, { name: c.name, color: c.color })),
+        toUpdate.map((c) => api.patch(`/categories/${c.id}`, { name: c.name, color: c.color, icon: c.icon })),
       );
 
       // 4. Persist the final order

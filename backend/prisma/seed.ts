@@ -7,7 +7,7 @@ const prisma = new PrismaClient({
 async function main() {
   console.log('Start seeding...');
   
-  const existingUser = await prisma.user.findUnique({
+  const existingUser = await prisma.user.findFirst({
     where: { email: 'dev@example.com' },
   });
 

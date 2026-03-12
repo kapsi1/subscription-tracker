@@ -5,33 +5,33 @@ import { CategoriesService } from './categories.service';
 
 jest.mock('@subscription-tracker/shared', () => ({
   DEFAULT_CATEGORIES: [
-    { name: 'Entertainment', color: '#a855f7' },
-    { name: 'Productivity', color: '#3b82f6' },
-    { name: 'Cloud Services', color: '#06b6d4' },
-    { name: 'Development', color: '#22c55e' },
-    { name: 'Professional', color: '#f97316' },
-    { name: 'Health', color: '#f43f5e' },
-    { name: 'Housing', color: '#f59e0b' },
-    { name: 'Utilities', color: '#6366f1' },
-    { name: 'Services', color: '#14b8a6' },
-    { name: 'Education', color: '#eab308' },
-    { name: 'Other', color: '#64748b' },
+    { name: 'Entertainment', color: '#a855f7', icon: 'Play' },
+    { name: 'Productivity', color: '#3b82f6', icon: 'CheckSquare' },
+    { name: 'Cloud Services', color: '#06b6d4', icon: 'Cloud' },
+    { name: 'Development', color: '#22c55e', icon: 'Code' },
+    { name: 'Professional', color: '#f97316', icon: 'Briefcase' },
+    { name: 'Health', color: '#f43f5e', icon: 'Heart' },
+    { name: 'Housing', color: '#f59e0b', icon: 'Home' },
+    { name: 'Utilities', color: '#6366f1', icon: 'Zap' },
+    { name: 'Services', color: '#14b8a6', icon: 'Settings' },
+    { name: 'Education', color: '#eab308', icon: 'Book' },
+    { name: 'Other', color: '#64748b', icon: 'Tag' },
   ],
 }));
 
 // Mirror the mock for assertions
-const DEFAULT_CATEGORIES: Array<{ name: string; color: string }> = [
-  { name: 'Entertainment', color: '#a855f7' },
-  { name: 'Productivity', color: '#3b82f6' },
-  { name: 'Cloud Services', color: '#06b6d4' },
-  { name: 'Development', color: '#22c55e' },
-  { name: 'Professional', color: '#f97316' },
-  { name: 'Health', color: '#f43f5e' },
-  { name: 'Housing', color: '#f59e0b' },
-  { name: 'Utilities', color: '#6366f1' },
-  { name: 'Services', color: '#14b8a6' },
-  { name: 'Education', color: '#eab308' },
-  { name: 'Other', color: '#64748b' },
+const DEFAULT_CATEGORIES: Array<{ name: string; color: string; icon: string }> = [
+  { name: 'Entertainment', color: '#a855f7', icon: 'Play' },
+  { name: 'Productivity', color: '#3b82f6', icon: 'CheckSquare' },
+  { name: 'Cloud Services', color: '#06b6d4', icon: 'Cloud' },
+  { name: 'Development', color: '#22c55e', icon: 'Code' },
+  { name: 'Professional', color: '#f97316', icon: 'Briefcase' },
+  { name: 'Health', color: '#f43f5e', icon: 'Heart' },
+  { name: 'Housing', color: '#f59e0b', icon: 'Home' },
+  { name: 'Utilities', color: '#6366f1', icon: 'Zap' },
+  { name: 'Services', color: '#14b8a6', icon: 'Settings' },
+  { name: 'Education', color: '#eab308', icon: 'Book' },
+  { name: 'Other', color: '#64748b', icon: 'Tag' },
 ];
 
 describe('CategoriesService', () => {
@@ -43,7 +43,7 @@ describe('CategoriesService', () => {
 
   const userId = 'user-1';
 
-  const mockCategory = { id: 'cat-1', name: 'Entertainment', color: '#a855f7', order: 0 };
+  const mockCategory = { id: 'cat-1', name: 'Entertainment', color: '#a855f7', icon: 'Play', order: 0 };
 
   beforeEach(async () => {
     prismaMock = {
@@ -76,7 +76,7 @@ describe('CategoriesService', () => {
       expect(prismaMock.category.findMany).toHaveBeenCalledWith({
         where: { userId },
         orderBy: { order: 'asc' },
-        select: { id: true, name: true, color: true, order: true },
+        select: { id: true, name: true, color: true, icon: true, order: true },
       });
       expect(result).toEqual([mockCategory]);
     });
@@ -104,7 +104,7 @@ describe('CategoriesService', () => {
 
   describe('create', () => {
     it('should create a new category', async () => {
-      const dto = { name: 'Entertainment', color: '#a855f7' };
+      const dto = { name: 'Entertainment', color: '#a855f7', icon: 'Play' };
 
       const result = await service.create(userId, dto);
 
@@ -113,7 +113,7 @@ describe('CategoriesService', () => {
       });
       expect(prismaMock.category.create).toHaveBeenCalledWith({
         data: { ...dto, userId, order: 1 },
-        select: { id: true, name: true, color: true, order: true },
+        select: { id: true, name: true, color: true, icon: true, order: true },
       });
       expect(result).toEqual(mockCategory);
     });
@@ -130,7 +130,7 @@ describe('CategoriesService', () => {
 
   describe('update', () => {
     it('should update a category name and color', async () => {
-      const dto = { name: 'Updated', color: '#3b82f6' };
+      const dto = { name: 'Updated', color: '#3b82f6', icon: 'Play' };
 
       const result = await service.update(userId, 'cat-1', dto);
 
@@ -140,7 +140,7 @@ describe('CategoriesService', () => {
       expect(prismaMock.category.update).toHaveBeenCalledWith({
         where: { id: 'cat-1' },
         data: dto,
-        select: { id: true, name: true, color: true, order: true },
+        select: { id: true, name: true, color: true, icon: true, order: true },
       });
       expect(result).toEqual({ ...mockCategory, name: 'Updated' });
     });

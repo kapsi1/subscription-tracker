@@ -333,4 +333,5 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add a find/filter functionality to settings. Show an input field at the top of the settings page, which should allow users to find/filter settings by any string. If something is typed into the input, show setting sections that contain that string, and hide the rest. If the input is empty, show all sections. In displayed sections, highlight the string that matched the filter. Add a button to clear the filter. Add unit and E2E tests.
 - [ ] Make backgrounds color gradients
 - [ ] Rethink and unify save strategy for settings
-- [ ] Add another accent color, maybe calculate from the existing one.
+- [ ] Add another accent color, maybe calculate it from the existing one.
+- [ ] Categories should have icons. Add appropriate icons to default categories. Add a selector, opening a popup with a library of icons, to each row in Category Management. Show the icons in This Month's Payments and All Subscriptions - left side.
