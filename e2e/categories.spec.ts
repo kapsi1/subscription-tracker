@@ -73,6 +73,19 @@ test.describe.serial('Category Management', () => {
     }).toPass({ timeout: 5_000 });
   }
 
+  function responseMatchesPath(
+    response: import('@playwright/test').Response,
+    method: string,
+    path: string,
+  ) {
+    if (response.request().method() !== method) return false;
+    try {
+      return new URL(response.url()).pathname === path;
+    } catch {
+      return false;
+    }
+  }
+
   test('should display default categories on first visit', async ({ page }) => {
     await navigateToCategories(page);
 
@@ -91,11 +104,14 @@ test.describe.serial('Category Management', () => {
     await newInput.fill('My Custom Category');
     await newInput.blur();
 
-    const responsePromise = page.waitForResponse(
-      (r) => r.url().includes('/categories') && r.request().method() === 'POST',
+    const createPromise = page.waitForResponse((r) => responseMatchesPath(r, 'POST', '/categories'));
+    const reorderPromise = page.waitForResponse((r) =>
+      responseMatchesPath(r, 'POST', '/categories/reorder'),
     );
-    await page.getByRole('button', { name: /save/i }).click();
-    await responsePromise;
+    const saveButton = page.getByRole('button', { name: /save/i });
+    await expect(saveButton).toBeEnabled();
+    await saveButton.click();
+    await Promise.all([createPromise, reorderPromise]);
 
     await expectCategoryExists(page, 'My Custom Category');
   });
@@ -108,11 +124,21 @@ test.describe.serial('Category Management', () => {
     await input.fill('Movies and TV');
     await input.blur();
 
-    const patchPromise = page.waitForResponse(
-      (r) => r.url().includes('/categories/') && r.request().method() === 'PATCH',
+    const patchPromise = page.waitForResponse((r) => {
+      if (r.request().method() !== 'PATCH') return false;
+      try {
+        return new URL(r.url()).pathname.startsWith('/categories/');
+      } catch {
+        return false;
+      }
+    });
+    const reorderPromise = page.waitForResponse((r) =>
+      responseMatchesPath(r, 'POST', '/categories/reorder'),
     );
-    await page.getByRole('button', { name: /save/i }).click();
-    await patchPromise;
+    const saveButton = page.getByRole('button', { name: /save/i });
+    await expect(saveButton).toBeEnabled();
+    await saveButton.click();
+    await Promise.all([patchPromise, reorderPromise]);
 
     await expectCategoryExists(page, 'Movies and TV');
 
@@ -124,11 +150,21 @@ test.describe.serial('Category Management', () => {
     await renamed.blur();
     await page.keyboard.press('Tab'); // robust blur
 
-    const patchPromise2 = page.waitForResponse(
-      (r) => r.url().includes('/categories/') && r.request().method() === 'PATCH',
+    const patchPromise2 = page.waitForResponse((r) => {
+      if (r.request().method() !== 'PATCH') return false;
+      try {
+        return new URL(r.url()).pathname.startsWith('/categories/');
+      } catch {
+        return false;
+      }
+    });
+    const reorderPromise2 = page.waitForResponse((r) =>
+      responseMatchesPath(r, 'POST', '/categories/reorder'),
     );
-    await page.getByRole('button', { name: /save/i }).click();
-    await patchPromise2;
+    const saveButton2 = page.getByRole('button', { name: /save/i });
+    await expect(saveButton2).toBeEnabled();
+    await saveButton2.click();
+    await Promise.all([patchPromise2, reorderPromise2]);
   });
 
   test('should delete a category', async ({ page }) => {
@@ -141,11 +177,14 @@ test.describe.serial('Category Management', () => {
     await newInput.fill('To Be Deleted');
     await newInput.blur();
 
-    const postPromise = page.waitForResponse(
-      (r) => r.url().includes('/categories') && r.request().method() === 'POST',
+    const createPromise = page.waitForResponse((r) => responseMatchesPath(r, 'POST', '/categories'));
+    const reorderPromise = page.waitForResponse((r) =>
+      responseMatchesPath(r, 'POST', '/categories/reorder'),
     );
-    await page.getByRole('button', { name: /save/i }).click();
-    await postPromise;
+    const saveButton = page.getByRole('button', { name: /save/i });
+    await expect(saveButton).toBeEnabled();
+    await saveButton.click();
+    await Promise.all([createPromise, reorderPromise]);
 
     await expectCategoryExists(page, 'To Be Deleted');
 
@@ -154,11 +193,21 @@ test.describe.serial('Category Management', () => {
     await row.hover();
     await row.getByRole('button').last().click();
 
-    const deletePromise = page.waitForResponse(
-      (r) => r.url().includes('/categories/') && r.request().method() === 'DELETE',
+    const deletePromise = page.waitForResponse((r) => {
+      if (r.request().method() !== 'DELETE') return false;
+      try {
+        return new URL(r.url()).pathname.startsWith('/categories/');
+      } catch {
+        return false;
+      }
+    });
+    const reorderPromise2 = page.waitForResponse((r) =>
+      responseMatchesPath(r, 'POST', '/categories/reorder'),
     );
-    await page.getByRole('button', { name: /save/i }).click();
-    await deletePromise;
+    const saveButton2 = page.getByRole('button', { name: /save/i });
+    await expect(saveButton2).toBeEnabled();
+    await saveButton2.click();
+    await Promise.all([deletePromise, reorderPromise2]);
 
     await expectCategoryGone(page, 'To Be Deleted');
   });
