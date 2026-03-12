@@ -7,7 +7,7 @@ import { MailpitHelper } from './mailpit.helper';
 import { AlertType } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
-describe('Alerts & Reminder Jobs (E2E)', () => {
+describe('Alerts & Reminder Jobs (Integration)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let alertsService: AlertsService;
@@ -51,7 +51,7 @@ describe('Alerts & Reminder Jobs (E2E)', () => {
     const sub = await prisma.subscription.create({
       data: {
         userId: user.id,
-        name: 'E2E Test Sub',
+        name: 'Integration Test Sub',
         amount: 50.00,
         currency: 'USD',
         billingCycle: 'monthly',
@@ -77,7 +77,7 @@ describe('Alerts & Reminder Jobs (E2E)', () => {
     // 5. Wait and verify email in Mailpit
     const email = await MailpitHelper.waitForMessage(testEmail);
     expect(email.Subject).toContain('Upcoming Subscription Renewal');
-    expect(email.HTML).toContain('E2E Test Sub');
+    expect(email.HTML).toContain('Integration Test Sub');
     expect(email.HTML).toContain('50 USD');
   });
 
