@@ -33,7 +33,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
           title={t('settings.categories.pickIcon')}
         >
           {SelectedIcon ? (
-            <SelectedIcon className="w-7 h-7" style={{ color }} />
+            <SelectedIcon className="size-6" style={{ color }} />
           ) : (
             <span className="text-muted-foreground/40 text-[10px]">None</span>
           )}
@@ -50,7 +50,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
                 key={name}
                 variant="ghost"
                 className={cn(
-                  'h-12 w-12 p-0 hover:bg-muted transition-colors shrink-0',
+                  'size-8 p-0 hover:bg-muted transition-colors shrink-0',
                   value === name && 'bg-muted ring-2 ring-primary/20',
                 )}
                 onClick={() => {
@@ -59,7 +59,7 @@ export function IconPicker({ value, onChange, color }: IconPickerProps) {
                 }}
                 title={name}
               >
-                <Icon className="w-8 h-8 stroke-2" style={{ color }} />
+                <Icon className="size-6 stroke-2" style={{ color }} />
               </Button>
             );
           })}

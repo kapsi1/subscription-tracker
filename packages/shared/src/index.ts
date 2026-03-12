@@ -124,7 +124,6 @@ export const CATEGORY_ICONS = [
   'Calendar',
   'Bell',
   'Star',
-  'Heart',
   'User',
   'Users',
   'Globe',
