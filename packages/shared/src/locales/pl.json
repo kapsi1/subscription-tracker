@@ -221,6 +221,31 @@
       "save": "Zapisz profil",
       "saveError": "Nie udało się zapisać profilu"
     },
+    "changePassword": {
+      "title": "Zmień hasło",
+      "desc": "Zaktualizuj hasło do swojego konta",
+      "currentPassword": "Aktualne hasło",
+      "newPassword": "Nowe hasło",
+      "confirmNewPassword": "Potwierdź nowe hasło",
+      "submit": "Zmień hasło",
+      "success": "Hasło zostało zmienione",
+      "errorCurrent": "Aktualne hasło jest nieprawidłowe",
+      "errorMismatch": "Nowe hasła nie są zgodne",
+      "errorSocial": "Nie można zmienić hasła dla kont powiązanych z Google",
+      "error": "Nie udało się zmienić hasła"
+    },
+    "changeEmail": {
+      "title": "Zmień adres e-mail",
+      "desc": "Zaktualizuj adres e-mail swojego konta",
+      "newEmail": "Nowy adres e-mail",
+      "currentPassword": "Aktualne hasło",
+      "submit": "Zmień e-mail",
+      "success": "Adres e-mail został zmieniony",
+      "errorCurrent": "Aktualne hasło jest nieprawidłowe",
+      "errorInUse": "Ten adres e-mail jest już używany",
+      "errorSocial": "Nie można zmienić adresu e-mail dla kont powiązanych z Google",
+      "error": "Nie udało się zmienić adresu e-mail"
+    },
     "notifications": {
       "email": {
         "title": "Powiadomienia e-mail",

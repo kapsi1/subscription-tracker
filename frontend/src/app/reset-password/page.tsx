@@ -125,7 +125,6 @@ function ResetPasswordContent() {
             <Input
               id="password"
               type="password"
-              placeholder={t('auth.fields.passwordPlaceholder')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -138,7 +137,6 @@ function ResetPasswordContent() {
             <Input
               id="confirm-password"
               type="password"
-              placeholder={t('auth.fields.confirmPasswordPlaceholder')}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required

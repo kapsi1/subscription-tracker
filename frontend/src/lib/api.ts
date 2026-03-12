@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+declare module 'axios' {
+  interface InternalAxiosRequestConfig {
+    _skipAuthRedirect?: boolean;
+  }
+}
+
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:3001',
   headers: {
@@ -28,7 +34,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     // Add logic here if implementing refresh tokens via cookies or separate endpoint later.
     // Right now, if 401, we can redirect or clear session.
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest._skipAuthRedirect) {
       originalRequest._retry = true;
       // Depending on auth flow, could trigger a logout event here.
       if (typeof window !== 'undefined') {

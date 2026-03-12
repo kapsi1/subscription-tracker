@@ -67,4 +67,20 @@ describe('AuthController', () => {
 
     expect(result).toEqual({ message: 'Logged out successfully' });
   });
+
+  it('should call forgotPassword and return message', async () => {
+    const dto = { email: 'test@example.com' };
+    const result = await controller.forgotPassword(dto);
+
+    expect(authServiceMock.forgotPassword).toHaveBeenCalledWith(dto.email);
+    expect(result).toEqual({ message: 'sent' });
+  });
+
+  it('should call resetPassword and return message', async () => {
+    const dto = { token: 'some-token', password: 'newpass123' };
+    const result = await controller.resetPassword(dto);
+
+    expect(authServiceMock.resetPassword).toHaveBeenCalledWith(dto.token, dto.password);
+    expect(result).toEqual({ message: 'reset' });
+  });
 });

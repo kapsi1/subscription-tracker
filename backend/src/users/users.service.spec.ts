@@ -1,7 +1,11 @@
+import { BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
+import * as bcrypt from 'bcrypt';
 import { WebhookService } from '../notifications/webhook/webhook.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from './users.service';
+
+jest.mock('bcrypt');
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -111,6 +115,84 @@ describe('UsersService', () => {
         data: { email: 'updated@example.com' },
       });
       expect(result.email).toBe('updated@example.com');
+    });
+  });
+
+  describe('changePassword', () => {
+    it('should change password when current password is correct', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+      (bcrypt.genSalt as jest.Mock).mockResolvedValue('salt');
+      (bcrypt.hash as jest.Mock).mockResolvedValue('new-hashed-pw');
+      prismaMock.user.update.mockResolvedValue({ ...mockUser, passwordHash: 'new-hashed-pw' });
+
+      await expect(service.changePassword('user-1', 'oldpass', 'newpass123')).resolves.toBeUndefined();
+      expect(prismaMock.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { passwordHash: 'new-hashed-pw' },
+      });
+    });
+
+    it('should throw UnauthorizedException when current password is wrong', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+
+      await expect(service.changePassword('user-1', 'wrongpass', 'newpass123')).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    it('should throw BadRequestException for social-only accounts', async () => {
+      prismaMock.user.findUnique.mockResolvedValue({ ...mockUser, passwordHash: null });
+
+      await expect(service.changePassword('user-1', 'anypass', 'newpass123')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+  });
+
+  describe('changeEmail', () => {
+    it('should change email when password is correct and email is not taken', async () => {
+      prismaMock.user.findUnique
+        .mockResolvedValueOnce(mockUser) // findById
+        .mockResolvedValueOnce(null); // findUnique by new email (not taken)
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+      prismaMock.user.update.mockResolvedValue({ ...mockUser, email: 'new@example.com' });
+
+      const result = await service.changeEmail('user-1', 'new@example.com', 'correctpass');
+      expect(result.email).toBe('new@example.com');
+      expect(prismaMock.user.update).toHaveBeenCalledWith({
+        where: { id: 'user-1' },
+        data: { email: 'new@example.com' },
+      });
+    });
+
+    it('should throw UnauthorizedException when password is wrong', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+
+      await expect(service.changeEmail('user-1', 'new@example.com', 'wrongpass')).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    it('should throw ConflictException when new email is already in use', async () => {
+      prismaMock.user.findUnique
+        .mockResolvedValueOnce(mockUser) // findById
+        .mockResolvedValueOnce({ ...mockUser, id: 'other-user' }); // email already taken
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await expect(service.changeEmail('user-1', 'taken@example.com', 'correctpass')).rejects.toThrow(
+        ConflictException,
+      );
+    });
+
+    it('should throw BadRequestException for social-only accounts', async () => {
+      prismaMock.user.findUnique.mockResolvedValue({ ...mockUser, passwordHash: null });
+
+      await expect(service.changeEmail('user-1', 'new@example.com', 'anypass')).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 

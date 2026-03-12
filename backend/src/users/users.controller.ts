@@ -19,6 +19,8 @@ import type { RequestWithUser } from '../common/interfaces/request.interface';
 import { EmailService } from '../notifications/email/email.service';
 import { WebPushService } from '../notifications/webpush/webpush.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { ChangeEmailDto } from './dto/change-email.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { PushSubscriptionDto } from './dto/push-subscription.dto';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
 import { UsersService } from './users.service';
@@ -265,6 +267,20 @@ export class UsersController {
       this.logger.error(`Test webhook failed: ${message}`);
       throw new BadRequestException(`Test webhook failed: ${message}`);
     }
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Patch('change-password')
+  async changePassword(@Req() req: RequestWithUser, @Body() dto: ChangePasswordDto) {
+    await this.usersService.changePassword(req.user.userId, dto.currentPassword, dto.newPassword);
+    return { message: 'Password changed successfully' };
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Patch('change-email')
+  async changeEmail(@Req() req: RequestWithUser, @Body() dto: ChangeEmailDto) {
+    await this.usersService.changeEmail(req.user.userId, dto.newEmail, dto.currentPassword);
+    return { message: 'Email changed successfully' };
   }
 
   @Delete('me')

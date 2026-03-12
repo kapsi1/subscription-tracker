@@ -27,6 +27,7 @@ interface User {
   dashboardSortOrder: string;
   showPaidPayments: boolean;
   avatarUrl: string | null;
+  googleId: string | null;
 }
 
 interface LoginCredentials {

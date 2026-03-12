@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import type { Prisma, User } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 import { WebhookService } from '../notifications/webhook/webhook.service';
 
 import { PrismaService } from '../prisma/prisma.service';
@@ -90,6 +91,36 @@ export class UsersService {
 
   async testWebhook(_userId: string, url: string, secret?: string) {
     return this.webhookService.sendAlert(url, secret, 'Test Subscription', 3, 19.99, 'USD');
+  }
+
+  async changePassword(id: string, currentPassword: string, newPassword: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) throw new BadRequestException('User not found');
+    if (!user.passwordHash) throw new BadRequestException('Cannot change password for social-only accounts');
+
+    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isValid) throw new UnauthorizedException('Current password is incorrect');
+
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+    await this.prisma.user.update({ where: { id }, data: { passwordHash } });
+    this.logger.log(`Password changed for user: ${id}`);
+  }
+
+  async changeEmail(id: string, newEmail: string, currentPassword: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) throw new BadRequestException('User not found');
+    if (!user.passwordHash) throw new BadRequestException('Cannot change email for social-only accounts');
+
+    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isValid) throw new UnauthorizedException('Current password is incorrect');
+
+    const existing = await this.prisma.user.findUnique({ where: { email: newEmail } });
+    if (existing) throw new ConflictException('Email already in use');
+
+    const updated = await this.prisma.user.update({ where: { id }, data: { email: newEmail } });
+    this.logger.log(`Email changed for user: ${id}`);
+    return updated;
   }
 
   async remove(id: string): Promise<void> {

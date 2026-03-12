@@ -5,11 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
 import api from '@/lib/api';
+import { ChangeEmailSection } from '../_components/ChangeEmailSection';
+import { ChangePasswordSection } from '../_components/ChangePasswordSection';
 import { type ProfileData, ProfileSection } from '../_components/ProfileSection';
 
 export default function ProfilePage() {
   const { t } = useTranslation();
-  const { fetchUser } = useAuth();
+  const { fetchUser, user } = useAuth();
+  const isGoogleAccount = !!user?.googleId;
   const [profile, setProfile] = useState<ProfileData>({
     name: '',
     email: '',
@@ -65,6 +68,8 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6">
       <ProfileSection profile={profile} setProfile={setProfile} />
+      {!isGoogleAccount && <ChangePasswordSection />}
+      {!isGoogleAccount && <ChangeEmailSection />}
     </div>
   );
 }

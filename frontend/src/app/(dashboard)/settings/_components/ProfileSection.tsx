@@ -35,18 +35,20 @@ export function ProfileSection({ profile, setProfile }: ProfileSectionProps) {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="profileName">{t('settings.profile.name')}</Label>
-          <Input
-            id="profileName"
-            value={profile.name}
-            placeholder={t('settings.profile.namePlaceholder')}
-            onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="profileEmail">{t('settings.notifications.email.address')}</Label>
-          <Input id="profileEmail" value={profile.email} disabled />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="profileName">{t('settings.profile.name')}</Label>
+            <Input
+              id="profileName"
+              value={profile.name}
+              placeholder={t('settings.profile.namePlaceholder')}
+              onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="profileEmail">{t('settings.notifications.email.address')}</Label>
+            <Input id="profileEmail" value={profile.email} disabled />
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">

@@ -203,6 +203,31 @@
       "save": "Save Profile",
       "saveError": "Failed to save profile"
     },
+    "changePassword": {
+      "title": "Change Password",
+      "desc": "Update your account password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "submit": "Change Password",
+      "success": "Password changed successfully",
+      "errorCurrent": "Current password is incorrect",
+      "errorMismatch": "New passwords do not match",
+      "errorSocial": "Cannot change password for accounts linked with Google",
+      "error": "Failed to change password"
+    },
+    "changeEmail": {
+      "title": "Change Email",
+      "desc": "Update your account email address",
+      "newEmail": "New Email Address",
+      "currentPassword": "Current Password",
+      "submit": "Change Email",
+      "success": "Email changed successfully",
+      "errorCurrent": "Current password is incorrect",
+      "errorInUse": "This email address is already in use",
+      "errorSocial": "Cannot change email for accounts linked with Google",
+      "error": "Failed to change email"
+    },
     "notifications": {
       "email": {
         "title": "Email Notifications",

@@ -287,9 +287,9 @@ For any new feature add unit and E2E tests
 - [x] Add user name field to registration and use it for personalized greetings in dashboard and emails.
 - [x] Show user's initials in the top right corner of the dashboard, instead of the logout button.  Clicking on it should open a dropdown with "Logout"
 - [x] After registration send user a verification email and don't allow login until verified. Create a flow for verification including a way to resend the verification email.
-- [ ] Add a "Forgot Password" flow.
+- [x] Add a "Forgot Password" flow. Make sure UI is in line with other flows. Add tests.
 - [x] Create user profile page. Make the profile page a tab in Settings page. Currents Settings page should be renamed to "Preferences".
-- [ ] Add Change Password and Change Email flow in user profile
+- [x] Add Change Password and Change Email flow in user profile
 - [ ] Add Delete Account flow in user profile
 - [x] Save settings on any change, remove the Save Settings button
 - [x] Instead of "Upcoming Payments" show payments for this month. Include done payments as well, with a suitablestyle to indicate they are done The list should be sorted by date, with a button to change sort direction. Also enable sorting by amount. Adjust the card's subtitle. 
@@ -330,7 +330,7 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Replace the email "auth@subscription-tracker.local" with an environment variable
 - [x] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
 - [x] Add a custom color picker to the settings page, which should allow users to pick any color as accent color.
-- [ ] Add a find/filter functionality to settings. Show an input field at the top of the settings page, which should allow users to find/filter settings by any string. If something is typed into the input, show setting sections that contain that string, and hide the rest. If the input is empty, show all sections. In displayed sections, highlight the string that matched the filter. Add a button to clear the filter. Add unit and E2E tests.
+- [ ] Add a find/filter functionality to settings. Show an input field at the top of the settings page, which should allow users to find/filter settings by any string. If something is typed into the input, show setting sections that contain that string, and hide the rest. If the input is empty, show all sections. In displayed sections, highlight the string that matched the filter. Search in sections from both Preferences and Profile tabs. Add a button to clear the filter. Add unit and E2E tests.
 - [ ] Make backgrounds color gradients
 - [ ] Rethink and unify save strategy for settings
 - [ ] Add another accent color, maybe calculate it from the existing one.
