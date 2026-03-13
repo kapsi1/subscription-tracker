@@ -290,7 +290,7 @@ For any new feature add unit and E2E tests
 - [x] Add a "Forgot Password" flow. Make sure UI is in line with other flows. Add tests.
 - [x] Create user profile page. Make the profile page a tab in Settings page. Currents Settings page should be renamed to "Preferences".
 - [x] Add Change Password and Change Email flow in user profile
-- [ ] Add Delete Account flow in user profile
+- [ ] Add Delete Account flow in user profile. Include a full screen warning/confirmation modal. Add tests.
 - [x] Save settings on any change, remove the Save Settings button
 - [x] Instead of "Upcoming Payments" show payments for this month. Include done payments as well, with a suitablestyle to indicate they are done The list should be sorted by date, with a button to change sort direction. Also enable sorting by amount. Adjust the card's subtitle. 
 - [x] Make the main container of dashboard full width with a small margin, on small and medium screen width.

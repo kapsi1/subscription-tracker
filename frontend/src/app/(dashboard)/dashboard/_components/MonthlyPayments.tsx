@@ -123,7 +123,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
             <CardTitle>{t('dashboard.monthlyPaymentsTitle')}</CardTitle>
             <CardDescription>{t('dashboard.monthlyPaymentsDesc')}</CardDescription>
           </div>
-          <div className="flex max-w-full flex-wrap items-center gap-3 md:gap-4">
+          <div className="flex max-w-full flex-wrap items-center justify-end gap-3 self-end md:gap-4">
             <div className="mr-2 flex shrink-0 items-center space-x-2">
               <Switch id="show-paid" checked={showPaid} onCheckedChange={handleToggleShowPaid} />
               <Label htmlFor="show-paid" className="text-sm font-medium cursor-pointer">
@@ -181,7 +181,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                 key={payment.id}
                 type="button"
                 onClick={() => onEdit?.(payment.subscriptionId)}
-                className={`flex w-full min-w-0 cursor-pointer flex-col gap-3 rounded-lg border p-4 text-left transition-colors md:flex-row md:items-center md:justify-between ${
+                className={`flex w-full min-w-0 cursor-pointer flex-col gap-3 rounded-lg border p-4 text-left transition-colors lg:flex-row lg:items-center lg:justify-between ${
                   payment.status === 'done'
                     ? 'border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80'
                     : 'bg-card hover:bg-accent/50'
@@ -200,50 +200,79 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex max-w-full flex-wrap items-center gap-2">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <p className="max-w-full cursor-pointer truncate font-medium md:max-w-[260px] lg:max-w-[350px]">
-                              {payment.name}
-                            </p>
-                          </TooltipTrigger>
-                          <TooltipContent side="bottom" className="max-w-[300px] wrap-break-word">
-                            {payment.name}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      {payment.status === 'done' ? (
-                        <Badge variant="secondary" className="shrink-0">
-                          {t('dashboard.paymentDone')}
-                        </Badge>
-                      ) : null}
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex max-w-full items-center gap-2">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <p className="max-w-full cursor-pointer truncate font-medium md:max-w-[260px] lg:max-w-[350px]">
+                                  {payment.name}
+                                </p>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom" className="max-w-[300px] wrap-break-word">
+                                {payment.name}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                        <div className="mt-2 flex flex-wrap items-center gap-2 lg:hidden">
+                          <Badge
+                            variant="outline"
+                            className="gap-1.5"
+                            style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
+                          >
+                            <DynamicIcon
+                              name={getCategoryIcon(payment.category)}
+                              fallback={Tag}
+                              className="w-3.5 h-3.5"
+                            />
+                            {t(`subscriptions.modal.categories.${payment.category}`, {
+                              defaultValue: payment.category,
+                            })}
+                          </Badge>
+                          {payment.status === 'done' ? (
+                            <Badge variant="secondary" className="shrink-0">
+                              {t('dashboard.paymentDone')}
+                            </Badge>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="shrink-0 text-right lg:hidden">
+                        <p className="font-semibold">
+                          {formatCurrency(payment.amount, payment.currency)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">{formatDate(payment.date)}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex min-w-0 flex-wrap items-center gap-3 md:flex-nowrap md:justify-end md:gap-4 lg:gap-6">
-                  <div className="hidden md:flex md:min-w-[110px] md:justify-end">
-                    <Badge
-                      variant="outline"
-                      className="gap-1.5"
-                      style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
-                    >
-                      <DynamicIcon
-                        name={getCategoryIcon(payment.category)}
-                        fallback={Tag}
-                        className="w-3.5 h-3.5"
-                      />
-                      {t(`subscriptions.modal.categories.${payment.category}`, {
-                        defaultValue: payment.category,
-                      })}
+                <div className="hidden lg:flex lg:min-w-[110px] lg:items-center lg:justify-end lg:gap-2">
+                  <Badge
+                    variant="outline"
+                    className="gap-1.5"
+                    style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
+                  >
+                    <DynamicIcon
+                      name={getCategoryIcon(payment.category)}
+                      fallback={Tag}
+                      className="w-3.5 h-3.5"
+                    />
+                    {t(`subscriptions.modal.categories.${payment.category}`, {
+                      defaultValue: payment.category,
+                    })}
+                  </Badge>
+                  {payment.status === 'done' ? (
+                    <Badge variant="secondary" className="shrink-0">
+                      {t('dashboard.paymentDone')}
                     </Badge>
-                  </div>
-                  <div className="min-w-0 md:min-w-[90px] md:text-right">
-                    <p className="font-semibold">
-                      {formatCurrency(payment.amount, payment.currency)}
-                    </p>
-                    <p className="text-sm text-muted-foreground">{formatDate(payment.date)}</p>
-                  </div>
+                  ) : null}
+                </div>
+                <div className="hidden lg:block lg:min-w-[90px] lg:text-right">
+                  <p className="font-semibold">
+                    {formatCurrency(payment.amount, payment.currency)}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{formatDate(payment.date)}</p>
                 </div>
               </button>
             ))}

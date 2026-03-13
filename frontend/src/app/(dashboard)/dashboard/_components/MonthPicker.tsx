@@ -1,0 +1,156 @@
+'use client';
+
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+interface MonthPickerProps {
+  selectedDate: Date;
+  setSelectedDate: (date: Date) => void;
+}
+
+export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps) {
+  const { t, i18n } = useTranslation();
+  const [pickerYear, setPickerYear] = useState(selectedDate.getFullYear());
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  const handlePrevMonth = () => {
+    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1));
+  };
+
+  const handleResetMonth = () => {
+    const now = new Date();
+    setSelectedDate(now);
+    setPickerYear(now.getFullYear());
+  };
+
+  const monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const handleMonthSelect = (monthIndex: number) => {
+    setSelectedDate(new Date(pickerYear, monthIndex, 1));
+    setIsPickerOpen(false);
+  };
+
+  return (
+    <>
+      <div className="flex w-full max-w-[236px] min-w-0 flex-1 items-center gap-2 rounded-lg border bg-muted/50 p-1 lg:flex-initial">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handlePrevMonth}
+          className="h-8 w-8 shrink-0"
+          aria-label={t('common.previous')}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <DropdownMenu
+          open={isPickerOpen}
+          onOpenChange={(open) => {
+            setIsPickerOpen(open);
+            if (open) setPickerYear(selectedDate.getFullYear());
+          }}
+        >
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-8 min-w-0 flex-1 font-medium hover:bg-accent/50 focus-visible:ring-0 lg:min-w-[140px] lg:flex-none"
+            >
+              {selectedDate.toLocaleDateString(i18n.language === 'pl' ? 'pl-PL' : 'en-US', {
+                month: 'long',
+                year: 'numeric',
+              })}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" className="p-3 w-64">
+            <div className="flex items-center justify-between mb-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setPickerYear((prev) => prev - 1);
+                }}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="font-semibold text-sm">{pickerYear}</div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setPickerYear((prev) => prev + 1);
+                }}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {monthNames.map((month, index) => {
+                const isSelected =
+                  selectedDate.getMonth() === index &&
+                  selectedDate.getFullYear() === pickerYear;
+                return (
+                  <Button
+                    key={month}
+                    variant={isSelected ? 'default' : 'ghost'}
+                    className="h-9 w-full text-xs font-medium"
+                    onClick={() => handleMonthSelect(index)}
+                  >
+                    {i18n.language === 'pl'
+                      ? new Date(2000, index).toLocaleDateString('pl-PL', { month: 'short' })
+                      : month}
+                  </Button>
+                );
+              })}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleNextMonth}
+          className="h-8 w-8 shrink-0"
+          aria-label={t('common.next')}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleResetMonth}
+        className="h-8 w-28 shrink-0 px-3 text-xs"
+      >
+        {t('dashboard.thisMonth')}
+      </Button>
+    </>
+  );
+}

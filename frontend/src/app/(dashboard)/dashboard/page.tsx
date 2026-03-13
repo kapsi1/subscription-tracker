@@ -2,7 +2,6 @@
 
 import type { DashboardSummary, ForecastItem, Subscription } from '@subscription-tracker/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,25 +10,19 @@ import { useAuth } from '@/components/auth-provider';
 import { LoadingState } from '@/components/loading-state';
 import { SubscriptionModal } from '@/components/subscription-modal';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import api from '@/lib/api';
 import { CostByCategory } from './_components/CostByCategory';
 import { MonthlyForecast } from './_components/MonthlyForecast';
 import { type MonthlyPayment, MonthlyPayments } from './_components/MonthlyPayments';
+import { MonthPicker } from './_components/MonthPicker';
 import { SummaryCards } from './_components/SummaryCards';
 
 export default function DashboardPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [pickerYear, setPickerYear] = useState(selectedDate.getFullYear());
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -77,40 +70,6 @@ export default function DashboardPage() {
   }, [summary, rawForecast]);
 
   const isLoading = isSummaryLoading || isForecastLoading || isPaymentsLoading;
-
-  const handlePrevMonth = () => {
-    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1));
-  };
-
-  const handleNextMonth = () => {
-    setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1));
-  };
-
-  const handleResetMonth = () => {
-    const now = new Date();
-    setSelectedDate(now);
-    setPickerYear(now.getFullYear());
-  };
-
-  const monthNames = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
-  const handleMonthSelect = (monthIndex: number) => {
-    setSelectedDate(new Date(pickerYear, monthIndex, 1));
-    setIsPickerOpen(false);
-  };
 
   const handleEditSubscription = async (id: string) => {
     try {
@@ -166,104 +125,10 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground mt-1">{t('dashboard.subtitle')}</p>
         </div>
-        <div className="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-center lg:justify-end">
-          <div className="flex max-w-full flex-wrap items-center gap-2 rounded-lg border bg-muted/50 p-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handlePrevMonth}
-              className="h-8 w-8"
-              aria-label={t('common.previous')}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <DropdownMenu
-              open={isPickerOpen}
-              onOpenChange={(open) => {
-                setIsPickerOpen(open);
-                if (open) setPickerYear(selectedDate.getFullYear());
-              }}
-            >
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="min-w-[140px] max-w-full font-medium hover:bg-accent/50 focus-visible:ring-0"
-                >
-                  {selectedDate.toLocaleDateString(i18n.language === 'pl' ? 'pl-PL' : 'en-US', {
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="p-3 w-64">
-                <div className="flex items-center justify-between mb-4">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setPickerYear((prev) => prev - 1);
-                    }}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <div className="font-semibold text-sm">{pickerYear}</div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setPickerYear((prev) => prev + 1);
-                    }}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {monthNames.map((month, index) => {
-                    const isSelected =
-                      selectedDate.getMonth() === index &&
-                      selectedDate.getFullYear() === pickerYear;
-                    return (
-                      <Button
-                        key={month}
-                        variant={isSelected ? 'default' : 'ghost'}
-                        className="h-9 w-full text-xs font-medium"
-                        onClick={() => handleMonthSelect(index)}
-                      >
-                        {i18n.language === 'pl'
-                          ? new Date(2000, index).toLocaleDateString('pl-PL', { month: 'short' })
-                          : month}
-                      </Button>
-                    );
-                  })}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleNextMonth}
-              className="h-8 w-8"
-              aria-label={t('common.next')}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleResetMonth}
-              className="text-xs px-2 h-7 ml-1"
-            >
-              {t('dashboard.thisMonth')}
-            </Button>
-          </div>
-          <Link href="/subscriptions">
-            <Button className="gap-2 whitespace-normal text-center md:w-auto">
+        <div className="flex w-full min-w-0 items-center justify-end gap-2 lg:w-auto">
+          <MonthPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+          <Link href="/subscriptions" className="shrink-0">
+            <Button className="gap-2 whitespace-nowrap text-center">
               {t('dashboard.manageSubscriptions')}
             </Button>
           </Link>

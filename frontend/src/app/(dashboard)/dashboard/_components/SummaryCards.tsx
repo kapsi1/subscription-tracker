@@ -20,18 +20,18 @@ interface SummaryCardsProps {
 function SummaryCard({ title, icon, value }: { title: string; icon: ReactNode; value: ReactNode }) {
   return (
     <Card className="min-w-0 shadow-sm transition-shadow hover:shadow-md">
-      <CardHeader className="flex flex-col items-center justify-center pb-2 px-4 h-24 text-center">
-        <div className="flex min-w-0 flex-row items-center justify-center gap-2">
-          <CardTitle className="min-w-0 text-md font-medium text-muted-foreground leading-tight">
-            {title}
-          </CardTitle>
-          <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+      <CardHeader className="flex h-20 flex-col justify-center px-6 pb-1 text-center md:h-[5.5rem] lg:h-24">
+        <div className="min-w-0 flex items-center justify-center">
+          <div className="flex h-9 w-9 min-w-9 items-center justify-center rounded-lg bg-secondary mr-4 lg:mr-0">
             {icon}
           </div>
+          <CardTitle className="min-w-0 text-center text-base font-medium leading-tight text-muted-foreground md:text-lg">
+            {title}
+          </CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="overflow-hidden text-center text-3xl font-semibold text-balance break-words lg:text-4xl">
+      <CardContent className="px-6 pb-4 md:pb-5 lg:pb-6">
+        <div className="overflow-hidden text-center text-[2.65rem] font-semibold leading-none text-balance wrap-break-word md:text-[3rem] lg:text-4xl">
           {value}
         </div>
       </CardContent>
