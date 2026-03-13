@@ -56,12 +56,12 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
 
   return (
     <>
-      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-1">
+      <div className="flex items-center gap-1 rounded-lg border bg-muted/50 px-1">
         <Button
           variant="ghost"
           size="icon"
           onClick={handlePrevMonth}
-          className="h-8 w-8 shrink-0"
+          className="h-9 w-9 shrink-0"
           aria-label={t('common.previous')}
         >
           <ChevronLeft className="h-4 w-4" />
@@ -76,7 +76,7 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="h-8 min-w-0 flex-1 font-medium hover:bg-accent/50 focus-visible:ring-0 lg:min-w-[140px] lg:flex-none"
+              className="h-9 min-w-0 flex-1 font-medium hover:bg-accent/50 focus-visible:ring-0 lg:min-w-[140px] lg:flex-none"
             >
               {selectedDate.toLocaleDateString(i18n.language === 'pl' ? 'pl-PL' : 'en-US', {
                 month: 'long',
@@ -137,7 +137,7 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
           variant="ghost"
           size="icon"
           onClick={handleNextMonth}
-          className="h-8 w-8 shrink-0"
+          className="h-9 w-9 shrink-0"
           aria-label={t('common.next')}
         >
           <ChevronRight className="h-4 w-4" />
@@ -145,9 +145,8 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
       </div>
       <Button
         variant="outline"
-        size="default"
         onClick={handleResetMonth}
-        className="h-8 shrink-0 text-sm py-5"
+        className="shrink-0"
       >
         {t('dashboard.thisMonth')}
       </Button>

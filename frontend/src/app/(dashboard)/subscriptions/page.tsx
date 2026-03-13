@@ -288,11 +288,9 @@ export default function SubscriptionsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-semibold">{t('subscriptions.title')}</h1>
-        </div>
-        <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl font-semibold">{t('subscriptions.title')}</h1>
+        <div className="flex flex-wrap items-center gap-2">
           <input
             type="file"
             accept=".json"
@@ -319,20 +317,16 @@ export default function SubscriptionsPage() {
         </div>
       </div>
 
-      {/* Search and Filters */}
-      <Card className="shadow-sm">
-        <CardContent className="pt-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder={t('subscriptions.search')}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-        </CardContent>
-      </Card>
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder={t('subscriptions.search')}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-9"
+        />
+      </div>
 
       {/* Subscriptions Table */}
       <Card className="shadow-sm">

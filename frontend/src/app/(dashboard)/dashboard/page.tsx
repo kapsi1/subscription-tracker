@@ -111,16 +111,14 @@ export default function DashboardPage() {
   ).length;
 
   return (
-    <div className="min-w-0 space-y-8">
+    <div className="min-w-0 space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 min-[860px]:flex-row min-[860px]:items-center min-[860px]:justify-between">
-        <div className="min-w-0">
-          <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
-        </div>
-        <div className="flex w-full min-w-0 flex-wrap items-center justify-end gap-2 min-[860px]:w-auto min-[860px]:flex-nowrap">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
+        <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
           <MonthPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           <Link href="/subscriptions" className="shrink-0">
-            <Button className="w-auto gap-2 whitespace-nowrap text-center">
+            <Button className="gap-2 whitespace-nowrap">
               {t('dashboard.manageSubscriptions')}
             </Button>
           </Link>
