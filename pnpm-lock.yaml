@@ -68,7 +68,7 @@ importers:
       '@prisma/client':
         specifier: 6.19.2
         version: 6.19.2(prisma@6.19.2(typescript@5.9.3))(typescript@5.9.3)
-      '@subscription-tracker/shared':
+      '@subtracker/shared':
         specifier: file:..\packages\shared
         version: link:../packages/shared
       '@types/web-push':
@@ -219,7 +219,7 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.8
         version: 1.2.8(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@subscription-tracker/shared':
+      '@subtracker/shared':
         specifier: file:..\packages\shared
         version: link:../packages/shared
       '@tanstack/react-query':
