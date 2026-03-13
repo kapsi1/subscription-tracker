@@ -186,9 +186,7 @@ export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCa
                   <Cell key={`cell-${entry.name}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip
-                content={<CustomTooltip currency={currency} t={t} />}
-              />
+              <Tooltip content={<CustomTooltip currency={currency} t={t} />} />
             </PieChart>
           ) : (
             <BarChart data={categoryData}>
@@ -204,9 +202,7 @@ export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCa
                 stroke="#64748b"
                 tickFormatter={(value) => formatCurrency(value, currency, 0)}
               />
-              <Tooltip
-                content={<CustomTooltip currency={currency} t={t} />}
-              />
+              <Tooltip content={<CustomTooltip currency={currency} t={t} />} />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                 {categoryData.map((entry) => (
                   <Cell key={`cell-${entry.name}`} fill={entry.color} />

@@ -286,7 +286,7 @@ export default function SubscriptionsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-page-in">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-semibold">{t('subscriptions.title')}</h1>
@@ -403,7 +403,7 @@ export default function SubscriptionsPage() {
                   {sortedSubscriptions.map((subscription) => (
                     <TableRow
                       key={subscription.id}
-                      className="hover:bg-accent/50 cursor-pointer group"
+                      className="animate-row-in hover:bg-accent/50 cursor-pointer group"
                       onClick={() => handleEdit(subscription)}
                     >
                       <TableCell className="font-medium max-w-[200px]">

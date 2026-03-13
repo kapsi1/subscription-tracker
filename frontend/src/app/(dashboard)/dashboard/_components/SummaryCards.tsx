@@ -23,9 +23,14 @@ function SummaryCard({
   icon,
   value,
   iconBgClass,
-}: { title: string; icon: ReactNode; value: ReactNode; iconBgClass: string }) {
+}: {
+  title: string;
+  icon: ReactNode;
+  value: ReactNode;
+  iconBgClass: string;
+}) {
   return (
-    <Card className="min-w-0 shadow-sm transition-shadow hover:shadow-md">
+    <Card className="min-w-0 shadow-sm animate-card-in">
       <CardHeader className="flex h-20 flex-col justify-center px-6 pb-1 text-center md:h-22 lg:h-24">
         <div className="min-w-0 flex items-center justify-center">
           <div

@@ -332,10 +332,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from:
           this.configService.get<string>('SMTP_FROM_ALERTS') ||
-          this.configService.get<string>(
-            'SMTP_FROM',
-            '"SubTracker" <alerts@subtracker.local>',
-          ),
+          this.configService.get<string>('SMTP_FROM', '"SubTracker" <alerts@subtracker.local>'),
         to: email,
         subject,
         html: htmlTemplate,
@@ -406,10 +403,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from:
           this.configService.get<string>('SMTP_FROM_ALERTS') ||
-          this.configService.get<string>(
-            'SMTP_FROM',
-            '"SubTracker" <alerts@subtracker.local>',
-          ),
+          this.configService.get<string>('SMTP_FROM', '"SubTracker" <alerts@subtracker.local>'),
         to: email,
         subject: locale.emails.budgetAlert,
         html: htmlTemplate,
@@ -502,10 +496,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from:
           this.configService.get<string>('SMTP_FROM_ALERTS') ||
-          this.configService.get<string>(
-            'SMTP_FROM',
-            '"SubTracker" <alerts@subtracker.local>',
-          ),
+          this.configService.get<string>('SMTP_FROM', '"SubTracker" <alerts@subtracker.local>'),
         to: email,
         subject: emails.dailyDigestSubject,
         html: htmlTemplate,
@@ -574,10 +565,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from:
           this.configService.get<string>('SMTP_FROM_ALERTS') ||
-          this.configService.get<string>(
-            'SMTP_FROM',
-            '"SubTracker" <alerts@subtracker.local>',
-          ),
+          this.configService.get<string>('SMTP_FROM', '"SubTracker" <alerts@subtracker.local>'),
         to: email,
         subject: emails.weeklyReportSubject,
         html: htmlTemplate,
@@ -643,10 +631,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from:
           this.configService.get<string>('SMTP_FROM_AUTH') ||
-          this.configService.get<string>(
-            'SMTP_FROM',
-            '"SubTracker" <auth@subtracker.local>',
-          ),
+          this.configService.get<string>('SMTP_FROM', '"SubTracker" <auth@subtracker.local>'),
         to: email,
         subject: verification.subject,
         html: htmlTemplate,
@@ -712,10 +697,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from:
           this.configService.get<string>('SMTP_FROM_AUTH') ||
-          this.configService.get<string>(
-            'SMTP_FROM',
-            '"SubTracker" <auth@subtracker.local>',
-          ),
+          this.configService.get<string>('SMTP_FROM', '"SubTracker" <auth@subtracker.local>'),
         to: email,
         subject: passwordReset.subject,
         html: htmlTemplate,

@@ -116,7 +116,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
   };
 
   return (
-    <Card className="min-w-0 shadow-sm transition-shadow hover:shadow-md">
+    <Card className="min-w-0 shadow-sm">
       <CardHeader>
         <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
@@ -181,7 +181,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                 key={payment.id}
                 type="button"
                 onClick={() => onEdit?.(payment.subscriptionId)}
-                className={`flex w-full min-w-0 cursor-pointer flex-col gap-3 rounded-lg border p-4 text-left transition-colors lg:flex-row lg:items-center lg:justify-between ${
+                className={`animate-list-item flex w-full min-w-0 cursor-pointer flex-col gap-3 rounded-lg border p-4 text-left transition-colors lg:flex-row lg:items-center lg:justify-between ${
                   payment.status === 'done'
                     ? 'border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80'
                     : 'bg-card hover:bg-accent/50'
@@ -210,7 +210,10 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                                   {payment.name}
                                 </p>
                               </TooltipTrigger>
-                              <TooltipContent side="bottom" className="max-w-[300px] wrap-break-word">
+                              <TooltipContent
+                                side="bottom"
+                                className="max-w-[300px] wrap-break-word"
+                              >
                                 {payment.name}
                               </TooltipContent>
                             </Tooltip>
@@ -220,7 +223,10 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                           <Badge
                             variant="outline"
                             className="gap-1.5"
-                            style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
+                            style={getCategoryStyle(
+                              getCategoryColor(payment.category),
+                              'dashboard',
+                            )}
                           >
                             <DynamicIcon
                               name={getCategoryIcon(payment.category)}

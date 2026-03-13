@@ -1,9 +1,4 @@
-import {
-  type AccentColor,
-  COLORS,
-  type ColorsConfig,
-  getAccentColor,
-} from '@subtracker/shared';
+import { type AccentColor, COLORS, type ColorsConfig, getAccentColor } from '@subtracker/shared';
 
 export const ACCENT_COLORS = Object.entries(COLORS as ColorsConfig).map(([name, values]) => ({
   name,

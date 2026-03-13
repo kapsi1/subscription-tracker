@@ -240,25 +240,22 @@ export function AppearanceSection() {
   const lastUpdateRef = useRef<number>(0);
   const pickerHexRef = useRef<string | null>(null);
 
-  const handleCustomColorChange = useCallback(
-    (hex: string) => {
-      // 1. Always update the browser styles immediately (direct DOM manipulation is fast)
-      const accent = getAccentColor(hex, COLORS as ColorsConfig);
-      applyAccentColor({ ...accent, name: hex });
+  const handleCustomColorChange = useCallback((hex: string) => {
+    // 1. Always update the browser styles immediately (direct DOM manipulation is fast)
+    const accent = getAccentColor(hex, COLORS as ColorsConfig);
+    applyAccentColor({ ...accent, name: hex });
 
-      // 2. Throttle React state updates to avoid heavy re-renders
-      const now = Date.now();
-      if (now - lastUpdateRef.current > 60) {
-        setCurrentAccent({ ...accent, name: hex });
-        lastUpdateRef.current = now;
-      }
+    // 2. Throttle React state updates to avoid heavy re-renders
+    const now = Date.now();
+    if (now - lastUpdateRef.current > 60) {
+      setCurrentAccent({ ...accent, name: hex });
+      lastUpdateRef.current = now;
+    }
 
-      // Track the current picker value for use when picker closes
-      pickerHexRef.current = hex;
-      latestUnsavedHexRef.current = hex;
-    },
-    [],
-  );
+    // Track the current picker value for use when picker closes
+    pickerHexRef.current = hex;
+    latestUnsavedHexRef.current = hex;
+  }, []);
 
   const handleCustomColorClose = useCallback(() => {
     const hex = pickerHexRef.current;

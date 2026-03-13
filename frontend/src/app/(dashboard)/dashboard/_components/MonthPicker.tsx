@@ -115,8 +115,7 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
             <div className="grid grid-cols-3 gap-2">
               {monthNames.map((month, index) => {
                 const isSelected =
-                  selectedDate.getMonth() === index &&
-                  selectedDate.getFullYear() === pickerYear;
+                  selectedDate.getMonth() === index && selectedDate.getFullYear() === pickerYear;
                 return (
                   <Button
                     key={month}
@@ -143,11 +142,7 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
-      <Button
-        variant="outline"
-        onClick={handleResetMonth}
-        className="shrink-0"
-      >
+      <Button variant="outline" onClick={handleResetMonth} className="shrink-0">
         {t('dashboard.thisMonth')}
       </Button>
     </>

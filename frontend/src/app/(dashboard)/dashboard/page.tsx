@@ -111,7 +111,7 @@ export default function DashboardPage() {
   ).length;
 
   return (
-    <div className="min-w-0 space-y-6">
+    <div className="min-w-0 space-y-6 animate-page-in">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
