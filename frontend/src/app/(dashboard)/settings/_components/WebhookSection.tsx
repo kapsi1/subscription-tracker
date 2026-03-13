@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface WebhookSectionProps {
   webhookEnabled: boolean;
@@ -29,6 +30,7 @@ export function WebhookSection({
   isSendingWebhookTest,
 }: WebhookSectionProps) {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
 
   return (
     <Card className="shadow-sm">
@@ -38,17 +40,35 @@ export function WebhookSection({
             <Webhook className="w-5 h-5 text-purple-600" />
           </div>
           <div>
-            <CardTitle>{t('settings.notifications.webhook.title')}</CardTitle>
-            <CardDescription>{t('settings.notifications.webhook.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight
+                text={t('settings.notifications.webhook.title')}
+                query={searchQuery}
+              />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight
+                text={t('settings.notifications.webhook.desc')}
+                query={searchQuery}
+              />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
           <div className="space-y-0.5">
-            <Label htmlFor="webhookEnabled">{t('settings.notifications.webhook.enable')}</Label>
+            <Label htmlFor="webhookEnabled">
+              <SearchHighlight
+                text={t('settings.notifications.webhook.enable')}
+                query={searchQuery}
+              />
+            </Label>
             <p className="text-sm text-muted-foreground">
-              {t('settings.notifications.webhook.enableDesc')}
+              <SearchHighlight
+                text={t('settings.notifications.webhook.enableDesc')}
+                query={searchQuery}
+              />
             </p>
           </div>
           <Switch
@@ -61,7 +81,12 @@ export function WebhookSection({
         {webhookEnabled && (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="webhookUrl">{t('settings.notifications.webhook.url')}</Label>
+              <Label htmlFor="webhookUrl">
+                <SearchHighlight
+                  text={t('settings.notifications.webhook.url')}
+                  query={searchQuery}
+                />
+              </Label>
               <Input
                 id="webhookUrl"
                 type="url"
@@ -70,12 +95,20 @@ export function WebhookSection({
                 onChange={(e) => onSettingsChange({ webhookUrl: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                {t('settings.notifications.webhook.urlDesc')}
+                <SearchHighlight
+                  text={t('settings.notifications.webhook.urlDesc')}
+                  query={searchQuery}
+                />
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="webhookSecret">{t('settings.notifications.webhook.secret')}</Label>
+              <Label htmlFor="webhookSecret">
+                <SearchHighlight
+                  text={t('settings.notifications.webhook.secret')}
+                  query={searchQuery}
+                />
+              </Label>
               <Input
                 id="webhookSecret"
                 type="password"
@@ -84,7 +117,10 @@ export function WebhookSection({
                 onChange={(e) => onSettingsChange({ webhookSecret: e.target.value })}
               />
               <p className="text-xs text-muted-foreground">
-                {t('settings.notifications.webhook.secretDesc')}
+                <SearchHighlight
+                  text={t('settings.notifications.webhook.secretDesc')}
+                  query={searchQuery}
+                />
               </p>
             </div>
 

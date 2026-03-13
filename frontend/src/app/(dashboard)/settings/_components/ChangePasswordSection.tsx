@@ -10,9 +10,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import api from '@/lib/api';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 export function ChangePasswordSection() {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -26,7 +28,13 @@ export function ChangePasswordSection() {
     }
     setIsLoading(true);
     try {
-      await api.patch('/users/change-password', { currentPassword, newPassword }, { _skipAuthRedirect: true });
+      await api.patch(
+        '/users/change-password',
+        { currentPassword, newPassword },
+        {
+          _skipAuthRedirect: true,
+        },
+      );
       toast.success(t('settings.changePassword.success'));
       setCurrentPassword('');
       setNewPassword('');
@@ -58,15 +66,24 @@ export function ChangePasswordSection() {
             <KeyRound className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <CardTitle>{t('settings.changePassword.title')}</CardTitle>
-            <CardDescription>{t('settings.changePassword.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.changePassword.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.changePassword.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="currentPassword">{t('settings.changePassword.currentPassword')}</Label>
+            <Label htmlFor="currentPassword">
+              <SearchHighlight
+                text={t('settings.changePassword.currentPassword')}
+                query={searchQuery}
+              />
+            </Label>
             <Input
               id="currentPassword"
               type="password"
@@ -78,7 +95,12 @@ export function ChangePasswordSection() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="newPassword">{t('settings.changePassword.newPassword')}</Label>
+              <Label htmlFor="newPassword">
+                <SearchHighlight
+                  text={t('settings.changePassword.newPassword')}
+                  query={searchQuery}
+                />
+              </Label>
               <Input
                 id="newPassword"
                 type="password"
@@ -90,7 +112,12 @@ export function ChangePasswordSection() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmNewPassword">{t('settings.changePassword.confirmNewPassword')}</Label>
+              <Label htmlFor="confirmNewPassword">
+                <SearchHighlight
+                  text={t('settings.changePassword.confirmNewPassword')}
+                  query={searchQuery}
+                />
+              </Label>
               <Input
                 id="confirmNewPassword"
                 type="password"

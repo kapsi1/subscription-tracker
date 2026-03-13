@@ -193,6 +193,9 @@
       "profile": "Profile",
       "preferences": "Preferences"
     },
+    "searchPlaceholder": "Search settings...",
+    "clearSearch": "Clear search",
+    "noResults": "No results found for \"{{query}}\"",
     "profile": {
       "title": "Account Profile",
       "desc": "Update your personal information",

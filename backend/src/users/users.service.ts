@@ -1,4 +1,10 @@
-import { BadRequestException, ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import type { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { WebhookService } from '../notifications/webhook/webhook.service';
@@ -96,7 +102,8 @@ export class UsersService {
   async changePassword(id: string, currentPassword: string, newPassword: string): Promise<void> {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new BadRequestException('User not found');
-    if (!user.passwordHash) throw new BadRequestException('Cannot change password for social-only accounts');
+    if (!user.passwordHash)
+      throw new BadRequestException('Cannot change password for social-only accounts');
 
     const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
     if (!isValid) throw new UnauthorizedException('Current password is incorrect');
@@ -110,7 +117,8 @@ export class UsersService {
   async changeEmail(id: string, newEmail: string, currentPassword: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new BadRequestException('User not found');
-    if (!user.passwordHash) throw new BadRequestException('Cannot change email for social-only accounts');
+    if (!user.passwordHash)
+      throw new BadRequestException('Cannot change email for social-only accounts');
 
     const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
     if (!isValid) throw new UnauthorizedException('Current password is incorrect');

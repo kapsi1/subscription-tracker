@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { cleanupUser, closePool } from './test-utils';
+import { cleanupUser } from './test-utils';
 
 test.describe('Internationalization (i18n) Flow', () => {
   const testEmail = `testuser-i18n-${Date.now()}@example.com`;
@@ -8,7 +8,6 @@ test.describe('Internationalization (i18n) Flow', () => {
   // Cleanup after all tests in this execution block finish
   test.afterAll(async () => {
     await cleanupUser(testEmail);
-    await closePool();
   });
 
   test('should switch language and persist across reloads', async ({ page }) => {

@@ -43,7 +43,13 @@ describe('CategoriesService', () => {
 
   const userId = 'user-1';
 
-  const mockCategory = { id: 'cat-1', name: 'Entertainment', color: '#a855f7', icon: 'Play', order: 0 };
+  const mockCategory = {
+    id: 'cat-1',
+    name: 'Entertainment',
+    color: '#a855f7',
+    icon: 'Play',
+    order: 0,
+  };
 
   beforeEach(async () => {
     prismaMock = {

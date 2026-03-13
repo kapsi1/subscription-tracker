@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { createServer } from 'http';
-import { cleanupUser, closePool } from './test-utils';
+import { cleanupUser } from './test-utils';
 
 test.describe('Webhooks', () => {
   const testEmail = `testuser-webhook-${Date.now()}@example.com`;
@@ -8,7 +8,6 @@ test.describe('Webhooks', () => {
 
   test.afterAll(async () => {
     await cleanupUser(testEmail);
-    await closePool();
   });
 
   test('should configure and test webhooks', async ({ page }) => {

@@ -162,8 +162,11 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
 
 const EMPTY_CATEGORIES: Category[] = [];
 
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
+
 export function CategorySection() {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
   const queryClient = useQueryClient();
   const [localCategories, setLocalCategories] = useState<Category[]>([]);
   const [isDirty, setIsDirty] = useState(false);
@@ -271,7 +274,9 @@ export function CategorySection() {
       // 2. Create new categories, collect real IDs
       const toCreate = localCategories.filter((c) => isNewCategory(c.id));
       const created = await Promise.all(
-        toCreate.map((c) => api.post('/categories', { name: c.name, color: c.color, icon: c.icon })),
+        toCreate.map((c) =>
+          api.post('/categories', { name: c.name, color: c.color, icon: c.icon }),
+        ),
       );
       const idMap = new Map<string, string>();
       for (let i = 0; i < toCreate.length; i++) {
@@ -282,10 +287,15 @@ export function CategorySection() {
       const toUpdate = localCategories.filter((c) => {
         if (isNewCategory(c.id)) return false;
         const original = serverCategories.find((s) => s.id === c.id);
-        return original && (original.name !== c.name || original.color !== c.color || original.icon !== c.icon);
+        return (
+          original &&
+          (original.name !== c.name || original.color !== c.color || original.icon !== c.icon)
+        );
       });
       await Promise.all(
-        toUpdate.map((c) => api.patch(`/categories/${c.id}`, { name: c.name, color: c.color, icon: c.icon })),
+        toUpdate.map((c) =>
+          api.patch(`/categories/${c.id}`, { name: c.name, color: c.color, icon: c.icon }),
+        ),
       );
 
       // 4. Persist the final order
@@ -310,6 +320,11 @@ export function CategorySection() {
     }
   };
 
+  const filteredCategories = localCategories.filter(
+    (cat) =>
+      searchQuery.trim() === '' || cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   return (
     <Card className="shadow-sm">
       <CardHeader>
@@ -318,8 +333,12 @@ export function CategorySection() {
             <Layers className="w-5 h-5 text-violet-600" />
           </div>
           <div className="flex-1">
-            <CardTitle>{t('settings.categories.title')}</CardTitle>
-            <CardDescription>{t('settings.categories.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.categories.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.categories.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -344,10 +363,10 @@ export function CategorySection() {
               onDragCancel={handleDragCancel}
             >
               <SortableContext
-                items={localCategories.map((c) => c.id)}
+                items={filteredCategories.map((c) => c.id)}
                 strategy={verticalListSortingStrategy}
               >
-                {localCategories.map((category) => (
+                {filteredCategories.map((category) => (
                   <CategoryRow
                     key={category.id}
                     category={category}

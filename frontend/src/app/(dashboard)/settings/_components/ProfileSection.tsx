@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 export interface ProfileData {
   name: string;
@@ -20,6 +21,7 @@ interface ProfileSectionProps {
 
 export function ProfileSection({ profile, setProfile }: ProfileSectionProps) {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
 
   return (
     <Card className="shadow-sm">
@@ -29,15 +31,21 @@ export function ProfileSection({ profile, setProfile }: ProfileSectionProps) {
             <UserRound className="w-5 h-5 text-orange-600" />
           </div>
           <div>
-            <CardTitle>{t('settings.profile.title')}</CardTitle>
-            <CardDescription>{t('settings.profile.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.profile.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.profile.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="profileName">{t('settings.profile.name')}</Label>
+            <Label htmlFor="profileName">
+              <SearchHighlight text={t('settings.profile.name')} query={searchQuery} />
+            </Label>
             <Input
               id="profileName"
               value={profile.name}
@@ -46,7 +54,12 @@ export function ProfileSection({ profile, setProfile }: ProfileSectionProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="profileEmail">{t('settings.notifications.email.address')}</Label>
+            <Label htmlFor="profileEmail">
+              <SearchHighlight
+                text={t('settings.notifications.email.address')}
+                query={searchQuery}
+              />
+            </Label>
             <Input id="profileEmail" value={profile.email} disabled />
           </div>
         </div>

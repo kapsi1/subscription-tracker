@@ -119,8 +119,11 @@ const PresetSelector = React.memo(
 
 PresetSelector.displayName = 'PresetSelector';
 
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
+
 export function AppearanceSection() {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
   const { user } = useAuth();
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [currentAccent, setCurrentAccent] = useState<AccentColorType>(ACCENT_COLORS[0]);
@@ -286,8 +289,12 @@ export function AppearanceSection() {
               <Palette className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <CardTitle>{t('settings.appearance.title')}</CardTitle>
-              <CardDescription>{t('settings.appearance.desc')}</CardDescription>
+              <CardTitle>
+                <SearchHighlight text={t('settings.appearance.title')} query={searchQuery} />
+              </CardTitle>
+              <CardDescription>
+                <SearchHighlight text={t('settings.appearance.desc')} query={searchQuery} />
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -303,24 +310,36 @@ export function AppearanceSection() {
             <Palette className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <CardTitle>{t('settings.appearance.title')}</CardTitle>
-            <CardDescription>{t('settings.appearance.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.appearance.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.appearance.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>{t('settings.appearance.theme')}</Label>
-            <p className="text-sm text-muted-foreground">{t('settings.appearance.themeDesc')}</p>
+            <Label>
+              <SearchHighlight text={t('settings.appearance.theme')} query={searchQuery} />
+            </Label>
+            <p className="text-sm text-muted-foreground">
+              <SearchHighlight text={t('settings.appearance.themeDesc')} query={searchQuery} />
+            </p>
             <ThemeSelector currentTheme={theme} onChange={handleThemeChange} t={t} />
           </div>
 
           <div className="h-px bg-border/50 my-2" />
 
           <div className="space-y-2">
-            <Label>{t('settings.appearance.accent')}</Label>
-            <p className="text-sm text-muted-foreground">{t('settings.appearance.accentDesc')}</p>
+            <Label>
+              <SearchHighlight text={t('settings.appearance.accent')} query={searchQuery} />
+            </Label>
+            <p className="text-sm text-muted-foreground">
+              <SearchHighlight text={t('settings.appearance.accentDesc')} query={searchQuery} />
+            </p>
             <PresetSelector
               currentAccentName={currentAccent.name}
               onSelect={handleAccentSelect}

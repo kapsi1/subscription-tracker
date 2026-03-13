@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { cleanupUser, closePool, getUserResetToken } from './test-utils';
+import { cleanupUser, getUserResetToken } from './test-utils';
 
 test.describe('Forgot Password Flow', () => {
   const testPassword = 'StrongPassword123!';
@@ -16,7 +16,6 @@ test.describe('Forgot Password Flow', () => {
     for (const email of createdEmails) {
       await cleanupUser(email);
     }
-    await closePool();
   });
 
   test('should complete the full forgot password and reset flow', async ({ page }) => {

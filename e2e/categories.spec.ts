@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { cleanupUser, closePool } from './test-utils';
+import { cleanupUser } from './test-utils';
 
 test.describe.serial('Category Management', () => {
   const testEmail = `testuser-categories-${Date.now()}@example.com`;
@@ -19,7 +19,6 @@ test.describe.serial('Category Management', () => {
 
   test.afterAll(async () => {
     await cleanupUser(testEmail);
-    await closePool();
   });
 
   async function navigateToCategories(page: import('@playwright/test').Page) {

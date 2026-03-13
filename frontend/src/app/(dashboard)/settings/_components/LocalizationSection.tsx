@@ -1,3 +1,5 @@
+'use client';
+
 import { CURRENCIES } from '@subscription-tracker/shared';
 import { ChevronDown, Globe, Search } from 'lucide-react';
 import { useState } from 'react';
@@ -12,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/components/ui/utils';
 import api from '@/lib/api';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface LocalizationSectionProps {
   currency: string;
@@ -20,6 +23,7 @@ interface LocalizationSectionProps {
 
 export function LocalizationSection({ currency, setCurrency }: LocalizationSectionProps) {
   const { t, i18n } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
   const { isAuthenticated } = useAuth();
   const [searchCurrency, setSearchCurrency] = useState('');
   const [isCurrencyPopoverOpen, setIsCurrencyPopoverOpen] = useState(false);
@@ -47,17 +51,23 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
             <Globe className="w-5 h-5 text-indigo-600" />
           </div>
           <div>
-            <CardTitle>{t('settings.localization.title')}</CardTitle>
-            <CardDescription>{t('settings.localization.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.localization.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.localization.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>{t('settings.localization.language')}</Label>
+            <Label>
+              <SearchHighlight text={t('settings.localization.language')} query={searchQuery} />
+            </Label>
             <p className="text-sm text-muted-foreground">
-              {t('settings.localization.languageDesc')}
+              <SearchHighlight text={t('settings.localization.languageDesc')} query={searchQuery} />
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
               <button
@@ -139,9 +149,11 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
           <div className="h-px bg-border/50 my-2" />
 
           <div className="space-y-2">
-            <Label htmlFor="currency">{t('settings.localization.currency')}</Label>
+            <Label htmlFor="currency">
+              <SearchHighlight text={t('settings.localization.currency')} query={searchQuery} />
+            </Label>
             <p className="text-sm text-muted-foreground">
-              {t('settings.localization.currencyDesc')}
+              <SearchHighlight text={t('settings.localization.currencyDesc')} query={searchQuery} />
             </p>
 
             <Popover open={isCurrencyPopoverOpen} onOpenChange={setIsCurrencyPopoverOpen}>

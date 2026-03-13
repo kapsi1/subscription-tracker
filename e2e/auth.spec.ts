@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { cleanupUser, closePool } from './test-utils';
+import { cleanupUser } from './test-utils';
 
 test.describe('Authentication Flow', () => {
   const testPassword = 'StrongPassword123!';
@@ -16,7 +16,6 @@ test.describe('Authentication Flow', () => {
     for (const email of createdEmails) {
       await cleanupUser(email);
     }
-    await closePool();
   });
 
   test('should navigate to login page and show correct elements', async ({ page }) => {

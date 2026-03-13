@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface PushNotificationsSectionProps {
   pushEnabled: boolean;
@@ -32,6 +33,7 @@ export function PushNotificationsSection({
   onResetPush,
 }: PushNotificationsSectionProps) {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
 
   return (
     <Card className="shadow-sm">
@@ -41,17 +43,26 @@ export function PushNotificationsSection({
             <Smartphone className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <CardTitle>{t('settings.notifications.push.title')}</CardTitle>
-            <CardDescription>{t('settings.notifications.push.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.notifications.push.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.notifications.push.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
           <div className="space-y-0.5">
-            <Label htmlFor="pushEnabled">{t('settings.notifications.push.enable')}</Label>
+            <Label htmlFor="pushEnabled">
+              <SearchHighlight text={t('settings.notifications.push.enable')} query={searchQuery} />
+            </Label>
             <p className="text-sm text-muted-foreground">
-              {t('settings.notifications.push.enableDesc')}
+              <SearchHighlight
+                text={t('settings.notifications.push.enableDesc')}
+                query={searchQuery}
+              />
             </p>
           </div>
           <Switch

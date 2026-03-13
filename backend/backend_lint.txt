@@ -1,0 +1,5 @@
+
+> backend@1.0.0 lint C:\dev\subscription-tracker\backend
+> biome check .
+
+Checked 77 files in 30ms. No fixes applied.

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { cleanupUser, closePool } from './test-utils';
+import { cleanupUser } from './test-utils';
 
 test.describe('Subscriptions Flow', () => {
   const testEmail = `testuser-subs-${Date.now()}@example.com`;
@@ -7,7 +7,6 @@ test.describe('Subscriptions Flow', () => {
 
   test.afterAll(async () => {
     await cleanupUser(testEmail);
-    await closePool();
   });
 
   test('should manage subscriptions (CRUD)', async ({ page }) => {

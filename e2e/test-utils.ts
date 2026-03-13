@@ -1,8 +1,5 @@
 import { Client } from 'pg';
 
-export async function closePool() {
-  // Deprecated: No shared pool to close anymore.
-}
 
 /**
  * Cleans up a user and all their associated data (subscriptions, etc.)

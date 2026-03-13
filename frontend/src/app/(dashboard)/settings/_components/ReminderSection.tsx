@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface ReminderSectionProps {
   defaultReminderEnabled: boolean;
@@ -20,6 +21,7 @@ export function ReminderSection({
   onSettingsChange,
 }: ReminderSectionProps) {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
 
   return (
     <Card className="shadow-sm">
@@ -29,17 +31,35 @@ export function ReminderSection({
             <Bell className="w-5 h-5 text-cyan-600" />
           </div>
           <div>
-            <CardTitle>{t('settings.notifications.default.title')}</CardTitle>
-            <CardDescription>{t('settings.notifications.default.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight
+                text={t('settings.notifications.default.title')}
+                query={searchQuery}
+              />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight
+                text={t('settings.notifications.default.desc')}
+                query={searchQuery}
+              />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
           <div className="space-y-0.5">
-            <Label htmlFor="defaultEnabled">{t('settings.notifications.default.enable')}</Label>
+            <Label htmlFor="defaultEnabled">
+              <SearchHighlight
+                text={t('settings.notifications.default.enable')}
+                query={searchQuery}
+              />
+            </Label>
             <p className="text-sm text-muted-foreground">
-              {t('settings.notifications.default.enableDesc')}
+              <SearchHighlight
+                text={t('settings.notifications.default.enableDesc')}
+                query={searchQuery}
+              />
             </p>
           </div>
           <Switch
@@ -50,7 +70,9 @@ export function ReminderSection({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="defaultDays">{t('settings.notifications.default.days')}</Label>
+          <Label htmlFor="defaultDays">
+            <SearchHighlight text={t('settings.notifications.default.days')} query={searchQuery} />
+          </Label>
           <div className="flex gap-2 items-center">
             <Input
               id="defaultDays"
@@ -64,11 +86,17 @@ export function ReminderSection({
               }
             />
             <span className="text-sm text-muted-foreground">
-              {t('settings.notifications.default.beforePayment')}
+              <SearchHighlight
+                text={t('settings.notifications.default.beforePayment')}
+                query={searchQuery}
+              />
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            {t('settings.notifications.default.daysDesc')}
+            <SearchHighlight
+              text={t('settings.notifications.default.daysDesc')}
+              query={searchQuery}
+            />
           </p>
         </div>
       </CardContent>

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { cleanupUser, closePool } from './test-utils';
+import { cleanupUser } from './test-utils';
 
 test.describe('Change Password and Change Email', () => {
   const testPassword = 'StrongPassword123!';
@@ -25,7 +25,6 @@ test.describe('Change Password and Change Email', () => {
     for (const email of createdEmails) {
       await cleanupUser(email);
     }
-    await closePool();
   });
 
   test('should change password successfully', async ({ page }) => {

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface EmailNotificationsSectionProps {
   emailNotifications: boolean;
@@ -43,6 +44,7 @@ export function EmailNotificationsSection({
   isLoading,
 }: EmailNotificationsSectionProps) {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
 
   return (
     <Card className="shadow-sm">
@@ -52,17 +54,29 @@ export function EmailNotificationsSection({
             <Mail className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <CardTitle>{t('settings.notifications.email.title')}</CardTitle>
-            <CardDescription>{t('settings.notifications.email.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.notifications.email.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.notifications.email.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
           <div className="space-y-0.5">
-            <Label htmlFor="emailEnabled">{t('settings.notifications.email.enable')}</Label>
+            <Label htmlFor="emailEnabled">
+              <SearchHighlight
+                text={t('settings.notifications.email.enable')}
+                query={searchQuery}
+              />
+            </Label>
             <p className="text-sm text-muted-foreground">
-              {t('settings.notifications.email.enableDesc')}
+              <SearchHighlight
+                text={t('settings.notifications.email.enableDesc')}
+                query={searchQuery}
+              />
             </p>
           </div>
           <Switch
@@ -75,7 +89,12 @@ export function EmailNotificationsSection({
         {emailNotifications && (
           <>
             <div className="space-y-2">
-              <Label htmlFor="emailAddress">{t('settings.notifications.email.address')}</Label>
+              <Label htmlFor="emailAddress">
+                <SearchHighlight
+                  text={t('settings.notifications.email.address')}
+                  query={searchQuery}
+                />
+              </Label>
               <Input
                 id="emailAddress"
                 type="email"
@@ -88,9 +107,17 @@ export function EmailNotificationsSection({
             <div className="border-t pt-2 mt-2">
               <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
                 <div className="space-y-0.5">
-                  <Label htmlFor="dailyDigest">{t('settings.notifications.email.daily')}</Label>
+                  <Label htmlFor="dailyDigest">
+                    <SearchHighlight
+                      text={t('settings.notifications.email.daily')}
+                      query={searchQuery}
+                    />
+                  </Label>
                   <p className="text-sm text-muted-foreground">
-                    {t('settings.notifications.email.dailyDesc')}
+                    <SearchHighlight
+                      text={t('settings.notifications.email.dailyDesc')}
+                      query={searchQuery}
+                    />
                   </p>
                 </div>
                 <Switch
@@ -104,9 +131,17 @@ export function EmailNotificationsSection({
             <div className="border-t pt-2 mt-2">
               <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
                 <div className="space-y-0.5">
-                  <Label htmlFor="weeklyReport">{t('settings.notifications.email.weekly')}</Label>
+                  <Label htmlFor="weeklyReport">
+                    <SearchHighlight
+                      text={t('settings.notifications.email.weekly')}
+                      query={searchQuery}
+                    />
+                  </Label>
                   <p className="text-sm text-muted-foreground">
-                    {t('settings.notifications.email.weeklyDesc')}
+                    <SearchHighlight
+                      text={t('settings.notifications.email.weeklyDesc')}
+                      query={searchQuery}
+                    />
                   </p>
                 </div>
                 <Switch

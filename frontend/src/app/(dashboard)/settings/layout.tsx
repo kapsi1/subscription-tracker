@@ -1,13 +1,17 @@
 'use client';
 
+import { Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { SettingsSearchProvider, useSettingsSearch } from './_components/SettingsSearchContext';
 
-export default function SettingsLayout({ children }: { children: React.ReactNode }) {
+function SettingsLayoutContent({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const pathname = usePathname();
+  const { searchQuery, setSearchQuery, clearSearch } = useSettingsSearch();
 
   const tabs = [
     {
@@ -25,8 +29,30 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
       {/* Header */}
-      <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-3xl font-semibold">{t('settings.title')}</h1>
+
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder={t('settings.searchPlaceholder', { defaultValue: 'Search settings...' })}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 pr-9"
+            id="settings-search-input"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              title={t('settings.clearSearch', { defaultValue: 'Clear search' })}
+              id="clear-settings-search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="inline-flex items-center gap-1 rounded-lg border bg-muted p-1">
@@ -41,5 +67,13 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
 
       <div>{children}</div>
     </div>
+  );
+}
+
+export default function SettingsLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SettingsSearchProvider>
+      <SettingsLayoutContent>{children}</SettingsLayoutContent>
+    </SettingsSearchProvider>
   );
 }

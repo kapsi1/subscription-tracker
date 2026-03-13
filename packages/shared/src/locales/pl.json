@@ -211,6 +211,9 @@
       "profile": "Profil",
       "preferences": "Preferencje"
     },
+    "searchPlaceholder": "Szukaj w ustawieniach...",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "noResults": "Nie znaleziono wyników dla \"{{query}}\"",
     "profile": {
       "title": "Profil konta",
       "desc": "Zaktualizuj swoje dane osobowe",

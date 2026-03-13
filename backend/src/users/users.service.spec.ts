@@ -126,7 +126,9 @@ describe('UsersService', () => {
       (bcrypt.hash as jest.Mock).mockResolvedValue('new-hashed-pw');
       prismaMock.user.update.mockResolvedValue({ ...mockUser, passwordHash: 'new-hashed-pw' });
 
-      await expect(service.changePassword('user-1', 'oldpass', 'newpass123')).resolves.toBeUndefined();
+      await expect(
+        service.changePassword('user-1', 'oldpass', 'newpass123'),
+      ).resolves.toBeUndefined();
       expect(prismaMock.user.update).toHaveBeenCalledWith({
         where: { id: 'user-1' },
         data: { passwordHash: 'new-hashed-pw' },
@@ -182,9 +184,9 @@ describe('UsersService', () => {
         .mockResolvedValueOnce({ ...mockUser, id: 'other-user' }); // email already taken
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      await expect(service.changeEmail('user-1', 'taken@example.com', 'correctpass')).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(
+        service.changeEmail('user-1', 'taken@example.com', 'correctpass'),
+      ).rejects.toThrow(ConflictException);
     });
 
     it('should throw BadRequestException for social-only accounts', async () => {

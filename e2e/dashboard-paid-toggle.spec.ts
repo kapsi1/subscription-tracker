@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { cleanupUser, closePool } from './test-utils';
+import { cleanupUser } from './test-utils';
 import { Client } from 'pg';
 
 test.describe('Dashboard Paid Toggle', () => {
@@ -8,7 +8,6 @@ test.describe('Dashboard Paid Toggle', () => {
 
   test.afterAll(async () => {
     await cleanupUser(testEmail);
-    await closePool();
   });
 
   async function insertManualPayment(email: string, subName: string) {

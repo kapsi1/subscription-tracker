@@ -11,9 +11,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import api from '@/lib/api';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 export function ChangeEmailSection() {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
   const { fetchUser } = useAuth();
   const [newEmail, setNewEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -23,7 +25,13 @@ export function ChangeEmailSection() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await api.patch('/users/change-email', { newEmail, currentPassword }, { _skipAuthRedirect: true });
+      await api.patch(
+        '/users/change-email',
+        { newEmail, currentPassword },
+        {
+          _skipAuthRedirect: true,
+        },
+      );
       toast.success(t('settings.changeEmail.success'));
       setNewEmail('');
       setCurrentPassword('');
@@ -57,8 +65,12 @@ export function ChangeEmailSection() {
             <Mail className="w-5 h-5 text-green-600" />
           </div>
           <div>
-            <CardTitle>{t('settings.changeEmail.title')}</CardTitle>
-            <CardDescription>{t('settings.changeEmail.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.changeEmail.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.changeEmail.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -66,7 +78,9 @@ export function ChangeEmailSection() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="newEmail">{t('settings.changeEmail.newEmail')}</Label>
+              <Label htmlFor="newEmail">
+                <SearchHighlight text={t('settings.changeEmail.newEmail')} query={searchQuery} />
+              </Label>
               <Input
                 id="newEmail"
                 type="email"
@@ -77,7 +91,12 @@ export function ChangeEmailSection() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="changeEmailPassword">{t('settings.changeEmail.currentPassword')}</Label>
+              <Label htmlFor="changeEmailPassword">
+                <SearchHighlight
+                  text={t('settings.changeEmail.currentPassword')}
+                  query={searchQuery}
+                />
+              </Label>
               <Input
                 id="changeEmailPassword"
                 type="password"

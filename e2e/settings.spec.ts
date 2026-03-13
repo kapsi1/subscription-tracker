@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { cleanupUser, closePool } from './test-utils';
+import { cleanupUser } from './test-utils';
 
 test.describe('User Settings Persistence', () => {
   let testEmail: string;
@@ -21,9 +21,6 @@ test.describe('User Settings Persistence', () => {
     await cleanupUser(testEmail);
   });
 
-  test.afterAll(async () => {
-    await closePool();
-  });
 
   test('should persist accent color across page reloads', async ({ page }) => {
     await page.goto('/settings/preferences');

@@ -275,75 +275,194 @@ export default function PreferencesPage() {
     setSettings((prev) => ({ ...prev, ...updates }));
   };
 
+  const { searchQuery, isSectionVisible } = useSettingsSearch();
+
+  const hasPreferencesMatches =
+    SETTINGS_SECTIONS.filter(
+      (s) => s.tab === 'preferences' && isSectionVisible(s.id, 'preferences'),
+    ).length > 0;
+  const hasProfileMatches = searchQuery.trim()
+    ? SETTINGS_SECTIONS.filter((s) => s.tab === 'profile' && isSectionVisible(s.id, 'preferences'))
+        .length > 0
+    : false;
+  const noMatches = searchQuery.trim() && !hasPreferencesMatches && !hasProfileMatches;
+
   return (
     <div className="space-y-6">
-      <LocalizationSection
-        currency={settings.currency}
-        setCurrency={(currency) => setSettings({ ...settings, currency })}
-      />
+      {noMatches && (
+        <div className="text-center py-12 bg-muted/30 rounded-lg border-2 border-dashed">
+          <p className="text-muted-foreground">
+            {t('settings.noResults', {
+              query: searchQuery,
+              defaultValue: `No results found for "${searchQuery}"`,
+            })}
+          </p>
+        </div>
+      )}
 
-      <AppearanceSection />
+      {isSectionVisible('localization', 'preferences') && (
+        <LocalizationSection
+          currency={settings.currency}
+          setCurrency={(currency) => setSettings({ ...settings, currency })}
+        />
+      )}
 
-      <CategorySection />
+      {isSectionVisible('appearance', 'preferences') && <AppearanceSection />}
 
-      <EmailNotificationsSection
-        emailNotifications={settings.emailNotifications}
-        emailAddress={settings.emailAddress ?? ''}
-        dailyDigest={settings.dailyDigest}
-        weeklyReport={settings.weeklyReport}
-        onSettingsChange={handleSettingsChange}
-        showTestControls={showTestControls}
-        testEmailLanguage={testEmailLanguage}
-        setTestEmailLanguage={setTestEmailLanguage}
-        onTestEmail={handleTestEmail}
-        onTestDailyDigest={handleTestDailyDigest}
-        onTestWeeklyReport={handleTestWeeklyReport}
-        isLoading={{
-          email: isSendingTestEmail,
-          daily: isSendingDailyTest,
-          weekly: isSendingWeeklyTest,
-        }}
-      />
+      {isSectionVisible('categories', 'preferences') && <CategorySection />}
 
-      <PushNotificationsSection
-        pushEnabled={settings.pushEnabled ?? false}
-        onPushToggle={handlePushToggle}
-        isTogglingPush={isTogglingPush}
-        showTestControls={showTestControls}
-        testDelay={testDelay}
-        setTestDelay={setTestDelay}
-        onTestPush={handleTestPush}
-        isSendingTest={isSendingTest}
-        onResetPush={handleResetPush}
-      />
+      {isSectionVisible('email', 'preferences') && (
+        <EmailNotificationsSection
+          emailNotifications={settings.emailNotifications}
+          emailAddress={settings.emailAddress ?? ''}
+          dailyDigest={settings.dailyDigest}
+          weeklyReport={settings.weeklyReport}
+          onSettingsChange={handleSettingsChange}
+          showTestControls={showTestControls}
+          testEmailLanguage={testEmailLanguage}
+          setTestEmailLanguage={setTestEmailLanguage}
+          onTestEmail={handleTestEmail}
+          onTestDailyDigest={handleTestDailyDigest}
+          onTestWeeklyReport={handleTestWeeklyReport}
+          isLoading={{
+            email: isSendingTestEmail,
+            daily: isSendingDailyTest,
+            weekly: isSendingWeeklyTest,
+          }}
+        />
+      )}
 
-      <WebhookSection
-        webhookEnabled={settings.webhookEnabled}
-        webhookUrl={settings.webhookUrl ?? ''}
-        webhookSecret={settings.webhookSecret ?? ''}
-        onSettingsChange={handleSettingsChange}
-        showTestControls={showTestControls}
-        onTestWebhook={handleTestWebhook}
-        isSendingWebhookTest={isSendingWebhookTest}
-      />
+      {isSectionVisible('push', 'preferences') && (
+        <PushNotificationsSection
+          pushEnabled={settings.pushEnabled ?? false}
+          onPushToggle={handlePushToggle}
+          isTogglingPush={isTogglingPush}
+          showTestControls={showTestControls}
+          testDelay={testDelay}
+          setTestDelay={setTestDelay}
+          onTestPush={handleTestPush}
+          isSendingTest={isSendingTest}
+          onResetPush={handleResetPush}
+        />
+      )}
 
-      <ReminderSection
-        defaultReminderEnabled={settings.defaultReminderEnabled}
-        defaultReminderDays={settings.defaultReminderDays}
-        onSettingsChange={handleSettingsChange}
-      />
+      {isSectionVisible('webhook', 'preferences') && (
+        <WebhookSection
+          webhookEnabled={settings.webhookEnabled}
+          webhookUrl={settings.webhookUrl ?? ''}
+          webhookSecret={settings.webhookSecret ?? ''}
+          onSettingsChange={handleSettingsChange}
+          showTestControls={showTestControls}
+          onTestWebhook={handleTestWebhook}
+          isSendingWebhookTest={isSendingWebhookTest}
+        />
+      )}
 
-      <BudgetSection
-        monthlyBudget={settings.monthlyBudget}
-        currency={settings.currency}
-        onSettingsChange={handleSettingsChange}
-        showTestControls={showTestControls}
-        testBudgetEmailLanguage={testBudgetEmailLanguage}
-        setTestBudgetEmailLanguage={setTestBudgetEmailLanguage}
-        onTestBudgetEmail={handleTestBudgetEmail}
-        isSendingBudgetTestEmail={isSendingBudgetTestEmail}
-        isSendingTestEmail={isSendingTestEmail}
-      />
+      {isSectionVisible('reminder', 'preferences') && (
+        <ReminderSection
+          defaultReminderEnabled={settings.defaultReminderEnabled}
+          defaultReminderDays={settings.defaultReminderDays}
+          onSettingsChange={handleSettingsChange}
+        />
+      )}
+
+      {isSectionVisible('budget', 'preferences') && (
+        <BudgetSection
+          monthlyBudget={settings.monthlyBudget}
+          currency={settings.currency}
+          onSettingsChange={handleSettingsChange}
+          showTestControls={showTestControls}
+          testBudgetEmailLanguage={testBudgetEmailLanguage}
+          setTestBudgetEmailLanguage={setTestBudgetEmailLanguage}
+          onTestBudgetEmail={handleTestBudgetEmail}
+          isSendingBudgetTestEmail={isSendingBudgetTestEmail}
+          isSendingTestEmail={isSendingTestEmail}
+        />
+      )}
+
+      {/* Show Profile sections when searching in Preferences */}
+      {searchQuery.trim() && (
+        <>
+          {isSectionVisible('profile', 'preferences') && <ProfilePageSearchWrapper />}
+          {isSectionVisible('password', 'preferences') && <ChangePasswordSearchWrapper />}
+          {isSectionVisible('change-email', 'preferences') && <ChangeEmailSearchWrapper />}
+        </>
+      )}
     </div>
   );
+}
+
+import { useAuth } from '@/components/auth-provider';
+// Wrapper components for Profile sections to handle their own data fetching
+import { ChangeEmailSection } from '../_components/ChangeEmailSection';
+import { ChangePasswordSection } from '../_components/ChangePasswordSection';
+import { type ProfileData, ProfileSection } from '../_components/ProfileSection';
+import { SETTINGS_SECTIONS, useSettingsSearch } from '../_components/SettingsSearchContext';
+
+function ProfilePageSearchWrapper() {
+  const { t } = useTranslation();
+  const { fetchUser } = useAuth();
+  const [profile, setProfile] = useState<ProfileData>({
+    name: '',
+    email: '',
+    createdAt: '',
+    updatedAt: '',
+  });
+  const hasLoadedProfileRef = useRef(false);
+  const lastSavedProfileNameRef = useRef<string>('');
+  const latestProfileSaveAttemptRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await api.get('/users/me');
+        setProfile({
+          name: response.data.name || '',
+          email: response.data.email || '',
+          createdAt: response.data.createdAt || '',
+          updatedAt: response.data.updatedAt || '',
+        });
+        lastSavedProfileNameRef.current = (response.data.name || '').trim();
+        hasLoadedProfileRef.current = true;
+      } catch (_error) {
+        toast.error(t('settings.loadError'));
+      }
+    };
+    fetchProfile();
+  }, [t]);
+
+  useEffect(() => {
+    if (!hasLoadedProfileRef.current) return;
+    const trimmedName = profile.name.trim();
+    if (trimmedName === lastSavedProfileNameRef.current) return;
+    const timer = window.setTimeout(async () => {
+      latestProfileSaveAttemptRef.current = trimmedName;
+      try {
+        await api.patch('/users/settings', { name: trimmedName });
+        if (latestProfileSaveAttemptRef.current === trimmedName) {
+          lastSavedProfileNameRef.current = trimmedName;
+        }
+        await fetchUser();
+      } catch (_error) {
+        toast.error(t('settings.profile.saveError', { defaultValue: 'Failed to save profile' }));
+      }
+    }, 500);
+    return () => window.clearTimeout(timer);
+  }, [profile.name, fetchUser, t]);
+
+  return <ProfileSection profile={profile} setProfile={setProfile} />;
+}
+
+function ChangePasswordSearchWrapper() {
+  const { user } = useAuth();
+  const isGoogleAccount = !!user?.googleId;
+  if (isGoogleAccount) return null;
+  return <ChangePasswordSection />;
+}
+
+function ChangeEmailSearchWrapper() {
+  const { user } = useAuth();
+  const isGoogleAccount = !!user?.googleId;
+  if (isGoogleAccount) return null;
+  return <ChangeEmailSection />;
 }

@@ -1,12 +1,13 @@
 'use client';
 
 import type { Settings } from '@subscription-tracker/shared';
-import { PiggyBank, SendHorizonal } from 'lucide-react';
+import { BadgeDollarSign, SendHorizonal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface BudgetSectionProps {
   monthlyBudget: number | null | undefined;
@@ -32,23 +33,30 @@ export function BudgetSection({
   isSendingTestEmail,
 }: BudgetSectionProps) {
   const { t } = useTranslation();
+  const { searchQuery } = useSettingsSearch();
 
   return (
     <Card className="shadow-sm">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-            <PiggyBank className="w-5 h-5 text-green-600" />
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <BadgeDollarSign className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <CardTitle>{t('settings.budget.title')}</CardTitle>
-            <CardDescription>{t('settings.budget.desc')}</CardDescription>
+            <CardTitle>
+              <SearchHighlight text={t('settings.budget.title')} query={searchQuery} />
+            </CardTitle>
+            <CardDescription>
+              <SearchHighlight text={t('settings.budget.desc')} query={searchQuery} />
+            </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="monthlyBudget">{t('settings.budget.label')}</Label>
+          <Label htmlFor="monthlyBudget">
+            <SearchHighlight text={t('settings.budget.label')} query={searchQuery} />
+          </Label>
           <div className="flex gap-2 items-center">
             <span className="text-muted-foreground font-medium text-sm">{currency}</span>
             <Input
@@ -66,7 +74,9 @@ export function BudgetSection({
               }
             />
           </div>
-          <p className="text-xs text-muted-foreground">{t('settings.budget.help')}</p>
+          <p className="text-xs text-muted-foreground">
+            <SearchHighlight text={t('settings.budget.help')} query={searchQuery} />
+          </p>
         </div>
         {showTestControls && (
           <div className="border-t pt-4 space-y-3">
