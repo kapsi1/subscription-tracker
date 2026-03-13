@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import api from '@/lib/api';
 import { CategorySection } from './CategorySection';
+import { SettingsSearchProvider } from './SettingsSearchContext';
 
 vi.mock('@/lib/api', () => ({
   default: {
@@ -42,7 +43,9 @@ function createWrapper() {
     },
   });
   const Wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <SettingsSearchProvider>{children}</SettingsSearchProvider>
+    </QueryClientProvider>
   );
   return { Wrapper, queryClient };
 }
@@ -76,14 +79,10 @@ describe('CategorySection', () => {
     });
   });
 
-  it('calls POST /categories when Add Category button is clicked and saved', async () => {
+  it('calls POST /categories immediately when Add Category is clicked', async () => {
     mockApi.post.mockResolvedValue({
-      data: { id: 'cat-new', name: 'New Category', color: '#6366f1' },
+      data: { id: 'cat-new', name: 'New Category', color: '#6366f1', icon: 'Tag' },
     });
-    mockApi.post.mockResolvedValueOnce({
-      data: { id: 'cat-new', name: 'New Category', color: '#6366f1' },
-    }); // for single post
-    mockApi.post.mockResolvedValue({ data: [] }); // for /categories/reorder
     const { Wrapper } = createWrapper();
     render(<CategorySection />, { wrapper: Wrapper });
 
@@ -95,11 +94,6 @@ describe('CategorySection', () => {
       fireEvent.click(addButton);
     });
 
-    const saveButton = screen.getByRole('button', { name: /settings.categories.save/i });
-    await act(async () => {
-      fireEvent.click(saveButton);
-    });
-
     await waitFor(() => {
       expect(mockApi.post).toHaveBeenCalledWith('/categories', {
         name: 'New Category',
@@ -109,9 +103,8 @@ describe('CategorySection', () => {
     });
   });
 
-  it('calls DELETE /categories/:id when delete button is clicked and saved', async () => {
+  it('calls DELETE /categories/:id immediately when delete button is clicked', async () => {
     mockApi.delete.mockResolvedValue({});
-    mockApi.post.mockResolvedValue({ data: [] }); // for /categories/reorder
     const { Wrapper } = createWrapper();
     render(<CategorySection />, { wrapper: Wrapper });
 
@@ -119,18 +112,12 @@ describe('CategorySection', () => {
 
     // Delete buttons are hidden (opacity-0) but can be clicked — find all and click first
     const deleteButtons = screen.getAllByRole('button', { name: '' });
-    // Delete buttons are icon-only Trash2 buttons, filter by those without visible text
     const trashButtons = deleteButtons.filter(
       (btn) => btn.querySelector('svg') && !btn.textContent?.trim(),
     );
 
     await act(async () => {
       fireEvent.click(trashButtons[0]);
-    });
-
-    const saveButton = screen.getByRole('button', { name: /settings.categories.save/i });
-    await act(async () => {
-      fireEvent.click(saveButton);
     });
 
     await waitFor(() => {
@@ -177,11 +164,10 @@ describe('CategorySection', () => {
     vi.unstubAllGlobals();
   });
 
-  it('calls PATCH /categories/:id when a category name is changed, blurred, and saved', async () => {
+  it('calls PATCH /categories/:id when a category name is changed and blurred', async () => {
     mockApi.patch.mockResolvedValue({
-      data: { id: 'cat-1', name: 'Movies', color: '#a855f7' },
+      data: { id: 'cat-1', name: 'Movies', color: '#a855f7', icon: 'Play' },
     });
-    mockApi.post.mockResolvedValue({ data: [] }); // for /categories/reorder
     const { Wrapper } = createWrapper();
     render(<CategorySection />, { wrapper: Wrapper });
 
@@ -194,16 +180,9 @@ describe('CategorySection', () => {
       fireEvent.blur(input);
     });
 
-    const saveButton = screen.getByRole('button', { name: /settings.categories.save/i });
-    await act(async () => {
-      fireEvent.click(saveButton);
-    });
-
     await waitFor(() => {
       expect(mockApi.patch).toHaveBeenCalledWith('/categories/cat-1', {
         name: 'Movies',
-        color: '#a855f7',
-        icon: 'Play', // Assuming 'Play' is the mock icon or we need to check mockCategories
       });
     });
   });

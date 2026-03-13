@@ -18,7 +18,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import type { Category } from '@subscription-tracker/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { GripVertical, Layers, Plus, RotateCcw, Save, Trash2, Undo2 } from 'lucide-react';
+import { GripVertical, Layers, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -28,18 +28,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import api from '@/lib/api';
 
-function isNewCategory(id: string) {
-  return id.startsWith('new-');
-}
-
 interface CategoryRowProps {
   category: Category;
-  onUpdate: (id: string, updates: Partial<Pick<Category, 'name' | 'color' | 'icon'>>) => void;
+  onSave: (id: string, updates: Partial<Pick<Category, 'name' | 'color' | 'icon'>>) => void;
   onDelete: (id: string) => void;
   autoFocus?: boolean;
 }
 
-function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowProps) {
+function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps) {
   const { t } = useTranslation();
   const [name, setName] = useState(category.name);
   const [color, setColor] = useState(category.color);
@@ -55,7 +51,7 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const updateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const colorSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setName(category.name);
@@ -64,7 +60,7 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
 
   useEffect(() => {
     return () => {
-      if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
+      if (colorSaveTimerRef.current) clearTimeout(colorSaveTimerRef.current);
     };
   }, []);
 
@@ -81,19 +77,18 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
       setName(category.name);
       toast.error(t('settings.categories.noName'));
     } else if (trimmed !== category.name) {
-      onUpdate(category.id, { name: trimmed, color });
+      onSave(category.id, { name: trimmed });
     }
   };
 
   const handleColorChange = (value: string) => {
     setColor(value);
 
-    // Debounce the parent update to avoid infinite re-render loops
-    // and performance issues when dragging the color picker
-    if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
-    updateTimerRef.current = setTimeout(() => {
-      onUpdate(category.id, { name: name.trim() || category.name, color: value });
-    }, 100);
+    // Debounce the API save to avoid excessive calls when dragging the color picker
+    if (colorSaveTimerRef.current) clearTimeout(colorSaveTimerRef.current);
+    colorSaveTimerRef.current = setTimeout(() => {
+      onSave(category.id, { color: value });
+    }, 500);
   };
 
   return (
@@ -116,7 +111,7 @@ function CategoryRow({ category, onUpdate, onDelete, autoFocus }: CategoryRowPro
       {/* Icon Picker */}
       <IconPicker
         value={category.icon}
-        onChange={(icon) => onUpdate(category.id, { icon })}
+        onChange={(icon) => onSave(category.id, { icon })}
         color={color}
       />
 
@@ -168,12 +163,9 @@ export function CategorySection() {
   const { t } = useTranslation();
   const { searchQuery } = useSettingsSearch();
   const queryClient = useQueryClient();
-  const [localCategories, setLocalCategories] = useState<Category[]>([]);
-  const [isDirty, setIsDirty] = useState(false);
   const [newCategoryId, setNewCategoryId] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
 
-  const { data: serverCategories = EMPTY_CATEGORIES, isLoading } = useQuery<Category[]>({
+  const { data: categories = EMPTY_CATEGORIES, isLoading } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: async () => {
       const res = await api.get('/categories');
@@ -181,20 +173,71 @@ export function CategorySection() {
     },
   });
 
-  // Sync local state from server when there are no unsaved changes
-  useEffect(() => {
-    if (!isDirty) {
-      setLocalCategories(serverCategories);
-    }
-  }, [serverCategories, isDirty]);
+  const invalidateRelated = () => {
+    queryClient.invalidateQueries({ queryKey: ['categories'] });
+    queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+  };
+
+  const createMutation = useMutation({
+    mutationFn: (newCat: { name: string; color: string; icon: string }) =>
+      api.post('/categories', newCat),
+    onSuccess: (res) => {
+      queryClient.setQueryData<Category[]>(['categories'], (old) => [...(old ?? []), res.data]);
+      setNewCategoryId(res.data.id);
+      invalidateRelated();
+    },
+    onError: () => {
+      toast.error(t('settings.categories.saveError'));
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({
+      id,
+      updates,
+    }: {
+      id: string;
+      updates: Partial<Pick<Category, 'name' | 'color' | 'icon'>>;
+    }) => api.patch(`/categories/${id}`, updates),
+    onSuccess: () => {
+      invalidateRelated();
+    },
+    onError: () => {
+      toast.error(t('settings.categories.saveError'));
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => api.delete(`/categories/${id}`),
+    onMutate: (id) => {
+      queryClient.setQueryData<Category[]>(['categories'], (old) =>
+        (old ?? []).filter((c) => c.id !== id),
+      );
+    },
+    onSuccess: () => {
+      invalidateRelated();
+    },
+    onError: () => {
+      toast.error(t('settings.categories.saveError'));
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
+
+  const reorderMutation = useMutation({
+    mutationFn: (items: { id: string; order: number }[]) =>
+      api.post('/categories/reorder', { items }),
+    onError: () => {
+      toast.error(t('settings.categories.saveError'));
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
 
   const resetMutation = useMutation({
     mutationFn: () => api.post('/categories/reset'),
     onSuccess: () => {
-      setIsDirty(false);
       setNewCategoryId(null);
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      invalidateRelated();
       toast.success(t('settings.categories.resetSuccess'));
     },
     onError: () => {
@@ -213,10 +256,16 @@ export function CategorySection() {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = localCategories.findIndex((c) => c.id === active.id);
-    const newIndex = localCategories.findIndex((c) => c.id === over.id);
-    setLocalCategories(arrayMove(localCategories, oldIndex, newIndex));
-    setIsDirty(true);
+    const oldIndex = categories.findIndex((c) => c.id === active.id);
+    const newIndex = categories.findIndex((c) => c.id === over.id);
+    const reordered = arrayMove(categories, oldIndex, newIndex);
+
+    // Optimistic update
+    queryClient.setQueryData<Category[]>(
+      ['categories'],
+      reordered.map((c, i) => ({ ...c, order: i })),
+    );
+    reorderMutation.mutate(reordered.map((c, i) => ({ id: c.id, order: i })));
   };
 
   const handleDragCancel = () => {
@@ -224,34 +273,20 @@ export function CategorySection() {
   };
 
   const handleAdd = () => {
-    const tempId = `new-${Math.random().toString(36).slice(2)}`;
-    const newCat: Category = {
-      id: tempId,
-      name: 'New Category',
-      color: '#6366f1',
-      icon: 'Tag',
-      order: localCategories.length,
-    };
-    setLocalCategories((prev) => [...prev, newCat]);
-    setNewCategoryId(tempId);
-    setIsDirty(true);
+    createMutation.mutate({ name: 'New Category', color: '#6366f1', icon: 'Tag' });
   };
 
-  const handleUpdate = (id: string, updates: Partial<Category>) => {
-    setLocalCategories((prev) => prev.map((c) => (c.id === id ? { ...c, ...updates } : c)));
-    setIsDirty(true);
+  const handleSave = (id: string, updates: Partial<Pick<Category, 'name' | 'color' | 'icon'>>) => {
+    // Optimistic update in query cache
+    queryClient.setQueryData<Category[]>(['categories'], (old) =>
+      (old ?? []).map((c) => (c.id === id ? { ...c, ...updates } : c)),
+    );
+    updateMutation.mutate({ id, updates });
   };
 
   const handleDelete = (id: string) => {
-    setLocalCategories((prev) => prev.filter((c) => c.id !== id));
     if (newCategoryId === id) setNewCategoryId(null);
-    setIsDirty(true);
-  };
-
-  const handleRevert = () => {
-    setLocalCategories(serverCategories);
-    setIsDirty(false);
-    setNewCategoryId(null);
+    deleteMutation.mutate(id);
   };
 
   const handleReset = () => {
@@ -260,67 +295,7 @@ export function CategorySection() {
     }
   };
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      const localIdSet = new Set(
-        localCategories.filter((c) => !isNewCategory(c.id)).map((c) => c.id),
-      );
-
-      // 1. Delete categories removed locally
-      const toDelete = serverCategories.filter((c) => !localIdSet.has(c.id));
-      await Promise.all(toDelete.map((c) => api.delete(`/categories/${c.id}`)));
-
-      // 2. Create new categories, collect real IDs
-      const toCreate = localCategories.filter((c) => isNewCategory(c.id));
-      const created = await Promise.all(
-        toCreate.map((c) =>
-          api.post('/categories', { name: c.name, color: c.color, icon: c.icon }),
-        ),
-      );
-      const idMap = new Map<string, string>();
-      for (let i = 0; i < toCreate.length; i++) {
-        idMap.set(toCreate[i].id, created[i].data.id);
-      }
-
-      // 3. Update changed existing categories
-      const toUpdate = localCategories.filter((c) => {
-        if (isNewCategory(c.id)) return false;
-        const original = serverCategories.find((s) => s.id === c.id);
-        return (
-          original &&
-          (original.name !== c.name || original.color !== c.color || original.icon !== c.icon)
-        );
-      });
-      await Promise.all(
-        toUpdate.map((c) =>
-          api.patch(`/categories/${c.id}`, { name: c.name, color: c.color, icon: c.icon }),
-        ),
-      );
-
-      // 4. Persist the final order
-      const finalIds = localCategories.map((c) => idMap.get(c.id) ?? c.id);
-      if (finalIds.length > 0) {
-        await api.post('/categories/reorder', {
-          items: finalIds.map((id, i) => ({ id, order: i })),
-        });
-      }
-
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-      setIsDirty(false);
-      setNewCategoryId(null);
-      toast.success(t('settings.categories.saveSuccess'));
-    } catch {
-      toast.error(t('settings.categories.saveError'));
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const filteredCategories = localCategories.filter(
+  const filteredCategories = categories.filter(
     (cat) =>
       searchQuery.trim() === '' || cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
@@ -370,7 +345,7 @@ export function CategorySection() {
                   <CategoryRow
                     key={category.id}
                     category={category}
-                    onUpdate={handleUpdate}
+                    onSave={handleSave}
                     onDelete={handleDelete}
                     autoFocus={category.id === newCategoryId}
                   />
@@ -382,30 +357,16 @@ export function CategorySection() {
 
         {/* Actions */}
         <div className="max-w-lg mx-auto flex items-center justify-between pt-2 border-t">
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleAdd} className="gap-2">
-              <Plus className="w-3.5 h-3.5" />
-              {t('settings.categories.addCategory')}
-            </Button>
-            {isDirty && (
-              <>
-                <Button size="sm" onClick={handleSave} disabled={isSaving} className="gap-2">
-                  <Save className="w-3.5 h-3.5" />
-                  {t('settings.categories.save')}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleRevert}
-                  disabled={isSaving}
-                  className="gap-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Undo2 className="w-3.5 h-3.5" />
-                  {t('settings.categories.revert')}
-                </Button>
-              </>
-            )}
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleAdd}
+            disabled={createMutation.isPending}
+            className="gap-2"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            {t('settings.categories.addCategory')}
+          </Button>
           <Button
             variant="ghost"
             size="sm"

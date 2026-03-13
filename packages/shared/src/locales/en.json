@@ -301,10 +301,7 @@
       "deleteError": "Failed to delete category",
       "resetError": "Failed to reset categories",
       "resetSuccess": "Categories reset to defaults",
-      "noName": "Category name cannot be empty",
-      "save": "Save",
-      "revert": "Revert",
-      "saveSuccess": "Categories saved"
+      "noName": "Category name cannot be empty"
     },
     "localization": {
       "title": "Localization",
@@ -332,7 +329,6 @@
       "pickCustomColor": "Pick custom color",
       "recentColors": "Recent Colors",
       "none": "Preset selected",
-      "saveSuccess": "Accent color updated",
       "saveError": "Failed to update accent color"
     },
     "budget": {

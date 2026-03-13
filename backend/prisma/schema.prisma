@@ -19,6 +19,7 @@ model User {
   monthlyBudget          Decimal?
   language               String             @default("en")
   accentColor            String             @default("Indigo")
+  recentAccentColors     String[]
   dailyDigest            Boolean            @default(false)
   emailNotifications     Boolean            @default(true)
   theme                  String             @default("system")

@@ -319,10 +319,7 @@
       "deleteError": "Nie udało się usunąć kategorii",
       "resetError": "Nie udało się zresetować kategorii",
       "resetSuccess": "Kategorie zostały przywrócone do domyślnych",
-      "noName": "Nazwa kategorii nie może być pusta",
-      "save": "Zapisz",
-      "revert": "Cofnij",
-      "saveSuccess": "Kategorie zostały zapisane"
+      "noName": "Nazwa kategorii nie może być pusta"
     },
     "localization": {
       "title": "Lokalizacja",
@@ -350,7 +347,6 @@
       "pickCustomColor": "Wybierz własny kolor",
       "recentColors": "Ostatnie kolory",
       "none": "Wybrano gotowy zestaw",
-      "saveSuccess": "Kolor akcentu został zaktualizowany",
       "saveError": "Nie udało się zaktualizować koloru akcentu"
     },
     "budget": {

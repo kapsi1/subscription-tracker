@@ -2,13 +2,12 @@
 
 import { COLORS, type ColorsConfig, getAccentColor } from '@subscription-tracker/shared';
 import type { TFunction } from 'i18next';
-import { Monitor, Moon, Palette, Pipette, RotateCcw, Save, Sun } from 'lucide-react';
+import { Monitor, Moon, Palette, Pipette, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/components/ui/utils';
@@ -127,11 +126,10 @@ export function AppearanceSection() {
   const { user } = useAuth();
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [currentAccent, setCurrentAccent] = useState<AccentColorType>(ACCENT_COLORS[0]);
-  const [lastSavedAccentName, setLastSavedAccentName] = useState<string>('Indigo');
   const [recentColors, setRecentColors] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
   const isInitializedRef = useRef(false);
+  const latestUnsavedHexRef = useRef<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -145,7 +143,6 @@ export function AppearanceSection() {
       }
     }
     if (cached) {
-      setLastSavedAccentName(cached);
       if (cached.startsWith('#')) {
         const custom = { ...getAccentColor(cached, COLORS as ColorsConfig), name: cached };
         setCurrentAccent(custom);
@@ -201,84 +198,106 @@ export function AppearanceSection() {
     [setTheme],
   );
 
-  const handleAccentSelect = useCallback(async (accent: AccentColorType) => {
+  const handleAccentSelect = useCallback((accent: AccentColorType) => {
     if (!accent.name) return;
+    latestUnsavedHexRef.current = null;
+    pickerHexRef.current = null;
     setCurrentAccent(accent);
     applyAccentColor(accent);
-    setLastSavedAccentName(accent.name);
-    setIsDirty(false);
+
     localStorage.setItem('app-accent-color', accent.name);
-    try {
-      await api.patch('/users/settings', { accentColor: accent.name });
-    } catch (error) {
+    api.patch('/users/settings', { accentColor: accent.name }).catch((error) => {
       console.error('Failed to save accent color', error);
-    }
+    });
   }, []);
 
-  const handleRevert = useCallback(() => {
-    if (lastSavedAccentName.startsWith('#')) {
-      const custom = {
-        ...getAccentColor(lastSavedAccentName, COLORS as ColorsConfig),
-        name: lastSavedAccentName,
-      };
-      setCurrentAccent(custom);
-      applyAccentColor(custom);
-    } else {
-      const found = ACCENT_COLORS.find((c) => c.name === lastSavedAccentName);
-      if (found) {
-        setCurrentAccent(found);
-        applyAccentColor(found);
+  const saveCustomColor = useCallback(
+    async (hex: string, updateHistory: boolean) => {
+      let updatedHistory: string[] | undefined;
+      if (updateHistory) {
+        setRecentColors((prev) => {
+          const filtered = prev.filter((c) => c !== hex);
+          updatedHistory = [hex, ...filtered].slice(0, 4);
+          localStorage.setItem('app-accent-history', JSON.stringify(updatedHistory));
+          return updatedHistory as string[];
+        });
       }
-    }
-    setIsDirty(false);
-  }, [lastSavedAccentName]);
+
+      localStorage.setItem('app-accent-color', hex);
+      try {
+        await api.patch('/users/settings', {
+          accentColor: hex,
+          ...(updateHistory && updatedHistory ? { recentAccentColors: updatedHistory } : {}),
+        });
+      } catch (error) {
+        console.error('Failed to save custom accent color', error);
+        toast.error(t('settings.appearance.saveError'));
+      }
+    },
+    [t],
+  );
 
   const lastUpdateRef = useRef<number>(0);
+  const pickerHexRef = useRef<string | null>(null);
+
   const handleCustomColorChange = useCallback(
     (hex: string) => {
       // 1. Always update the browser styles immediately (direct DOM manipulation is fast)
       const accent = getAccentColor(hex, COLORS as ColorsConfig);
       applyAccentColor({ ...accent, name: hex });
 
-      // 2. Throttle the React state updates to avoid heavy re-renders
+      // 2. Throttle React state updates to avoid heavy re-renders
       const now = Date.now();
       if (now - lastUpdateRef.current > 60) {
-        // 60ms = ~16fps state updates
         setCurrentAccent({ ...accent, name: hex });
-        setIsDirty(hex !== lastSavedAccentName);
         lastUpdateRef.current = now;
       }
+
+      // Track the current picker value for use when picker closes
+      pickerHexRef.current = hex;
+      latestUnsavedHexRef.current = hex;
     },
-    [lastSavedAccentName],
+    [],
   );
 
-  const handleSaveCustomColor = useCallback(async () => {
-    if (!currentAccent.name) return;
-    const hex = currentAccent.name;
+  const handleCustomColorClose = useCallback(() => {
+    const hex = pickerHexRef.current;
+    if (!hex) return;
+    pickerHexRef.current = null;
+    latestUnsavedHexRef.current = null;
+    const accent = getAccentColor(hex, COLORS as ColorsConfig);
+    setCurrentAccent({ ...accent, name: hex });
+    saveCustomColor(hex, true);
+  }, [saveCustomColor]);
 
-    // Update history
-    let updatedHistory: string[] = [];
-    setRecentColors((prev) => {
-      const filtered = prev.filter((c) => c !== hex);
-      updatedHistory = [hex, ...filtered].slice(0, 4);
-      localStorage.setItem('app-accent-history', JSON.stringify(updatedHistory));
-      return updatedHistory;
-    });
-
-    setLastSavedAccentName(hex);
-    setIsDirty(false);
-    localStorage.setItem('app-accent-color', hex);
-    try {
-      await api.patch('/users/settings', {
-        accentColor: hex,
-        recentAccentColors: updatedHistory,
+  const handleRecentColorSelect = useCallback(
+    (hex: string) => {
+      const accent = getAccentColor(hex, COLORS as ColorsConfig);
+      applyAccentColor({ ...accent, name: hex });
+      setCurrentAccent({ ...accent, name: hex });
+      latestUnsavedHexRef.current = null;
+      pickerHexRef.current = null;
+      // Save color only — do not update recent colors list
+      localStorage.setItem('app-accent-color', hex);
+      api.patch('/users/settings', { accentColor: hex }).catch((error) => {
+        console.error('Failed to save accent color', error);
+        toast.error(t('settings.appearance.saveError'));
       });
-      toast.success(t('settings.appearance.saveSuccess'));
-    } catch (error) {
-      console.error('Failed to save custom accent color', error);
-      toast.error(t('settings.appearance.saveError'));
-    }
-  }, [currentAccent.name, t]);
+    },
+    [t],
+  );
+
+  // Flush pending auto-save on unmount
+  useEffect(() => {
+    return () => {
+      if (latestUnsavedHexRef.current) {
+        const hex = latestUnsavedHexRef.current;
+        latestUnsavedHexRef.current = null;
+        // Fire-and-forget save on unmount
+        api.patch('/users/settings', { accentColor: hex }).catch(() => {});
+      }
+    };
+  }, []);
 
   if (!mounted)
     return (
@@ -370,6 +389,7 @@ export function AppearanceSection() {
                             : currentAccent.lightPrimary
                       }
                       onChange={(e) => handleCustomColorChange(e.target.value)}
+                      onBlur={handleCustomColorClose}
                       className="w-12 h-12 rounded-full cursor-pointer border-2 border-border bg-card p-0 overflow-hidden transition-all hover:border-primary/50 shadow-sm [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-full"
                       title={t('settings.appearance.pickCustomColor')}
                     />
@@ -403,7 +423,7 @@ export function AppearanceSection() {
                       <button
                         key={key}
                         type="button"
-                        onClick={() => hasColor && handleCustomColorChange(hex)}
+                        onClick={() => hasColor && handleRecentColorSelect(hex)}
                         disabled={!hasColor}
                         className={cn(
                           'w-12 h-12 rounded-full border-2 border-border/50 shadow-sm transition-all',
@@ -417,34 +437,6 @@ export function AppearanceSection() {
                     );
                   })}
                 </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-end h-12 min-w-[170px] mt-auto">
-                {isDirty ? (
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleSaveCustomColor}
-                      className="gap-2 text-primary hover:text-primary hover:bg-primary/10"
-                    >
-                      <Save className="w-3.5 h-3.5" />
-                      {t('common.save')}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleRevert}
-                      className="gap-2 text-muted-foreground hover:text-foreground"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                      {t('common.reset')}
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="h-9" /> /* Maintain vertical space */
-                )}
               </div>
             </div>
           </div>
