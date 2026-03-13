@@ -6,7 +6,7 @@
       "submit": "Zaloguj się",
       "switch": "Przełącz na rejestrację",
       "resendVerification": "Wyślij ponownie e-mail weryfikacyjny",
-      "forgotPassword": "Zapomniałem hasła"
+      "forgotPassword": "Zapomniałem hasła?"
     },
     "register": {
       "subtitle": "Utwórz konto, aby rozpocząć",
@@ -59,9 +59,7 @@
     "backendTimeout": "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
     "tryAgain": "Spróbuj ponownie",
     "redirectingToLogin": "Przekierowywanie do logowania...",
-    "redirectingToDashboard": "Przekierowanie do panelu...",
-    "save": "Zapisz",
-    "reset": "Resetuj"
+    "redirectingToDashboard": "Przekierowanie do panelu..."
   },
   "nav": {
     "dashboard": "Panel główny",
@@ -144,6 +142,7 @@
     "foundCount_one": "Znaleziono {{count}} subskrypcję",
     "foundCount_few": "Znaleziono {{count}} subskrypcje",
     "foundCount_many": "Znaleziono {{count}} subskrypcji",
+    "foundCount_other": "Znaleziono {{count}} subskrypcji",
     "noFound": "Nie znaleziono subskrypcji",
     "noFoundDesc": "Spróbuj zmienić parametry wyszukiwania",
     "getStarted": "Zacznij od dodania swojej pierwszej subskrypcji",
@@ -315,6 +314,7 @@
       "resetToDefaults": "Przywróć domyślne",
       "resetConfirm": "Spowoduje to usunięcie wszystkich niestandardowych kategorii i przywrócenie domyślnych. Czy jesteś pewien?",
       "namePlaceholder": "Nazwa kategorii",
+      "pickIcon": "Wybierz ikonę",
       "saveError": "Nie udało się zapisać kategorii",
       "deleteError": "Nie udało się usunąć kategorii",
       "resetError": "Nie udało się zresetować kategorii",
@@ -356,6 +356,7 @@
       "help": "Pozostaw puste, jeśli nie chcesz alertów budżetowych"
     },
     "save": "Zapisz ustawienia",
+    "saveError": "Nie udało się zapisać ustawień",
     "loadError": "Nie udało się załadować ustawień"
   },
   "emails": {

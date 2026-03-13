@@ -58,8 +58,6 @@
     "tryAgain": "Try Again",
     "redirectingToLogin": "Redirecting to login...",
     "redirectingToDashboard": "Redirecting to dashboard...",
-    "save": "Save",
-    "reset": "Reset",
     "previous": "Previous",
     "next": "Next"
   },
@@ -113,7 +111,21 @@
   },
   "colors": {
     "Indigo": "Indigo",
-    "Crimson": "Crimson"
+    "Crimson": "Crimson",
+    "Rose": "Rose",
+    "Lavender": "Lavender",
+    "Cobalt": "Cobalt",
+    "Navy": "Navy",
+    "Mint": "Mint",
+    "Forest": "Forest",
+    "Sage": "Sage",
+    "Amber": "Amber",
+    "Gold": "Gold",
+    "Terracotta": "Terracotta",
+    "Coffee": "Coffee",
+    "Sand": "Sand",
+    "Slate": "Slate",
+    "Charcoal": "Charcoal"
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -123,7 +135,8 @@
     "add": "Add Subscription",
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
-    "foundCount": "Found {{count}} subscriptions",
+    "foundCount_one": "Found {{count}} subscription",
+    "foundCount_other": "Found {{count}} subscriptions",
     "noFound": "No subscriptions found",
     "noFoundDesc": "Try adjusting your search query",
     "getStarted": "Get started by adding your first subscription",
@@ -297,6 +310,7 @@
       "resetToDefaults": "Reset to Defaults",
       "resetConfirm": "This will delete all your custom categories and restore the defaults. Are you sure?",
       "namePlaceholder": "Category name",
+      "pickIcon": "Pick icon",
       "saveError": "Failed to save category",
       "deleteError": "Failed to delete category",
       "resetError": "Failed to reset categories",
@@ -338,6 +352,7 @@
       "help": "Leave blank if you don't want budget alerts"
     },
     "save": "Save Settings",
+    "saveError": "Failed to save settings",
     "loadError": "Failed to load settings"
   },
   "emails": {
