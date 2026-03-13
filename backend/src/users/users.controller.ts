@@ -50,7 +50,7 @@ export class UsersController {
       throw new NotFoundException('User not found');
     }
     // Don't return password hash
-    const { passwordHash, ...result } = user;
+    const { passwordHash: _, ...result } = user;
     return result;
   }
 
@@ -145,6 +145,7 @@ export class UsersController {
       language,
       user.accentColor,
       user.theme,
+      user.name ?? undefined,
     );
 
     return {
@@ -183,6 +184,7 @@ export class UsersController {
       user.accentColor,
       user.theme,
       language,
+      user.name ?? undefined,
     );
 
     return {
@@ -216,6 +218,7 @@ export class UsersController {
       language,
       user.accentColor,
       user.theme,
+      user.name ?? undefined,
     );
 
     return {
@@ -242,6 +245,7 @@ export class UsersController {
       language,
       user.accentColor,
       user.theme,
+      user.name ?? undefined,
     );
 
     return {

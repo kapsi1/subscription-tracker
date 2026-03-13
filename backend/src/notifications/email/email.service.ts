@@ -284,11 +284,14 @@ export class EmailService {
     language: 'en' | 'pl' = 'en',
     accentColor?: string,
     theme?: string,
+    name?: string,
   ) {
     const locale = LOCALES[language];
+    const emails = locale.emails;
     const themeMode = this.resolveTheme(theme);
     const safeSubscriptionName = this.escapeHtml(subscriptionName);
-    const subject = `${locale.emails.upcomingRenewal}: ${subscriptionName}`;
+    const subject = `${emails.upcomingRenewal}: ${subscriptionName}`;
+    const greeting = emails.greetingWithName.replace('{{name}}', name || email);
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const teamNameHtml = locale.emails.teamName.replace(
@@ -308,9 +311,9 @@ export class EmailService {
             <div class="email-card">
               <div class="email-topbar-bg"></div>
               <div class="email-content">
-                <h2 class="email-title">${locale.emails.subscriptionAlert}</h2>
-                <p class="email-greeting">${locale.emails.greeting}</p>
-                <p class="email-text">${locale.emails.reminder.replace('{{name}}', safeSubscriptionName)}</p>
+                <h2 class="email-title">${emails.subscriptionAlert}</h2>
+                <p class="email-greeting">${greeting}</p>
+                <p class="email-text">${emails.reminder.replace('{{name}}', safeSubscriptionName)}</p>
                 <div class="email-highlight">
                   <p class="email-metric"><strong>${locale.emails.amount}:</strong> <span class="email-amount">${amount} ${currency}</span></p>
                   <p class="email-metric"><strong>${locale.emails.renewingIn}:</strong> ${daysBefore} ${locale.emails.days}</p>
@@ -355,9 +358,12 @@ export class EmailService {
     accentColor?: string,
     theme?: string,
     language: 'en' | 'pl' = 'en',
+    name?: string,
   ) {
     const locale = LOCALES[language];
+    const emails = locale.emails;
     const themeMode = this.resolveTheme(theme);
+    const greeting = emails.greetingWithName.replace('{{name}}', name || email);
 
     const appUrl =
       this.configService.get<string>('APP_URL') ||
@@ -379,9 +385,9 @@ export class EmailService {
           <div class="email-card">
             <div class="email-danger-topbar-bg"></div>
             <div class="email-content">
-              <h2 class="email-danger-title">${locale.emails.budgetExceeded}</h2>
-              <p class="email-greeting">${locale.emails.greeting}</p>
-              <p class="email-text">${locale.emails.budgetLimitDesc}</p>
+              <h2 class="email-danger-title">${emails.budgetExceeded}</h2>
+              <p class="email-greeting">${greeting}</p>
+              <p class="email-text">${emails.budgetLimitDesc}</p>
               <div class="email-highlight">
                 <p class="email-metric"><strong>${locale.emails.currentMonthly}:</strong> <span class="email-danger">${amount.toFixed(2)} ${currency}</span></p>
                 <p class="email-metric"><strong>${locale.emails.yourBudget}:</strong> ${budget.toFixed(2)} ${currency}</p>
@@ -424,9 +430,12 @@ export class EmailService {
     language: 'en' | 'pl' = 'en',
     accentColor?: string,
     theme?: string,
+    name?: string,
   ) {
     const locale = LOCALES[language];
+    const emails = locale.emails;
     const themeMode = this.resolveTheme(theme);
+    const greeting = emails.greetingWithName.replace('{{name}}', name || email);
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const teamNameHtml = locale.emails.teamName.replace(
@@ -440,7 +449,6 @@ export class EmailService {
       `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
     );
 
-    const emails = locale.emails;
     const digest = emails.digest;
 
     let paidYesterdayHtml = '';
@@ -472,7 +480,7 @@ export class EmailService {
             <div class="email-topbar-bg"></div>
             <div class="email-content">
               <h2 class="email-title">${emails.dailyDigestTitle}</h2>
-              <p class="email-greeting">${emails.greeting}</p>
+              <p class="email-greeting">${greeting}</p>
               <p class="email-text">${digest.summary}</p>
               <div class="email-highlight">
                 <p class="email-metric"><strong>${digest.totalActive}:</strong> ${stats.totalActive}</p>
@@ -517,9 +525,12 @@ export class EmailService {
     language: 'en' | 'pl' = 'en',
     accentColor?: string,
     theme?: string,
+    name?: string,
   ) {
     const locale = LOCALES[language];
+    const emails = locale.emails;
     const themeMode = this.resolveTheme(theme);
+    const greeting = emails.greetingWithName.replace('{{name}}', name || email);
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const teamNameHtml = locale.emails.teamName.replace(
@@ -533,7 +544,6 @@ export class EmailService {
       `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
     );
 
-    const emails = locale.emails;
     const digest = emails.digest;
 
     const bodyHtml = `
@@ -543,7 +553,7 @@ export class EmailService {
             <div class="email-topbar-bg"></div>
             <div class="email-content">
               <h2 class="email-title">${emails.weeklyReportTitle}</h2>
-              <p class="email-greeting">${emails.greeting}</p>
+              <p class="email-greeting">${greeting}</p>
               <p class="email-text">${digest.summary}</p>
               <div class="email-highlight">
                 <p class="email-metric"><strong>${digest.totalActive}:</strong> ${stats.totalActive}</p>

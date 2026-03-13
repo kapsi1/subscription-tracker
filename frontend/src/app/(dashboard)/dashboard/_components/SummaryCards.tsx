@@ -4,6 +4,7 @@ import { Calendar, CreditCard, DollarSign, TrendingUp } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/components/ui/utils';
 import { formatCurrency } from '@/lib/utils';
 
 interface SummaryCardsProps {
@@ -17,12 +18,22 @@ interface SummaryCardsProps {
   monthlyPaymentsTotalCount: number;
 }
 
-function SummaryCard({ title, icon, value }: { title: string; icon: ReactNode; value: ReactNode }) {
+function SummaryCard({
+  title,
+  icon,
+  value,
+  iconBgClass,
+}: { title: string; icon: ReactNode; value: ReactNode; iconBgClass: string }) {
   return (
     <Card className="min-w-0 shadow-sm transition-shadow hover:shadow-md">
-      <CardHeader className="flex h-20 flex-col justify-center px-6 pb-1 text-center md:h-[5.5rem] lg:h-24">
+      <CardHeader className="flex h-20 flex-col justify-center px-6 pb-1 text-center md:h-22 lg:h-24">
         <div className="min-w-0 flex items-center justify-center">
-          <div className="flex h-9 w-9 min-w-9 items-center justify-center rounded-lg bg-secondary mr-4 lg:mr-0">
+          <div
+            className={cn(
+              'flex h-9 w-9 min-w-9 items-center justify-center rounded-lg mr-4 lg:mr-0',
+              iconBgClass,
+            )}
+          >
             {icon}
           </div>
           <CardTitle className="min-w-0 text-center text-base font-medium leading-tight text-muted-foreground md:text-lg">
@@ -50,23 +61,27 @@ export function SummaryCards({
     <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <SummaryCard
         title={t('dashboard.totalMonthlyCost')}
-        icon={<DollarSign className="w-4 h-4 text-primary" />}
+        icon={<DollarSign className="w-4 h-4 text-[#3b82f6]" />}
         value={formatCurrency(summary.totalMonthlyCost, summary.currency)}
+        iconBgClass="bg-[#3b82f6]/10"
       />
       <SummaryCard
         title={t('dashboard.totalYearlyCost')}
-        icon={<TrendingUp className="w-4 h-4 text-primary" />}
+        icon={<TrendingUp className="w-4 h-4 text-[#10b981]" />}
         value={formatCurrency(summary.totalYearlyCost, summary.currency, 0)}
+        iconBgClass="bg-[#10b981]/10"
       />
       <SummaryCard
         title={t('dashboard.monthlyPayments')}
-        icon={<Calendar className="w-4 h-4 text-primary" />}
+        icon={<Calendar className="w-4 h-4 text-[#f59e0b]" />}
         value={`${monthlyPaymentsDoneCount}/${monthlyPaymentsTotalCount}`}
+        iconBgClass="bg-[#f59e0b]/10"
       />
       <SummaryCard
         title={t('dashboard.activeSubscriptions')}
-        icon={<CreditCard className="w-4 h-4 text-primary" />}
+        icon={<CreditCard className="w-4 h-4 text-[#8b5cf6]" />}
         value={summary.activeSubscriptions}
+        iconBgClass="bg-[#8b5cf6]/10"
       />
     </div>
   );

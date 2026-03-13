@@ -144,6 +144,7 @@ export class AlertsService {
           type,
           daysBefore,
           userEmail: sub.user.email,
+          userName: sub.user.name ?? undefined,
           subscriptionName: sub.name,
           amount: Number(sub.amount),
           currency: sub.currency,
@@ -231,6 +232,7 @@ export class AlertsService {
             'processBudgetAlert',
             {
               userEmail: user.email,
+              userName: user.name ?? undefined,
               amount: summary.totalMonthlyCost,
               budget: monthlyBudget,
               currency: user.currency,

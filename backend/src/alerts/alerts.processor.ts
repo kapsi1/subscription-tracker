@@ -41,6 +41,7 @@ export class AlertsProcessor extends WorkerHost {
       alertId,
       subscriptionId,
       userEmail,
+      userName,
       subscriptionName,
       daysBefore,
       amount,
@@ -86,6 +87,7 @@ export class AlertsProcessor extends WorkerHost {
           userPrefs?.language === 'pl' ? 'pl' : 'en',
           userPrefs?.accentColor,
           userPrefs?.theme,
+          userName,
         );
         this.logger.log({
           msg: 'Email alert sent successfully',
@@ -201,6 +203,7 @@ export class AlertsProcessor extends WorkerHost {
         userPrefs?.accentColor,
         userPrefs?.theme,
         userPrefs?.language === 'pl' ? 'pl' : 'en',
+        job.data.userName,
       );
       return { success: true };
     } catch (error: unknown) {

@@ -146,6 +146,7 @@ export class PaymentsService {
               (user.language as 'en' | 'pl') || 'en',
               user.accentColor,
               user.theme,
+              user.name ?? undefined,
             );
           } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);

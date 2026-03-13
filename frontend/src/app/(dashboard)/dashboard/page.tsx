@@ -110,7 +110,6 @@ export default function DashboardPage() {
     (payment) => payment.status === 'done',
   ).length;
 
-
   return (
     <div className="min-w-0 space-y-8">
       {/* Header */}
