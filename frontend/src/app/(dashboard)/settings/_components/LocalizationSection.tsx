@@ -1,6 +1,6 @@
 'use client';
 
-import { CURRENCIES } from '@subscription-tracker/shared';
+import { CURRENCIES } from '@subtracker/shared';
 import { ChevronDown, Globe, Search } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

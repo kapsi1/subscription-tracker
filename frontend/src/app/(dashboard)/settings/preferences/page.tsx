@@ -1,6 +1,6 @@
 'use client';
 
-import type { Settings } from '@subscription-tracker/shared';
+import type { Settings } from '@subtracker/shared';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';

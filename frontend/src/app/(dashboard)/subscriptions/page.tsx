@@ -1,7 +1,7 @@
 'use client';
 
 import { sendGAEvent } from '@next/third-parties/google';
-import type { Category, Subscription } from '@subscription-tracker/shared';
+import type { Category, Subscription } from '@subtracker/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowUpDown,

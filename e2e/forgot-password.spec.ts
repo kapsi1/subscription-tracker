@@ -38,7 +38,7 @@ test.describe('Forgot Password Flow', () => {
     await page.getByText('Forgot password?').click();
     await page.waitForURL('**/forgot-password');
     
-    await expect(page.getByText('Subscription Cost Tracker')).toBeVisible();
+    await expect(page.getByText('SubTracker')).toBeVisible();
     await page.getByLabel('Email').fill(testEmail);
     await page.getByRole('button', { name: 'Forgot password?' }).click();
 

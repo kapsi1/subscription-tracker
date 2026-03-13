@@ -3,7 +3,7 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { CategoriesService } from './categories.service';
 
-jest.mock('@subscription-tracker/shared', () => ({
+jest.mock('@subtracker/shared', () => ({
   DEFAULT_CATEGORIES: [
     { name: 'Entertainment', color: '#a855f7', icon: 'Play' },
     { name: 'Productivity', color: '#3b82f6', icon: 'CheckSquare' },

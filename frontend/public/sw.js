@@ -15,7 +15,7 @@ self.addEventListener('push', (event) => {
     data = { body: event.data ? event.data.text() : '' };
   }
 
-  const title = data.title || 'Subscription Tracker';
+  const title = data.title || 'SubTracker';
   const options = {
     body: data.body || 'You have a new notification.',
     icon: '/next.svg',

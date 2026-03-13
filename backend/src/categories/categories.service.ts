@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { DEFAULT_CATEGORIES } from '@subscription-tracker/shared';
+import { DEFAULT_CATEGORIES } from '@subtracker/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ReorderCategoriesDto } from './dto/reorder-categories.dto';

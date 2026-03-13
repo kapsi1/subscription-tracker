@@ -1,6 +1,6 @@
 'use client';
 
-import { CATEGORY_ICONS } from '@subscription-tracker/shared';
+import { CATEGORY_ICONS } from '@subtracker/shared';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DynamicIcon } from '@/components/DynamicIcon';

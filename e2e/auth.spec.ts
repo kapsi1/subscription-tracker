@@ -22,7 +22,7 @@ test.describe('Authentication Flow', () => {
     await page.goto('/login');
     
     // Expect a title "to contain" a substring.
-    await expect(page).toHaveTitle(/Subscription Tracker/);
+    await expect(page).toHaveTitle(/SubTracker/);
 
     // Verify form elements exist
     await expect(page.getByLabel('Email')).toBeVisible();

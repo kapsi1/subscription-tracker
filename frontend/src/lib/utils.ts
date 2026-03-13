@@ -2,7 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 /**
- * Utility functions for the Subscription Cost Tracker app
+ * Utility functions for the SubTracker app
  */
 
 /**

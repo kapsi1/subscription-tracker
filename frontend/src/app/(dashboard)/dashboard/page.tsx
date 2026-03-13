@@ -1,6 +1,6 @@
 'use client';
 
-import type { DashboardSummary, ForecastItem, Subscription } from '@subscription-tracker/shared';
+import type { DashboardSummary, ForecastItem, Subscription } from '@subtracker/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';

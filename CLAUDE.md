@@ -87,7 +87,7 @@ Key modules: `auth`, `users`, `subscriptions`, `dashboard`, `alerts`, `notificat
 - `src/components/auth-provider.tsx` — Auth context (user, login, logout, fetchUser)
 
 ### Shared Package
-Import as `@subscription-tracker/shared`. Contains shared TypeScript interfaces, colors, currencies, and locale strings. Must be built (`pnpm run build:shared`) before backend or frontend can use it. In dev, run `pnpm run dev:shared` to watch for changes.
+Import as `@subtracker/shared`. Contains shared TypeScript interfaces, colors, currencies, and locale strings. Must be built (`pnpm run build:shared`) before backend or frontend can use it. In dev, run `pnpm run dev:shared` to watch for changes.
 
 ### Authentication
 - JWT stored in localStorage (`accessToken`, `refreshToken`) and cookie (`accessToken`)

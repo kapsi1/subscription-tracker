@@ -1,4 +1,4 @@
-# Subscription Cost Tracker – System Assumptions
+# SubTracker – System Assumptions
 
 ## Functional Requirements
 

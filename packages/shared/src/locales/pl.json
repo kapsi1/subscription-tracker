@@ -1,6 +1,6 @@
 {
   "auth": {
-    "title": "Monitor kosztów subskrypcji",
+    "title": "SubTracker",
     "login": {
       "subtitle": "Zaloguj się, aby zarządzać swoimi subskrypcjami",
       "submit": "Zaloguj się",
@@ -371,7 +371,7 @@
     "days": "dni",
     "managePrompt": "Jeśli chcesz zarządzać lub anulować tę subskrypcję, zaloguj się do panelu.",
     "thankYou": "Dziękujemy",
-    "teamName": "Zespół Subscription Tracker",
+    "teamName": "Zespół SubTracker",
     "budgetExceeded": "Przekroczono limit budżetu",
     "budgetLimitDesc": "To automatyczne powiadomienie, że łączny miesięczny koszt Twoich subskrypcji przekroczył ustawiony budżet.",
     "currentMonthly": "Aktualny koszt miesięczny",
@@ -390,14 +390,14 @@
       "noPaymentsPaidYesterday": "Wczoraj nie opłacono żadnych subskrypcji."
     },
     "verification": {
-      "subject": "Zweryfikuj swój adres e-mail - Subscription Tracker",
+      "subject": "Zweryfikuj swój adres e-mail - SubTracker",
       "title": "Weryfikacja e-mail",
-      "text": "Dziękujemy za rejestrację w Subscription Tracker! Aby dokończyć rejestrację i zacząć zarządzać swoimi subskrypcjami, prosimy o zweryfikowanie adresu e-mail poprzez kliknięcie w poniższy przycisk. Link jest ważny przez 24 godziny:",
+      "text": "Dziękujemy za rejestrację w SubTracker! Aby dokończyć rejestrację i zacząć zarządzać swoimi subskrypcjami, prosimy o zweryfikowanie adresu e-mail poprzez kliknięcie w poniższy przycisk. Link jest ważny przez 24 godziny:",
       "button": "Zweryfikuj e-mail",
       "footer": "Jeśli to nie Ty utworzyłeś konto, możesz bezpiecznie zignorować tę wiadomość."
     },
     "passwordReset": {
-      "subject": "Zresetuj hasło - Subscription Tracker",
+      "subject": "Zresetuj hasło - SubTracker",
       "title": "Resetowanie hasła",
       "text": "Otrzymaliśmy prośbę o zresetowanie hasła. Kliknij poniższy przycisk, aby ustawić nowe hasło. Link jest ważny przez 1 godzinę:",
       "button": "Zresetuj hasło",

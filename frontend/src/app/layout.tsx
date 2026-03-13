@@ -8,7 +8,7 @@ import { Providers } from '@/components/providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Subscription Tracker',
+  title: 'SubTracker',
   description: 'Manage and forecast your subscriptions cost efficiently',
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import type { Settings } from '@subscription-tracker/shared';
+import type { Settings } from '@subtracker/shared';
 import { Bell } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

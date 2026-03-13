@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@subscription-tracker/shared"],
+  transpilePackages: ["@subtracker/shared"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "flagcdn.com" },

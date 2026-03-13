@@ -1,4 +1,4 @@
-# AI Development Guide - Subscription Cost Tracker
+# AI Development Guide - SubTracker
 
 This document is designed to provide high-context, low-token overhead for AI agents working on this codebase.
 
@@ -8,7 +8,7 @@ The project is a **pnpm monorepo** using a modern TypeScript stack:
 
 - **Frontend**: Next.js 15+ (App Router), React 19, Tailwind CSS, TanStack Query, Axios. (Port 3000)
 - **Backend**: NestJS 11, Prisma ORM, PostgreSQL, Redis, BullMQ for background jobs. (Port 3001)
-- **Shared**: `@subscription-tracker/shared` - Common types, constants, and logic.
+- **Shared**: `@subtracker/shared` - Common types, constants, and logic.
 - **Testing**:
   - **E2E**: Playwright (against live/dev server).
   - **Backend**: Jest (Unit & Integration).
@@ -63,7 +63,7 @@ The app supports **English (`en`)** and **Polish (`pl`)**, using `react-i18next`
 
 ### Architecture
 
-- **Single source of truth**: All translation strings live in `packages/shared/src/locales/`. Both frontend and backend import from there via `@subscription-tracker/shared`.
+- **Single source of truth**: All translation strings live in `packages/shared/src/locales/`. Both frontend and backend import from there via `@subtracker/shared`.
 - **Frontend**: `i18next` with `i18next-browser-languagedetector` (reads from `localStorage`, falls back to browser language, then `en`).
 - **Backend**: No i18n library — the email service imports `LOCALES` directly and selects strings by language key.
 - **Persistence**: The user's language preference is stored in the database (`user.language`) and synced to the frontend i18n instance on login via `I18nProvider`.
@@ -86,7 +86,7 @@ i18n.changeLanguage('pl')       // switch language
 
 **Backend — email service:**
 ```typescript
-import { LOCALES } from '@subscription-tracker/shared';
+import { LOCALES } from '@subtracker/shared';
 const strings = LOCALES[language];  // 'en' | 'pl'
 ```
 

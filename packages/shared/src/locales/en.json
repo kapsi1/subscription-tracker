@@ -1,6 +1,6 @@
 {
   "auth": {
-    "title": "Subscription Cost Tracker",
+    "title": "SubTracker",
     "login": {
       "subtitle": "Sign in to manage your subscriptions",
       "submit": "Sign In",
@@ -353,7 +353,7 @@
     "days": "day(s)",
     "managePrompt": "If you wish to manage or cancel this subscription, please log in to your dashboard.",
     "thankYou": "Thank you",
-    "teamName": "Subscription Tracker Team",
+    "teamName": "SubTracker Team",
     "budgetExceeded": "Budget Limit Exceeded",
     "budgetLimitDesc": "This is an automated alert to inform you that your total monthly subscription cost has exceeded your configured budget.",
     "currentMonthly": "Current Monthly Cost",
@@ -372,14 +372,14 @@
       "noPaymentsPaidYesterday": "No subscriptions were paid yesterday."
     },
     "verification": {
-      "subject": "Verify your email - Subscription Tracker",
+      "subject": "Verify your email - SubTracker",
       "title": "Email Verification",
-      "text": "Thank you for signing up for Subscription Tracker! To complete your registration and start managing your subscriptions, please verify your email address by clicking the button below. The link is valid for 24 hours:",
+      "text": "Thank you for signing up for SubTracker! To complete your registration and start managing your subscriptions, please verify your email address by clicking the button below. The link is valid for 24 hours:",
       "button": "Verify Email",
       "footer": "If you didn't create an account, you can safely ignore this email."
     },
     "passwordReset": {
-      "subject": "Reset your password - Subscription Tracker",
+      "subject": "Reset your password - SubTracker",
       "title": "Password Reset",
       "text": "We received a request to reset your password. Click the button below to create a new password. The link is valid for 1 hour:",
       "button": "Reset Password",

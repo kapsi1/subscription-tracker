@@ -1,6 +1,6 @@
 'use client';
 
-import type { Category } from '@subscription-tracker/shared';
+import type { Category } from '@subtracker/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowDown, ArrowUp, CreditCard, Tag } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';

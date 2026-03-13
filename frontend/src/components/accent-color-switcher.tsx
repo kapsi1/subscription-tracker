@@ -6,7 +6,7 @@ import {
   COLORS,
   type ColorsConfig,
   type AccentColor as SharedAccentColor,
-} from '@subscription-tracker/shared';
+} from '@subtracker/shared';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useCallback, useEffect, useRef, useState } from 'react';

@@ -108,7 +108,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return source.slice(0, 2).toUpperCase();
   };
 
-  const title = 'Subscription Tracker';
+  const title = 'SubTracker';
   const _currentLanguage = i18n.language || 'en';
 
   // 1. Initial health check failed

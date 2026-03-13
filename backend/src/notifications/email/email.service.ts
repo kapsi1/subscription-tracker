@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { COLORS, type ColorsConfig, getAccentColor, LOCALES } from '@subscription-tracker/shared';
+import { COLORS, type ColorsConfig, getAccentColor, LOCALES } from '@subtracker/shared';
 import * as nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 
@@ -292,8 +292,8 @@ export class EmailService {
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
+      'SubTracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
     );
 
     const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
@@ -331,7 +331,7 @@ export class EmailService {
           this.configService.get<string>('SMTP_FROM_ALERTS') ||
           this.configService.get<string>(
             'SMTP_FROM',
-            '"Subscription Tracker" <alerts@subscription-tracker.local>',
+            '"SubTracker" <alerts@subtracker.local>',
           ),
         to: email,
         subject,
@@ -363,8 +363,8 @@ export class EmailService {
       this.configService.get<string>('APP_URL') ||
       this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
+      'SubTracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
     );
 
     const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
@@ -402,7 +402,7 @@ export class EmailService {
           this.configService.get<string>('SMTP_FROM_ALERTS') ||
           this.configService.get<string>(
             'SMTP_FROM',
-            '"Subscription Tracker" <alerts@subscription-tracker.local>',
+            '"SubTracker" <alerts@subtracker.local>',
           ),
         to: email,
         subject: locale.emails.budgetAlert,
@@ -430,8 +430,8 @@ export class EmailService {
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
+      'SubTracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
     );
 
     const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
@@ -496,7 +496,7 @@ export class EmailService {
           this.configService.get<string>('SMTP_FROM_ALERTS') ||
           this.configService.get<string>(
             'SMTP_FROM',
-            '"Subscription Tracker" <alerts@subscription-tracker.local>',
+            '"SubTracker" <alerts@subtracker.local>',
           ),
         to: email,
         subject: emails.dailyDigestSubject,
@@ -523,8 +523,8 @@ export class EmailService {
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
+      'SubTracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
     );
 
     const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
@@ -566,7 +566,7 @@ export class EmailService {
           this.configService.get<string>('SMTP_FROM_ALERTS') ||
           this.configService.get<string>(
             'SMTP_FROM',
-            '"Subscription Tracker" <alerts@subscription-tracker.local>',
+            '"SubTracker" <alerts@subtracker.local>',
           ),
         to: email,
         subject: emails.weeklyReportSubject,
@@ -596,8 +596,8 @@ export class EmailService {
 
     const appUrl = frontendUrl;
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
+      'SubTracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
     );
 
     const bodyHtml = `
@@ -635,7 +635,7 @@ export class EmailService {
           this.configService.get<string>('SMTP_FROM_AUTH') ||
           this.configService.get<string>(
             'SMTP_FROM',
-            '"Subscription Tracker" <auth@subscription-tracker.local>',
+            '"SubTracker" <auth@subtracker.local>',
           ),
         to: email,
         subject: verification.subject,
@@ -665,8 +665,8 @@ export class EmailService {
 
     const appUrl = frontendUrl;
     const teamNameHtml = locale.emails.teamName.replace(
-      'Subscription Tracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">Subscription Tracker</a>`,
+      'SubTracker',
+      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
     );
 
     const bodyHtml = `
@@ -704,7 +704,7 @@ export class EmailService {
           this.configService.get<string>('SMTP_FROM_AUTH') ||
           this.configService.get<string>(
             'SMTP_FROM',
-            '"Subscription Tracker" <auth@subscription-tracker.local>',
+            '"SubTracker" <auth@subtracker.local>',
           ),
         to: email,
         subject: passwordReset.subject,

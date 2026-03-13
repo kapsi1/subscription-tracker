@@ -52,8 +52,8 @@ async function bootstrap() {
 
   // Swagger OpenAPI Setup
   const config = new DocumentBuilder()
-    .setTitle('Subscription Tracker API')
-    .setDescription('The API documentation for the Subscription Tracker application')
+    .setTitle('SubTracker API')
+    .setDescription('The API documentation for the SubTracker application')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

@@ -1,4 +1,4 @@
-import type { Category, Subscription } from '@subscription-tracker/shared';
+import type { Category, Subscription } from '@subtracker/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

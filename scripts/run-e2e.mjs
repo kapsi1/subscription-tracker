@@ -120,7 +120,7 @@ async function main() {
   const startedChildren = [];
 
   try {
-    await runCommand(PNPM_BIN, ['--filter', '@subscription-tracker/shared', 'build']);
+    await runCommand(PNPM_BIN, ['--filter', '@subtracker/shared', 'build']);
 
     const [backendUp, frontendUp] = await Promise.all([
       checkUrl(BACKEND_URL),

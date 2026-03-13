@@ -1,6 +1,6 @@
 'use client';
 
-import { COLORS, type ColorsConfig, getAccentColor } from '@subscription-tracker/shared';
+import { COLORS, type ColorsConfig, getAccentColor } from '@subtracker/shared';
 import type { TFunction } from 'i18next';
 import { Monitor, Moon, Palette, Pipette, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';

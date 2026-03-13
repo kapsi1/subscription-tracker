@@ -1,7 +1,7 @@
 {
-  "name": "@subscription-tracker/shared",
+  "name": "@subtracker/shared",
   "version": "1.0.0",
-  "description": "Shared configuration for Subscription Tracker",
+  "description": "Shared configuration for SubTracker",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

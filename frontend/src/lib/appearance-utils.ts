@@ -3,7 +3,7 @@ import {
   COLORS,
   type ColorsConfig,
   getAccentColor,
-} from '@subscription-tracker/shared';
+} from '@subtracker/shared';
 
 export const ACCENT_COLORS = Object.entries(COLORS as ColorsConfig).map(([name, values]) => ({
   name,

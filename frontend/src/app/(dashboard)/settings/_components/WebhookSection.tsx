@@ -1,6 +1,6 @@
 'use client';
 
-import type { Settings } from '@subscription-tracker/shared';
+import type { Settings } from '@subtracker/shared';
 import { SendHorizonal, Webhook } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';

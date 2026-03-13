@@ -115,7 +115,7 @@ export default function ProfilePage() {
 }
 
 // Wrapper components for Preferences sections to handle their own data fetching
-import type { Settings } from '@subscription-tracker/shared';
+import type { Settings } from '@subtracker/shared';
 import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from '@/lib/push';
 import { AppearanceSection } from '../_components/AppearanceSection';
 import { BudgetSection } from '../_components/BudgetSection';
