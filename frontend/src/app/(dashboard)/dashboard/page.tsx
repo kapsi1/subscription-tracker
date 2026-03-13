@@ -125,10 +125,10 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground mt-1">{t('dashboard.subtitle')}</p>
         </div>
-        <div className="flex w-full min-w-0 items-center justify-end gap-2 lg:w-auto">
+        <div className="flex w-auto min-w-0 flex-wrap items-center justify-end gap-2 lg:w-auto lg:flex-nowrap">
           <MonthPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           <Link href="/subscriptions" className="shrink-0">
-            <Button className="gap-2 whitespace-nowrap text-center">
+            <Button className="w-auto gap-2 whitespace-nowrap text-center">
               {t('dashboard.manageSubscriptions')}
             </Button>
           </Link>

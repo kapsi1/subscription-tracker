@@ -56,7 +56,7 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
 
   return (
     <>
-      <div className="flex w-full max-w-[236px] min-w-0 flex-1 items-center gap-2 rounded-lg border bg-muted/50 p-1 lg:flex-initial">
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-1">
         <Button
           variant="ghost"
           size="icon"
@@ -144,10 +144,10 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
         </Button>
       </div>
       <Button
-        variant="ghost"
-        size="sm"
+        variant="outline"
+        size="default"
         onClick={handleResetMonth}
-        className="h-8 w-28 shrink-0 px-3 text-xs"
+        className="h-8 shrink-0 text-sm py-5"
       >
         {t('dashboard.thisMonth')}
       </Button>
