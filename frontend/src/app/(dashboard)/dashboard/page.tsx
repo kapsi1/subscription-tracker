@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { useAuth } from '@/components/auth-provider';
 import { LoadingState } from '@/components/loading-state';
 import { SubscriptionModal } from '@/components/subscription-modal';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,6 @@ import { SummaryCards } from './_components/SummaryCards';
 
 export default function DashboardPage() {
   const { t } = useTranslation();
-  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -112,20 +110,15 @@ export default function DashboardPage() {
     (payment) => payment.status === 'done',
   ).length;
 
-  const greetingName = user?.name?.trim() || user?.email?.split('@')[0] || 'there';
 
   return (
     <div className="min-w-0 space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 min-[860px]:flex-row min-[860px]:items-center min-[860px]:justify-between">
         <div className="min-w-0">
-          <p className="text-sm text-muted-foreground">
-            {t('dashboard.greeting', { name: greetingName })}
-          </p>
           <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('dashboard.subtitle')}</p>
         </div>
-        <div className="flex w-auto min-w-0 flex-wrap items-center justify-end gap-2 lg:w-auto lg:flex-nowrap">
+        <div className="flex w-full min-w-0 flex-wrap items-center justify-end gap-2 min-[860px]:w-auto min-[860px]:flex-nowrap">
           <MonthPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
           <Link href="/subscriptions" className="shrink-0">
             <Button className="w-auto gap-2 whitespace-nowrap text-center">

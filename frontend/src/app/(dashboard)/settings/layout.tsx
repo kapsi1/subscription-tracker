@@ -27,7 +27,7 @@ function SettingsLayoutContent({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-[1055px] mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-3xl font-semibold">{t('settings.title')}</h1>

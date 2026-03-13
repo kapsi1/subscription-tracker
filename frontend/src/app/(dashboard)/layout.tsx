@@ -270,7 +270,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <LoadingState message={t('common.loading')} />
           </div>
         ) : (
-          children
+          <>
+            <div className="mb-1">
+              <p className="text-sm text-muted-foreground">
+                {t('dashboard.greeting', {
+                  name: user?.name?.trim() || user?.email?.split('@')[0] || 'there',
+                })}
+              </p>
+            </div>
+            {children}
+          </>
         )}
       </main>
     </div>
