@@ -105,7 +105,7 @@ export const SETTINGS_SECTIONS: SectionMetadata[] = [
     tab: 'profile',
     titleKey: 'settings.profile.title',
     descKey: 'settings.profile.desc',
-    searchKeys: ['settings.profile.name', 'settings.notifications.email.address'],
+    searchKeys: ['settings.profile.name'],
   },
   {
     id: 'password',

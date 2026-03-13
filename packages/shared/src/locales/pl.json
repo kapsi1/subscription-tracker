@@ -221,8 +221,6 @@
       "desc": "Zaktualizuj swoje dane osobowe",
       "name": "Imię i nazwisko",
       "namePlaceholder": "Wprowadź swoje imię i nazwisko",
-      "memberSince": "Członek od",
-      "lastUpdated": "Ostatnia aktualizacja",
       "save": "Zapisz profil",
       "saveError": "Nie udało się zapisać profilu"
     },

@@ -9,8 +9,6 @@ import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 export interface ProfileData {
   name: string;
-  email: string;
-  createdAt: string;
   updatedAt: string;
 }
 
@@ -41,45 +39,16 @@ export function ProfileSection({ profile, setProfile }: ProfileSectionProps) {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="profileName">
-              <SearchHighlight text={t('settings.profile.name')} query={searchQuery} />
-            </Label>
-            <Input
-              id="profileName"
-              value={profile.name}
-              placeholder={t('settings.profile.namePlaceholder')}
-              onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="profileEmail">
-              <SearchHighlight
-                text={t('settings.notifications.email.address')}
-                query={searchQuery}
-              />
-            </Label>
-            <Input id="profileEmail" value={profile.email} disabled />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">
-              {t('settings.profile.memberSince', { defaultValue: 'Member since' })}
-            </p>
-            <p className="text-sm font-medium">
-              {profile.createdAt ? new Date(profile.createdAt).toLocaleString() : '-'}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">
-              {t('settings.profile.lastUpdated', { defaultValue: 'Last updated' })}
-            </p>
-            <p className="text-sm font-medium">
-              {profile.updatedAt ? new Date(profile.updatedAt).toLocaleString() : '-'}
-            </p>
-          </div>
+        <div className="space-y-2">
+          <Label htmlFor="profileName">
+            <SearchHighlight text={t('settings.profile.name')} query={searchQuery} />
+          </Label>
+          <Input
+            id="profileName"
+            value={profile.name}
+            placeholder={t('settings.profile.namePlaceholder')}
+            onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+          />
         </div>
       </CardContent>
     </Card>

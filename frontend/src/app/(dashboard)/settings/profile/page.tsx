@@ -15,8 +15,6 @@ export default function ProfilePage() {
   const isGoogleAccount = !!user?.googleId;
   const [profile, setProfile] = useState<ProfileData>({
     name: '',
-    email: '',
-    createdAt: '',
     updatedAt: '',
   });
   const hasLoadedProfileRef = useRef(false);
@@ -29,8 +27,6 @@ export default function ProfilePage() {
         const response = await api.get('/users/me');
         setProfile({
           name: response.data.name || '',
-          email: response.data.email || '',
-          createdAt: response.data.createdAt || '',
           updatedAt: response.data.updatedAt || '',
         });
         lastSavedProfileNameRef.current = (response.data.name || '').trim();

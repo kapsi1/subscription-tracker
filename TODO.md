@@ -339,4 +339,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add a new logo, include different versions of it for different contexts (favicon, app icon, etc.). Include it in email templates as well.
 - [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [x] Branding: find instances of "Subscription Tracker" visible to the user, and replace them with "SubTracker". Also replace "Subscription Tracker" with "SubTracker" in code, if it's not used anywhere else.
-- [ ] In Profile/Account Profile remove Email Address section. Remove "Member since". Add a "Change Name" button, and make all sections styles look similar.
+- [x] In Profile/Account Profile remove Email Address section. Remove "Member since".

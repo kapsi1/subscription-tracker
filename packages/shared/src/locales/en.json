@@ -203,8 +203,6 @@
       "desc": "Update your personal information",
       "name": "Full Name",
       "namePlaceholder": "Enter your full name",
-      "memberSince": "Member since",
-      "lastUpdated": "Last updated",
       "save": "Save Profile",
       "saveError": "Failed to save profile"
     },
