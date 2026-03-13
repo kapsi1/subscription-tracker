@@ -116,21 +116,21 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
   };
 
   return (
-    <Card className="shadow-sm hover:shadow-md transition-shadow">
+    <Card className="min-w-0 shadow-sm transition-shadow hover:shadow-md">
       <CardHeader>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div>
+        <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0">
             <CardTitle>{t('dashboard.monthlyPaymentsTitle')}</CardTitle>
             <CardDescription>{t('dashboard.monthlyPaymentsDesc')}</CardDescription>
           </div>
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-            <div className="flex items-center space-x-2 mr-2">
+          <div className="flex max-w-full flex-wrap items-center gap-3 md:gap-4">
+            <div className="mr-2 flex shrink-0 items-center space-x-2">
               <Switch id="show-paid" checked={showPaid} onCheckedChange={handleToggleShowPaid} />
               <Label htmlFor="show-paid" className="text-sm font-medium cursor-pointer">
                 {t('dashboard.showPaid')}
               </Label>
             </div>
-            <div className="flex gap-2">
+            <div className="flex max-w-full flex-wrap gap-2">
               <Button
                 type="button"
                 variant={paymentSortBy === 'date' ? 'secondary' : 'outline'}
@@ -181,15 +181,15 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                 key={payment.id}
                 type="button"
                 onClick={() => onEdit?.(payment.subscriptionId)}
-                className={`w-full text-left flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border transition-colors gap-3 cursor-pointer ${
+                className={`flex w-full min-w-0 cursor-pointer flex-col gap-3 rounded-lg border p-4 text-left transition-colors md:flex-row md:items-center md:justify-between ${
                   payment.status === 'done'
                     ? 'border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80'
                     : 'bg-card hover:bg-accent/50'
                 }`}
               >
-                <div className="flex items-center gap-4 flex-1">
+                <div className="flex min-w-0 flex-1 items-center gap-4">
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center border"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border"
                     style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
                   >
                     <DynamicIcon
@@ -200,11 +200,11 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 max-w-full">
+                    <div className="flex max-w-full flex-wrap items-center gap-2">
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <p className="font-medium truncate cursor-pointer max-w-[180px] sm:max-w-[250px] md:max-w-[350px]">
+                            <p className="max-w-full cursor-pointer truncate font-medium md:max-w-[260px] lg:max-w-[350px]">
                               {payment.name}
                             </p>
                           </TooltipTrigger>
@@ -221,8 +221,8 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 sm:gap-6">
-                  <div className="hidden sm:flex min-w-[120px] justify-end">
+                <div className="flex min-w-0 flex-wrap items-center gap-3 md:flex-nowrap md:justify-end md:gap-4 lg:gap-6">
+                  <div className="hidden md:flex md:min-w-[110px] md:justify-end">
                     <Badge
                       variant="outline"
                       className="gap-1.5"
@@ -238,7 +238,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                       })}
                     </Badge>
                   </div>
-                  <div className="text-right min-w-[90px]">
+                  <div className="min-w-0 md:min-w-[90px] md:text-right">
                     <p className="font-semibold">
                       {formatCurrency(payment.amount, payment.currency)}
                     </p>

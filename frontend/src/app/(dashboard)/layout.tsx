@@ -158,20 +158,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
-        <div className="flex h-16 items-center px-4 sm:px-6 gap-4">
+        <div className="flex h-16 min-w-0 items-center gap-2 px-4 sm:px-6 md:gap-4">
           <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <CreditCard className="w-5 h-5 text-white" />
             </div>
-            <span className="font-semibold text-lg hidden sm:inline">SubTracker</span>
+            <span className="font-semibold text-lg hidden min-[860px]:inline">SubTracker</span>
           </Link>
 
-          <nav className="flex items-center gap-1 ml-2 sm:ml-4">
+          <nav className="ml-1 flex min-w-0 items-center gap-1 sm:ml-2 md:ml-4">
             <Link href="/dashboard">
               <Button
                 variant="ghost"
                 className={cn(
-                  'gap-2 px-2 sm:px-3 transition-colors',
+                  'gap-2 px-2 min-[860px]:px-3 transition-colors',
                   pathname === '/dashboard'
                     ? 'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
@@ -179,14 +179,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="sm"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('nav.dashboard')}</span>
+                <span className="hidden min-[860px]:inline">{t('nav.dashboard')}</span>
               </Button>
             </Link>
             <Link href="/subscriptions">
               <Button
                 variant="ghost"
                 className={cn(
-                  'gap-2 px-2 sm:px-3 transition-colors',
+                  'gap-2 px-2 min-[860px]:px-3 transition-colors',
                   pathname === '/subscriptions'
                     ? 'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
@@ -194,14 +194,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="sm"
               >
                 <ListChecks className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('nav.subscriptions')}</span>
+                <span className="hidden min-[860px]:inline">{t('nav.subscriptions')}</span>
               </Button>
             </Link>
             <Link href="/settings">
               <Button
                 variant="ghost"
                 className={cn(
-                  'gap-2 px-2 sm:px-3 transition-colors',
+                  'gap-2 px-2 min-[860px]:px-3 transition-colors',
                   pathname === '/settings'
                     ? 'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
@@ -209,7 +209,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="sm"
               >
                 <Settings className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('nav.settings')}</span>
+                <span className="hidden min-[860px]:inline">{t('nav.settings')}</span>
               </Button>
             </Link>
           </nav>
@@ -264,7 +264,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </header>
 
-      <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 lg:max-w-10xl lg:mx-auto justify-items-center">
+      <main className="flex-1 w-full min-w-0 p-4 sm:p-6 lg:mx-auto lg:max-w-10xl lg:p-8">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <LoadingState message={t('common.loading')} />

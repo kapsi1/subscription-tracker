@@ -335,3 +335,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Rethink and unify save strategy for settings. Some settings are saved automatically, others have a save button. Make the button placements and when they appear consistent in every section..
 - [ ] Add another accent color, maybe calculate it from the existing one.
 - [x] Categories should have icons. Add appropriate icons to default categories. Add a selector, opening a popup with a library of icons, to each row in Category Management. Show the icons in This Month's Payments and All Subscriptions - left side.
+- [ ] Content is scrollable horizontally for screen width about 640-708 and 768-804 pixels. It shouldn't be.

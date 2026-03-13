@@ -19,10 +19,10 @@ interface SummaryCardsProps {
 
 function SummaryCard({ title, icon, value }: { title: string; icon: ReactNode; value: ReactNode }) {
   return (
-    <Card className="shadow-sm hover:shadow-md transition-shadow">
+    <Card className="min-w-0 shadow-sm transition-shadow hover:shadow-md">
       <CardHeader className="flex flex-col items-center justify-center pb-2 px-4 h-24 text-center">
-        <div className="flex flex-row items-center justify-center gap-2">
-          <CardTitle className="text-md font-medium text-muted-foreground leading-tight">
+        <div className="flex min-w-0 flex-row items-center justify-center gap-2">
+          <CardTitle className="min-w-0 text-md font-medium text-muted-foreground leading-tight">
             {title}
           </CardTitle>
           <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0">
@@ -31,7 +31,9 @@ function SummaryCard({ title, icon, value }: { title: string; icon: ReactNode; v
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-4xl text-center font-semibold">{value}</div>
+        <div className="overflow-hidden text-center text-3xl font-semibold text-balance break-words lg:text-4xl">
+          {value}
+        </div>
       </CardContent>
     </Card>
   );
@@ -45,7 +47,7 @@ export function SummaryCards({
   const { t } = useTranslation();
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <SummaryCard
         title={t('dashboard.totalMonthlyCost')}
         icon={<DollarSign className="w-4 h-4 text-primary" />}

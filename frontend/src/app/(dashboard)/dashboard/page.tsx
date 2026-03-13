@@ -156,18 +156,18 @@ export default function DashboardPage() {
   const greetingName = user?.name?.trim() || user?.email?.split('@')[0] || 'there';
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0">
           <p className="text-sm text-muted-foreground">
             {t('dashboard.greeting', { name: greetingName })}
           </p>
           <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground mt-1">{t('dashboard.subtitle')}</p>
         </div>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <div className="flex items-center gap-2 bg-muted/50 border rounded-lg p-1">
+        <div className="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-center lg:justify-end">
+          <div className="flex max-w-full flex-wrap items-center gap-2 rounded-lg border bg-muted/50 p-1">
             <Button
               variant="ghost"
               size="icon"
@@ -187,7 +187,7 @@ export default function DashboardPage() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="min-w-[140px] font-medium hover:bg-accent/50 focus-visible:ring-0"
+                  className="min-w-[140px] max-w-full font-medium hover:bg-accent/50 focus-visible:ring-0"
                 >
                   {selectedDate.toLocaleDateString(i18n.language === 'pl' ? 'pl-PL' : 'en-US', {
                     month: 'long',
@@ -263,7 +263,9 @@ export default function DashboardPage() {
             </Button>
           </div>
           <Link href="/subscriptions">
-            <Button className="gap-2 sm:w-auto">{t('dashboard.manageSubscriptions')}</Button>
+            <Button className="gap-2 whitespace-normal text-center md:w-auto">
+              {t('dashboard.manageSubscriptions')}
+            </Button>
           </Link>
         </div>
       </div>
