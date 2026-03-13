@@ -132,8 +132,10 @@
   "subscriptions": {
     "title": "Subskrypcje",
     "subtitle": "Zarządzaj swoimi subskrypcjami",
+    "paymentCount_one": "{{count}} płatność",
     "paymentCount_few": "{{count}} płatności",
     "paymentCount_many": "{{count}} płatności",
+    "paymentCount_other": "{{count}} płatności",
     "import": "Importuj",
     "export": "Eksportuj",
     "add": "Dodaj subskrypcję",

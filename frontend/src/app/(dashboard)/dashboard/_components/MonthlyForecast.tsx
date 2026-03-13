@@ -50,7 +50,10 @@ const CustomTooltip = ({ active, payload, label, t, currency = 'USD' }: CustomTo
             {label} {data.year}
           </span>
           <span className="text-[10px] font-medium opacity-70">
-            {t('subscriptions.paymentCount', { count: payments.length })}
+            {t('subscriptions.paymentCount', {
+              count: payments.length,
+              defaultValue: `${payments.length} payment${payments.length === 1 ? '' : 's'}`,
+            })}
           </span>
         </div>
 

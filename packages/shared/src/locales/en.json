@@ -127,6 +127,8 @@
     "noFound": "No subscriptions found",
     "noFoundDesc": "Try adjusting your search query",
     "getStarted": "Get started by adding your first subscription",
+    "paymentCount_one": "{{count}} payment",
+    "paymentCount_other": "{{count}} payments",
     "table": {
       "service": "Service Name",
       "amount": "Amount",

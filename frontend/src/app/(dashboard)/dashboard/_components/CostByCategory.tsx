@@ -34,6 +34,55 @@ interface PieLabelProps {
   value?: number;
 }
 
+interface RechartsPayloadItem {
+  color?: string;
+  name?: string;
+  value?: number | string;
+  payload?: {
+    color?: string;
+    name?: string;
+    value?: number | string;
+  };
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: RechartsPayloadItem[];
+  label?: string;
+  currency: string;
+  t: ReturnType<typeof useTranslation>['t'];
+}
+
+const CustomTooltip = ({ active, payload, label, currency, t }: CustomTooltipProps) => {
+  if (!active || !payload?.length) {
+    return null;
+  }
+
+  const item = payload[0];
+  const rawCategoryName = label || item.name || item.payload?.name || '';
+  const translatedCategoryName = t(`subscriptions.modal.categories.${rawCategoryName}`, {
+    defaultValue: rawCategoryName,
+  });
+  const amount = Number(item.value ?? item.payload?.value ?? 0);
+  const color = item.color || item.payload?.color || 'var(--primary)';
+
+  return (
+    <div className="z-100 min-w-[180px] max-w-[220px] rounded-md border bg-card p-2 text-xs text-foreground shadow-lg animate-in fade-in-0 zoom-in-95">
+      <div className="flex items-center justify-between gap-3 font-bold">
+        <span>{translatedCategoryName}</span>
+        <span className="flex items-center gap-1.5 text-primary">
+          <span
+            className="h-2.5 w-2.5 rounded-full"
+            style={{ backgroundColor: color }}
+            aria-hidden="true"
+          />
+          {formatCurrency(amount, currency)}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCategoryProps) {
   const { t } = useTranslation();
   const [selectedChart, setSelectedChart] = useState<'pie' | 'bar'>('pie');
@@ -138,10 +187,7 @@ export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCa
                 ))}
               </Pie>
               <Tooltip
-                formatter={(value: unknown) => [
-                  formatCurrency(Number(value || 0), currency),
-                  t('subscriptions.modal.amount'),
-                ]}
+                content={<CustomTooltip currency={currency} t={t} />}
               />
             </PieChart>
           ) : (
@@ -159,20 +205,7 @@ export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCa
                 tickFormatter={(value) => formatCurrency(value, currency, 0)}
               />
               <Tooltip
-                contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                }}
-                labelFormatter={(label: unknown) =>
-                  t(`subscriptions.modal.categories.${label}`, {
-                    defaultValue: String(label || ''),
-                  })
-                }
-                formatter={(value: unknown) => [
-                  formatCurrency(Number(value || 0), currency),
-                  t('subscriptions.modal.amount'),
-                ]}
+                content={<CustomTooltip currency={currency} t={t} />}
               />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                 {categoryData.map((entry) => (

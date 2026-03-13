@@ -325,13 +325,13 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] In All Subscriptions table, make the column headers clickable (add cursor-pointer class), and clicking them sort the table. Show up/down chevrons next to column name, to show sort order. Default order is Next Billing / ascending (chronological).
 - [x] Make the category background colors in /subscriptions more muted. Use the same colors for categories in dashboard. For light theme make backgrounds of category badges in dashboard darker. Make text color same as surrounding text color.
 - [ ] Improve UI & UX on small screens
-- [ ] Make the tooltip  on Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
+- [ ] Make the tooltip in Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
 - [x] Add "resend verification email" button to the Email Sent page
 - [x] Replace the email "auth@subscription-tracker.local" with an environment variable
 - [x] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
 - [x] Add a custom color picker to the settings page, which should allow users to pick any color as accent color.
 - [x] Add a find/filter functionality to settings. Show an input field at the top of the settings page, which should allow users to find/filter settings by any string. If something is typed into the input, show setting sections that contain that string, and hide the rest. If the input is empty, show all sections. In displayed sections, highlight the string that matched the filter. Search in sections from both Preferences and Profile tabs. Add a button to clear the filter. Add unit and E2E tests.
 - [ ] Make backgrounds color gradients
-- [ ] Rethink and unify save strategy for settings. Some settings are saved automatically, others have a save button. Make the button placements and when they appear consistent in every section..
+- [x] Rethink and unify save strategy for settings. Some settings are saved automatically, others have a save button. Make the button placements and when they appear consistent in every section..
 - [ ] Add another accent color, maybe calculate it from the existing one.
-- [ ] Categories should have icons. Add appropriate icons to default categories. Add a selector, opening a popup with a library of icons, to each row in Category Management. Show the icons in This Month's Payments and All Subscriptions - left side.
+- [x] Categories should have icons. Add appropriate icons to default categories. Add a selector, opening a popup with a library of icons, to each row in Category Management. Show the icons in This Month's Payments and All Subscriptions - left side.
