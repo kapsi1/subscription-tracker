@@ -21,6 +21,18 @@ export default function DashboardPage() {
   const queryClient = useQueryClient();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [slideDirection, setSlideDirection] = useState<'next' | 'prev' | null>(null);
+
+  const handleDateChange = (newDate: Date) => {
+    const direction =
+      newDate.getFullYear() > selectedDate.getFullYear() ||
+      (newDate.getFullYear() === selectedDate.getFullYear() &&
+        newDate.getMonth() > selectedDate.getMonth())
+        ? 'next'
+        : 'prev';
+    setSlideDirection(direction);
+    setSelectedDate(newDate);
+  };
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -116,7 +128,7 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
         <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
-          <MonthPicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+          <MonthPicker selectedDate={selectedDate} setSelectedDate={handleDateChange} />
           <Link href="/subscriptions" className="shrink-0">
             <Button className="gap-2 whitespace-nowrap">
               {t('dashboard.manageSubscriptions')}
@@ -125,17 +137,28 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <SummaryCards
-        summary={summary}
-        monthlyPaymentsDoneCount={monthlyPaymentsDoneCount}
-        monthlyPaymentsTotalCount={monthlyPayments.length}
-      />
+      <div
+        key={`${year}-${month}`}
+        className={
+          slideDirection === 'next'
+            ? 'animate-month-next space-y-6'
+            : slideDirection === 'prev'
+              ? 'animate-month-prev space-y-6'
+              : 'space-y-6'
+        }
+      >
+        <SummaryCards
+          summary={summary}
+          monthlyPaymentsDoneCount={monthlyPaymentsDoneCount}
+          monthlyPaymentsTotalCount={monthlyPayments.length}
+        />
 
-      <MonthlyPayments monthlyPayments={monthlyPayments} onEdit={handleEditSubscription} />
+        <MonthlyPayments monthlyPayments={monthlyPayments} onEdit={handleEditSubscription} />
 
-      <MonthlyForecast forecast={forecast} currency={summary.currency} />
+        <MonthlyForecast forecast={forecast} currency={summary.currency} />
 
-      <CostByCategory categoryBreakdown={summary.categoryBreakdown} currency={summary.currency} />
+        <CostByCategory categoryBreakdown={summary.categoryBreakdown} currency={summary.currency} />
+      </div>
 
       <SubscriptionModal
         open={modalOpen}

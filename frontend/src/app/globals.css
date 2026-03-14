@@ -222,6 +222,28 @@
   }
 }
 
+@keyframes slide-in-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes logo-glow {
   0%,
   100% {
@@ -300,6 +322,14 @@
     animation-delay: 150ms;
   }
 
+  .animate-month-next {
+    animation: slide-in-from-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-month-prev {
+    animation: slide-in-from-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
   .logo-icon-hover:hover {
     animation: logo-glow 1.4s ease-in-out infinite;
   }
@@ -327,7 +357,9 @@
   .animate-page-in,
   .animate-card-in,
   .animate-list-item,
-  .animate-row-in {
+  .animate-row-in,
+  .animate-month-next,
+  .animate-month-prev {
     animation: none;
   }
   .logo-icon-hover:hover {
