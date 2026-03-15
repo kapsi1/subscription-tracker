@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { COLORS, type ColorsConfig, getAccentColor, LOCALES } from '@subtracker/shared';
 import * as nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
 
 type AppTheme = 'light' | 'dark' | 'system';
 
@@ -137,6 +139,7 @@ export class EmailService {
       .email-muted { color: ${light.muted}; }
       .email-danger, .email-danger-topbar, .email-danger-title { color: ${light.danger}; }
       .email-danger-topbar-bg { background: ${light.danger}; }
+      .email-brand-text { color: ${light.primary}; }
     `;
 
     const darkCss = `
@@ -148,6 +151,7 @@ export class EmailService {
       .email-muted { color: ${dark.muted}; }
       .email-danger, .email-danger-topbar, .email-danger-title { color: ${dark.danger}; }
       .email-danger-topbar-bg { background: ${dark.danger}; }
+      .email-brand-text { color: ${dark.primary}; }
     `;
 
     if (theme === 'dark') {
@@ -201,6 +205,28 @@ export class EmailService {
             .email-shell {
               max-width: 640px;
               margin: 0 auto;
+            }
+            .email-header {
+              padding-bottom: 32px;
+              text-align: center;
+            }
+            .email-logo-container {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              text-decoration: none;
+            }
+            .email-logo {
+              height: 100px;
+              width: auto;
+              display: block;
+            }
+            .email-brand-text {
+              margin-left: 16px;
+              font-size: 42px;
+              font-weight: 700;
+              letter-spacing: -0.04em;
+              line-height: 1;
             }
             .email-card {
               border: 1px solid;
@@ -260,10 +286,71 @@ export class EmailService {
           </style>
         </head>
         <body>
-          ${bodyHtml}
+          <div class="email-root">
+            <div class="email-shell">
+              ${bodyHtml}
+            </div>
+          </div>
         </body>
       </html>
     `;
+  }
+
+  private getEmailHeader(appUrl: string): string {
+    return `
+      <div class="email-header">
+        <a href="${appUrl}" class="email-logo-container">
+          <img src="cid:logo" alt="" class="email-logo" />
+          <span class="email-brand-text">SubTracker</span>
+        </a>
+      </div>
+    `;
+  }
+
+  private async sendEmail(options: {
+    to: string;
+    subject: string;
+    html: string;
+    fromKey?: 'SMTP_FROM_ALERTS' | 'SMTP_FROM_AUTH';
+    fallbackFrom: string;
+  }) {
+    const possiblePaths = [
+      path.join(process.cwd(), 'assets', 'logo-email.png'),
+      path.join(process.cwd(), 'backend', 'assets', 'logo-email.png'),
+    ];
+
+    let logoPath = '';
+    for (const p of possiblePaths) {
+      if (fs.existsSync(p)) {
+        logoPath = p;
+        break;
+      }
+    }
+
+    const attachments = [];
+    if (logoPath) {
+      attachments.push({
+        filename: 'logo.png',
+        path: logoPath,
+        cid: 'logo',
+      });
+    }
+
+    try {
+      await this.transporter.sendMail({
+        from:
+          (options.fromKey ? this.configService.get<string>(options.fromKey) : undefined) ||
+          this.configService.get<string>('SMTP_FROM', options.fallbackFrom),
+        to: options.to,
+        subject: options.subject,
+        html: options.html,
+        attachments,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`[SMTP] Failed to send email to ${options.to}: ${message}`);
+      throw error;
+    }
   }
 
   private escapeHtml(value: string): string {
@@ -294,10 +381,7 @@ export class EmailService {
     const greeting = emails.greetingWithName.replace('{{name}}', name || email);
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
-    const teamNameHtml = locale.emails.teamName.replace(
-      'SubTracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
-    );
+    const teamNameHtml = locale.emails.teamName;
 
     const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
     const managePromptHtml = locale.emails.managePrompt.replace(
@@ -306,11 +390,9 @@ export class EmailService {
     );
 
     const bodyHtml = `
-        <div class="email-root">
-          <div class="email-shell">
-            <div class="email-card">
               <div class="email-topbar-bg"></div>
               <div class="email-content">
+                ${this.getEmailHeader(appUrl)}
                 <h2 class="email-title">${emails.subscriptionAlert}</h2>
                 <p class="email-greeting">${greeting}</p>
                 <p class="email-text">${emails.reminder.replace('{{name}}', safeSubscriptionName)}</p>
@@ -322,29 +404,18 @@ export class EmailService {
                 <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
               </div>
             </div>
-          </div>
-        </div>
       `;
 
     const htmlTemplate = this.buildEmailDocument(bodyHtml, accentColor, themeMode);
 
-    try {
-      await this.transporter.sendMail({
-        from:
-          this.configService.get<string>('SMTP_FROM_ALERTS') ||
-          this.configService.get<string>('SMTP_FROM', '"SubTracker" <alerts@subtracker.local>'),
-        to: email,
-        subject,
-        html: htmlTemplate,
-      });
-      this.logger.log(`[SMTP] Successfully sent warning email to ${email} for ${subscriptionName}`);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(
-        `[SMTP] Failed to send email to ${email} for ${subscriptionName}: ${message}`,
-      );
-      throw error;
-    }
+    await this.sendEmail({
+      to: email,
+      subject,
+      html: htmlTemplate,
+      fromKey: 'SMTP_FROM_ALERTS',
+      fallbackFrom: '"SubTracker" <alerts@subtracker.local>',
+    });
+    this.logger.log(`[SMTP] Successfully sent warning email to ${email} for ${subscriptionName}`);
   }
 
   async sendBudgetAlert(
@@ -365,10 +436,7 @@ export class EmailService {
     const appUrl =
       this.configService.get<string>('APP_URL') ||
       this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
-    const teamNameHtml = locale.emails.teamName.replace(
-      'SubTracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
-    );
+    const teamNameHtml = locale.emails.teamName;
 
     const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
     const managePromptHtml = locale.emails.managePrompt.replace(
@@ -377,11 +445,10 @@ export class EmailService {
     );
 
     const bodyHtml = `
-      <div class="email-root">
-        <div class="email-shell">
           <div class="email-card">
             <div class="email-danger-topbar-bg"></div>
             <div class="email-content">
+              ${this.getEmailHeader(appUrl)}
               <h2 class="email-danger-title">${emails.budgetExceeded}</h2>
               <p class="email-greeting">${greeting}</p>
               <p class="email-text">${emails.budgetLimitDesc}</p>
@@ -393,27 +460,18 @@ export class EmailService {
               <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
             </div>
           </div>
-        </div>
-      </div>
     `;
 
     const htmlTemplate = this.buildEmailDocument(bodyHtml, accentColor, themeMode);
 
-    try {
-      await this.transporter.sendMail({
-        from:
-          this.configService.get<string>('SMTP_FROM_ALERTS') ||
-          this.configService.get<string>('SMTP_FROM', '"SubTracker" <alerts@subtracker.local>'),
-        to: email,
-        subject: locale.emails.budgetAlert,
-        html: htmlTemplate,
-      });
-      this.logger.log(`[SMTP] Successfully sent budget alert email to ${email}`);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`[SMTP] Failed to send budget alert email to ${email}: ${message}`);
-      throw error;
-    }
+    await this.sendEmail({
+      to: email,
+      subject: locale.emails.budgetAlert,
+      html: htmlTemplate,
+      fromKey: 'SMTP_FROM_ALERTS',
+      fallbackFrom: '"SubTracker" <alerts@subtracker.local>',
+    });
+    this.logger.log(`[SMTP] Successfully sent budget alert email to ${email}`);
   }
 
   async sendDailyDigest(
@@ -432,10 +490,7 @@ export class EmailService {
     const greeting = emails.greetingWithName.replace('{{name}}', name || email);
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
-    const teamNameHtml = locale.emails.teamName.replace(
-      'SubTracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
-    );
+    const teamNameHtml = locale.emails.teamName;
 
     const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
     const managePromptHtml = locale.emails.managePrompt.replace(
@@ -468,11 +523,10 @@ export class EmailService {
     }
 
     const bodyHtml = `
-      <div class="email-root">
-        <div class="email-shell">
           <div class="email-card">
             <div class="email-topbar-bg"></div>
             <div class="email-content">
+              ${this.getEmailHeader(appUrl)}
               <h2 class="email-title">${emails.dailyDigestTitle}</h2>
               <p class="email-greeting">${greeting}</p>
               <p class="email-text">${digest.summary}</p>
@@ -486,27 +540,18 @@ export class EmailService {
               <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
             </div>
           </div>
-        </div>
-      </div>
     `;
 
     const htmlTemplate = this.buildEmailDocument(bodyHtml, accentColor, themeMode);
 
-    try {
-      await this.transporter.sendMail({
-        from:
-          this.configService.get<string>('SMTP_FROM_ALERTS') ||
-          this.configService.get<string>('SMTP_FROM', '"SubTracker" <alerts@subtracker.local>'),
-        to: email,
-        subject: emails.dailyDigestSubject,
-        html: htmlTemplate,
-      });
-      this.logger.log(`[SMTP] Successfully sent daily digest email to ${email}`);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`[SMTP] Failed to send daily digest to ${email}: ${message}`);
-      throw error;
-    }
+    await this.sendEmail({
+      to: email,
+      subject: emails.dailyDigestSubject,
+      html: htmlTemplate,
+      fromKey: 'SMTP_FROM_ALERTS',
+      fallbackFrom: '"SubTracker" <alerts@subtracker.local>',
+    });
+    this.logger.log(`[SMTP] Successfully sent daily digest email to ${email}`);
   }
 
   async sendWeeklyReport(
@@ -524,10 +569,7 @@ export class EmailService {
     const greeting = emails.greetingWithName.replace('{{name}}', name || email);
 
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
-    const teamNameHtml = locale.emails.teamName.replace(
-      'SubTracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
-    );
+    const teamNameHtml = locale.emails.teamName;
 
     const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
     const managePromptHtml = locale.emails.managePrompt.replace(
@@ -538,11 +580,10 @@ export class EmailService {
     const digest = emails.digest;
 
     const bodyHtml = `
-      <div class="email-root">
-        <div class="email-shell">
           <div class="email-card">
             <div class="email-topbar-bg"></div>
             <div class="email-content">
+              ${this.getEmailHeader(appUrl)}
               <h2 class="email-title">${emails.weeklyReportTitle}</h2>
               <p class="email-greeting">${greeting}</p>
               <p class="email-text">${digest.summary}</p>
@@ -555,27 +596,18 @@ export class EmailService {
               <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
             </div>
           </div>
-        </div>
-      </div>
     `;
 
     const htmlTemplate = this.buildEmailDocument(bodyHtml, accentColor, themeMode);
 
-    try {
-      await this.transporter.sendMail({
-        from:
-          this.configService.get<string>('SMTP_FROM_ALERTS') ||
-          this.configService.get<string>('SMTP_FROM', '"SubTracker" <alerts@subtracker.local>'),
-        to: email,
-        subject: emails.weeklyReportSubject,
-        html: htmlTemplate,
-      });
-      this.logger.log(`[SMTP] Successfully sent weekly report email to ${email}`);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`[SMTP] Failed to send weekly report to ${email}: ${message}`);
-      throw error;
-    }
+    await this.sendEmail({
+      to: email,
+      subject: emails.weeklyReportSubject,
+      html: htmlTemplate,
+      fromKey: 'SMTP_FROM_ALERTS',
+      fallbackFrom: '"SubTracker" <alerts@subtracker.local>',
+    });
+    this.logger.log(`[SMTP] Successfully sent weekly report email to ${email}`);
   }
 
   async sendVerificationEmail(
@@ -593,17 +625,13 @@ export class EmailService {
     const verificationUrl = `${frontendUrl}/verify-email?token=${token}`;
 
     const appUrl = frontendUrl;
-    const teamNameHtml = locale.emails.teamName.replace(
-      'SubTracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
-    );
+    const teamNameHtml = locale.emails.teamName;
 
     const bodyHtml = `
-      <div class="email-root">
-        <div class="email-shell">
           <div class="email-card">
             <div class="email-topbar-bg"></div>
             <div class="email-content">
+              ${this.getEmailHeader(appUrl)}
               <h2 class="email-title">${verification.title}</h2>
               <p class="email-greeting">${emails.greetingWithName.replace('{{name}}', name || email)}</p>
               <p class="email-text">${verification.text}</p>
@@ -621,27 +649,18 @@ export class EmailService {
               <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
             </div>
           </div>
-        </div>
-      </div>
     `;
 
     const htmlTemplate = this.buildEmailDocument(bodyHtml, undefined, themeMode);
 
-    try {
-      await this.transporter.sendMail({
-        from:
-          this.configService.get<string>('SMTP_FROM_AUTH') ||
-          this.configService.get<string>('SMTP_FROM', '"SubTracker" <auth@subtracker.local>'),
-        to: email,
-        subject: verification.subject,
-        html: htmlTemplate,
-      });
-      this.logger.log(`[SMTP] Successfully sent verification email to ${email}`);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`[SMTP] Failed to send verification email to ${email}: ${message}`);
-      throw error;
-    }
+    await this.sendEmail({
+      to: email,
+      subject: verification.subject,
+      html: htmlTemplate,
+      fromKey: 'SMTP_FROM_AUTH',
+      fallbackFrom: '"SubTracker" <auth@subtracker.local>',
+    });
+    this.logger.log(`[SMTP] Successfully sent verification email to ${email}`);
   }
 
   async sendPasswordResetEmail(
@@ -659,17 +678,13 @@ export class EmailService {
     const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
 
     const appUrl = frontendUrl;
-    const teamNameHtml = locale.emails.teamName.replace(
-      'SubTracker',
-      `<a href="${appUrl}" style="color: inherit; text-decoration: none; font-weight: 600;">SubTracker</a>`,
-    );
+    const teamNameHtml = locale.emails.teamName;
 
     const bodyHtml = `
-      <div class="email-root">
-        <div class="email-shell">
           <div class="email-card">
             <div class="email-topbar-bg"></div>
             <div class="email-content">
+              ${this.getEmailHeader(appUrl)}
               <h2 class="email-title">${passwordReset.title}</h2>
               <p class="email-greeting">${emails.greetingWithName.replace('{{name}}', name || email)}</p>
               <p class="email-text">${passwordReset.text}</p>
@@ -687,26 +702,17 @@ export class EmailService {
               <p class="email-signoff email-muted">${locale.emails.thankYou},<br>${teamNameHtml}</p>
             </div>
           </div>
-        </div>
-      </div>
     `;
 
     const htmlTemplate = this.buildEmailDocument(bodyHtml, undefined, themeMode);
 
-    try {
-      await this.transporter.sendMail({
-        from:
-          this.configService.get<string>('SMTP_FROM_AUTH') ||
-          this.configService.get<string>('SMTP_FROM', '"SubTracker" <auth@subtracker.local>'),
-        to: email,
-        subject: passwordReset.subject,
-        html: htmlTemplate,
-      });
-      this.logger.log(`[SMTP] Successfully sent password reset email to ${email}`);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`[SMTP] Failed to send password reset email to ${email}: ${message}`);
-      throw error;
-    }
+    await this.sendEmail({
+      to: email,
+      subject: passwordReset.subject,
+      html: htmlTemplate,
+      fromKey: 'SMTP_FROM_AUTH',
+      fallbackFrom: '"SubTracker" <auth@subtracker.local>',
+    });
+    this.logger.log(`[SMTP] Successfully sent password reset email to ${email}`);
   }
 }

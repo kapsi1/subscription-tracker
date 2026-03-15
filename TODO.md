@@ -336,7 +336,7 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add another accent color, maybe calculate it from the existing one.
 - [x] Categories should have icons. Add appropriate icons to default categories. Add a selector, opening a popup with a library of icons, to each row in Category Management. Show the icons in This Month's Payments and All Subscriptions - left side.
 - [x] Content is scrollable horizontally for screen width about 640-708 and 768-804 pixels. It shouldn't be.
-- [ ] Add a new logo, include different versions of it for different contexts (favicon, app icon, etc.). Include it in email templates as well.
+- [x] Add a new logo, include different versions of it for different contexts (favicon, app icon, etc.). Include it in email templates as well.
 - [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [x] Branding: find instances of "Subscription Tracker" visible to the user, and replace them with "SubTracker". Also replace "Subscription Tracker" with "SubTracker" in code, if it's not used anywhere else.
 - [x] In Profile/Account Profile remove Email Address section. Remove "Member since".
