@@ -117,7 +117,7 @@ export default function LoginPage() {
           <>
             <CardHeader className="space-y-4 text-center pb-8">
               <div className="flex justify-center mb-2">
-                <Image src="/logo.svg" alt="SubTracker" width={128} height={128} className="mx-auto" />
+                <Image src="/logo-transparent.svg" alt="SubTracker" width={128} height={128} className="mx-auto" />
               </div>
               <div>
                 <CardTitle className="text-2xl">{t('auth.title')}</CardTitle>
