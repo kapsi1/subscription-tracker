@@ -10,6 +10,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'SubTracker',
   description: 'Manage and forecast your subscriptions cost efficiently',
+  manifest: '/site.webmanifest',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
