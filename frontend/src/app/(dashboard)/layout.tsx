@@ -160,9 +160,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <header className="sticky flex justify-center top-0 z-50 w-full border-b bg-card shadow-sm">
         <div className="flex h-16 min-w-0 items-center gap-2 px-4 sm:px-6 md:gap-4 w-full max-w-[1055px]">
           <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center logo-icon-hover transition-all">
-              <CreditCard className="w-5 h-5 text-white" />
-            </div>
+            <Image src="/logo.svg" alt="SubTracker" width={64} height={64} className="mx-auto" />
             <span className="font-semibold text-lg hidden min-[860px]:inline">SubTracker</span>
           </Link>
 
@@ -172,7 +170,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 variant="ghost"
                 className={cn(
                   'gap-2 px-2 min-[860px]:px-3 transition-colors',
-                  pathname === '/dashboard'
+                  pathname === '/dashboard' || pathname.startsWith('/dashboard/')
                     ? 'nav-item-active hover:bg-transparent font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}
@@ -187,7 +185,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 variant="ghost"
                 className={cn(
                   'gap-2 px-2 min-[860px]:px-3 transition-colors',
-                  pathname === '/subscriptions'
+                  pathname === '/subscriptions' || pathname.startsWith('/subscriptions/')
                     ? 'nav-item-active hover:bg-transparent font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}
@@ -202,7 +200,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 variant="ghost"
                 className={cn(
                   'gap-2 px-2 min-[860px]:px-3 transition-colors',
-                  pathname === '/settings'
+                  pathname === '/settings' || pathname.startsWith('/settings/')
                     ? 'nav-item-active hover:bg-transparent font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}

@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { CreditCard, Mail } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -116,9 +117,7 @@ export default function LoginPage() {
           <>
             <CardHeader className="space-y-4 text-center pb-8">
               <div className="flex justify-center mb-2">
-                <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center shadow-md">
-                  <CreditCard className="w-8 h-8 text-white" />
-                </div>
+                <Image src="/logo.svg" alt="SubTracker" width={128} height={128} className="mx-auto" />
               </div>
               <div>
                 <CardTitle className="text-2xl">{t('auth.title')}</CardTitle>
