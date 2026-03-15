@@ -20,6 +20,7 @@ export const Flag = ({ countryCode, className }: FlagProps) => {
       alt={`${countryCode} Flag`}
       width={20}
       height={14}
+      style={{ width: 20, height: 14 }}
       className={cn('object-cover rounded-[1px] shadow-[0_0_0_1px_rgba(0,0,0,0.1)]', className)}
     />
   );

@@ -122,6 +122,7 @@ export default function LoginPage() {
                   alt="SubTracker"
                   width={128}
                   height={128}
+                  style={{ width: 128, height: 128 }}
                   className="mx-auto"
                   priority
                 />
