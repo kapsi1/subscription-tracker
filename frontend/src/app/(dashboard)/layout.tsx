@@ -1,12 +1,13 @@
 'use client';
 
-import { LayoutDashboard, ListChecks, LogOut, Settings, UserRound } from 'lucide-react';
+import { Download, LayoutDashboard, ListChecks, LogOut, Settings, UserRound } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/components/auth-provider';
+import { useInstallPrompt } from '@/hooks/use-install-prompt';
 import { ErrorState } from '@/components/error-state'; // Assuming this path
 import { LoadingState } from '@/components/loading-state';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { t, i18n } = useTranslation();
+  const { canInstall, install } = useInstallPrompt();
 
   const [backendInitStatus, setBackendInitStatus] = useState<'checking' | 'ready' | 'timeout'>(
     'ready',
@@ -256,6 +258,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <span>{t('settings.tabs.profile')}</span>
                   </Link>
                 </DropdownMenuItem>
+                {canInstall && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={install} className="gap-2 cursor-pointer">
+                      <Download className="h-4 w-4" />
+                      <span>{t('nav.installApp')}</span>
+                    </DropdownMenuItem>
+                  </>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}

@@ -18,8 +18,8 @@ self.addEventListener('push', (event) => {
   const title = data.title || 'SubTracker';
   const options = {
     body: data.body || 'You have a new notification.',
-    icon: '/next.svg',
-    badge: '/next.svg',
+    icon: '/icon-192.png',
+    badge: '/favicon-32x32.png',
     data: {
       url: data.url || '/',
     },

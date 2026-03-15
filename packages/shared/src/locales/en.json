@@ -65,7 +65,8 @@
     "dashboard": "Dashboard",
     "subscriptions": "Subscriptions",
     "settings": "Settings",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "installApp": "Install App"
   },
   "dashboard": {
     "title": "Dashboard",

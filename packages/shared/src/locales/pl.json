@@ -65,7 +65,8 @@
     "dashboard": "Panel główny",
     "subscriptions": "Subskrypcje",
     "settings": "Ustawienia",
-    "logout": "Wyloguj się"
+    "logout": "Wyloguj się",
+    "installApp": "Zainstaluj aplikację"
   },
   "dashboard": {
     "title": "Panel główny",
