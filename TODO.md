@@ -340,3 +340,4 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [x] Branding: find instances of "Subscription Tracker" visible to the user, and replace them with "SubTracker". Also replace "Subscription Tracker" with "SubTracker" in code, if it's not used anywhere else.
 - [x] In Profile/Account Profile remove Email Address section. Remove "Member since".
+- [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices.
