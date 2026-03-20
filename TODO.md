@@ -110,8 +110,8 @@
 - [x] Calculate total yearly cost
 - [x] Convert yearly to monthly equivalent
 - [x] Group subscriptions by category
-- [x] Implement `/dashboard/summary` endpoint
-- [x] Implement `/dashboard/forecast?months=12` endpoint
+- [x] Implement `/Dashboard/summary` endpoint
+- [x] Implement `/Dashboard/forecast?months=12` endpoint
 
 ---
 
@@ -224,7 +224,7 @@
 ## 2.7 Frontend E2E Testing
 - [x] Initialize Playwright
 - [x] Write auth flow tests
-- [x] Write dashboard + subscriptions flow tests
+- [x] Write Dashboard + subscriptions flow tests
 
 ---
 
@@ -277,16 +277,16 @@
 - [x] Payment history
 - [x] When adding or saving subscription, check all fields for validity and show error messages
 - [x] "Daily Digest" emails should be sent at midnight, when a subscription was paid a previous day. They should include all subscriptions paid that day.
-- [x] Add user name field to registration and use it for personalized greetings in dashboard and emails.
-- [x] Show user's initials in the top right corner of the dashboard, instead of the logout button. Clicking on it should open a dropdown with "Logout"
+- [x] Add user name field to registration and use it for personalized greetings in Dashboard and emails.
+- [x] Show user's initials in the top right corner of the Dashboard, instead of the logout button. Clicking on it should open a dropdown with "Logout"
 - [x] After registration send user a verification email and don't allow login until verified. Create a flow for verification including a way to resend the verification email.
 - [x] Add a "Forgot Password" flow. Make sure UI is in line with other flows. Add tests.
 - [x] Create user profile page. Make the profile page a tab in Settings page. Currents Settings page should be renamed to "Preferences".
 - [x] Add Change Password and Change Email flow in user profile
 - [x] Save settings on any change, remove the Save Settings button
 - [x] Instead of "Upcoming Payments" show payments for this month. Include done payments as well, with a suitablestyle to indicate they are done The list should be sorted by date, with a button to change sort direction. Also enable sorting by amount. Adjust the card's subtitle.
-- [x] Make the main container of dashboard full width with a small margin, on small and medium screen width.
-- [x] Add buttons to switch the month to previous and next, and display the current month and year. Implement month switching. The whole dashboard should be showing data for the selected month, except 12-month forecast chart.
+- [x] Make the main container of Dashboard full width with a small margin, on small and medium screen width.
+- [x] Add buttons to switch the month to previous and next, and display the current month and year. Implement month switching. The whole Dashboard should be showing data for the selected month, except 12-month forecast chart.
 - [x] Make the 12-month forecast chart full-width on large screen width. In forecast chart for each column, under month names, add a circle with a hover effect (like the color chooser in the top nav bar). Background should be transparent by default, and accent color on hover. Inside the circle there should be a number of payments done that month. Hovering over the circle shows a html tooltip with a list of payments for this month (date, name, cost)
 - [x] Only one currency should be allowed. In settings, add a currency selector. It should be a dropdown with a list of currencies. Each row should show currency code, name and flag. There should be an input field for currency code or name. Design UI and make it look in line with the rest of the app. Validate on backend. Selected currency should be used for all subscriptions. Remove the currency selector in the subscription form.
 - [x] If user is logged with a Google account, show their profile picture in corner, instead of initials. Also add a link to user profile page above the logout button. Settings page should have its subpages in url, so we can link to them.
@@ -305,7 +305,7 @@
 - [x] Create a JSON with test subscriptions data that can be imported in the app. Include different currencies, billing cycles, categories, payment history, etc. Make different months have different amount of subscriptions. Include some very long subscription names to test the subscriptions list.
 - [x] This Month Payments (in SummaryCards.tsx): show done this month/total this month, e.g. 2/10
 - [x] In All Subscriptions table, make the column headers clickable (add cursor-pointer class), and clicking them sort the table. Show up/down chevrons next to column name, to show sort order. Default order is Next Billing / ascending (chronological).
-- [x] Make the category background colors in /subscriptions more muted. Use the same colors for categories in dashboard. For light theme make backgrounds of category badges in dashboard darker. Make text color same as surrounding text color.
+- [x] Make the category background colors in /subscriptions more muted. Use the same colors for categories in Dashboard. For light theme make backgrounds of category badges in Dashboard darker. Make text color same as surrounding text color.
 - [x] Add "resend verification email" button to the Email Sent page
 - [x] Replace the email "auth@subscription-tracker.local" with an environment variable
 - [x] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
@@ -325,7 +325,7 @@
 - [ ] Custom billing cycle
 - [x] Delete Account flow in user profile. Include a full screen warning/confirmation modal. Add tests.
 - [ ] Billing cycle -> custom does nothing
-- [ ] Support multiple currencies. Add a toggle in settings, that enables multiple currencies. When toggle is enabled, the currency selected in the currency selector should be the target currency for conversion. This currency will be what all other currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. The subscription add/edit form should have a currency selector (same as in settings). Use an external service to convert currencies. Show me a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
+- [ ] Support multiple currencies. Add a toggle in Settings, that enables multiple currencies. When toggle is enabled, the currency selected in the currency selector should be the target currency for conversion. This currency will be what all other currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. The subscription add/edit form should have a currency selector (same as in Settings). Use an external service to convert currencies. Show me a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
 
 To consider: what happens when we disable the toggle after adding some subscriptions with different currencies?
 
@@ -343,9 +343,10 @@ full width
 - [x] On login page, instead of "Invalid credentials" show "Invalid email or password". Also add a 5 second lock for the login button, so user can't spam it.
 - [x] Don't show the "Successfully logged in" toast after login.
 - [x] Don't show "Failed to load settings" toast after logout.
-- [x] Make colors in "Cost by Category" charts same as category colors in settings.
-- [x] Make category badge colors in All Subscriptions table same as on dashboard. Clean up code from redundant color definitions.
+- [x] Make colors in "Cost by Category" charts same as category colors in Settings.
+- [x] Make category badge colors in All Subscriptions table same as on Dashboard. Clean up code from redundant color definitions.
 - [x] Make main container background color a subtle gradient: top -> down, top color is as now, bottom color is slightly darker. Do it for all pages.
-- [ ] Bug: change color in settings, switch to another tab and back to settings, the color switches back to the old one. On page reload the color is correct (the new one). It doesn't matter how fast you switch to another tab after changing the color, or from another tab back to settings. It doesn't happen when switching to dashboard and then to subscriptions tab, only when returning to settings tab.
+- [ ] Bug: change color in Settings, switch to another tab and back to Settings, the color switches back to the old one. On page reload the color is correct (the new one). It doesn't matter how fast you switch to another tab after changing the color, or from another tab back to Settings. It doesn't happen when switching to Dashboard and then to Dashboard tab, only when returning to Settings tab.
 - [ ] In light mode make the toast backgrounds darker, and text on them black.
-- [ ] In light mode you can't see which subtab is selected in settings
+- [ ] In light mode you can't see if Profile or Preferences subtab is selected in Settings
+- [ ] Analyze code and find large files that can be refactored into smaller files. Don't edit anything yet, just make a report.
