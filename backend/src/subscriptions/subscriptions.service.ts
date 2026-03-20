@@ -119,6 +119,14 @@ export class SubscriptionsService {
     };
 
     await this.prisma.$transaction(async (tx) => {
+      if (importDto.replace) {
+        await Promise.all([
+          tx.subscription.deleteMany({ where: { userId } }),
+          tx.category.deleteMany({ where: { userId } }),
+          tx.paymentHistory.deleteMany({ where: { userId } }),
+        ]);
+      }
+
       // 1. Import Categories
       if (importDto.categories?.length) {
         for (const cat of importDto.categories) {

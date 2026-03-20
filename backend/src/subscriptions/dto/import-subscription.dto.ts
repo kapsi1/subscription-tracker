@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsOptional, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsOptional, ValidateNested } from 'class-validator';
 import { CreateCategoryDto } from '../../categories/dto/create-category.dto';
 import { CreateSubscriptionDto } from './create-subscription.dto';
 import { StandalonePaymentDto } from './standalone-payment.dto';

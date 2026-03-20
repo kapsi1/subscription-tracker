@@ -15,6 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import api from '@/lib/api';
 import { SubscriptionsTable } from '../_components/SubscriptionsTable';
+import { ImportPreviewModal } from './_components/ImportPreviewModal';
 
 const paymentSchema = z.object({
   amount: z.number().positive(),
@@ -61,6 +62,10 @@ export default function ManageSubscriptionsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [importPreviewData, setImportPreviewData] = useState<z.infer<
+    typeof importDataSchema
+  > | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: subscriptions = [], isLoading: isFetchLoading } = useQuery<Subscription[]>({
@@ -80,7 +85,6 @@ export default function ManageSubscriptionsPage() {
   });
 
   const [isImportLoading, setIsImportLoading] = useState(false);
-  const isLoading = isFetchLoading || isImportLoading;
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.delete(`/subscriptions/${id}`),
@@ -159,8 +163,9 @@ export default function ManageSubscriptionsPage() {
   const handleExport = async () => {
     try {
       const res = await api.get('/subscriptions/export');
-      const dataStr =
-        'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(res.data, null, 2));
+      const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
+        JSON.stringify(res.data, null, 2),
+      )}`;
       const downloadAnchorNode = document.createElement('a');
       downloadAnchorNode.setAttribute('href', dataStr);
       downloadAnchorNode.setAttribute('download', 'subtracker_data.json');
@@ -181,33 +186,22 @@ export default function ManageSubscriptionsPage() {
 
     const reader = new FileReader();
     reader.onload = async (e) => {
-      setIsImportLoading(true);
       try {
         const content = e.target?.result as string;
         const json = JSON.parse(content);
 
         let importData: z.infer<typeof importDataSchema>;
         if (Array.isArray(json)) {
-          // Backward compatibility for array-only format
           importData = { subscriptions: json };
         } else if (json.subscriptions || json.categories || json.payments) {
-          // New format
           importData = json;
         } else {
-          // Single subscription
           importData = { subscriptions: [json] };
         }
 
         const validData = importDataSchema.parse(importData);
-
-        await api.post('/subscriptions/import', validData);
-        toast.success(t('subscriptions.importSuccess'));
-        sendGAEvent({ event: 'import_subscriptions', value: 'success' });
-
-        queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
-        queryClient.invalidateQueries({ queryKey: ['categories'] });
-        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-        queryClient.invalidateQueries({ queryKey: ['payments'] });
+        setImportPreviewData(validData);
+        setPreviewModalOpen(true);
       } catch (err: unknown) {
         if (err instanceof z.ZodError) {
           toast.error(`${t('subscriptions.importError')}: Invalid file format`);
@@ -215,8 +209,6 @@ export default function ManageSubscriptionsPage() {
           toast.error(t('subscriptions.importError'));
         }
         sendGAEvent({ event: 'import_subscriptions', value: 'failed' });
-      } finally {
-        setIsImportLoading(false);
       }
 
       if (fileInputRef.current) {
@@ -226,7 +218,32 @@ export default function ManageSubscriptionsPage() {
     reader.readAsText(file);
   };
 
-  if (isLoading) {
+  const confirmImport = async (replace: boolean) => {
+    if (!importPreviewData) return;
+
+    setIsImportLoading(true);
+    try {
+      await api.post('/subscriptions/import', {
+        ...importPreviewData,
+        replace,
+      });
+      toast.success(t('subscriptions.importSuccess'));
+      sendGAEvent({ event: 'import_subscriptions', value: 'success' });
+
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['payments'] });
+      setPreviewModalOpen(false);
+    } catch (_err: unknown) {
+      toast.error(t('subscriptions.importError'));
+      sendGAEvent({ event: 'import_subscriptions', value: 'failed' });
+    } finally {
+      setIsImportLoading(false);
+    }
+  };
+
+  if (isFetchLoading) {
     return <LoadingState message={t('common.loading')} />;
   }
 
@@ -300,6 +317,14 @@ export default function ManageSubscriptionsPage() {
         onOpenChange={setModalOpen}
         subscription={editingSubscription}
         onSave={handleSave}
+      />
+
+      <ImportPreviewModal
+        open={previewModalOpen}
+        onOpenChange={setPreviewModalOpen}
+        data={importPreviewData}
+        onConfirm={confirmImport}
+        isLoading={isImportLoading}
       />
     </>
   );

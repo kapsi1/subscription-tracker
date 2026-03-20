@@ -183,6 +183,19 @@
     "exportError": "Failed to export subscriptions",
     "importSuccess": "Successfully imported subscriptions",
     "importError": "Failed to parse or import JSON file",
+    "importPreview": {
+      "title": "Preview Import Data",
+      "desc": "Review the items that will be added to your account",
+      "subscriptions": "Subscriptions",
+      "categories": "Categories",
+      "payments": "Payments",
+      "replace": "Replace existing data",
+      "replaceDesc": "Warning: This will delete all your current subscriptions, categories, and payment history before importing.",
+      "confirm": "Confirm Import",
+      "cancel": "Cancel",
+      "summary": "Summary",
+      "itemsToImport": "Items to import"
+    },
     "modal": {
       "addTitle": "Add Subscription",
       "editTitle": "Edit Subscription",

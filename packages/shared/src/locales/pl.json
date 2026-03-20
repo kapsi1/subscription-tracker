@@ -191,6 +191,19 @@
     "exportError": "Nie udało się wyeksportować subskrypcji",
     "importSuccess": "Pomyślnie zaimportowano subskrypcje",
     "importError": "Nie udało się przetworzyć lub zaimportować pliku JSON",
+    "importPreview": {
+      "title": "Podgląd importowanych danych",
+      "desc": "Przejrzyj elementy, które zostaną dodane do Twojego konta",
+      "subscriptions": "Subskrypcje",
+      "categories": "Kategorie",
+      "payments": "Płatności",
+      "replace": "Zastąp istniejące dane",
+      "replaceDesc": "Uwaga: Spowoduje to usunięcie wszystkich Twoich obecnych subskrypcji, kategorii i historii płatności przed importem.",
+      "confirm": "Potwierdź import",
+      "cancel": "Anuluj",
+      "summary": "Podsumowanie",
+      "itemsToImport": "Elementy do zaimportowania"
+    },
     "modal": {
       "addTitle": "Dodaj subskrypcję",
       "editTitle": "Edytuj subskrypcję",
