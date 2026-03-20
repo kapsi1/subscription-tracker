@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { cn } from '@/components/ui/utils';
 import api from '@/lib/api';
 import { ACCENT_COLORS, type AccentColorType, applyAccentColor } from '@/lib/appearance-utils';
@@ -348,9 +347,9 @@ export function AppearanceSection() {
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>
+            <div className="text-sm font-medium leading-none">
               <SearchHighlight text={t('settings.appearance.theme')} query={searchQuery} />
-            </Label>
+            </div>
             <p className="text-sm text-muted-foreground">
               <SearchHighlight text={t('settings.appearance.themeDesc')} query={searchQuery} />
             </p>
@@ -360,9 +359,9 @@ export function AppearanceSection() {
           <div className="h-px bg-border/50 my-2" />
 
           <div className="space-y-2">
-            <Label>
+            <div className="text-sm font-medium leading-none">
               <SearchHighlight text={t('settings.appearance.accent')} query={searchQuery} />
-            </Label>
+            </div>
             <p className="text-sm text-muted-foreground">
               <SearchHighlight text={t('settings.appearance.accentDesc')} query={searchQuery} />
             </p>
@@ -382,11 +381,15 @@ export function AppearanceSection() {
               <div className="flex-1 space-y-3">
                 <div className="flex items-center gap-2">
                   <Pipette className="w-4 h-4 text-muted-foreground" />
-                  <Label>{t('settings.appearance.customColor')}</Label>
+                  <div className="text-sm font-medium leading-none">
+                    {t('settings.appearance.customColor')}
+                  </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="relative group">
                     <input
+                      id="customColor"
+                      name="customColor"
                       type="color"
                       value={
                         currentAccent.name?.startsWith('#')
@@ -399,6 +402,7 @@ export function AppearanceSection() {
                       onBlur={handleCustomColorClose}
                       className="w-12 h-12 rounded-full cursor-pointer border-2 border-border bg-card p-0 overflow-hidden transition-all hover:border-primary/50 shadow-sm [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-full"
                       title={t('settings.appearance.pickCustomColor')}
+                      aria-label={t('settings.appearance.pickCustomColor')}
                     />
                   </div>
                   <div className="flex flex-col gap-0.5">
@@ -419,7 +423,9 @@ export function AppearanceSection() {
               {/* Recent Colors Group */}
               <div className="space-y-3">
                 <div className="flex items-center">
-                  <Label>{t('settings.appearance.recentColors')}</Label>
+                  <div className="text-sm font-medium leading-none">
+                    {t('settings.appearance.recentColors')}
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   {Array.from({ length: 4 }).map((_, i) => {

@@ -76,6 +76,7 @@ export function ReminderSection({
           <div className="flex gap-2 items-center">
             <Input
               id="defaultDays"
+              name="defaultDays"
               type="number"
               min="1"
               max="30"

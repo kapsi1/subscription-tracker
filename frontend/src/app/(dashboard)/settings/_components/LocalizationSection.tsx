@@ -63,9 +63,9 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>
+            <div className="text-sm font-medium leading-none">
               <SearchHighlight text={t('settings.localization.language')} query={searchQuery} />
-            </Label>
+            </div>
             <p className="text-sm text-muted-foreground">
               <SearchHighlight text={t('settings.localization.languageDesc')} query={searchQuery} />
             </p>
@@ -149,7 +149,7 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
           <div className="h-px bg-border/50 my-2" />
 
           <div className="space-y-2">
-            <Label htmlFor="currency">
+            <Label htmlFor="currency-trigger">
               <SearchHighlight text={t('settings.localization.currency')} query={searchQuery} />
             </Label>
             <p className="text-sm text-muted-foreground">
@@ -162,6 +162,7 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                   variant="outline"
                   role="combobox"
                   aria-expanded={isCurrencyPopoverOpen}
+                  id="currency-trigger"
                   className="w-full justify-between dark:bg-input/30 h-11"
                 >
                   <span className="flex items-center gap-2">
@@ -192,6 +193,8 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
+                      id="currency-search"
+                      aria-label={t('settings.localization.searchCurrency')}
                       placeholder={t('settings.localization.searchCurrency')}
                       value={searchCurrency}
                       onChange={(e) => setSearchCurrency(e.target.value)}

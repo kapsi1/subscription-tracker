@@ -76,7 +76,7 @@ export function PushNotificationsSection({
         {showTestControls && (
           <div className="border-t pt-4 space-y-3">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Test Notification</Label>
+              <div className="text-sm font-medium leading-none">Test Notification</div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -102,6 +102,7 @@ export function PushNotificationsSection({
                 </Label>
                 <Input
                   id="testDelay"
+                  name="testDelay"
                   type="number"
                   min="0"
                   max="300"

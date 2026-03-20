@@ -86,6 +86,7 @@ export function ChangePasswordSection() {
             </Label>
             <Input
               id="currentPassword"
+              name="currentPassword"
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
@@ -103,6 +104,7 @@ export function ChangePasswordSection() {
               </Label>
               <Input
                 id="newPassword"
+                name="newPassword"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -120,6 +122,7 @@ export function ChangePasswordSection() {
               </Label>
               <Input
                 id="confirmNewPassword"
+                name="confirmNewPassword"
                 type="password"
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}

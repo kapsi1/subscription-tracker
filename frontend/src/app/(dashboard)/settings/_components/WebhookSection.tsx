@@ -89,6 +89,7 @@ export function WebhookSection({
               </Label>
               <Input
                 id="webhookUrl"
+                name="webhookUrl"
                 type="url"
                 placeholder="https://your-domain.com/webhook"
                 value={webhookUrl}
@@ -111,6 +112,7 @@ export function WebhookSection({
               </Label>
               <Input
                 id="webhookSecret"
+                name="webhookSecret"
                 type="password"
                 value={webhookSecret}
                 onChange={(e) => onSettingsChange({ webhookSecret: e.target.value })}
@@ -125,7 +127,9 @@ export function WebhookSection({
 
             {showTestControls && (
               <div className="border-t pt-4 space-y-3">
-                <Label>{t('settings.notifications.webhook.testTitle')}</Label>
+                <div className="text-sm font-medium leading-none">
+                  {t('settings.notifications.webhook.testTitle')}
+                </div>
                 <p className="text-sm text-muted-foreground">
                   {t('settings.notifications.webhook.testDesc')}
                 </p>

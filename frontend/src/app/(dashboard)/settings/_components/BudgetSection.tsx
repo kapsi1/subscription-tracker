@@ -61,6 +61,7 @@ export function BudgetSection({
             <span className="text-muted-foreground font-medium text-sm">{currency}</span>
             <Input
               id="monthlyBudget"
+              name="monthlyBudget"
               type="number"
               min="0"
               step="0.01"
@@ -80,16 +81,24 @@ export function BudgetSection({
         </div>
         {showTestControls && (
           <div className="border-t pt-4 space-y-3">
-            <Label>{t('settings.notifications.email.testBudgetTitle')}</Label>
+            <div className="text-sm font-medium leading-none">
+              {t('settings.notifications.email.testBudgetTitle')}
+            </div>
             <p className="text-sm text-muted-foreground">
               {t('settings.notifications.email.testBudgetDesc')}
             </p>
 
             <div className="space-y-2">
-              <Label className="text-sm">{t('settings.notifications.email.testLanguage')}</Label>
+              <div className="text-sm font-medium leading-none">
+                {t('settings.notifications.email.testLanguage')}
+              </div>
               <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 text-sm">
+                <label
+                  htmlFor="testBudgetEmailLanguage-en"
+                  className="flex items-center gap-2 text-sm cursor-pointer"
+                >
                   <input
+                    id="testBudgetEmailLanguage-en"
                     type="radio"
                     name="testBudgetEmailLanguage"
                     value="en"
@@ -98,8 +107,12 @@ export function BudgetSection({
                   />
                   English
                 </label>
-                <label className="flex items-center gap-2 text-sm">
+                <label
+                  htmlFor="testBudgetEmailLanguage-pl"
+                  className="flex items-center gap-2 text-sm cursor-pointer"
+                >
                   <input
+                    id="testBudgetEmailLanguage-pl"
                     type="radio"
                     name="testBudgetEmailLanguage"
                     value="pl"

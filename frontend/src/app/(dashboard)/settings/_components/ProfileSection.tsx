@@ -47,6 +47,7 @@ export function ProfileSection({ profile, setProfile }: ProfileSectionProps) {
           </Label>
           <Input
             id="profileName"
+            name="profileName"
             value={profile.name}
             placeholder={t('settings.profile.namePlaceholder')}
             onChange={(e) => setProfile({ ...profile, name: e.target.value })}

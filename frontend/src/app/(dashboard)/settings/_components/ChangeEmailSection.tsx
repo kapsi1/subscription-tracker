@@ -83,6 +83,7 @@ export function ChangeEmailSection() {
               </Label>
               <Input
                 id="newEmail"
+                name="newEmail"
                 type="email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
@@ -99,6 +100,7 @@ export function ChangeEmailSection() {
               </Label>
               <Input
                 id="changeEmailPassword"
+                name="currentPassword"
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}

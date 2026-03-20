@@ -208,19 +208,25 @@ export default function ManageSubscriptionsPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
+            id="subscription-search"
+            name="search"
             placeholder={t('subscriptions.search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
+            aria-label={t('subscriptions.search')}
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <input
+            id="subscription-import"
+            name="subscription-import"
             type="file"
             accept=".json"
             className="hidden"
             ref={fileInputRef}
             onChange={handleImport}
+            aria-label="Import subscriptions from JSON"
           />
           <Button
             variant="outline"

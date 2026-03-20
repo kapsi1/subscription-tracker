@@ -11,6 +11,9 @@ export function useInstallPrompt() {
 
   useEffect(() => {
     const handler = (e: Event) => {
+      // If we're already in standalone mode, don't prevent default or capture the prompt
+      if (window.matchMedia('(display-mode: standalone)').matches) return;
+
       e.preventDefault();
       setInstallPrompt(e as BeforeInstallPromptEvent);
     };

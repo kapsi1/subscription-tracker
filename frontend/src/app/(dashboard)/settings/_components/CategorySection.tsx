@@ -127,6 +127,7 @@ function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps
           onChange={(e) => handleColorChange(e.target.value)}
           className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
           tabIndex={-1}
+          aria-label={t('settings.categories.pickColor')}
         />
       </label>
 
@@ -137,6 +138,7 @@ function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps
         onChange={(e) => setName(e.target.value)}
         onBlur={handleNameBlur}
         placeholder={t('settings.categories.namePlaceholder')}
+        aria-label={t('settings.categories.categoryName')}
         className="h-8 flex-1 text-sm border-transparent bg-transparent shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:shadow-sm"
         maxLength={50}
       />

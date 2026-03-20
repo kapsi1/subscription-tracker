@@ -102,6 +102,7 @@ export function DeleteAccountSection() {
                 </Label>
                 <Input
                   id="delete-account-password"
+                  name="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

@@ -152,6 +152,7 @@ export function SubscriptionModal({
           <Label htmlFor="name">{t('subscriptions.modal.serviceName')}</Label>
           <Input
             id="name"
+            name="name"
             placeholder={t('subscriptions.modal.servicePlaceholder')}
             value={formData.name}
             onChange={(e) => {
@@ -175,6 +176,7 @@ export function SubscriptionModal({
           <Label htmlFor="amount">{t('subscriptions.modal.amount')}</Label>
           <Input
             id="amount"
+            name="amount"
             type="number"
             step="0.01"
             min="0"
@@ -201,6 +203,7 @@ export function SubscriptionModal({
           <div className="space-y-2">
             <Label htmlFor="billingCycle">{t('subscriptions.modal.billingCycle')}</Label>
             <Select
+              name="billingCycle"
               value={formData.billingCycle}
               onValueChange={(value) => setFormData({ ...formData, billingCycle: value })}
             >
@@ -220,6 +223,7 @@ export function SubscriptionModal({
           <div className="space-y-2">
             <Label htmlFor="category">{t('subscriptions.modal.category')}</Label>
             <Select
+              name="category"
               value={formData.category}
               onValueChange={(value) => setFormData({ ...formData, category: value })}
             >
@@ -266,6 +270,7 @@ export function SubscriptionModal({
           <Label htmlFor="nextBillingDate">{t('subscriptions.modal.nextBillingDate')}</Label>
           <Input
             id="nextBillingDate"
+            name="nextBillingDate"
             type="date"
             value={formData.nextBillingDate}
             onChange={(e) => {
@@ -294,6 +299,7 @@ export function SubscriptionModal({
           </div>
           <Switch
             id="reminderEnabled"
+            name="reminderEnabled"
             checked={formData.reminderEnabled}
             onCheckedChange={(checked) => setFormData({ ...formData, reminderEnabled: checked })}
           />
@@ -304,6 +310,7 @@ export function SubscriptionModal({
             <Label htmlFor="reminderDays">{t('subscriptions.modal.reminderDays')}</Label>
             <Input
               id="reminderDays"
+              name="reminderDays"
               type="number"
               min="0"
               max="30"

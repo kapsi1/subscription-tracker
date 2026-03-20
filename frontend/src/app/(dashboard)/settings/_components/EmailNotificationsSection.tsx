@@ -97,6 +97,7 @@ export function EmailNotificationsSection({
               </Label>
               <Input
                 id="emailAddress"
+                name="emailAddress"
                 type="email"
                 placeholder="you@example.com"
                 value={emailAddress}
@@ -154,18 +155,24 @@ export function EmailNotificationsSection({
 
             {showTestControls && (
               <div className="border-t pt-4 space-y-3">
-                <Label>{t('settings.notifications.email.testTitle')}</Label>
+                <div className="text-sm font-medium leading-none">
+                  {t('settings.notifications.email.testTitle')}
+                </div>
                 <p className="text-sm text-muted-foreground">
                   {t('settings.notifications.email.testDesc')}
                 </p>
 
                 <div className="space-y-2">
-                  <Label className="text-sm">
+                  <div className="text-sm font-medium leading-none">
                     {t('settings.notifications.email.testLanguage')}
-                  </Label>
+                  </div>
                   <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2 text-sm">
+                    <label
+                      htmlFor="testEmailLanguage-en"
+                      className="flex items-center gap-2 text-sm cursor-pointer"
+                    >
                       <input
+                        id="testEmailLanguage-en"
                         type="radio"
                         name="testEmailLanguage"
                         value="en"
@@ -174,8 +181,12 @@ export function EmailNotificationsSection({
                       />
                       English
                     </label>
-                    <label className="flex items-center gap-2 text-sm">
+                    <label
+                      htmlFor="testEmailLanguage-pl"
+                      className="flex items-center gap-2 text-sm cursor-pointer"
+                    >
                       <input
+                        id="testEmailLanguage-pl"
                         type="radio"
                         name="testEmailLanguage"
                         value="pl"
