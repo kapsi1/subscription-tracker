@@ -22,7 +22,7 @@ test.describe('Subscriptions Flow', () => {
     // Navigate to Subscriptions
     await page.waitForTimeout(1000);
     await page.goto('/subscriptions');
-    await expect(page.getByRole('heading', { name: 'Subscriptions', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Add Subscription' }).first()).toBeVisible();
 
     // Verify empty state
     await expect(page.getByText('No subscriptions found')).toBeVisible();
@@ -42,7 +42,7 @@ test.describe('Subscriptions Flow', () => {
 
     // Wait for modal to close and row to appear in table
     await expect(page.getByRole('dialog')).not.toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Netflix' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Netflix', exact: true })).toBeVisible();
     await expect(page.getByRole('cell', { name: '$15.99' })).toBeVisible();
     await expect(page.getByRole('cell', { name: 'Monthly' })).toBeVisible();
 
@@ -53,7 +53,7 @@ test.describe('Subscriptions Flow', () => {
     
     await page.getByPlaceholder('Search subscriptions').fill('Net');
     // Netflix should return
-    await expect(page.getByRole('cell', { name: 'Netflix' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Netflix', exact: true })).toBeVisible();
 
     // 4. Update Subscription
     // Clear search
@@ -77,7 +77,7 @@ test.describe('Subscriptions Flow', () => {
     await page.getByRole('row', { name: /Netflix/ }).getByRole('button').nth(1).click(); // Second button is Trash
     
     // Verify it disappeared and empty state returned
-    await expect(page.getByRole('cell', { name: 'Netflix' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Netflix', exact: true })).not.toBeVisible();
     await expect(page.getByText('No subscriptions found')).toBeVisible();
 
     // 6. Test Export
@@ -88,7 +88,21 @@ test.describe('Subscriptions Flow', () => {
     await page.getByRole('combobox', { name: /Category/i }).click();
     await page.getByRole('option', { name: 'Entertainment' }).click();
     await page.getByRole('button', { name: 'Add Subscription' }).click();
-    await expect(page.getByRole('cell', { name: 'Spotify' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Spotify', exact: true })).toBeVisible();
+
+    const spotifyRow = page.getByRole('row', { name: /Spotify/ });
+    await spotifyRow.hover();
+
+    const googleCalendarLink = spotifyRow.getByRole('link', {
+      name: 'Export Spotify to Google Calendar',
+    });
+    await expect(googleCalendarLink).toBeVisible();
+    await expect(googleCalendarLink).toHaveAttribute(
+      'href',
+      /calendar\.google\.com\/calendar\/render/,
+    );
+    await expect(googleCalendarLink).toHaveAttribute('href', /text=Spotify/);
+    await expect(googleCalendarLink).toHaveAttribute('target', '_blank');
 
     // Click Export button and intercept download
     const downloadPromise = page.waitForEvent('download');
@@ -118,7 +132,7 @@ test.describe('Subscriptions Flow', () => {
     });
 
     await expect(page.getByText('Successfully imported subscriptions')).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Hulu' })).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'AWS' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Hulu', exact: true })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'AWS', exact: true })).toBeVisible();
   });
 });

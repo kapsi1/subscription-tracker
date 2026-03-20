@@ -1,5 +1,13 @@
 import type { Category, Subscription } from '@subtracker/shared';
-import { ArrowUpDown, ChevronDown, ChevronUp, Pencil, Tag, Trash2 } from 'lucide-react';
+import {
+  ArrowUpDown,
+  CalendarPlus,
+  ChevronDown,
+  ChevronUp,
+  Pencil,
+  Tag,
+  Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DynamicIcon } from '@/components/DynamicIcon';
@@ -15,6 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { buildGoogleCalendarUrl } from '@/lib/google-calendar';
 import {
   findCategoryColor,
   findCategoryIcon,
@@ -158,78 +167,109 @@ export function SubscriptionsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedSubscriptions.map((subscription) => (
-            <TableRow
-              key={subscription.id}
-              className="animate-row-in hover:bg-accent/50 cursor-pointer group"
-              onClick={() => onEdit(subscription)}
-            >
-              <TableCell className="font-medium max-w-[200px]">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="truncate cursor-pointer">{subscription.name}</div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="max-w-[300px] wrap-break-word">
-                      {subscription.name}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </TableCell>
-              <TableCell>{formatCurrency(subscription.amount, subscription.currency)}</TableCell>
-              <TableCell>
-                {t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}
-              </TableCell>
-              <TableCell>
-                {subscription.nextBillingDate ? formatDate(subscription.nextBillingDate) : 'N/A'}
-              </TableCell>
-              <TableCell>
-                <Badge
-                  variant="outline"
-                  className="gap-1.5"
-                  style={getCategoryStyle(
-                    findCategoryColor(categories, subscription.category),
-                    'dashboard',
-                  )}
+          {sortedSubscriptions.map((subscription) =>
+            (() => {
+              const googleCalendarUrl = buildGoogleCalendarUrl(subscription);
+
+              return (
+                <TableRow
+                  key={subscription.id}
+                  className="animate-row-in hover:bg-accent/50 cursor-pointer group"
+                  onClick={() => onEdit(subscription)}
                 >
-                  <DynamicIcon
-                    name={findCategoryIcon(categories, subscription.category)}
-                    fallback={Tag}
-                    className="w-3.5 h-3.5"
-                  />
-                  {t(`subscriptions.modal.categories.${subscription.category}`, {
-                    defaultValue: subscription.category,
-                  })}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2 opacity-0 focus-within:opacity-100 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEdit(subscription);
-                    }}
-                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete(subscription.id);
-                    }}
-                    className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                  <TableCell className="font-medium max-w-[200px]">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="truncate cursor-pointer">{subscription.name}</div>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" className="max-w-[300px] wrap-break-word">
+                          {subscription.name}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </TableCell>
+                  <TableCell>
+                    {formatCurrency(subscription.amount, subscription.currency)}
+                  </TableCell>
+                  <TableCell>
+                    {t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}
+                  </TableCell>
+                  <TableCell>
+                    {subscription.nextBillingDate
+                      ? formatDate(subscription.nextBillingDate)
+                      : 'N/A'}
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className="gap-1.5"
+                      style={getCategoryStyle(
+                        findCategoryColor(categories, subscription.category),
+                        'dashboard',
+                      )}
+                    >
+                      <DynamicIcon
+                        name={findCategoryIcon(categories, subscription.category)}
+                        fallback={Tag}
+                        className="w-3.5 h-3.5"
+                      />
+                      {t(`subscriptions.modal.categories.${subscription.category}`, {
+                        defaultValue: subscription.category,
+                      })}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2 opacity-0 focus-within:opacity-100 group-hover:opacity-100 transition-opacity">
+                      {googleCalendarUrl ? (
+                        <Button
+                          asChild
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent"
+                        >
+                          <a
+                            href={googleCalendarUrl}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={t('subscriptions.exportToGoogleCalendar', {
+                              subscriptionName: subscription.name,
+                            })}
+                            title={t('subscriptions.openInGoogleCalendar')}
+                          >
+                            <CalendarPlus className="w-4 h-4" />
+                          </a>
+                        </Button>
+                      ) : null}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEdit(subscription);
+                        }}
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(subscription.id);
+                        }}
+                        className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })(),
+          )}
         </TableBody>
       </Table>
     </div>

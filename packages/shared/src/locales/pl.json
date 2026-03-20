@@ -179,6 +179,14 @@
     "saveSuccess": "Subskrypcja została pomyślnie zapisana",
     "updateSuccess": "Subskrypcja została pomyślnie zaktualizowana",
     "saveError": "Nie udało się zapisać subskrypcji",
+    "openInGoogleCalendar": "Otwórz w Kalendarzu Google",
+    "exportToGoogleCalendar": "Eksportuj {{subscriptionName}} do Kalendarza Google",
+    "googleCalendarDescription": {
+      "title": "Płatność za subskrypcję śledzoną w SubTracker",
+      "amount": "Kwota: {{value}} {{currency}}",
+      "billingCycle": "Cykl rozliczeniowy: {{value}}",
+      "category": "Kategoria: {{value}}"
+    },
     "exportSuccess": "Eksport zakończony sukcesem",
     "exportError": "Nie udało się wyeksportować subskrypcji",
     "importSuccess": "Pomyślnie zaimportowano subskrypcje",

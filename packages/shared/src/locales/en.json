@@ -171,6 +171,14 @@
     "saveSuccess": "Subscription saved successfully",
     "updateSuccess": "Subscription updated successfully",
     "saveError": "Failed to save subscription",
+    "openInGoogleCalendar": "Open in Google Calendar",
+    "exportToGoogleCalendar": "Export {{subscriptionName}} to Google Calendar",
+    "googleCalendarDescription": {
+      "title": "Subscription payment tracked in SubTracker",
+      "amount": "Amount: {{value}} {{currency}}",
+      "billingCycle": "Billing cycle: {{value}}",
+      "category": "Category: {{value}}"
+    },
     "exportSuccess": "Export successful",
     "exportError": "Failed to export subscriptions",
     "importSuccess": "Successfully imported subscriptions",
