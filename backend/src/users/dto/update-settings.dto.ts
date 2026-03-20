@@ -56,6 +56,7 @@ export class UpdateSettingsDto {
 
   @IsOptional()
   @IsString()
+  @ValidateIf((_o, value) => value !== '' && value !== null)
   @IsUrl({ protocols: ['http', 'https'], require_tld: false })
   webhookUrl?: string;
 

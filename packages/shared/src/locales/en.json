@@ -321,7 +321,7 @@
     "localization": {
       "title": "Localization",
       "desc": "Regional and display settings",
-      "currency": "Default Currency",
+      "currency": "Currency",
       "currencyDesc": "This currency will be used for all your subscriptions",
       "language": "Application Language",
       "languageDesc": "Select your preferred language for the interface",

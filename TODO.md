@@ -333,9 +333,8 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add more translations for major languages
 - [ ] Add payment history to the subscription details page (the edit subscription modal)
 - [ ] Improve UI & UX on small screens
-- [ ] Make the tooltip in Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
-- [ ] Add another accent color, maybe calculate it from the existing one.
-- [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
+- [x] Make the tooltip in Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
+- [x] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
 - [x] In /settings make search switch search input with tab chooser, make search
 full width
@@ -350,3 +349,4 @@ full width
 - [x] In light mode make the toast background colors darker, and text on them black.
 - [x] In light mode you can't see if Profile or Preferences subtab is selected in Settings
 - [x] Analyze code and find large files that can be refactored into smaller files.
+- [ ] Remove placeholders from password fields
