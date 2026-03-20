@@ -16,6 +16,25 @@ import { Input } from '@/components/ui/input';
 import api from '@/lib/api';
 import { SubscriptionsTable } from '../_components/SubscriptionsTable';
 
+const paymentSchema = z.object({
+  amount: z.number().positive(),
+  currency: z.string().length(3),
+  paidAt: z.string(),
+});
+
+const categorySchema = z.object({
+  name: z.string().min(1),
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+  icon: z.string().optional().nullable(),
+});
+
+const standalonePaymentSchema = z.object({
+  subscriptionName: z.string().min(1),
+  amount: z.number().positive(),
+  currency: z.string().length(3),
+  paidAt: z.string(),
+});
+
 const subscriptionImportSchema = z.object({
   name: z.string().min(1),
   amount: z.number().positive(),
@@ -27,15 +46,13 @@ const subscriptionImportSchema = z.object({
   reminderEnabled: z.boolean().optional(),
   reminderDays: z.number().positive().optional(),
   isActive: z.boolean().optional(),
-  payments: z
-    .array(
-      z.object({
-        amount: z.number().positive(),
-        currency: z.string().length(3),
-        paidAt: z.string(),
-      }),
-    )
-    .optional(),
+  payments: z.array(paymentSchema).optional(),
+});
+
+const importDataSchema = z.object({
+  subscriptions: z.array(subscriptionImportSchema).optional(),
+  categories: z.array(categorySchema).optional(),
+  payments: z.array(standalonePaymentSchema).optional(),
 });
 
 export default function ManageSubscriptionsPage() {
@@ -143,11 +160,10 @@ export default function ManageSubscriptionsPage() {
     try {
       const res = await api.get('/subscriptions/export');
       const dataStr =
-        'data:text/json;charset=utf-8,' +
-        encodeURIComponent(JSON.stringify(res.data.subscriptions, null, 2));
+        'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(res.data, null, 2));
       const downloadAnchorNode = document.createElement('a');
       downloadAnchorNode.setAttribute('href', dataStr);
-      downloadAnchorNode.setAttribute('download', 'subscriptions.json');
+      downloadAnchorNode.setAttribute('download', 'subtracker_data.json');
       document.body.appendChild(downloadAnchorNode);
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
@@ -170,15 +186,28 @@ export default function ManageSubscriptionsPage() {
         const content = e.target?.result as string;
         const json = JSON.parse(content);
 
-        const subscriptionsToImport = Array.isArray(json) ? json : json.subscriptions || [json];
-        const validSubscriptions = z.array(subscriptionImportSchema).parse(subscriptionsToImport);
+        let importData: z.infer<typeof importDataSchema>;
+        if (Array.isArray(json)) {
+          // Backward compatibility for array-only format
+          importData = { subscriptions: json };
+        } else if (json.subscriptions || json.categories || json.payments) {
+          // New format
+          importData = json;
+        } else {
+          // Single subscription
+          importData = { subscriptions: [json] };
+        }
 
-        await api.post('/subscriptions/import', { subscriptions: validSubscriptions });
+        const validData = importDataSchema.parse(importData);
+
+        await api.post('/subscriptions/import', validData);
         toast.success(t('subscriptions.importSuccess'));
         sendGAEvent({ event: 'import_subscriptions', value: 'success' });
 
         queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+        queryClient.invalidateQueries({ queryKey: ['categories'] });
         queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        queryClient.invalidateQueries({ queryKey: ['payments'] });
       } catch (err: unknown) {
         if (err instanceof z.ZodError) {
           toast.error(`${t('subscriptions.importError')}: Invalid file format`);
