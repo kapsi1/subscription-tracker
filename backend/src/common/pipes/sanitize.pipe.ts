@@ -17,7 +17,7 @@ export class SanitizePipe implements PipeTransform {
     return sanitizeHtml(str, {
       allowedTags: [],
       allowedAttributes: {},
-    });
+    }).replace(/&amp;/g, '&');
   }
 
   private sanitizeObject(obj: Record<string, unknown>): Record<string, unknown> {

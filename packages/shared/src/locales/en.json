@@ -61,7 +61,7 @@
   },
   "nav": {
     "dashboard": "Dashboard",
-    "subscriptions": "Subscriptions",
+    "manage": "Manage",
     "settings": "Settings",
     "logout": "Log Out",
     "installApp": "Install App"

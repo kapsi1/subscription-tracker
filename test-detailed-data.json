@@ -1,213 +1,379 @@
 {
   "categories": [
-    { "name": "Digital Life & Online Services", "color": "#a855f7", "icon": "Play" },
-    { "name": "Professional Work & Creative Suite", "color": "#3b82f6", "icon": "Briefcase" },
-    { "name": "Health, Fitness & Holistic Wellness", "color": "#f43f5e", "icon": "Heart" },
-    { "name": "Home Office & Remote Work Equipment", "color": "#06b6d4", "icon": "Home" },
-    { "name": "Leisure & Media Consumption", "color": "#eab308", "icon": "Play" },
-    { "name": "Ongoing Educational Growth & Certifications", "color": "#22c55e", "icon": "GraduationCap" },
-    { "name": "Household Utilities & Essential Services", "color": "#6366f1", "icon": "Zap" },
-    { "name": "Finance & Wealth Management", "color": "#10b981", "icon": "Wallet" },
-    { "name": "Transportation & Mobility", "color": "#14b8a6", "icon": "Car" },
-    { "name": "Miscellaneous Personal Expenses", "color": "#64748b", "icon": "MoreHorizontal" }
+    { "name": "Życie Cyfrowe & Usługi 🌐", "color": "#a855f7", "icon": "Play" },
+    { "name": "Praca & Twórczość Cyfrowa 🎨", "color": "#3b82f6", "icon": "Briefcase" },
+    { "name": "Zdrowie, Fitness & Wellness 🧘‍♂️", "color": "#f43f5e", "icon": "Heart" },
+    { "name": "Biuro Domowe & Sprzęt Zdalny 💻", "color": "#06b6d4", "icon": "Home" },
+    { "name": "Rozrywka & Konsumpcja Mediów 📺", "color": "#eab308", "icon": "Play" },
+    { "name": "Edukacja & Rozwój Osobisty 🎓", "color": "#22c55e", "icon": "GraduationCap" },
+    { "name": "Usługi Domowe & Media ⚡", "color": "#6366f1", "icon": "Zap" },
+    { "name": "Finanse & Zarządzanie Majątkiem 💰", "color": "#10b981", "icon": "Wallet" },
+    { "name": "Transport & Mobilność Miejska 🚗", "color": "#14b8a6", "icon": "Car" },
+    { "name": "Inne Wydatki Osobiste 📦 & Różności", "color": "#64748b", "icon": "MoreHorizontal" }
   ],
   "subscriptions": [
     {
-      "name": "Netflix Premium Ultra HD Plan for Family Sharing",
+      "name": "Netflix Subskrypcja Rodzinna 4K (Dla Żony & Dzieci) 👪",
       "amount": 19.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Leisure & Media Consumption",
+      "category": "Rozrywka & Konsumpcja Mediów 📺",
       "nextBillingDate": "2026-04-15T00:00:00.000Z",
       "payments": [
         { "amount": 19.99, "currency": "USD", "paidAt": "2026-03-15T12:00:00.000Z" },
         { "amount": 19.99, "currency": "USD", "paidAt": "2026-02-15T12:00:00.000Z" },
-        { "amount": 19.99, "currency": "USD", "paidAt": "2026-01-15T12:00:00.000Z" }
+        { "amount": 19.99, "currency": "USD", "paidAt": "2026-01-15T12:00:00.000Z" },
+        { "amount": 19.99, "currency": "USD", "paidAt": "2025-12-15T12:00:00.000Z" }
       ]
     },
     {
-      "name": "Spotify Family",
+      "name": "Spotify dla Rodziny 🎵",
       "amount": 15.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Leisure & Media Consumption",
+      "category": "Rozrywka & Konsumpcja Mediów 📺",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
         { "amount": 15.99, "currency": "USD", "paidAt": "2026-03-01T10:00:00.000Z" },
-        { "amount": 15.99, "currency": "USD", "paidAt": "2026-02-01T10:00:00.000Z" }
+        { "amount": 15.99, "currency": "USD", "paidAt": "2026-02-01T10:00:00.000Z" },
+        { "amount": 15.99, "currency": "USD", "paidAt": "2026-01-01T10:00:00.000Z" }
       ]
     },
     {
-      "name": "Disney+",
-      "amount": 139.99,
-      "currency": "USD",
+      "name": "Allegro Smart! 📦",
+      "amount": 49.0,
+      "currency": "PLN",
       "billingCycle": "yearly",
-      "category": "Leisure & Media Consumption",
+      "category": "Życie Cyfrowe & Usługi 🌐",
       "nextBillingDate": "2026-11-12T00:00:00.000Z",
       "payments": [
-        { "amount": 139.99, "currency": "USD", "paidAt": "2025-11-12T00:00:00.000Z" }
+        { "amount": 49.0, "currency": "PLN", "paidAt": "2025-11-12T10:00:00.000Z" },
+        { "amount": 49.0, "currency": "PLN", "paidAt": "2024-11-12T10:00:00.000Z" }
       ]
     },
     {
-      "name": "Amazon Prime",
+      "name": "Amazon Prime Polska 🚚",
       "amount": 14.99,
-      "currency": "USD",
+      "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Digital Life & Online Services",
+      "category": "Życie Cyfrowe & Usługi 🌐",
       "nextBillingDate": "2026-04-05T00:00:00.000Z",
       "payments": [
-        { "amount": 14.99, "currency": "USD", "paidAt": "2026-03-05T08:00:00.000Z" }
+        { "amount": 14.99, "currency": "PLN", "paidAt": "2026-03-05T09:00:00.000Z" },
+        { "amount": 14.99, "currency": "PLN", "paidAt": "2026-02-05T09:00:00.000Z" }
       ]
     },
-    { "name": "YouTube Premium", "amount": 13.99, "currency": "USD", "billingCycle": "monthly", "category": "Leisure & Media Consumption", "nextBillingDate": "2026-03-28T00:00:00.000Z" },
     {
-      "name": "GitHub Copilot Individual",
+      "name": "YouTube Premium (Bez Reklam) 🚫",
+      "amount": 13.99,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Rozrywka & Konsumpcja Mediów 📺",
+      "nextBillingDate": "2026-03-28T00:00:00.000Z",
+      "payments": [
+        { "amount": 13.99, "currency": "USD", "paidAt": "2026-02-28T11:00:00.000Z" },
+        { "amount": 13.99, "currency": "USD", "paidAt": "2026-01-28T11:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "GitHub Copilot (Sztuczna Inteligencja) 🤖",
       "amount": 10.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Professional Work & Creative Suite",
+      "category": "Praca & Twórczość Cyfrowa 🎨",
       "nextBillingDate": "2026-04-20T00:00:00.000Z",
       "payments": [
         { "amount": 10.0, "currency": "USD", "paidAt": "2026-03-20T14:00:00.000Z" },
-        { "amount": 10.0, "currency": "USD", "paidAt": "2026-02-20T14:00:00.000Z" }
+        { "amount": 10.0, "currency": "USD", "paidAt": "2026-02-20T14:00:00.000Z" },
+        { "amount": 10.0, "currency": "USD", "paidAt": "2026-01-20T14:00:00.000Z" }
       ]
     },
     {
-      "name": "ChatGPT Plus Subscription for OpenAI Services",
+      "name": "ChatGPT Plus (GPT-4) 🧠",
       "amount": 20.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Digital Life & Online Services",
+      "category": "Życie Cyfrowe & Usługi 🌐",
       "nextBillingDate": "2026-04-02T00:00:00.000Z",
       "payments": [
-        { "amount": 20.0, "currency": "USD", "paidAt": "2026-03-02T10:00:00.000Z" }
+        { "amount": 20.0, "currency": "USD", "paidAt": "2026-03-02T10:00:00.000Z" },
+        { "amount": 20.0, "currency": "USD", "paidAt": "2026-02-02T10:00:00.000Z" }
       ]
     },
     {
-      "name": "iCloud+ 2TB Storage Plan",
+      "name": "iCloud+ 2TB (Kopia Zapasowa) ☁️",
       "amount": 9.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Digital Life & Online Services",
+      "category": "Życie Cyfrowe & Usługi 🌐",
       "nextBillingDate": "2026-04-10T00:00:00.000Z",
       "payments": [
-        { "amount": 9.99, "currency": "USD", "paidAt": "2026-03-10T09:00:00.000Z" }
+        { "amount": 9.99, "currency": "USD", "paidAt": "2026-03-10T09:00:00.000Z" },
+        { "amount": 9.99, "currency": "USD", "paidAt": "2026-02-10T09:00:00.000Z" }
       ]
     },
-    { "name": "Google One 100GB", "amount": 1.99, "currency": "USD", "billingCycle": "monthly", "category": "Digital Life & Online Services", "nextBillingDate": "2026-03-25T00:00:00.000Z" },
     {
-      "name": "Adobe Creative Cloud All Apps",
+      "name": "Google One 100GB 📧",
+      "amount": 1.99,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Życie Cyfrowe & Usługi 🌐",
+      "nextBillingDate": "2026-03-25T00:00:00.000Z",
+      "payments": [
+        { "amount": 1.99, "currency": "USD", "paidAt": "2026-02-25T08:00:00.000Z" },
+        { "amount": 1.99, "currency": "USD", "paidAt": "2026-01-25T08:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Adobe Creative Cloud (Wszystkie Aplikacje) 🖌️",
       "amount": 54.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Professional Work & Creative Suite",
+      "category": "Praca & Twórczość Cyfrowa 🎨",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
-        { "amount": 54.99, "currency": "USD", "paidAt": "2026-03-01T15:00:00.000Z" }
+        { "amount": 54.99, "currency": "USD", "paidAt": "2026-03-01T15:00:00.000Z" },
+        { "amount": 54.99, "currency": "USD", "paidAt": "2026-02-01T15:00:00.000Z" }
       ]
     },
-    { "name": "Microsoft 365 Personal", "amount": 69.99, "currency": "USD", "billingCycle": "yearly", "category": "Professional Work & Creative Suite", "nextBillingDate": "2027-01-15T00:00:00.000Z" },
-    { "name": "DigitalOcean Droplet Starter", "amount": 6.0, "currency": "USD", "billingCycle": "monthly", "category": "Digital Life & Online Services", "nextBillingDate": "2026-04-01T00:00:00.000Z" },
-    { "name": "Evernote Personal Membership Plan", "amount": 8.99, "currency": "USD", "billingCycle": "monthly", "category": "Professional Work & Creative Suite", "nextBillingDate": "2026-04-12T00:00:00.000Z" },
-    { "name": "Notion Plus", "amount": 10.0, "currency": "USD", "billingCycle": "monthly", "category": "Professional Work & Creative Suite", "nextBillingDate": "2026-04-18T00:00:00.000Z" },
     {
-      "name": "Slack Pro Workspace for Business Communication",
+      "name": "Microsoft 365 Personal (Office) 📄",
+      "amount": 69.99,
+      "currency": "USD",
+      "billingCycle": "yearly",
+      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "nextBillingDate": "2027-01-15T00:00:00.000Z",
+      "payments": [
+        { "amount": 69.99, "currency": "USD", "paidAt": "2026-01-15T11:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "DigitalOcean Droplet (Serwer WWW) 🌐",
+      "amount": 6.0,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Życie Cyfrowe & Usługi 🌐",
+      "nextBillingDate": "2026-04-01T00:00:00.000Z",
+      "payments": [
+        { "amount": 6.0, "currency": "USD", "paidAt": "2026-03-01T10:00:00.000Z" },
+        { "amount": 6.0, "currency": "USD", "paidAt": "2026-02-01T10:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Evernote (Notatki & Dokumenty) 🐘",
+      "amount": 8.99,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "nextBillingDate": "2026-04-12T00:00:00.000Z",
+      "payments": [
+        { "amount": 8.99, "currency": "USD", "paidAt": "2026-03-12T09:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Notion Plus (Planowanie) 📝",
+      "amount": 10.0,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "nextBillingDate": "2026-04-18T00:00:00.000Z",
+      "payments": [
+        { "amount": 10.0, "currency": "USD", "paidAt": "2026-03-18T14:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Slack Pro (Komunikacja w Zespole) 💬",
       "amount": 8.75,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Professional Work & Creative Suite",
+      "category": "Praca & Twórczość Cyfrowa 🎨",
       "nextBillingDate": "2026-04-05T00:00:00.000Z",
-      "payments": [{ "amount": 8.75, "currency": "USD", "paidAt": "2026-03-05T13:00:00.000Z" }]
-    },
-    { "name": "Zoom Pro", "amount": 149.9, "currency": "USD", "billingCycle": "yearly", "category": "Professional Work & Creative Suite", "nextBillingDate": "2026-08-20T00:00:00.000Z" },
-    {
-      "name": "Peloton App Membership",
-      "amount": 12.99,
-      "currency": "USD",
-      "billingCycle": "monthly",
-      "category": "Health, Fitness & Holistic Wellness",
-      "nextBillingDate": "2026-04-01T00:00:00.000Z",
-      "payments": [{ "amount": 12.99, "currency": "USD", "paidAt": "2026-03-01T07:00:00.000Z" }]
-    },
-    { "name": "Headspace Plus Mindfulness Meditation App", "amount": 69.99, "currency": "USD", "billingCycle": "yearly", "category": "Health, Fitness & Holistic Wellness", "nextBillingDate": "2026-12-05T00:00:00.000Z" },
-    {
-      "name": "Gym Membership - Monthly Premium Plan",
-      "amount": 49.99,
-      "currency": "USD",
-      "billingCycle": "monthly",
-      "category": "Health, Fitness & Holistic Wellness",
-      "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
-        { "amount": 49.99, "currency": "USD", "paidAt": "2026-03-01T10:00:00.000Z" },
-        { "amount": 49.99, "currency": "USD", "paidAt": "2026-02-01T10:00:00.000Z" }
+        { "amount": 8.75, "currency": "USD", "paidAt": "2026-03-05T13:00:00.000Z" }
       ]
     },
     {
-      "name": "HelloFresh Family Plan 4 Persons 3 Recipes",
+      "name": "Zoom Pro (Wideo Konferencje) 📹",
+      "amount": 149.9,
+      "currency": "USD",
+      "billingCycle": "yearly",
+      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "nextBillingDate": "2026-08-20T00:00:00.000Z",
+      "payments": [
+        { "amount": 149.9, "currency": "USD", "paidAt": "2025-08-20T09:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Peloton App (Treningi w Domu) 🚴‍♂️",
+      "amount": 12.99,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "nextBillingDate": "2026-04-01T00:00:00.000Z",
+      "payments": [
+        { "amount": 12.99, "currency": "USD", "paidAt": "2026-03-01T07:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Headspace (Medytacja & Spokój) 🧘",
+      "amount": 69.99,
+      "currency": "USD",
+      "billingCycle": "yearly",
+      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "nextBillingDate": "2026-12-05T00:00:00.000Z",
+      "payments": [
+        { "amount": 69.99, "currency": "USD", "paidAt": "2025-12-05T08:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Siłownia - Karnet Premium (Miesięczny) 💪",
+      "amount": 199.0,
+      "currency": "PLN",
+      "billingCycle": "monthly",
+      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "nextBillingDate": "2026-04-01T00:00:00.000Z",
+      "payments": [
+        { "amount": 199.0, "currency": "PLN", "paidAt": "2026-03-01T10:00:00.000Z" },
+        { "amount": 199.0, "currency": "PLN", "paidAt": "2026-02-01T10:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "HelloFresh (Pudełka z Jedzeniem) 🥗",
       "amount": 89.99,
       "currency": "USD",
       "billingCycle": "custom",
       "intervalDays": 7,
-      "category": "Health, Fitness & Holistic Wellness",
+      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
       "nextBillingDate": "2026-03-27T00:00:00.000Z",
       "payments": [
         { "amount": 89.99, "currency": "USD", "paidAt": "2026-03-20T12:00:00.000Z" },
-        { "amount": 89.99, "currency": "USD", "paidAt": "2026-03-13T12:00:00.000Z" }
+        { "amount": 89.99, "currency": "USD", "paidAt": "2026-03-13T12:00:00.000Z" },
+        { "amount": 89.99, "currency": "USD", "paidAt": "2026-03-06T12:00:00.000Z" }
       ]
     },
-    { "name": "Blue Apron Weekly Deliveries", "amount": 75.0, "currency": "USD", "billingCycle": "custom", "intervalDays": 7, "category": "Health, Fitness & Holistic Wellness", "nextBillingDate": "2026-03-24T00:00:00.000Z" },
-    { "name": "Medium Membership", "amount": 5.0, "currency": "USD", "billingCycle": "monthly", "category": "Ongoing Educational Growth & Certifications", "nextBillingDate": "2026-03-30T00:00:00.000Z" },
-    { "name": "MasterClass Annual Pass", "amount": 180.0, "currency": "USD", "billingCycle": "yearly", "category": "Ongoing Educational Growth & Certifications", "nextBillingDate": "2027-02-10T00:00:00.000Z" },
     {
-      "name": "Duolingo Super Annual Plus",
+      "name": "Fitatu Premium (Liczenie Kalorii) 🍎",
+      "amount": 9.99,
+      "currency": "PLN",
+      "billingCycle": "monthly",
+      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "nextBillingDate": "2026-04-10T00:00:00.000Z",
+      "payments": [
+        { "amount": 9.99, "currency": "PLN", "paidAt": "2026-03-10T11:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Medium (Czytanie & Wiedza) 📖",
+      "amount": 5.0,
+      "currency": "USD",
+      "billingCycle": "monthly",
+      "category": "Edukacja & Rozwój Osobisty 🎓",
+      "nextBillingDate": "2026-03-30T00:00:00.000Z",
+      "payments": [
+        { "amount": 5.0, "currency": "USD", "paidAt": "2026-02-28T09:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "MasterClass (Kursy od Ekspertów) 🎬",
+      "amount": 180.0,
+      "currency": "USD",
+      "billingCycle": "yearly",
+      "category": "Edukacja & Rozwój Osobisty 🎓",
+      "nextBillingDate": "2027-02-10T00:00:00.000Z",
+      "payments": [
+        { "amount": 180.0, "currency": "USD", "paidAt": "2026-02-10T10:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Duolingo Super (Nauka Języków) 🦉",
       "amount": 59.99,
       "currency": "USD",
       "billingCycle": "yearly",
-      "category": "Ongoing Educational Growth & Certifications",
+      "category": "Edukacja & Rozwój Osobisty 🎓",
       "nextBillingDate": "2026-10-15T00:00:00.000Z",
-      "payments": [{ "amount": 59.99, "currency": "USD", "paidAt": "2025-10-15T09:00:00.000Z" }]
+      "payments": [
+        { "amount": 59.99, "currency": "USD", "paidAt": "2025-10-15T09:00:00.000Z" }
+      ]
     },
-    { "name": "Coursera Plus Subscription", "amount": 399.0, "currency": "USD", "billingCycle": "yearly", "category": "Ongoing Educational Growth & Certifications", "nextBillingDate": "2027-01-01T00:00:00.000Z" },
     {
-      "name": "Electricity - Monthly Bill Variable",
-      "amount": 120.0,
+      "name": "Coursera Plus (Certyfikaty Online) 📜",
+      "amount": 399.0,
       "currency": "USD",
+      "billingCycle": "yearly",
+      "category": "Edukacja & Rozwój Osobisty 🎓",
+      "nextBillingDate": "2027-01-01T00:00:00.000Z",
+      "payments": [
+        { "amount": 399.0, "currency": "USD", "paidAt": "2026-01-01T10:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Prąd - Enea (Rachunek Zmienny) 💡",
+      "amount": 250.0,
+      "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Household Utilities & Essential Services",
+      "category": "Usługi Domowe & Media ⚡",
       "nextBillingDate": "2026-04-10T00:00:00.000Z",
-      "payments": [{ "amount": 115.42, "currency": "USD", "paidAt": "2026-03-10T11:00:00.000Z" }]
+      "payments": [
+        { "amount": 232.5, "currency": "PLN", "paidAt": "2026-03-10T12:00:00.000Z" },
+        { "amount": 210.0, "currency": "PLN", "paidAt": "2026-02-10T12:00:00.000Z" }
+      ]
     },
-    { "name": "Water Bill - City Water Works", "amount": 45.0, "currency": "USD", "billingCycle": "monthly", "category": "Household Utilities & Essential Services", "nextBillingDate": "2026-04-15T00:00:00.000Z" },
     {
-      "name": "Rent - Manhattan Apartment Downtown",
+      "name": "Woda - ZWiK (Opłata Stała) 💧",
+      "amount": 45.0,
+      "currency": "PLN",
+      "billingCycle": "monthly",
+      "category": "Usługi Domowe & Media ⚡",
+      "nextBillingDate": "2026-04-15T00:00:00.000Z",
+      "payments": [
+        { "amount": 45.0, "currency": "PLN", "paidAt": "2026-03-15T09:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Czynsz - Mieszkanie (Kraków) 🏠",
       "amount": 3200.0,
-      "currency": "USD",
+      "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Home Office & Remote Work Equipment",
+      "category": "Biuro Domowe & Sprzęt Zdalny 💻",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
-      "payments": [{ "amount": 3200.0, "currency": "USD", "paidAt": "2026-03-01T09:00:00.000Z" }]
+      "payments": [
+        { "amount": 3200.0, "currency": "PLN", "paidAt": "2026-03-01T08:00:00.000Z" },
+        { "amount": 3200.0, "currency": "PLN", "paidAt": "2026-02-01T08:00:00.000Z" }
+      ]
     },
-    { "name": "Car Insurance - Geico Premium Coverage", "amount": 150.0, "currency": "USD", "billingCycle": "monthly", "category": "Finance & Wealth Management", "nextBillingDate": "2026-04-05T00:00:00.000Z" },
     {
-      "name": "Home Internet - Verizon Fios Gigabit Connection",
-      "amount": 89.99,
+      "name": "Ubezpieczenie Samochodu (Geico/PZU) 🛡️",
+      "amount": 150.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Household Utilities & Essential Services",
+      "category": "Finanse & Zarządzanie Majątkiem 💰",
+      "nextBillingDate": "2026-04-05T00:00:00.000Z",
+      "payments": [
+        { "amount": 150.0, "currency": "USD", "paidAt": "2026-03-05T09:00:00.000Z" }
+      ]
+    },
+    {
+      "name": "Internet Domowy 5G (Światłowód) 🚀",
+      "amount": 89.99,
+      "currency": "PLN",
+      "billingCycle": "monthly",
+      "category": "Usługi Domowe & Media ⚡",
       "nextBillingDate": "2026-04-20T00:00:00.000Z",
-      "payments": [{ "amount": 89.99, "currency": "USD", "paidAt": "2026-03-20T10:00:00.000Z" }]
+      "payments": [
+        { "amount": 89.99, "currency": "PLN", "paidAt": "2026-03-20T10:00:00.000Z" }
+      ]
     }
   ],
   "payments": [
-    { "subscriptionName": "Old Gym Membership - 2024", "amount": 45.0, "currency": "USD", "paidAt": "2024-12-20T10:00:00.000Z" },
-    { "subscriptionName": "Legacy VPN Service", "amount": 9.99, "currency": "USD", "paidAt": "2025-01-15T09:00:00.000Z" },
-    { "subscriptionName": "One-time Domain Purchase - subtracker.com", "amount": 12.0, "currency": "USD", "paidAt": "2025-06-10T14:30:00.000Z" },
-    { "subscriptionName": "Single-entry Concert Ticket - Jazz Club", "amount": 25.0, "currency": "USD", "paidAt": "2026-02-14T20:00:00.000Z" },
-    { "subscriptionName": "Charity Donation - Red Cross", "amount": 50.0, "currency": "USD", "paidAt": "2025-12-24T12:00:00.000Z" },
-    { "subscriptionName": "Flight Ticket - NYC to SF", "amount": 350.0, "currency": "USD", "paidAt": "2026-01-20T11:00:00.000Z" },
-    { "subscriptionName": "Coffee Shop - Bulk 10-Cup Credit", "amount": 30.0, "currency": "USD", "paidAt": "2026-03-01T08:00:00.000Z" },
-    { "subscriptionName": "One-time Hardware License Code", "amount": 5.0, "currency": "USD", "paidAt": "2025-11-12T16:00:00.000Z" },
-    { "subscriptionName": "Dinner Out - Celebration", "amount": 120.0, "currency": "USD", "paidAt": "2026-03-10T19:30:00.000Z" },
-    { "subscriptionName": "Yearly Membership Fee - Historical Society", "amount": 50.0, "currency": "USD", "paidAt": "2025-08-15T15:00:00.000Z" }
+    { "subscriptionName": "Stara Siłownia (Zakończona) 🏋️", "amount": 45.0, "currency": "USD", "paidAt": "2024-12-20T10:00:00.000Z" },
+    { "subscriptionName": "Stary Serwer VPN (Już Nieużywany) 🔒", "amount": 9.99, "currency": "USD", "paidAt": "2025-01-15T09:00:00.000Z" },
+    { "subscriptionName": "Zakup Domeny - subtracker.pl 🌐", "amount": 12.0, "currency": "USD", "paidAt": "2025-06-10T14:30:00.000Z" },
+    { "subscriptionName": "Bilet na Koncert Jazzowy 🎷", "amount": 25.0, "currency": "USD", "paidAt": "2026-02-14T20:00:00.000Z" },
+    { "subscriptionName": "Darowizna na Czerwony Krzyż ❤️", "amount": 50.0, "currency": "USD", "paidAt": "2025-12-24T12:00:00.000Z" },
+    { "subscriptionName": "Bilet Lotniczy - Warszawa do Rzymu ✈️", "amount": 350.0, "currency": "PLN", "paidAt": "2026-01-20T11:00:00.000Z" },
+    { "subscriptionName": "Kawiarnia - Karnet na 10 Kaw ☕", "amount": 30.0, "currency": "USD", "paidAt": "2026-03-01T08:00:00.000Z" },
+    { "subscriptionName": "Licencja na Oprogramowanie (Jednorazowa) 🔑", "amount": 5.0, "currency": "USD", "paidAt": "2025-11-12T16:00:00.000Z" },
+    { "subscriptionName": "Kolacja Urodzinowa z Rodziną 🎂", "amount": 120.0, "currency": "PLN", "paidAt": "2026-03-10T19:30:00.000Z" },
+    { "subscriptionName": "Składka Członkowska Rok 2025 🏛️", "amount": 50.0, "currency": "USD", "paidAt": "2025-08-15T15:00:00.000Z" }
   ]
 }

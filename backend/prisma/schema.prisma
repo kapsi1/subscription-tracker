@@ -76,7 +76,7 @@ model Subscription {
   reminderEnabled Boolean          @default(true)
   alerts          Alert[]
   payments        PaymentHistory[]
-  user            User             @relation(fields: [userId], references: [id])
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([nextBillingDate])
@@ -89,7 +89,7 @@ model PushSubscription {
   p256dh    String
   auth      String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -102,7 +102,7 @@ model Alert {
   isEnabled      Boolean      @default(true)
   webhookSecret  String?
   webhookUrl     String?
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
   @@index([subscriptionId])
 }

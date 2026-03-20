@@ -63,7 +63,7 @@
   },
   "nav": {
     "dashboard": "Panel główny",
-    "subscriptions": "Subskrypcje",
+    "manage": "Zarządzaj",
     "settings": "Ustawienia",
     "logout": "Wyloguj się",
     "installApp": "Zainstaluj aplikację"

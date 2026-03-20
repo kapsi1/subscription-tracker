@@ -22,4 +22,8 @@ export class ImportSubscriptionsDto {
   @ValidateNested({ each: true })
   @Type(() => StandalonePaymentDto)
   payments?: StandalonePaymentDto[];
+
+  @IsOptional()
+  @IsBoolean()
+  replace?: boolean;
 }

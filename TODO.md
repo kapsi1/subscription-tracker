@@ -358,3 +358,6 @@ full width
 - [x] Show a translated string for Polish, for "Network error" in toast. Find other places with hardcoded strings and add translations for them.
 - [ ] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
 - [ ] After user's first login, add a glow/slow pulsate effect to the Manage Subscriptions button, to direct user's attention to it.
+- [ ] Move category management from Settings to Manage tab, as a new sub-tab.
+- [ ] On tabs with sub-tabs, when changing sub-tab update the title to match the sub-tab name.
+- [ ] Import data functionality: after a file is selected by user and validated, show a modal with a preview of the data to be imported. Let user confirm or cancel the import. Add a checkbox to replace existing data with imported data. Add unit and E2E tests.

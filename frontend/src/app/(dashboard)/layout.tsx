@@ -202,7 +202,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="sm"
               >
                 <ListChecks className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('nav.subscriptions')}</span>
+                <span className="hidden sm:inline">{t('nav.manage')}</span>
               </Button>
             </Link>
             <Link href="/settings">
