@@ -35,18 +35,25 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    // Add logic here if implementing refresh tokens via cookies or separate endpoint later.
-    // Right now, if 401, we can redirect or clear session.
     if (
       error.response?.status === 401 &&
-      !originalRequest._retry &&
-      !originalRequest._skipAuthRedirect
+      !originalRequest?._retry &&
+      !originalRequest?._skipAuthRedirect
     ) {
       originalRequest._retry = true;
-      // Depending on auth flow, could trigger a logout event here.
       if (typeof window !== 'undefined') {
         localStorage.removeItem('accessToken');
         window.dispatchEvent(new Event('unauthorized'));
+      }
+    } else if (axios.isAxiosError(error) && !error.response && error.message === 'Network Error') {
+      import('./i18n').then((module) => {
+        error.message = module.default.t('common.connectionError');
+      });
+      try {
+        const i18n = require('./i18n').default;
+        error.message = i18n.t('common.connectionError');
+      } catch (_e) {
+        // ignore
       }
     }
     return Promise.reject(error);

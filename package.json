@@ -8,7 +8,7 @@
     "build:shared": "cd packages/shared && pnpm build && cd ../..",
     "build:backend": "cd backend && pnpm build && cd ../..",
     "build:frontend": "cd frontend && pnpm build && cd ../..",
-    "dev": "pnpm --filter @subtracker/shared build && concurrently -n \"shared,backend,frontend\" -c \"magenta,blue,green\" \"pnpm --filter @subtracker/shared dev\" \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
+    "dev": "pnpm --filter @subtracker/shared build && concurrently -n \"shared,backend,frontend\" -c \"magenta,blue,green\" \"pnpm --filter @subtracker/shared dev\" \"pnpm --filter backend dev\" \"pnpm --filter frontend dev -- --hostname 0.0.0.0\"",
     "dev:shared": "pnpm --filter @subtracker/shared dev",
     "dev:backend": "pnpm --filter backend dev",
     "dev:frontend": "pnpm --filter frontend dev",

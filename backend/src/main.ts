@@ -30,9 +30,19 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000', process.env.FRONTEND_URL].filter(
-      Boolean,
-    ) as string[],
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        process.env.FRONTEND_URL,
+      ].filter(Boolean) as string[];
+
+      if (!origin || allowedOrigins.includes(origin) || origin.startsWith('http://192.168.')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'x-e2e-testing'],
   });
@@ -61,7 +71,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, documentFactory);
 
   const port = process.env.PORT || 3001;
-  await app.listen(port);
-  app.get(Logger).log(`Backend is running on: http://localhost:${port}`);
+  await app.listen(port, '0.0.0.0');
+  app.get(Logger).log(`Backend is running on: http://0.0.0.0:${port}`);
 }
 bootstrap();
