@@ -94,7 +94,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background to-secondary px-4 relative">
+    <div className="min-h-screen flex items-center justify-center bg-premium-pattern px-4 relative">
       <div className="absolute top-4 right-4">
         <LanguageSelector showLabel />
       </div>

@@ -334,7 +334,6 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add payment history to the subscription details page (the edit subscription modal)
 - [ ] Improve UI & UX on small screens
 - [ ] Make the tooltip in Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
-- [ ] Make backgrounds color subtle gradients
 - [ ] Add another accent color, maybe calculate it from the existing one.
 - [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
@@ -346,3 +345,4 @@ full width
 - [x] Don't show "Failed to load settings" toast after logout.
 - [ ] Make colors in "Cost by Category" charts same as category colors in settings.
 - [ ] Make category badge colors in All Subscriptions table same as on dashboard. Clean up code from redundant color definitions.
+- [x] Make main container background color a subtle gradient: top -> down, top color is as now, bottom color is slightly darker. Do it for all pages.

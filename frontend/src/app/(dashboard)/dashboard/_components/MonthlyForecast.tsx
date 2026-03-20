@@ -119,7 +119,10 @@ export function MonthlyForecast({ forecast, currency = 'USD' }: MonthlyForecastP
               content={<CustomTooltip t={t} currency={currency} />}
               cursor={{ fill: 'var(--primary)', opacity: 0.05 }}
             />
-            <Legend iconType="circle" />
+            <Legend
+              iconType="circle"
+              formatter={(value) => <span className="text-muted-foreground text-sm">{value}</span>}
+            />
             <Bar
               yAxisId="right"
               dataKey="cumulativeAmount"

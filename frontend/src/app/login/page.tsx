@@ -89,7 +89,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background to-secondary px-4 relative">
+    <div className="min-h-screen flex items-center justify-center bg-premium-pattern px-4 relative">
       <Card className="w-full max-w-md shadow-lg border-2">
         {isRegistered ? (
           <CardContent className="pt-12 pb-12 text-center space-y-6">

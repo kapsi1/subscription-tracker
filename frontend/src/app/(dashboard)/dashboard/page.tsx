@@ -1,6 +1,6 @@
 'use client';
 
-import type { DashboardSummary, ForecastItem, Subscription } from '@subtracker/shared';
+import type { Category, DashboardSummary, ForecastItem, Subscription } from '@subtracker/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
@@ -66,6 +66,14 @@ export default function DashboardPage() {
     },
   });
 
+  const { data: categories = [], isLoading: isCategoriesLoading } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await api.get('/categories');
+      return res.data;
+    },
+  });
+
   const forecast = useMemo(() => {
     if (!summary || !rawForecast) return [];
 
@@ -79,7 +87,8 @@ export default function DashboardPage() {
     }, []);
   }, [summary, rawForecast]);
 
-  const isLoading = isSummaryLoading || isForecastLoading || isPaymentsLoading;
+  const isLoading =
+    isSummaryLoading || isForecastLoading || isPaymentsLoading || isCategoriesLoading;
 
   const handleEditSubscription = async (id: string) => {
     try {
@@ -157,7 +166,11 @@ export default function DashboardPage() {
 
         <MonthlyForecast forecast={forecast} currency={summary.currency} />
 
-        <CostByCategory categoryBreakdown={summary.categoryBreakdown} currency={summary.currency} />
+        <CostByCategory
+          categoryBreakdown={summary.categoryBreakdown}
+          currency={summary.currency}
+          categories={categories}
+        />
       </div>
 
       <SubscriptionModal

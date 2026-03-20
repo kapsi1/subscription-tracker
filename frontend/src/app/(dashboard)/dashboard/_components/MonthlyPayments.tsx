@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import api from '@/lib/api';
-import { formatCurrency, getCategoryStyle } from '@/lib/utils';
+import { findCategoryColor, findCategoryIcon, formatCurrency, getCategoryStyle } from '@/lib/utils';
 
 export type MonthlyPayment = {
   id: string;
@@ -47,10 +47,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
     },
   });
 
-  const getCategoryColor = (name: string) =>
-    categories.find((c) => c.name === name)?.color ?? '#64748b';
 
-  const getCategoryIcon = (name: string) => categories.find((c) => c.name === name)?.icon ?? 'Tag';
 
   useEffect(() => {
     if (user?.dashboardSortBy) {
@@ -190,13 +187,13 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                 <div className="flex min-w-0 flex-1 items-center gap-4">
                   <div
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border"
-                    style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
+                    style={getCategoryStyle(findCategoryColor(categories, payment.category), 'dashboard')}
                   >
                     <DynamicIcon
-                      name={getCategoryIcon(payment.category)}
+                      name={findCategoryIcon(categories, payment.category)}
                       fallback={CreditCard}
                       className="w-5 h-5"
-                      style={{ color: getCategoryColor(payment.category) }}
+                      style={{ color: findCategoryColor(categories, payment.category) }}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -224,12 +221,12 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                             variant="outline"
                             className="gap-1.5"
                             style={getCategoryStyle(
-                              getCategoryColor(payment.category),
+                              findCategoryColor(categories, payment.category),
                               'dashboard',
                             )}
                           >
                             <DynamicIcon
-                              name={getCategoryIcon(payment.category)}
+                              name={findCategoryIcon(categories, payment.category)}
                               fallback={Tag}
                               className="w-3.5 h-3.5"
                             />
@@ -257,10 +254,10 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                   <Badge
                     variant="outline"
                     className="gap-1.5"
-                    style={getCategoryStyle(getCategoryColor(payment.category), 'dashboard')}
+                    style={getCategoryStyle(findCategoryColor(categories, payment.category), 'dashboard')}
                   >
                     <DynamicIcon
-                      name={getCategoryIcon(payment.category)}
+                      name={findCategoryIcon(categories, payment.category)}
                       fallback={Tag}
                       className="w-3.5 h-3.5"
                     />

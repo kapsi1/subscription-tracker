@@ -158,7 +158,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   // 4. Authenticated UI
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-premium-pattern flex flex-col">
       <header className="sticky flex justify-center top-0 z-50 w-full border-b bg-card shadow-sm">
         <div className="flex h-16 min-w-0 items-center gap-2 px-4 sm:px-6 md:gap-4 w-full max-w-[1055px]">
           <Link href="/dashboard" className="flex items-center gap-2 shrink-0">

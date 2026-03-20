@@ -30,7 +30,7 @@ function SummaryCard({
   iconBgClass: string;
 }) {
   return (
-    <Card className="min-w-0 shadow-sm animate-card-in">
+    <Card className="min-w-0 shadow-sm animate-card-in bg-card hover:bg-accent/50">
       <CardHeader className="flex h-20 flex-col justify-center px-6 pb-1 text-center md:h-22 lg:h-24">
         <div className="min-w-0 flex items-center justify-center">
           <div

@@ -1,5 +1,7 @@
 'use client';
 
+import type { Category } from '@subtracker/shared';
+
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -22,6 +24,7 @@ import { formatCurrency } from '@/lib/utils';
 interface CostByCategoryProps {
   categoryBreakdown: Record<string, number>;
   currency?: string;
+  categories: Category[];
 }
 
 interface PieLabelProps {
@@ -83,16 +86,20 @@ const CustomTooltip = ({ active, payload, label, currency, t }: CustomTooltipPro
   );
 };
 
-export function CostByCategory({ categoryBreakdown, currency = 'USD' }: CostByCategoryProps) {
+export function CostByCategory({
+  categoryBreakdown,
+  currency = 'USD',
+  categories,
+}: CostByCategoryProps) {
   const { t } = useTranslation();
   const [selectedChart, setSelectedChart] = useState<'pie' | 'bar'>('pie');
 
-  const categoryData = Object.keys(categoryBreakdown).map((key, index) => {
-    const chartVar = `--chart-${(index % 5) + 1}`;
+  const categoryData = Object.keys(categoryBreakdown).map((key) => {
+    const categoryColor = categories.find((c) => c.name === key)?.color;
     return {
       name: key,
       value: categoryBreakdown[key],
-      color: `var(${chartVar})`,
+      color: categoryColor || 'var(--primary)',
     };
   });
 
