@@ -270,40 +270,27 @@
 - [x] README.md for Github
 
 # 7. Additional
-- [ ] Push notifications not working on Opera
-- [ ] Push notifications not working when Chrome is not running
-- [ ] Email notifications on production
 - [x] Webhook integration
-- [ ] Default reminders
-- [ ] Budget threshold alerts
 - [x] Google Auth
-- [ ] Custom billing cycle
 - [x] Add category management. In settings, add a category management section. In this section, show a list of categories. Each row should have a color swatch, category name (editable in place), color picker (editable in place), and a delete button. Add a button to add a new category. This should add a new row with an empty name and default color, and focus on the name field. Add a button to reset categories to default values.
 - [x] Currency management
 - [x] Payment history
 - [x] When adding or saving subscription, check all fields for validity and show error messages
-- [x] "Daily Digest" emails should be sent at midnight, when a subscription was paid a previous day.  They should include all subscriptions paid that day.
+- [x] "Daily Digest" emails should be sent at midnight, when a subscription was paid a previous day. They should include all subscriptions paid that day.
 - [x] Add user name field to registration and use it for personalized greetings in dashboard and emails.
-- [x] Show user's initials in the top right corner of the dashboard, instead of the logout button.  Clicking on it should open a dropdown with "Logout"
+- [x] Show user's initials in the top right corner of the dashboard, instead of the logout button. Clicking on it should open a dropdown with "Logout"
 - [x] After registration send user a verification email and don't allow login until verified. Create a flow for verification including a way to resend the verification email.
 - [x] Add a "Forgot Password" flow. Make sure UI is in line with other flows. Add tests.
 - [x] Create user profile page. Make the profile page a tab in Settings page. Currents Settings page should be renamed to "Preferences".
 - [x] Add Change Password and Change Email flow in user profile
-- [ ] Add Delete Account flow in user profile. Include a full screen warning/confirmation modal. Add tests.
 - [x] Save settings on any change, remove the Save Settings button
-- [x] Instead of "Upcoming Payments" show payments for this month. Include done payments as well, with a suitablestyle to indicate they are done The list should be sorted by date, with a button to change sort direction. Also enable sorting by amount. Adjust the card's subtitle. 
+- [x] Instead of "Upcoming Payments" show payments for this month. Include done payments as well, with a suitablestyle to indicate they are done The list should be sorted by date, with a button to change sort direction. Also enable sorting by amount. Adjust the card's subtitle.
 - [x] Make the main container of dashboard full width with a small margin, on small and medium screen width.
 - [x] Add buttons to switch the month to previous and next, and display the current month and year. Implement month switching. The whole dashboard should be showing data for the selected month, except 12-month forecast chart.
 - [x] Make the 12-month forecast chart full-width on large screen width. In forecast chart for each column, under month names, add a circle with a hover effect (like the color chooser in the top nav bar). Background should be transparent by default, and accent color on hover. Inside the circle there should be a number of payments done that month. Hovering over the circle shows a html tooltip with a list of payments for this month (date, name, cost)
-- [ ] Billing cycle -> custom does nothing
 - [x] Only one currency should be allowed. In settings, add a currency selector. It should be a dropdown with a list of currencies. Each row should show currency code, name and flag. There should be an input field for currency code or name. Design UI and make it look in line with the rest of the app. Validate on backend. Selected currency should be used for all subscriptions. Remove the currency selector in the subscription form.
-- [ ] Support multiple currencies. Add a toggle in settings, that enables multiple currencies. When toggle is enabled, the currency selected in the currency selector should be the target currency for conversion. This currency will be what all other currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. The subscription add/edit form should have a currency selector (same as in settings). Use an external service to convert currencies. Show me a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
-
-To consider: what happens when we disable the toggle after adding some subscriptions with different currencies? 
-
 - [x] If user is logged with a Google account, show their profile picture in corner, instead of initials. Also add a link to user profile page above the logout button. Settings page should have its subpages in url, so we can link to them.
 - [x] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
-
 - [x] Review translations for spelling, grammar, consistency, capitalization and style.
 - [x] Review code for security vulnerabilities and best practices.
 - [x] Review code for performance issues and improvements
@@ -312,31 +299,42 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [x] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
 - [x] Check for and remove unused code and translations
 - [x] Find and fix compiler & linter errors and warnings.
-- [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
-
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
 - [x] Refactor settings page: split it into multiple components, by section
 - [x] Add a language selector to the login/register pages
-- [ ] Add more translations for major languages
 - [x] Create a JSON with test subscriptions data that can be imported in the app. Include different currencies, billing cycles, categories, payment history, etc. Make different months have different amount of subscriptions. Include some very long subscription names to test the subscriptions list.
-- [ ] Add payment history to the subscription details page (the edit subscription modal)
 - [x] This Month Payments (in SummaryCards.tsx): show done this month/total this month, e.g. 2/10
 - [x] In All Subscriptions table, make the column headers clickable (add cursor-pointer class), and clicking them sort the table. Show up/down chevrons next to column name, to show sort order. Default order is Next Billing / ascending (chronological).
 - [x] Make the category background colors in /subscriptions more muted. Use the same colors for categories in dashboard. For light theme make backgrounds of category badges in dashboard darker. Make text color same as surrounding text color.
-- [ ] Improve UI & UX on small screens
-- [ ] Make the tooltip in Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
 - [x] Add "resend verification email" button to the Email Sent page
 - [x] Replace the email "auth@subscription-tracker.local" with an environment variable
 - [x] Remove the language and color selectors from the top bar. Clean up references to those features, if they're not needed.
 - [x] Add a custom color picker to the settings page, which should allow users to pick any color as accent color.
 - [x] Add a find/filter functionality to settings. Show an input field at the top of the settings page, which should allow users to find/filter settings by any string. If something is typed into the input, show setting sections that contain that string, and hide the rest. If the input is empty, show all sections. In displayed sections, highlight the string that matched the filter. Search in sections from both Preferences and Profile tabs. Add a button to clear the filter. Add unit and E2E tests.
-- [ ] Make backgrounds color subtle gradients
 - [x] Rethink and unify save strategy for settings. Some settings are saved automatically, others have a save button. Make the button placements and when they appear consistent in every section..
-- [ ] Add another accent color, maybe calculate it from the existing one.
 - [x] Categories should have icons. Add appropriate icons to default categories. Add a selector, opening a popup with a library of icons, to each row in Category Management. Show the icons in This Month's Payments and All Subscriptions - left side.
 - [x] Content is scrollable horizontally for screen width about 640-708 and 768-804 pixels. It shouldn't be.
 - [x] Add a new logo, include different versions of it for different contexts (favicon, app icon, etc.). Include it in email templates as well.
-- [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [x] Branding: find instances of "Subscription Tracker" visible to the user, and replace them with "SubTracker". Also replace "Subscription Tracker" with "SubTracker" in code, if it's not used anywhere else.
 - [x] In Profile/Account Profile remove Email Address section. Remove "Member since".
+- [ ] Push notifications not working on Opera
+- [ ] Push notifications not working when Chrome is not running
+- [ ] Email notifications on production
+- [ ] Default reminders
+- [ ] Budget threshold alerts
+- [ ] Custom billing cycle
+- [ ] Delete Account flow in user profile. Include a full screen warning/confirmation modal. Add tests.
+- [ ] Billing cycle -> custom does nothing
+- [ ] Support multiple currencies. Add a toggle in settings, that enables multiple currencies. When toggle is enabled, the currency selected in the currency selector should be the target currency for conversion. This currency will be what all other currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. The subscription add/edit form should have a currency selector (same as in settings). Use an external service to convert currencies. Show me a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
+
+To consider: what happens when we disable the toggle after adding some subscriptions with different currencies?
+
+- [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
+- [ ] Add more translations for major languages
+- [ ] Add payment history to the subscription details page (the edit subscription modal)
+- [ ] Improve UI & UX on small screens
+- [ ] Make the tooltip in Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
+- [ ] Make backgrounds color subtle gradients
+- [ ] Add another accent color, maybe calculate it from the existing one.
+- [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
