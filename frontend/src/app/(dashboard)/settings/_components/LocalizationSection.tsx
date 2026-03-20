@@ -176,7 +176,8 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                           {currency}
                         </span>
                         <span className="text-muted-foreground font-normal overflow-hidden text-ellipsis whitespace-nowrap ml-1">
-                          {CURRENCIES.find((c) => c.code === currency)?.name} ({CURRENCIES.find((c) => c.code === currency)?.symbol})
+                          {CURRENCIES.find((c) => c.code === currency)?.name} (
+                          {CURRENCIES.find((c) => c.code === currency)?.symbol})
                         </span>
                       </>
                     ) : (
@@ -239,10 +240,10 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                       c.code.toLowerCase().includes(searchCurrency.toLowerCase()) ||
                       c.name.toLowerCase().includes(searchCurrency.toLowerCase()),
                   ).length === 0 && (
-                      <div className="p-4 text-center text-sm text-muted-foreground">
-                        No currency found.
-                      </div>
-                    )}
+                    <div className="p-4 text-center text-sm text-muted-foreground">
+                      No currency found.
+                    </div>
+                  )}
                 </div>
               </PopoverContent>
             </Popover>

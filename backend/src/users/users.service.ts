@@ -71,7 +71,7 @@ export class UsersService {
       });
 
       await this.prisma.paymentHistory.updateMany({
-        where: { subscription: { userId: id } },
+        where: { userId: id },
         data: { currency: data.currency },
       });
     }
@@ -149,10 +149,10 @@ export class UsersService {
     this.logger.warn(`Deleting user account: ${id}`);
 
     await this.prisma.$transaction(async (tx) => {
-      // Manual cascade (since schema doesn't have onDelete: Cascade)
+      // Manual cascade (since schema doesn't have onDelete: Cascade on all relations)
       // 1. Delete payment history
       await tx.paymentHistory.deleteMany({
-        where: { subscription: { userId: id } },
+        where: { userId: id },
       });
 
       // 2. Delete alerts

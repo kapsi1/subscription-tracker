@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { daysUntil, formatCurrency, formatDate } from './utils';
-
 import i18n from './i18n';
+import { daysUntil, formatCurrency, formatDate } from './utils';
 
 describe('formatCurrency', () => {
   it('should format USD correctly', () => {

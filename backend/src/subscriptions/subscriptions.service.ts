@@ -105,7 +105,9 @@ export class SubscriptionsService {
 
       const allPayments = subscriptionsToCreate.flatMap((sub) =>
         sub.payments.map((p) => ({
+          userId,
           subscriptionId: sub.id,
+          subscriptionName: sub.name,
           amount: p.amount,
           currency: p.currency,
           paidAt: new Date(p.paidAt),

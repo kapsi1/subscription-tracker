@@ -129,8 +129,27 @@
     "Charcoal": "Węglowy"
   },
   "subscriptions": {
-    "title": "Subskrypcje",
+    "title": "Zarządzaj subskrypcjami",
     "subtitle": "Zarządzaj swoimi subskrypcjami",
+    "pageTabs": {
+      "subscriptions": "Zarządzaj",
+      "paymentHistory": "Historia płatności"
+    },
+    "history": {
+      "title": "Wszystkie płatności",
+      "search": "Szukaj płatności po nazwie usługi...",
+      "noPayments": "Brak płatności",
+      "noPaymentsDesc": "Płatności pojawią się tutaj po przetworzeniu subskrypcji",
+      "foundCount_one": "Znaleziono {{count}} płatność",
+      "foundCount_few": "Znaleziono {{count}} płatności",
+      "foundCount_many": "Znaleziono {{count}} płatności",
+      "foundCount_other": "Znaleziono {{count}} płatności",
+      "table": {
+        "date": "Data",
+        "service": "Usługa",
+        "amount": "Kwota"
+      }
+    },
     "paymentCount_one": "{{count}} płatność",
     "paymentCount_few": "{{count}} płatności",
     "paymentCount_many": "{{count}} płatności",
@@ -204,6 +223,27 @@
         "monthly": "Miesięcznie",
         "yearly": "Rocznie",
         "custom": "Własny"
+      },
+      "tabs": {
+        "details": "Szczegóły",
+        "payments": "Historia płatności"
+      },
+      "payments": {
+        "title": "Historia płatności",
+        "noPayments": "Brak zarejestrowanych płatności",
+        "addPayment": "Dodaj płatność",
+        "editPayment": "Edytuj płatność",
+        "date": "Data",
+        "amount": "Kwota",
+        "save": "Zapisz",
+        "cancel": "Anuluj",
+        "deleteConfirm": "Usunąć tę płatność?",
+        "addSuccess": "Płatność została dodana",
+        "updateSuccess": "Płatność została zaktualizowana",
+        "deleteSuccess": "Płatność została usunięta",
+        "addError": "Nie udało się dodać płatności",
+        "updateError": "Nie udało się zaktualizować płatności",
+        "deleteError": "Nie udało się usunąć płatności"
       }
     }
   },

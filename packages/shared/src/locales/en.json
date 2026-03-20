@@ -127,13 +127,30 @@
     "Charcoal": "Charcoal"
   },
   "subscriptions": {
-    "title": "Subscriptions",
+    "title": "Manage Subscriptions",
     "subtitle": "Manage all your recurring subscriptions",
     "import": "Import",
     "export": "Export",
     "add": "Add Subscription",
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
+    "pageTabs": {
+      "subscriptions": "Manage",
+      "paymentHistory": "Payment History"
+    },
+    "history": {
+      "title": "All Payments",
+      "search": "Search payments by service name...",
+      "noPayments": "No payments found",
+      "noPaymentsDesc": "Payments will appear here once subscriptions are processed",
+      "foundCount_one": "Found {{count}} payment",
+      "foundCount_other": "Found {{count}} payments",
+      "table": {
+        "date": "Date",
+        "service": "Service",
+        "amount": "Amount"
+      }
+    },
     "foundCount_one": "Found {{count}} subscription",
     "foundCount_other": "Found {{count}} subscriptions",
     "noFound": "No subscriptions found",
@@ -198,6 +215,27 @@
         "monthly": "Monthly",
         "yearly": "Yearly",
         "custom": "Custom"
+      },
+      "tabs": {
+        "details": "Details",
+        "payments": "Payment History"
+      },
+      "payments": {
+        "title": "Payment History",
+        "noPayments": "No payments recorded yet",
+        "addPayment": "Add Payment",
+        "editPayment": "Edit Payment",
+        "date": "Date",
+        "amount": "Amount",
+        "save": "Save",
+        "cancel": "Cancel",
+        "deleteConfirm": "Delete this payment?",
+        "addSuccess": "Payment added",
+        "updateSuccess": "Payment updated",
+        "deleteSuccess": "Payment deleted",
+        "addError": "Failed to add payment",
+        "updateError": "Failed to update payment",
+        "deleteError": "Failed to delete payment"
       }
     }
   },

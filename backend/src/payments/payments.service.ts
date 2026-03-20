@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DashboardService } from '../dashboard/dashboard.service';
 
 import { EmailService } from '../notifications/email/email.service';
@@ -6,6 +6,8 @@ import { EmailService } from '../notifications/email/email.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 import { calculateNextBillingDate } from '../subscriptions/utils/billing-date.util';
+import type { CreatePaymentDto } from './dto/create-payment.dto';
+import type { UpdatePaymentDto } from './dto/update-payment.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -59,7 +61,9 @@ export class PaymentsService {
         // Create payment history record
         await this.prisma.paymentHistory.create({
           data: {
+            userId: sub.userId,
             subscriptionId: sub.id,
+            subscriptionName: sub.name,
             amount: sub.amount,
             currency: sub.currency,
             paidAt: sub.nextBillingDate, // Use the date it was actually due
@@ -157,5 +161,78 @@ export class PaymentsService {
         this.logger.log('No payments were due yesterday; skipping daily digests.');
       }
     }
+  }
+
+  async findAllForUser(userId: string) {
+    return this.prisma.paymentHistory.findMany({
+      where: { userId },
+      orderBy: { paidAt: 'desc' },
+    });
+  }
+
+  async findAllForSubscription(userId: string, subscriptionId: string) {
+    // Verify subscription belongs to user
+    const subscription = await this.prisma.subscription.findFirst({
+      where: { id: subscriptionId, userId },
+    });
+    if (!subscription) {
+      throw new NotFoundException('Subscription not found');
+    }
+
+    return this.prisma.paymentHistory.findMany({
+      where: { subscriptionId },
+      orderBy: { paidAt: 'desc' },
+    });
+  }
+
+  async createPayment(userId: string, subscriptionId: string, dto: CreatePaymentDto) {
+    const subscription = await this.prisma.subscription.findFirst({
+      where: { id: subscriptionId, userId },
+    });
+    if (!subscription) {
+      throw new NotFoundException('Subscription not found');
+    }
+
+    return this.prisma.paymentHistory.create({
+      data: {
+        userId,
+        subscriptionId,
+        subscriptionName: subscription.name,
+        amount: dto.amount,
+        currency: dto.currency,
+        paidAt: new Date(dto.paidAt),
+      },
+    });
+  }
+
+  async updatePayment(userId: string, paymentId: string, dto: UpdatePaymentDto) {
+    const payment = await this.prisma.paymentHistory.findFirst({
+      where: { id: paymentId, userId },
+    });
+    if (!payment) {
+      throw new NotFoundException('Payment not found');
+    }
+
+    return this.prisma.paymentHistory.update({
+      where: { id: paymentId },
+      data: {
+        ...(dto.amount !== undefined && { amount: dto.amount }),
+        ...(dto.currency && { currency: dto.currency }),
+        ...(dto.paidAt && { paidAt: new Date(dto.paidAt) }),
+      },
+    });
+  }
+
+  async removePayment(userId: string, paymentId: string) {
+    const payment = await this.prisma.paymentHistory.findFirst({
+      where: { id: paymentId, userId },
+    });
+    if (!payment) {
+      throw new NotFoundException('Payment not found');
+    }
+
+    return this.prisma.paymentHistory.delete({
+      where: { id: paymentId },
+    });
   }
 }

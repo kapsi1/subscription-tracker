@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '@/lib/api';
 import { useAuth } from './auth-provider';
+import { PaymentHistoryTab } from './payment-history-tab';
 import { Button } from './ui/button';
 import {
   Dialog,
@@ -17,6 +18,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Switch } from './ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 interface SubscriptionModalProps {
   open: boolean;
@@ -59,6 +61,7 @@ export function SubscriptionModal({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState('details');
 
   useEffect(() => {
     if (subscription && open) {
@@ -86,6 +89,7 @@ export function SubscriptionModal({
       setIsSubmitted(false);
       setErrors({});
     }
+    setActiveTab('details');
   }, [subscription, open, user]);
 
   const validate = () => {
@@ -139,9 +143,208 @@ export function SubscriptionModal({
     }
   };
 
+  const isEditing = !!subscription;
+
+  const detailsForm = (
+    <form onSubmit={handleSubmit}>
+      <div className="space-y-4 py-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">{t('subscriptions.modal.serviceName')}</Label>
+          <Input
+            id="name"
+            placeholder={t('subscriptions.modal.servicePlaceholder')}
+            value={formData.name}
+            onChange={(e) => {
+              setFormData({ ...formData, name: e.target.value });
+              if (errors.name) {
+                const newErrors = { ...errors };
+                delete newErrors.name;
+                setErrors(newErrors);
+              }
+            }}
+            aria-invalid={isSubmitted && !!errors.name}
+          />
+          {isSubmitted && errors.name && (
+            <p className="text-xs font-medium text-destructive">
+              {t(`subscriptions.modal.errors.${errors.name}`)}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="amount">{t('subscriptions.modal.amount')}</Label>
+          <Input
+            id="amount"
+            type="number"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+            value={formData.amount}
+            onChange={(e) => {
+              setFormData({ ...formData, amount: e.target.value });
+              if (errors.amount) {
+                const newErrors = { ...errors };
+                delete newErrors.amount;
+                setErrors(newErrors);
+              }
+            }}
+            aria-invalid={isSubmitted && !!errors.amount}
+          />
+          {isSubmitted && errors.amount && (
+            <p className="text-xs font-medium text-destructive">
+              {t(`subscriptions.modal.errors.${errors.amount}`)}
+            </p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="billingCycle">{t('subscriptions.modal.billingCycle')}</Label>
+            <Select
+              value={formData.billingCycle}
+              onValueChange={(value) => setFormData({ ...formData, billingCycle: value })}
+            >
+              <SelectTrigger id="billingCycle">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {billingCycles.map((cycle) => (
+                  <SelectItem key={cycle.value} value={cycle.value}>
+                    {t(`subscriptions.modal.billingCycles.${cycle.value}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="category">{t('subscriptions.modal.category')}</Label>
+            <Select
+              value={formData.category}
+              onValueChange={(value) => setFormData({ ...formData, category: value })}
+            >
+              <SelectTrigger id="category">
+                <SelectValue>
+                  {(() => {
+                    const cat = categories.find((c) => c.name === formData.category);
+                    return (
+                      <span className="flex items-center gap-2">
+                        {cat && (
+                          <span
+                            className="inline-block w-3 h-3 rounded-full shrink-0"
+                            style={{ backgroundColor: cat.color }}
+                          />
+                        )}
+                        {t(`subscriptions.modal.categories.${formData.category}`, {
+                          defaultValue: formData.category,
+                        })}
+                      </span>
+                    );
+                  })()}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.name} value={category.name}>
+                    <span className="flex items-center gap-2">
+                      <span
+                        className="inline-block w-3 h-3 rounded-full shrink-0"
+                        style={{ backgroundColor: category.color }}
+                      />
+                      {t(`subscriptions.modal.categories.${category.name}`, {
+                        defaultValue: category.name,
+                      })}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="nextBillingDate">{t('subscriptions.modal.nextBillingDate')}</Label>
+          <Input
+            id="nextBillingDate"
+            type="date"
+            value={formData.nextBillingDate}
+            onChange={(e) => {
+              setFormData({ ...formData, nextBillingDate: e.target.value });
+              if (errors.nextBillingDate) {
+                const newErrors = { ...errors };
+                delete newErrors.nextBillingDate;
+                setErrors(newErrors);
+              }
+            }}
+            aria-invalid={isSubmitted && !!errors.nextBillingDate}
+          />
+          {isSubmitted && errors.nextBillingDate && (
+            <p className="text-xs font-medium text-destructive">
+              {t(`subscriptions.modal.errors.${errors.nextBillingDate}`)}
+            </p>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between border-t pt-4">
+          <div className="space-y-0.5">
+            <Label htmlFor="reminderEnabled">{t('subscriptions.modal.reminders')}</Label>
+            <p className="text-sm text-muted-foreground">
+              {t('subscriptions.modal.remindersDesc')}
+            </p>
+          </div>
+          <Switch
+            id="reminderEnabled"
+            checked={formData.reminderEnabled}
+            onCheckedChange={(checked) => setFormData({ ...formData, reminderEnabled: checked })}
+          />
+        </div>
+
+        {formData.reminderEnabled && (
+          <div className="space-y-2">
+            <Label htmlFor="reminderDays">{t('subscriptions.modal.reminderDays')}</Label>
+            <Input
+              id="reminderDays"
+              type="number"
+              min="0"
+              max="30"
+              value={formData.reminderDays}
+              onChange={(e) => {
+                setFormData({ ...formData, reminderDays: e.target.value });
+                if (errors.reminderDays) {
+                  const newErrors = { ...errors };
+                  delete newErrors.reminderDays;
+                  setErrors(newErrors);
+                }
+              }}
+              aria-invalid={isSubmitted && !!errors.reminderDays}
+            />
+            {isSubmitted && errors.reminderDays && (
+              <p className="text-xs font-medium text-destructive">
+                {t(`subscriptions.modal.errors.${errors.reminderDays}`)}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      <DialogFooter>
+        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+          {t('subscriptions.modal.cancel')}
+        </Button>
+        <Button type="submit" disabled={isSaving}>
+          {isSaving
+            ? t('common.loading')
+            : subscription
+              ? t('subscriptions.modal.update')
+              : t('subscriptions.modal.add')}
+        </Button>
+      </DialogFooter>
+    </form>
+  );
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>
             {subscription ? t('subscriptions.modal.editTitle') : t('subscriptions.modal.addTitle')}
@@ -150,202 +353,30 @@ export function SubscriptionModal({
             {subscription ? t('subscriptions.modal.editDesc') : t('subscriptions.modal.addDesc')}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">{t('subscriptions.modal.serviceName')}</Label>
-              <Input
-                id="name"
-                placeholder={t('subscriptions.modal.servicePlaceholder')}
-                value={formData.name}
-                onChange={(e) => {
-                  setFormData({ ...formData, name: e.target.value });
-                  if (errors.name) {
-                    const newErrors = { ...errors };
-                    delete newErrors.name;
-                    setErrors(newErrors);
-                  }
-                }}
-                aria-invalid={isSubmitted && !!errors.name}
-              />
-              {isSubmitted && errors.name && (
-                <p className="text-xs font-medium text-destructive">
-                  {t(`subscriptions.modal.errors.${errors.name}`)}
-                </p>
-              )}
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="amount">{t('subscriptions.modal.amount')}</Label>
-              <Input
-                id="amount"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="0.00"
-                value={formData.amount}
-                onChange={(e) => {
-                  setFormData({ ...formData, amount: e.target.value });
-                  if (errors.amount) {
-                    const newErrors = { ...errors };
-                    delete newErrors.amount;
-                    setErrors(newErrors);
-                  }
-                }}
-                aria-invalid={isSubmitted && !!errors.amount}
-              />
-              {isSubmitted && errors.amount && (
-                <p className="text-xs font-medium text-destructive">
-                  {t(`subscriptions.modal.errors.${errors.amount}`)}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="billingCycle">{t('subscriptions.modal.billingCycle')}</Label>
-                <Select
-                  value={formData.billingCycle}
-                  onValueChange={(value) => setFormData({ ...formData, billingCycle: value })}
-                >
-                  <SelectTrigger id="billingCycle">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {billingCycles.map((cycle) => (
-                      <SelectItem key={cycle.value} value={cycle.value}>
-                        {t(`subscriptions.modal.billingCycles.${cycle.value}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="category">{t('subscriptions.modal.category')}</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData({ ...formData, category: value })}
-                >
-                  <SelectTrigger id="category">
-                    <SelectValue>
-                      {(() => {
-                        const cat = categories.find((c) => c.name === formData.category);
-                        return (
-                          <span className="flex items-center gap-2">
-                            {cat && (
-                              <span
-                                className="inline-block w-3 h-3 rounded-full shrink-0"
-                                style={{ backgroundColor: cat.color }}
-                              />
-                            )}
-                            {t(`subscriptions.modal.categories.${formData.category}`, {
-                              defaultValue: formData.category,
-                            })}
-                          </span>
-                        );
-                      })()}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.name} value={category.name}>
-                        <span className="flex items-center gap-2">
-                          <span
-                            className="inline-block w-3 h-3 rounded-full shrink-0"
-                            style={{ backgroundColor: category.color }}
-                          />
-                          {t(`subscriptions.modal.categories.${category.name}`, {
-                            defaultValue: category.name,
-                          })}
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="nextBillingDate">{t('subscriptions.modal.nextBillingDate')}</Label>
-              <Input
-                id="nextBillingDate"
-                type="date"
-                value={formData.nextBillingDate}
-                onChange={(e) => {
-                  setFormData({ ...formData, nextBillingDate: e.target.value });
-                  if (errors.nextBillingDate) {
-                    const newErrors = { ...errors };
-                    delete newErrors.nextBillingDate;
-                    setErrors(newErrors);
-                  }
-                }}
-                aria-invalid={isSubmitted && !!errors.nextBillingDate}
-              />
-              {isSubmitted && errors.nextBillingDate && (
-                <p className="text-xs font-medium text-destructive">
-                  {t(`subscriptions.modal.errors.${errors.nextBillingDate}`)}
-                </p>
-              )}
-            </div>
-
-            <div className="flex items-center justify-between border-t pt-4">
-              <div className="space-y-0.5">
-                <Label htmlFor="reminderEnabled">{t('subscriptions.modal.reminders')}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('subscriptions.modal.remindersDesc')}
-                </p>
-              </div>
-              <Switch
-                id="reminderEnabled"
-                checked={formData.reminderEnabled}
-                onCheckedChange={(checked) =>
-                  setFormData({ ...formData, reminderEnabled: checked })
-                }
-              />
-            </div>
-
-            {formData.reminderEnabled && (
-              <div className="space-y-2">
-                <Label htmlFor="reminderDays">{t('subscriptions.modal.reminderDays')}</Label>
-                <Input
-                  id="reminderDays"
-                  type="number"
-                  min="0"
-                  max="30"
-                  value={formData.reminderDays}
-                  onChange={(e) => {
-                    setFormData({ ...formData, reminderDays: e.target.value });
-                    if (errors.reminderDays) {
-                      const newErrors = { ...errors };
-                      delete newErrors.reminderDays;
-                      setErrors(newErrors);
-                    }
-                  }}
-                  aria-invalid={isSubmitted && !!errors.reminderDays}
+        {isEditing ? (
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="w-full">
+              <TabsTrigger value="details" className="flex-1">
+                {t('subscriptions.modal.tabs.details')}
+              </TabsTrigger>
+              <TabsTrigger value="payments" className="flex-1">
+                {t('subscriptions.modal.tabs.payments')}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="details">{detailsForm}</TabsContent>
+            <TabsContent value="payments">
+              {subscription && (
+                <PaymentHistoryTab
+                  subscriptionId={subscription.id}
+                  currency={subscription.currency}
                 />
-                {isSubmitted && errors.reminderDays && (
-                  <p className="text-xs font-medium text-destructive">
-                    {t(`subscriptions.modal.errors.${errors.reminderDays}`)}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t('subscriptions.modal.cancel')}
-            </Button>
-            <Button type="submit" disabled={isSaving}>
-              {isSaving
-                ? t('common.loading')
-                : subscription
-                  ? t('subscriptions.modal.update')
-                  : t('subscriptions.modal.add')}
-            </Button>
-          </DialogFooter>
-        </form>
+              )}
+            </TabsContent>
+          </Tabs>
+        ) : (
+          detailsForm
+        )}
       </DialogContent>
     </Dialog>
   );

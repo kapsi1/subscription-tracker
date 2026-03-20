@@ -57,15 +57,20 @@ export function formatCurrency(
 /**
  * Get the symbol for a currency code
  */
-export function getCurrencySymbol(currency: string, locale: string = i18n.language || 'en-US'): string {
+export function getCurrencySymbol(
+  currency: string,
+  locale: string = i18n.language || 'en-US',
+): string {
   try {
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency,
-      currencyDisplay: 'narrowSymbol',
-    })
-      .formatToParts(0)
-      .find((part) => part.type === 'currency')?.value || currency;
+    return (
+      new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency,
+        currencyDisplay: 'narrowSymbol',
+      })
+        .formatToParts(0)
+        .find((part) => part.type === 'currency')?.value || currency
+    );
   } catch (_e) {
     return currency;
   }

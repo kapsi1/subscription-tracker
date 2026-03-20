@@ -190,12 +190,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <span className="hidden sm:inline">{t('nav.dashboard')}</span>
               </Button>
             </Link>
-            <Link href="/subscriptions">
+            <Link href="/manage">
               <Button
                 variant="ghost"
                 className={cn(
                   'gap-2 px-2 min-[860px]:px-3 transition-colors',
-                  pathname === '/subscriptions' || pathname.startsWith('/subscriptions/')
+                  pathname === '/manage' || pathname.startsWith('/manage/')
                     ? 'nav-item-active hover:bg-transparent font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}

@@ -109,7 +109,6 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
     });
   }, [monthlyPayments, paymentSortBy, paymentSortDirection, showPaid]);
 
-
   return (
     <Card className="min-w-0 shadow-sm">
       <CardHeader>

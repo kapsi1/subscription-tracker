@@ -142,14 +142,14 @@ export class DashboardService {
       }),
       this.prisma.paymentHistory.aggregate({
         where: {
-          subscription: { userId },
+          userId,
           paidAt: { gte: monthStart, lt: nextMonthStart },
         },
         _sum: { amount: true },
       }),
       this.prisma.paymentHistory.aggregate({
         where: {
-          subscription: { userId },
+          userId,
           paidAt: { gte: yearStart, lt: nextYearStart },
         },
         _sum: { amount: true },
@@ -192,12 +192,10 @@ export class DashboardService {
     const [paidPayments, subscriptions] = await Promise.all([
       this.prisma.paymentHistory.findMany({
         where: {
+          userId,
           paidAt: {
             gte: monthStart,
             lt: nextMonthStart,
-          },
-          subscription: {
-            userId,
           },
         },
         include: {
@@ -225,14 +223,16 @@ export class DashboardService {
       `${subscriptionId}:${date.toISOString().slice(0, 10)}`;
 
     const paidPaymentKeys = new Set(
-      paidPayments.map((payment) => paidKey(payment.subscriptionId, payment.paidAt)),
+      paidPayments
+        .filter((payment) => payment.subscriptionId)
+        .map((payment) => paidKey(payment.subscriptionId as string, payment.paidAt)),
     );
 
     const completedItems = paidPayments.map((payment) => ({
       id: payment.id,
       subscriptionId: payment.subscriptionId,
-      name: payment.subscription.name,
-      category: payment.subscription.category,
+      name: payment.subscription?.name ?? payment.subscriptionName,
+      category: payment.subscription?.category ?? 'Other',
       amount: Number(payment.amount),
       currency: payment.currency,
       date: payment.paidAt,

@@ -40,6 +40,7 @@ model User {
   passwordResetToken     String?            @unique
   passwordResetTokenExpiresAt DateTime?
   categories             Category[]
+  paymentHistory         PaymentHistory[]
   pushSubscriptions      PushSubscription[]
   subscriptions          Subscription[]
 }
@@ -107,15 +108,19 @@ model Alert {
 }
 
 model PaymentHistory {
-  id             String       @id @default(uuid())
-  subscriptionId String
-  amount         Decimal
-  currency       String
-  paidAt         DateTime     @default(now())
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  id               String        @id @default(uuid())
+  userId           String
+  subscriptionId   String?
+  subscriptionName String
+  amount           Decimal
+  currency         String
+  paidAt           DateTime      @default(now())
+  subscription     Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([subscriptionId])
   @@index([paidAt])
+  @@index([userId])
 }
 
 enum BillingCycle {

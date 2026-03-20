@@ -66,6 +66,15 @@ export interface Category {
   order: number;
 }
 
+export interface PaymentHistory {
+  id: string;
+  subscriptionId: string | null;
+  subscriptionName: string;
+  amount: number;
+  currency: string;
+  paidAt: string;
+}
+
 export enum BillingCycle {
   monthly = 'monthly',
   yearly = 'yearly',
