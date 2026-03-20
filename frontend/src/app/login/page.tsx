@@ -3,7 +3,7 @@
 import axios from 'axios';
 import { Mail } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
@@ -23,20 +23,31 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showResend, setShowResend] = useState(false);
+  const [lockTime, setLockTime] = useState(0);
+
+  useEffect(() => {
+    if (lockTime > 0) {
+      const timer = setTimeout(() => setLockTime((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [lockTime]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (lockTime > 0) return;
     setIsLoading(true);
     setShowResend(false);
     try {
       if (isLogin) {
         await login({ email, password });
-        toast.success(t('auth.status.loginSuccess'));
       } else {
         await register({ name, email, password, language: i18n.language });
         setIsRegistered(true);
       }
     } catch (err: unknown) {
+      if (isLogin) {
+        setLockTime(5);
+      }
       if (axios.isAxiosError(err)) {
         const apiMessage = (err.response?.data as { message?: string } | undefined)?.message;
         if (apiMessage === 'NOT_VERIFIED') {
@@ -190,12 +201,14 @@ export default function LoginPage() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full h-11" size="lg" disabled={isLoading}>
+                <Button type="submit" className="w-full h-11" size="lg" disabled={isLoading || lockTime > 0}>
                   {isLoading
                     ? t('auth.status.pleaseWait')
-                    : isLogin
-                      ? t('auth.login.submit')
-                      : t('auth.register.submit')}
+                    : lockTime > 0
+                      ? `${t('auth.status.pleaseWait')} (${lockTime}s)`
+                      : isLogin
+                        ? t('auth.login.submit')
+                        : t('auth.register.submit')}
                 </Button>
                 {showResend && (
                   <Button

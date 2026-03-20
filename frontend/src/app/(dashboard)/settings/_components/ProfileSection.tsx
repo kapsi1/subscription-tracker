@@ -9,6 +9,8 @@ import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 export interface ProfileData {
   name: string;
+  email?: string;
+  createdAt?: string;
   updatedAt: string;
 }
 

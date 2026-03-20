@@ -125,7 +125,7 @@ export class AuthService {
     const user = await this.usersService.findByEmail(loginDto.email);
     if (!user) {
       this.logger.warn(`Failed login attempt: user not found (${loginDto.email})`);
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     if (!user.passwordHash) {
@@ -136,7 +136,7 @@ export class AuthService {
     const isPasswordValid = await bcrypt.compare(loginDto.password, user.passwordHash);
     if (!isPasswordValid) {
       this.logger.warn(`Failed login attempt: invalid password (${loginDto.email})`);
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     if (!user.isVerified) {

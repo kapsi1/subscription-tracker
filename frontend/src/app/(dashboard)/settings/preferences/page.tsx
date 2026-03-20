@@ -1,6 +1,7 @@
 'use client';
 
 import type { Settings } from '@subtracker/shared';
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -83,7 +84,8 @@ export default function PreferencesPage() {
           currency: loadedSettings.currency,
         });
         hasLoadedSettingsRef.current = true;
-      } catch (_error) {
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) return;
         toast.error(t('settings.loadError'));
       }
     };
@@ -134,7 +136,8 @@ export default function PreferencesPage() {
         if (latestSaveAttemptRef.current === serializedPayload) {
           lastSavedPreferencesRef.current = serializedPayload;
         }
-      } catch (_error) {
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) return;
         toast.error(t('settings.saveError', { defaultValue: 'Failed to save settings' }));
       }
     }, 500);
@@ -424,7 +427,8 @@ function ProfilePageSearchWrapper() {
         });
         lastSavedProfileNameRef.current = (response.data.name || '').trim();
         hasLoadedProfileRef.current = true;
-      } catch (_error) {
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) return;
         toast.error(t('settings.loadError'));
       }
     };
@@ -443,7 +447,8 @@ function ProfilePageSearchWrapper() {
           lastSavedProfileNameRef.current = trimmedName;
         }
         await fetchUser();
-      } catch (_error) {
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) return;
         toast.error(t('settings.profile.saveError', { defaultValue: 'Failed to save profile' }));
       }
     }, 500);

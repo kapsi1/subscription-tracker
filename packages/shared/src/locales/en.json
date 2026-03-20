@@ -32,7 +32,7 @@
       "pleaseWait": "Please wait...",
       "loginSuccess": "Successfully logged in",
       "registerSuccess": "Account created successfully. Please check your email to verify your account. The link is valid for 24 hours.",
-      "failed": "Authentication failed",
+      "failed": "Invalid email or password",
       "notVerified": "Email not verified. Please check your inbox or resend the verification email.",
       "verificationSent": "Verification email sent successfully",
       "verificationFailed": "Verification failed. The link may be invalid or expired.",

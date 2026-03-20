@@ -338,9 +338,11 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add another accent color, maybe calculate it from the existing one.
 - [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
-- [ ] In /settings make search switch search input with tab chooser, make search
+- [x] In /settings make search switch search input with tab chooser, make search
 full width
-- [ ] Make error toasts have red background, and success toasts green.
-- [ ] On login page, instead of "Invalid credentials" show "Invalid email or password". Also add a 5 second delay for the login button, so user can't spam it.
-- [ ] Don't show the "Successfully logged in" toast after login.
-- [ ] Don't show "Failed to load settings" toast after logout.
+- [x] Make error toasts have red background, and success toasts green.
+- [x] On login page, instead of "Invalid credentials" show "Invalid email or password". Also add a 5 second lock for the login button, so user can't spam it.
+- [x] Don't show the "Successfully logged in" toast after login.
+- [x] Don't show "Failed to load settings" toast after logout.
+- [ ] Make colors in "Cost by Category" charts same as category colors in settings.
+- [ ] Make category badge colors in All Subscriptions table same as on dashboard. Clean up code from redundant color definitions.

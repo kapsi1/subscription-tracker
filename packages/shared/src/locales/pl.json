@@ -32,7 +32,7 @@
       "pleaseWait": "Proszę czekać...",
       "loginSuccess": "Zalogowano pomyślnie",
       "registerSuccess": "Konto zostało utworzone. Sprawdź swoją skrzynkę e-mail, aby zweryfikować konto. Link jest ważny przez 24 godziny.",
-      "failed": "Błąd uwierzytelniania",
+      "failed": "Nieprawidłowy adres e-mail lub hasło",
       "notVerified": "E-mail nie został zweryfikowany. Sprawdź skrzynkę lub wyślij ponownie e-mail weryfikacyjny.",
       "verificationSent": "E-mail weryfikacyjny został wysłany",
       "verificationFailed": "Weryfikacja nie powiodła się. Link może być nieprawidłowy lub wygasł.",
