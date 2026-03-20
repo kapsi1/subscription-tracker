@@ -8,8 +8,8 @@ import { useAuth } from '@/components/auth-provider';
 import api from '@/lib/api';
 import { ChangeEmailSection } from '../_components/ChangeEmailSection';
 import { ChangePasswordSection } from '../_components/ChangePasswordSection';
-import { type ProfileData, ProfileSection } from '../_components/ProfileSection';
 import { DeleteAccountSection } from '../_components/DeleteAccountSection';
+import { type ProfileData, ProfileSection } from '../_components/ProfileSection';
 
 export default function ProfilePage() {
   const { t } = useTranslation();

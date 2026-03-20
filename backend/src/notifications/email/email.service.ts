@@ -1,11 +1,10 @@
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
 import { COLORS, type ColorsConfig, getAccentColor, LOCALES } from '@subtracker/shared';
 import * as nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
-import * as path from 'node:path';
-import * as fs from 'node:fs';
 
 type AppTheme = 'light' | 'dark' | 'system';
 

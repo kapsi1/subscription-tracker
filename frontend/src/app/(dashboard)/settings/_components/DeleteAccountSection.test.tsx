@@ -1,9 +1,9 @@
-import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { afterEach, describe, it, expect, vi, beforeEach } from 'vitest';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { type AuthContextType, type User, useAuth } from '@/components/auth-provider';
+import api from '@/lib/api';
 import { DeleteAccountSection } from './DeleteAccountSection';
 import { SettingsSearchProvider } from './SettingsSearchContext';
-import api from '@/lib/api';
-import { useAuth, type AuthContextType, type User } from '@/components/auth-provider';
 
 vi.mock('@/lib/api', () => ({
   default: {
@@ -59,7 +59,7 @@ describe('DeleteAccountSection', () => {
     render(
       <SettingsSearchProvider>
         <DeleteAccountSection />
-      </SettingsSearchProvider>
+      </SettingsSearchProvider>,
     );
     const deleteButton = screen.getByRole('button', { name: /settings\.deleteAccount\.button/i });
     expect(deleteButton).toBeInTheDocument();
@@ -69,12 +69,12 @@ describe('DeleteAccountSection', () => {
     render(
       <SettingsSearchProvider>
         <DeleteAccountSection />
-      </SettingsSearchProvider>
+      </SettingsSearchProvider>,
     );
-    
+
     const deleteButton = screen.getByRole('button', { name: /settings\.deleteAccount\.button/i });
     fireEvent.click(deleteButton);
-    
+
     // Radix Dialog renders in a portal
     const title = await screen.findByText(/settings\.deleteAccount\.confirmTitle/i);
     expect(title).toBeInTheDocument();
@@ -86,30 +86,34 @@ describe('DeleteAccountSection', () => {
       user: { id: '1', email: 'test@example.com', googleId: null } as User,
     });
     vi.mocked(api.delete).mockResolvedValue({});
-    
+
     render(
       <SettingsSearchProvider>
         <DeleteAccountSection />
-      </SettingsSearchProvider>
+      </SettingsSearchProvider>,
     );
-    
+
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
-    
-    const passwordInput = await screen.findByPlaceholderText('settings.deleteAccount.passwordPlaceholder');
+
+    const passwordInput = await screen.findByPlaceholderText(
+      'settings.deleteAccount.passwordPlaceholder',
+    );
     expect(passwordInput).toBeInTheDocument();
-    
-    const confirmButton = screen.getByRole('button', { name: /settings\.deleteAccount\.confirmButton/i });
+
+    const confirmButton = screen.getByRole('button', {
+      name: /settings\.deleteAccount\.confirmButton/i,
+    });
     expect(confirmButton).toBeDisabled();
-    
+
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
     expect(confirmButton).not.toBeDisabled();
-    
+
     fireEvent.click(confirmButton);
-    
+
     await waitFor(() => {
-      expect(api.delete).toHaveBeenCalledWith('/users/me', { 
+      expect(api.delete).toHaveBeenCalledWith('/users/me', {
         data: { password: 'password123' },
-        _skipAuthRedirect: true
+        _skipAuthRedirect: true,
       });
       expect(mockLogout).toHaveBeenCalled();
     });
@@ -121,27 +125,31 @@ describe('DeleteAccountSection', () => {
       user: { id: '1', email: 'test@example.com', googleId: 'google-1' } as User,
     });
     vi.mocked(api.delete).mockResolvedValue({});
-    
+
     render(
       <SettingsSearchProvider>
         <DeleteAccountSection />
-      </SettingsSearchProvider>
+      </SettingsSearchProvider>,
     );
-    
+
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
-    
+
     await screen.findByText(/settings\.deleteAccount\.confirmTitle/i);
-    expect(screen.queryByPlaceholderText('settings.deleteAccount.passwordPlaceholder')).not.toBeInTheDocument();
-    
-    const confirmButton = screen.getByRole('button', { name: /settings\.deleteAccount\.confirmButton/i });
+    expect(
+      screen.queryByPlaceholderText('settings.deleteAccount.passwordPlaceholder'),
+    ).not.toBeInTheDocument();
+
+    const confirmButton = screen.getByRole('button', {
+      name: /settings\.deleteAccount\.confirmButton/i,
+    });
     expect(confirmButton).not.toBeDisabled();
-    
+
     fireEvent.click(confirmButton);
-    
+
     await waitFor(() => {
-      expect(api.delete).toHaveBeenCalledWith('/users/me', { 
+      expect(api.delete).toHaveBeenCalledWith('/users/me', {
         data: { password: '' },
-        _skipAuthRedirect: true
+        _skipAuthRedirect: true,
       });
       expect(mockLogout).toHaveBeenCalled();
     });
@@ -152,28 +160,32 @@ describe('DeleteAccountSection', () => {
       ...defaultAuthValue,
       user: { id: '1', email: 'test@example.com', googleId: null } as User,
     });
-    
+
     // Simulate axios 401 response
     const { default: axios } = await import('axios');
     const error = new axios.AxiosError('Unauthorized', '401', undefined, undefined, {
       status: 401,
       data: { message: 'Incorrect password' },
-    } as any);
-    
+    } as unknown as import('axios').AxiosResponse);
+
     vi.mocked(api.delete).mockRejectedValue(error);
     const { toast } = await import('sonner');
-    
+
     render(
       <SettingsSearchProvider>
         <DeleteAccountSection />
-      </SettingsSearchProvider>
+      </SettingsSearchProvider>,
     );
-    
+
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
-    const passwordInput = await screen.findByPlaceholderText('settings.deleteAccount.passwordPlaceholder');
+    const passwordInput = await screen.findByPlaceholderText(
+      'settings.deleteAccount.passwordPlaceholder',
+    );
     fireEvent.change(passwordInput, { target: { value: 'wrong-pass' } });
-    fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.confirmButton/i }));
-    
+    fireEvent.click(
+      screen.getByRole('button', { name: /settings\.deleteAccount\.confirmButton/i }),
+    );
+
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('settings.deleteAccount.errorIncorrect');
     });
@@ -184,27 +196,33 @@ describe('DeleteAccountSection', () => {
       ...defaultAuthValue,
       user: { id: '1', email: 'test@example.com', googleId: null } as User,
     });
-    
+
     render(
       <SettingsSearchProvider>
         <DeleteAccountSection />
-      </SettingsSearchProvider>
+      </SettingsSearchProvider>,
     );
-    
+
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
-    const passwordInput = await screen.findByPlaceholderText('settings.deleteAccount.passwordPlaceholder');
+    const passwordInput = await screen.findByPlaceholderText(
+      'settings.deleteAccount.passwordPlaceholder',
+    );
     fireEvent.change(passwordInput, { target: { value: 'some-pass' } });
-    
-    const cancelButton = screen.getByRole('button', { name: /settings\.deleteAccount\.cancelButton/i });
+
+    const cancelButton = screen.getByRole('button', {
+      name: /settings\.deleteAccount\.cancelButton/i,
+    });
     fireEvent.click(cancelButton);
-    
+
     await waitFor(() => {
       expect(screen.queryByText(/settings\.deleteAccount\.confirmTitle/i)).not.toBeInTheDocument();
     });
-    
+
     // Re-open and check password is empty
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
-    const newPasswordInput = await screen.findByPlaceholderText('settings.deleteAccount.passwordPlaceholder');
+    const newPasswordInput = await screen.findByPlaceholderText(
+      'settings.deleteAccount.passwordPlaceholder',
+    );
     expect((newPasswordInput as HTMLInputElement).value).toBe('');
   });
 });

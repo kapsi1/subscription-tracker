@@ -203,7 +203,12 @@ export default function LoginPage() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full h-11" size="lg" disabled={isLoading || lockTime > 0}>
+                <Button
+                  type="submit"
+                  className="w-full h-11"
+                  size="lg"
+                  disabled={isLoading || lockTime > 0}
+                >
                   {isLoading
                     ? t('auth.status.pleaseWait')
                     : lockTime > 0

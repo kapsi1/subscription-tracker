@@ -37,7 +37,13 @@ import {
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import api from '@/lib/api';
-import { findCategoryColor, findCategoryIcon, formatCurrency, formatDate, getCategoryStyle } from '@/lib/utils';
+import {
+  findCategoryColor,
+  findCategoryIcon,
+  formatCurrency,
+  formatDate,
+  getCategoryStyle,
+} from '@/lib/utils';
 
 const subscriptionImportSchema = z.object({
   name: z.string().min(1),
@@ -88,8 +94,6 @@ export default function SubscriptionsPage() {
       return res.data;
     },
   });
-
-
 
   const [isImportLoading, setIsImportLoading] = useState(false);
   const isLoading = isFetchLoading || isImportLoading;
@@ -430,7 +434,10 @@ export default function SubscriptionsPage() {
                         <Badge
                           variant="outline"
                           className="gap-1.5"
-                          style={getCategoryStyle(findCategoryColor(categories, subscription.category), 'dashboard')}
+                          style={getCategoryStyle(
+                            findCategoryColor(categories, subscription.category),
+                            'dashboard',
+                          )}
                         >
                           <DynamicIcon
                             name={findCategoryIcon(categories, subscription.category)}

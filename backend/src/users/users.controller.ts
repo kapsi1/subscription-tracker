@@ -21,9 +21,9 @@ import { WebPushService } from '../notifications/webpush/webpush.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ChangeEmailDto } from './dto/change-email.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { DeleteAccountDto } from './dto/delete-account.dto';
 import { PushSubscriptionDto } from './dto/push-subscription.dto';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
-import { DeleteAccountDto } from './dto/delete-account.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')

@@ -35,7 +35,11 @@ function SettingsLayoutContent({ children }: { children: React.ReactNode }) {
         <div className="inline-flex items-center gap-1 rounded-lg border bg-muted p-1 self-start sm:self-auto">
           {tabs.map((tab) => (
             <Link key={tab.id} href={tab.href}>
-              <Button type="button" variant={pathname === tab.href ? 'secondary' : 'ghost'} size="sm">
+              <Button
+                type="button"
+                variant={pathname === tab.href ? 'secondary' : 'ghost'}
+                size="sm"
+              >
                 {tab.label}
               </Button>
             </Link>

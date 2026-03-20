@@ -1,15 +1,13 @@
 'use client';
 
+import axios from 'axios';
 import { AlertTriangle, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import axios from 'axios';
 import { useAuth } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -19,6 +17,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import api from '@/lib/api';
 import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
@@ -34,9 +34,9 @@ export function DeleteAccountSection() {
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await api.delete('/users/me', { 
+      await api.delete('/users/me', {
         data: { password },
-        _skipAuthRedirect: true
+        _skipAuthRedirect: true,
       });
       toast.success(t('settings.deleteAccount.success'));
       setIsOpen(false);
@@ -80,9 +80,7 @@ export function DeleteAccountSection() {
       <CardContent>
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
-            <Button variant="destructive">
-              {t('settings.deleteAccount.button')}
-            </Button>
+            <Button variant="destructive">{t('settings.deleteAccount.button')}</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -130,7 +128,9 @@ export function DeleteAccountSection() {
                 className="w-full sm:w-auto"
                 disabled={isDeleting || (!isGoogleAccount && !password)}
               >
-                {isDeleting ? t('auth.status.pleaseWait') : t('settings.deleteAccount.confirmButton')}
+                {isDeleting
+                  ? t('auth.status.pleaseWait')
+                  : t('settings.deleteAccount.confirmButton')}
               </Button>
             </DialogFooter>
           </DialogContent>

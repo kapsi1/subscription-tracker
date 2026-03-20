@@ -47,8 +47,6 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
     },
   });
 
-
-
   useEffect(() => {
     if (user?.dashboardSortBy) {
       setPaymentSortBy(user.dashboardSortBy as 'date' | 'amount');
@@ -187,7 +185,10 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                 <div className="flex min-w-0 flex-1 items-center gap-4">
                   <div
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border"
-                    style={getCategoryStyle(findCategoryColor(categories, payment.category), 'dashboard')}
+                    style={getCategoryStyle(
+                      findCategoryColor(categories, payment.category),
+                      'dashboard',
+                    )}
                   >
                     <DynamicIcon
                       name={findCategoryIcon(categories, payment.category)}
@@ -254,7 +255,10 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
                   <Badge
                     variant="outline"
                     className="gap-1.5"
-                    style={getCategoryStyle(findCategoryColor(categories, payment.category), 'dashboard')}
+                    style={getCategoryStyle(
+                      findCategoryColor(categories, payment.category),
+                      'dashboard',
+                    )}
                   >
                     <DynamicIcon
                       name={findCategoryIcon(categories, payment.category)}
