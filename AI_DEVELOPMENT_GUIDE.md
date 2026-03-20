@@ -2,6 +2,9 @@
 
 This document is designed to provide high-context, low-token overhead for AI agents working on this codebase.
 
+## General instructions
+If there's documentation, update it after changes. If there's a TODO, update it after changes. For any new feature add unit and E2E tests.
+
 ## 🏗️ Architecture Overview
 
 The project is a **pnpm monorepo** using a modern TypeScript stack:

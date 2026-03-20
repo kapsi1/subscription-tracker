@@ -1,5 +1,3 @@
-For any new feature add unit and E2E tests
-
 # Subscription Cost Tracker – Task List (Architecture 1: Monolith)
 
 ## 0. Project Setup
@@ -265,10 +263,11 @@ For any new feature add unit and E2E tests
 ---
 
 # 6. Documentation
-- [ ] Architecture overview diagram
-- [ ] API documentation
-- [ ] Setup instructions
-- [ ] Environment variables documentation
+- [x] Architecture overview diagram
+- [x] API documentation
+- [x] Setup instructions
+- [x] Environment variables documentation
+- [x] README.md for Github
 
 # 7. Additional
 - [ ] Push notifications not working on Opera

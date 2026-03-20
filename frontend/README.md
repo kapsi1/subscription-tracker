@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SubTracker – Frontend
 
-## Getting Started
+Next.js (App Router) frontend for the SubTracker subscription management application.
 
-First, run the development server:
+## Quick start
+
+> Run from the **monorepo root** with `pnpm dev` to start all services together.
+
+To run the frontend in isolation:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Install dependencies (if not done at root)
+pnpm install
+
+# Start dev server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app is available at **http://localhost:3000**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create `frontend/.env.local` with:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start Next.js dev server with HMR |
+| `pnpm build` | Build production bundle |
+| `pnpm start` | Start production server |
+| `pnpm test` | Run unit tests (Vitest) |
+| `pnpm test:ui` | Vitest UI explorer |
+| `pnpm lint` | Run Biome linter |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Page structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/app/
+├── (auth)/
+│   ├── login/
+│   ├── register/
+│   ├── forgot-password/
+│   ├── reset-password/
+│   └── verify-email/
+├── (dashboard)/
+│   ├── page.tsx          # Main dashboard
+│   ├── subscriptions/    # All subscriptions list
+│   └── settings/         # Preferences + Profile tabs
+└── layout.tsx
+```
 
-## Deploy on Vercel
+## Key libraries
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Library | Purpose |
+|---------|---------|
+| `next-intl` | Internationalisation |
+| `recharts` | Charts (forecast, category distribution) |
+| `react-hook-form` + `zod` | Form validation |
+| `sonner` | Toast notifications |
+| `next-themes` | Light / dark / system theme |
+| `axios` | API client with JWT interceptors |
+| `@dnd-kit` | Drag-and-drop (category ordering) |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Environment variables
+
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_API_URL` | Backend API base URL (e.g. `http://localhost:3001`) |
+
+## Tests
+
+```bash
+pnpm test       # unit/component tests with Vitest
+```
+
+E2E tests live in the monorepo root `e2e/` directory and are run via `pnpm e2e`.

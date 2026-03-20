@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "Kamil Kapsiak",
-  "license": "ISC",
+  "license": "MIT",
   "packageManager": "pnpm@10.32.1",
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",
