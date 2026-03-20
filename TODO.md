@@ -343,6 +343,9 @@ full width
 - [x] On login page, instead of "Invalid credentials" show "Invalid email or password". Also add a 5 second lock for the login button, so user can't spam it.
 - [x] Don't show the "Successfully logged in" toast after login.
 - [x] Don't show "Failed to load settings" toast after logout.
-- [ ] Make colors in "Cost by Category" charts same as category colors in settings.
-- [ ] Make category badge colors in All Subscriptions table same as on dashboard. Clean up code from redundant color definitions.
+- [x] Make colors in "Cost by Category" charts same as category colors in settings.
+- [x] Make category badge colors in All Subscriptions table same as on dashboard. Clean up code from redundant color definitions.
 - [x] Make main container background color a subtle gradient: top -> down, top color is as now, bottom color is slightly darker. Do it for all pages.
+- [ ] Bug: change color in settings, switch to another tab and back to settings, the color switches back to the old one. On page reload the color is correct (the new one). It doesn't matter how fast you switch to another tab after changing the color, or from another tab back to settings. It doesn't happen when switching to dashboard and then to subscriptions tab, only when returning to settings tab.
+- [ ] In light mode make the toast backgrounds darker, and text on them black.
+- [ ] In light mode you can't see which subtab is selected in settings
