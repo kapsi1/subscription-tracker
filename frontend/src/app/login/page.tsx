@@ -53,6 +53,8 @@ export default function LoginPage() {
         if (apiMessage === 'NOT_VERIFIED') {
           toast.error(t('auth.status.notVerified'));
           setShowResend(true);
+        } else if (apiMessage === 'Invalid email or password') {
+          toast.error(t('auth.status.failed'));
         } else {
           toast.error(apiMessage || err.message || t('auth.status.failed'));
         }
