@@ -331,7 +331,6 @@ To consider: what happens when we disable the toggle after adding some subscript
 
 - [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
 - [ ] Add more translations for major languages
-- [ ] Add payment history to the subscription details page (the edit subscription modal)
 - [ ] Improve UI & UX on small screens
 - [x] Make the tooltip in Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
 - [x] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
@@ -349,4 +348,12 @@ full width
 - [x] In light mode make the toast background colors darker, and text on them black.
 - [x] In light mode you can't see if Profile or Preferences subtab is selected in Settings
 - [x] Analyze code and find large files that can be refactored into smaller files.
-- [ ] Remove placeholders from password fields
+- [x] Remove placeholders from password fields
+- [x] When Polish language is selected, use a non-breaking space for a digit group separator (e.g. 10 000 instead of 10,000), and a comma for decimal separator (e.g. 10,50 instead of 10.50)
+- [x] Where possible, use currency symbols instead of codes (e.g. $ instead of USD). In the currency chooser in settings, show both symbol and code. In other places only symbol.
+- [x] Changing currency requires a page reload to take effect. Make it not require a page reload.
+- [ ] When deleting a subscription, make sure previous payments aren't deleted.
+- [ ] Add payment history: propose UI to manage payment history. It should show previous payments, and allow user to edit, add or delete them. Instead of 
+- [ ] User should be able to update subscription cost. Make sure already paid payments don't change.
+- [ ] Google Calendar export for subscriptions: in Subscriptions tab show a button to export subscriptions to Google Calendar, for each table row and above the table, and to the right. Row buttons export only this subscription to Google Calendar. Above table button exports all subscriptions to Google Calendar. Use Google Calendar URL API to create the export URL. Add unit and E2E tests.
+- [x] Don't show decimals if value is integer (i.e. $50 instead of $50.00)

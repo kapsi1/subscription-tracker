@@ -9,6 +9,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDate } from '@/lib/utils';
 
 interface MonthPickerProps {
   selectedDate: Date;
@@ -16,7 +17,7 @@ interface MonthPickerProps {
 }
 
 export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [pickerYear, setPickerYear] = useState(selectedDate.getFullYear());
   const [isPickerOpen, setIsPickerOpen] = useState(false);
 
@@ -78,7 +79,7 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
               variant="ghost"
               className="h-9 min-w-0 flex-1 font-medium hover:bg-accent/50 focus-visible:ring-0 lg:min-w-[140px] lg:flex-none"
             >
-              {selectedDate.toLocaleDateString(i18n.language === 'pl' ? 'pl-PL' : 'en-US', {
+              {formatDate(selectedDate.toISOString(), {
                 month: 'long',
                 year: 'numeric',
               })}
@@ -123,9 +124,7 @@ export function MonthPicker({ selectedDate, setSelectedDate }: MonthPickerProps)
                     className="h-9 w-full text-xs font-medium"
                     onClick={() => handleMonthSelect(index)}
                   >
-                    {i18n.language === 'pl'
-                      ? new Date(2000, index).toLocaleDateString('pl-PL', { month: 'short' })
-                      : month}
+                    {formatDate(new Date(2000, index).toISOString(), { month: 'short' })}
                   </Button>
                 );
               })}

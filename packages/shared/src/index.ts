@@ -73,6 +73,7 @@ export const getAccentColor = (nameOrHex: string, definitions: ColorsConfig): Ac
 export type Currency = {
   code: string;
   name: string;
+  symbol: string;
   flag: string;
   countryCode: string;
 };

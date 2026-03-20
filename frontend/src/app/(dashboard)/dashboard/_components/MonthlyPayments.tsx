@@ -14,7 +14,13 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import api from '@/lib/api';
-import { findCategoryColor, findCategoryIcon, formatCurrency, getCategoryStyle } from '@/lib/utils';
+import {
+  findCategoryColor,
+  findCategoryIcon,
+  formatCurrency,
+  formatDate,
+  getCategoryStyle,
+} from '@/lib/utils';
 
 export type MonthlyPayment = {
   id: string;
@@ -33,7 +39,7 @@ interface MonthlyPaymentsProps {
 }
 
 export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [paymentSortBy, setPaymentSortBy] = useState<'date' | 'amount'>('date');
   const [paymentSortDirection, setPaymentSortDirection] = useState<'asc' | 'desc'>('asc');
@@ -103,12 +109,6 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
     });
   }, [monthlyPayments, paymentSortBy, paymentSortDirection, showPaid]);
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const locale = i18n.language === 'pl' ? 'pl-PL' : 'en-US';
-    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
-  };
 
   return (
     <Card className="min-w-0 shadow-sm">

@@ -6,6 +6,8 @@ import { twMerge } from 'tailwind-merge';
  * Utility functions for the SubTracker app
  */
 
+import i18n from './i18n';
+
 /**
  * Find category color by name from categories list
  */
@@ -36,9 +38,14 @@ export function formatCurrency(
   maximumFractionDigits = 2,
 ): string {
   try {
-    return new Intl.NumberFormat('en-US', {
+    const locale = i18n.language || 'en-US';
+    const isInteger = value % 1 === 0;
+    const minDigits = isInteger ? 0 : Math.min(maximumFractionDigits, 2);
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currency,
+      currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: minDigits,
       maximumFractionDigits,
     }).format(value);
   } catch (_e) {
@@ -48,12 +55,30 @@ export function formatCurrency(
 }
 
 /**
+ * Get the symbol for a currency code
+ */
+export function getCurrencySymbol(currency: string, locale: string = i18n.language || 'en-US'): string {
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+      currencyDisplay: 'narrowSymbol',
+    })
+      .formatToParts(0)
+      .find((part) => part.type === 'currency')?.value || currency;
+  } catch (_e) {
+    return currency;
+  }
+}
+
+/**
  * Format a date string
  */
 export function formatDate(dateString: string, options?: Intl.DateTimeFormatOptions): string {
   const date = new Date(dateString);
+  const locale = i18n.language || 'en-US';
   return date.toLocaleDateString(
-    'en-US',
+    locale,
     options || { month: 'short', day: 'numeric', year: 'numeric' },
   );
 }

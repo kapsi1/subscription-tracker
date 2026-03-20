@@ -105,7 +105,6 @@ export function DeleteAccountSection() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder={t('settings.deleteAccount.passwordPlaceholder')}
                   disabled={isDeleting}
                 />
               </div>

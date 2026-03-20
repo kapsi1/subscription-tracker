@@ -1,6 +1,7 @@
 'use client';
 
 import type { Settings } from '@subtracker/shared';
+import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +19,7 @@ import { WebhookSection } from '../_components/WebhookSection';
 
 export default function PreferencesPage() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const showTestControls = process.env.NODE_ENV !== 'production';
   const [settings, setSettings] = useState<Settings>({
     defaultReminderEnabled: true,
@@ -135,6 +137,9 @@ export default function PreferencesPage() {
         await api.patch('/users/settings', payload);
         if (latestSaveAttemptRef.current === serializedPayload) {
           lastSavedPreferencesRef.current = serializedPayload;
+          // Invalidate queries to refresh data across the app (e.g. currency changes)
+          queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+          queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 401) return;
@@ -143,7 +148,7 @@ export default function PreferencesPage() {
     }, 500);
 
     return () => window.clearTimeout(timer);
-  }, [settings, t]);
+  }, [settings, t, queryClient]);
 
   const handlePushToggle = async (checked: boolean) => {
     setIsTogglingPush(true);

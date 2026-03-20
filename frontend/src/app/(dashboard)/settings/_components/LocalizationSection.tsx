@@ -172,9 +172,11 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                             CURRENCIES.find((c) => c.code === currency)?.countryCode || 'US'
                           }
                         />
-                        <span className="font-medium">{currency}</span>
-                        <span className="text-muted-foreground font-normal overflow-hidden text-ellipsis whitespace-nowrap">
-                          - {CURRENCIES.find((c) => c.code === currency)?.name}
+                        <span className="text-muted-foreground text-sm font-normal">
+                          {currency}
+                        </span>
+                        <span className="text-muted-foreground font-normal overflow-hidden text-ellipsis whitespace-nowrap ml-1">
+                          {CURRENCIES.find((c) => c.code === currency)?.name} ({CURRENCIES.find((c) => c.code === currency)?.symbol})
                         </span>
                       </>
                     ) : (
@@ -226,8 +228,10 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                       }}
                     >
                       <Flag countryCode={c.countryCode} />
-                      <span className="font-medium">{c.code}</span>
-                      <span className="text-muted-foreground text-xs truncate">- {c.name}</span>
+                      <span className="text-muted-foreground text-xs">{c.code}</span>
+                      <span className="text-muted-foreground text-xs truncate flex-1">
+                        {c.name} ({c.symbol})
+                      </span>
                     </div>
                   ))}
                   {CURRENCIES.filter(
@@ -235,10 +239,10 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
                       c.code.toLowerCase().includes(searchCurrency.toLowerCase()) ||
                       c.name.toLowerCase().includes(searchCurrency.toLowerCase()),
                   ).length === 0 && (
-                    <div className="p-4 text-center text-sm text-muted-foreground">
-                      No currency found.
-                    </div>
-                  )}
+                      <div className="p-4 text-center text-sm text-muted-foreground">
+                        No currency found.
+                      </div>
+                    )}
                 </div>
               </PopoverContent>
             </Popover>

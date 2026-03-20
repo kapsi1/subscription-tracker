@@ -112,7 +112,6 @@ export function WebhookSection({
               <Input
                 id="webhookSecret"
                 type="password"
-                placeholder="Secret key"
                 value={webhookSecret}
                 onChange={(e) => onSettingsChange({ webhookSecret: e.target.value })}
               />

@@ -1,25 +1,44 @@
 import { describe, expect, it } from 'vitest';
 import { daysUntil, formatCurrency, formatDate } from './utils';
 
+import i18n from './i18n';
+
 describe('formatCurrency', () => {
   it('should format USD correctly', () => {
     expect(formatCurrency(15.99, 'USD')).toBe('$15.99');
   });
 
   it('should format EUR correctly', () => {
-    expect(formatCurrency(10, 'EUR')).toBe('€10.00');
+    expect(formatCurrency(10, 'EUR')).toBe('€10');
   });
 
   it('should handle zero', () => {
-    expect(formatCurrency(0)).toBe('$0.00');
+    expect(formatCurrency(0)).toBe('$0');
   });
 
   it('should default to USD', () => {
-    expect(formatCurrency(100)).toBe('$100.00');
+    expect(formatCurrency(100)).toBe('$100');
   });
 
-  it('should format large numbers with commas', () => {
+  it('should format large numbers with commas in English', () => {
     expect(formatCurrency(1234.56)).toBe('$1,234.56');
+  });
+
+  it('should format numbers with NBSP and comma in Polish', async () => {
+    const currentLang = i18n.language;
+    await i18n.changeLanguage('pl');
+    try {
+      const result = formatCurrency(12345.67, 'PLN');
+      // Polish uses NBSP (160) as group separator and comma as decimal separator
+      // Note: result might be "12 345,67 zł" or "12.345,67 PLN" depending on environment
+      // but according to our test earlier it should be "12 345,67 zł"
+      expect(result).toContain(',');
+      expect(result).toContain('\xa0');
+      // Normalize spaces for comparison if needed, but the requirement specifically asked for NBSP
+      expect(result.charCodeAt(result.indexOf(',') - 4)).toBe(160);
+    } finally {
+      await i18n.changeLanguage(currentLang);
+    }
   });
 });
 
