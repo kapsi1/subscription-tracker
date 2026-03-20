@@ -23,6 +23,7 @@ import { ChangeEmailDto } from './dto/change-email.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { PushSubscriptionDto } from './dto/push-subscription.dto';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
+import { DeleteAccountDto } from './dto/delete-account.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -288,8 +289,8 @@ export class UsersController {
   }
 
   @Delete('me')
-  async deleteMe(@Req() req: RequestWithUser) {
-    await this.usersService.remove(req.user.userId);
+  async deleteMe(@Req() req: RequestWithUser, @Body() dto: DeleteAccountDto) {
+    await this.usersService.remove(req.user.userId, dto.password);
     return { message: 'Account deleted successfully' };
   }
 }

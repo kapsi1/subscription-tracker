@@ -7,7 +7,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/components/auth-provider';
-import { useInstallPrompt } from '@/hooks/use-install-prompt';
 import { ErrorState } from '@/components/error-state'; // Assuming this path
 import { LoadingState } from '@/components/loading-state';
 import { Button } from '@/components/ui/button';
@@ -20,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/components/ui/utils';
+import { useInstallPrompt } from '@/hooks/use-install-prompt';
 import api from '@/lib/api';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -171,7 +171,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               className="mx-auto"
               priority
             />
-            <span className="font-semibold text-lg hidden min-[860px]:inline">SubTracker</span>
+            <span className="font-semibold text-lg hidden sm:inline">SubTracker</span>
           </Link>
 
           <nav className="ml-1 flex min-w-0 items-center gap-1 sm:ml-2 md:ml-4">
@@ -187,7 +187,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="sm"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                <span className="hidden min-[860px]:inline">{t('nav.dashboard')}</span>
+                <span className="hidden sm:inline">{t('nav.dashboard')}</span>
               </Button>
             </Link>
             <Link href="/subscriptions">
@@ -202,7 +202,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="sm"
               >
                 <ListChecks className="w-4 h-4" />
-                <span className="hidden min-[860px]:inline">{t('nav.subscriptions')}</span>
+                <span className="hidden sm:inline">{t('nav.subscriptions')}</span>
               </Button>
             </Link>
             <Link href="/settings">
@@ -217,7 +217,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 size="sm"
               >
                 <Settings className="w-4 h-4" />
-                <span className="hidden min-[860px]:inline">{t('nav.settings')}</span>
+                <span className="hidden sm:inline">{t('nav.settings')}</span>
               </Button>
             </Link>
           </nav>

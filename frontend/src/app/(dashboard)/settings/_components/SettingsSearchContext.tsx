@@ -125,6 +125,17 @@ export const SETTINGS_SECTIONS: SectionMetadata[] = [
     descKey: 'settings.changeEmail.desc',
     searchKeys: ['settings.changeEmail.newEmail', 'settings.changeEmail.currentPassword'],
   },
+  {
+    id: 'delete-account',
+    tab: 'profile',
+    titleKey: 'settings.deleteAccount.title',
+    descKey: 'settings.deleteAccount.desc',
+    searchKeys: [
+      'settings.deleteAccount.button',
+      'settings.deleteAccount.confirmTitle',
+      'settings.deleteAccount.confirmDesc',
+    ],
+  },
 ];
 
 interface SettingsSearchContextType {

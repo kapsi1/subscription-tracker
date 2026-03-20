@@ -8,6 +8,7 @@ import api from '@/lib/api';
 import { ChangeEmailSection } from '../_components/ChangeEmailSection';
 import { ChangePasswordSection } from '../_components/ChangePasswordSection';
 import { type ProfileData, ProfileSection } from '../_components/ProfileSection';
+import { DeleteAccountSection } from '../_components/DeleteAccountSection';
 
 export default function ProfilePage() {
   const { t } = useTranslation();
@@ -92,6 +93,8 @@ export default function ProfilePage() {
       {isSectionVisible('password', 'profile') && !isGoogleAccount && <ChangePasswordSection />}
 
       {isSectionVisible('change-email', 'profile') && !isGoogleAccount && <ChangeEmailSection />}
+
+      {isSectionVisible('delete-account', 'profile') && <DeleteAccountSection />}
 
       {/* Show Preferences sections when searching in Profile */}
       {searchQuery.trim() && (

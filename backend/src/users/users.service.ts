@@ -131,7 +131,21 @@ export class UsersService {
     return updated;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string, password?: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) throw new BadRequestException('User not found');
+
+    // If regular account (has passwordHash), require password verification
+    if (user.passwordHash) {
+      if (!password) {
+        throw new BadRequestException('Password is required to delete your account.');
+      }
+      const isValid = await bcrypt.compare(password, user.passwordHash);
+      if (!isValid) {
+        throw new UnauthorizedException('Incorrect password. Account deletion aborted.');
+      }
+    }
+
     this.logger.warn(`Deleting user account: ${id}`);
 
     await this.prisma.$transaction(async (tx) => {

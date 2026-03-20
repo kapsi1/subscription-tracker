@@ -323,7 +323,7 @@
 - [ ] Default reminders
 - [ ] Budget threshold alerts
 - [ ] Custom billing cycle
-- [ ] Delete Account flow in user profile. Include a full screen warning/confirmation modal. Add tests.
+- [x] Delete Account flow in user profile. Include a full screen warning/confirmation modal. Add tests.
 - [ ] Billing cycle -> custom does nothing
 - [ ] Support multiple currencies. Add a toggle in settings, that enables multiple currencies. When toggle is enabled, the currency selected in the currency selector should be the target currency for conversion. This currency will be what all other currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. The subscription add/edit form should have a currency selector (same as in settings). Use an external service to convert currencies. Show me a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
 
@@ -338,3 +338,9 @@ To consider: what happens when we disable the toggle after adding some subscript
 - [ ] Add another accent color, maybe calculate it from the existing one.
 - [ ] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
 - [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
+- [ ] In /settings make search switch search input with tab chooser, make search
+full width
+- [ ] Make error toasts have red background, and success toasts green.
+- [ ] On login page, instead of "Invalid credentials" show "Invalid email or password". Also add a 5 second delay for the login button, so user can't spam it.
+- [ ] Don't show the "Successfully logged in" toast after login.
+- [ ] Don't show "Failed to load settings" toast after logout.

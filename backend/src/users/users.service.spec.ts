@@ -12,6 +12,7 @@ describe('UsersService', () => {
   let prismaMock: {
     user: Record<string, jest.Mock>;
     pushSubscription: Record<string, jest.Mock>;
+    $transaction: jest.Mock;
   };
 
   const mockWebhookService = {
@@ -37,6 +38,7 @@ describe('UsersService', () => {
         upsert: jest.fn(),
         deleteMany: jest.fn(),
       },
+      $transaction: jest.fn().mockImplementation((cb) => cb(prismaMock)),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -228,6 +230,53 @@ describe('UsersService', () => {
         where: { userId: 'user-1', endpoint: 'http://test' },
       });
       expect(result).toEqual({ count: 1 });
+    });
+  });
+
+  describe('remove', () => {
+    const txMock = {
+      paymentHistory: { deleteMany: jest.fn() },
+      alert: { deleteMany: jest.fn() },
+      subscription: { deleteMany: jest.fn() },
+      pushSubscription: { deleteMany: jest.fn() },
+      user: { delete: jest.fn() },
+    };
+
+    beforeEach(() => {
+      prismaMock.$transaction.mockImplementation((cb) => cb(txMock));
+    });
+
+    it('should delete user and all related data when password is correct', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await service.remove('user-1', 'correct-pass');
+
+      expect(prismaMock.$transaction).toHaveBeenCalled();
+      expect(txMock.user.delete).toHaveBeenCalledWith({ where: { id: 'user-1' } });
+    });
+
+    it('should throw UnauthorizedException when password is incorrect', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+
+      await expect(service.remove('user-1', 'wrong-pass')).rejects.toThrow(UnauthorizedException);
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('should throw BadRequestException when password is missing for regular account', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+
+      await expect(service.remove('user-1')).rejects.toThrow(BadRequestException);
+    });
+
+    it('should delete social-only account without password check', async () => {
+      prismaMock.user.findUnique.mockResolvedValue({ ...mockUser, passwordHash: null });
+
+      await service.remove('user-1');
+
+      expect(prismaMock.$transaction).toHaveBeenCalled();
+      expect(txMock.user.delete).toHaveBeenCalled();
     });
   });
 });
