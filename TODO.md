@@ -346,7 +346,7 @@ full width
 - [x] Make colors in "Cost by Category" charts same as category colors in Settings.
 - [x] Make category badge colors in All Subscriptions table same as on Dashboard. Clean up code from redundant color definitions.
 - [x] Make main container background color a subtle gradient: top -> down, top color is as now, bottom color is slightly darker. Do it for all pages.
-- [ ] Bug: change color in Settings, switch to another tab and back to Settings, the color switches back to the old one. On page reload the color is correct (the new one). It doesn't matter how fast you switch to another tab after changing the color, or from another tab back to Settings. Bug doesn't happen when changing color, then switching to Dashboard and then to Subscriptions tab (or the other way), only when going to Settings tab from another tab.
+- [x] Bug: change color in Settings, switch to another tab and back to Settings, the color switches back to the old one. On page reload the color is correct (the new one). It doesn't matter how fast you switch to another tab after changing the color, or from another tab back to Settings. Bug doesn't happen when changing color, then switching to Dashboard and then to Subscriptions tab (or the other way), only when going to Settings tab from another tab.
 - [ ] In light mode make the toast backgrounds darker, and text on them black.
 - [ ] In light mode you can't see if Profile or Preferences subtab is selected in Settings
 - [ ] Analyze code and find large files that can be refactored into smaller files. Don't edit anything yet, just make a report.

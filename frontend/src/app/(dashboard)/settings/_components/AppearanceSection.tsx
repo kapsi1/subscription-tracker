@@ -123,7 +123,7 @@ import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 export function AppearanceSection() {
   const { t } = useTranslation();
   const { searchQuery } = useSettingsSearch();
-  const { user } = useAuth();
+  const { user, fetchUser } = useAuth();
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [currentAccent, setCurrentAccent] = useState<AccentColorType>(ACCENT_COLORS[0]);
   const [recentColors, setRecentColors] = useState<string[]>([]);
@@ -198,18 +198,24 @@ export function AppearanceSection() {
     [setTheme],
   );
 
-  const handleAccentSelect = useCallback((accent: AccentColorType) => {
-    if (!accent.name) return;
-    latestUnsavedHexRef.current = null;
-    pickerHexRef.current = null;
-    setCurrentAccent(accent);
-    applyAccentColor(accent);
+  const handleAccentSelect = useCallback(
+    (accent: AccentColorType) => {
+      if (!accent.name) return;
+      latestUnsavedHexRef.current = null;
+      pickerHexRef.current = null;
+      setCurrentAccent(accent);
+      applyAccentColor(accent);
 
-    localStorage.setItem('app-accent-color', accent.name);
-    api.patch('/users/settings', { accentColor: accent.name }).catch((error) => {
-      console.error('Failed to save accent color', error);
-    });
-  }, []);
+      localStorage.setItem('app-accent-color', accent.name);
+      api
+        .patch('/users/settings', { accentColor: accent.name })
+        .then(() => fetchUser())
+        .catch((error) => {
+          console.error('Failed to save accent color', error);
+        });
+    },
+    [fetchUser],
+  );
 
   const saveCustomColor = useCallback(
     async (hex: string, updateHistory: boolean) => {
@@ -229,12 +235,13 @@ export function AppearanceSection() {
           accentColor: hex,
           ...(updateHistory && updatedHistory ? { recentAccentColors: updatedHistory } : {}),
         });
+        await fetchUser();
       } catch (error) {
         console.error('Failed to save custom accent color', error);
         toast.error(t('settings.appearance.saveError'));
       }
     },
-    [t],
+    [t, fetchUser],
   );
 
   const lastUpdateRef = useRef<number>(0);
@@ -276,12 +283,15 @@ export function AppearanceSection() {
       pickerHexRef.current = null;
       // Save color only — do not update recent colors list
       localStorage.setItem('app-accent-color', hex);
-      api.patch('/users/settings', { accentColor: hex }).catch((error) => {
-        console.error('Failed to save accent color', error);
-        toast.error(t('settings.appearance.saveError'));
-      });
+      api
+        .patch('/users/settings', { accentColor: hex })
+        .then(() => fetchUser())
+        .catch((error) => {
+          console.error('Failed to save accent color', error);
+          toast.error(t('settings.appearance.saveError'));
+        });
     },
-    [t],
+    [t, fetchUser],
   );
 
   // Flush pending auto-save on unmount
