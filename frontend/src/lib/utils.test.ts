@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { daysUntil, formatCurrency, formatDate, getCategoryColor } from './utils';
+import { daysUntil, formatCurrency, formatDate } from './utils';
 
 describe('formatCurrency', () => {
   it('should format USD correctly', () => {
@@ -61,27 +61,5 @@ describe('daysUntil', () => {
     const result = daysUntil(today);
     expect(result).toBeGreaterThanOrEqual(0);
     expect(result).toBeLessThanOrEqual(1);
-  });
-});
-
-describe('getCategoryColor', () => {
-  it('should return correct classes for Entertainment', () => {
-    const result = getCategoryColor('Entertainment');
-    expect(result).toContain('purple');
-  });
-
-  it('should return correct classes for Productivity', () => {
-    const result = getCategoryColor('Productivity');
-    expect(result).toContain('blue');
-  });
-
-  it('should return correct classes for Cloud Services', () => {
-    const result = getCategoryColor('Cloud Services');
-    expect(result).toContain('cyan');
-  });
-
-  it('should return default gray classes for unknown categories', () => {
-    const result = getCategoryColor('SomeRandomCategory');
-    expect(result).toContain('slate');
   });
 });

@@ -2,7 +2,9 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Toaster } from './sonner';
 
-const sonnerMock = vi.fn((_props: { style?: Record<string, string> }) => <div data-testid="sonner-root" />);
+const sonnerMock = vi.fn((_props: { style?: Record<string, string> }) => (
+  <div data-testid="sonner-root" />
+));
 
 vi.mock('next-themes', () => ({
   useTheme: () => ({ theme: 'system', resolvedTheme: 'light' }),

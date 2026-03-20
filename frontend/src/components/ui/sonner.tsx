@@ -13,8 +13,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       richColors
       style={
-        (isLightTheme
-          ? {
+        isLightTheme
+          ? ({
               '--normal-bg': 'color-mix(in srgb, var(--card) 88%, var(--foreground) 12%)',
               '--normal-text': 'var(--foreground)',
               '--normal-border': 'color-mix(in srgb, var(--border) 72%, var(--foreground) 28%)',
@@ -30,8 +30,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
               '--warning-bg': 'color-mix(in srgb, #f59e0b 26%, white)',
               '--warning-border': 'color-mix(in srgb, #d97706 38%, white)',
               '--warning-text': 'var(--foreground)',
-            }
-          : {
+            } as React.CSSProperties)
+          : ({
               '--normal-bg': 'var(--popover)',
               '--normal-text': 'white',
               '--success-text': 'white',
@@ -39,7 +39,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
               '--info-text': 'white',
               '--warning-text': 'white',
               '--normal-border': 'var(--border)',
-            }) as React.CSSProperties
+            } as React.CSSProperties)
       }
       {...props}
     />

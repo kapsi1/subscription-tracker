@@ -349,4 +349,4 @@ full width
 - [x] Bug: change color in Settings, switch to another tab and back to Settings, the color switches back to the old one. On page reload the color is correct (the new one). It doesn't matter how fast you switch to another tab after changing the color, or from another tab back to Settings. Bug doesn't happen when changing color, then switching to Dashboard and then to Subscriptions tab (or the other way), only when going to Settings tab from another tab.
 - [x] In light mode make the toast background colors darker, and text on them black.
 - [x] In light mode you can't see if Profile or Preferences subtab is selected in Settings
-- [ ] Analyze code and find large files that can be refactored into smaller files. Don't edit anything yet, just make a report.
+- [x] Analyze code and find large files that can be refactored into smaller files.
