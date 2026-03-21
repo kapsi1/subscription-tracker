@@ -30,7 +30,9 @@ function SettingsLayoutContent({ children }: { children: React.ReactNode }) {
     <div className="w-full max-w-[1055px] mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-3xl font-semibold">{t('settings.title')}</h1>
+        <h1 className="text-3xl font-semibold">
+          {tabs.find((tab) => pathname === tab.href)?.label ?? tabs[0].label}
+        </h1>
 
         <div className="inline-flex items-center gap-1 rounded-lg border bg-muted p-1 self-start sm:self-auto">
           {tabs.map((tab) => (

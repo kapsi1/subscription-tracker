@@ -129,10 +129,9 @@
     "Charcoal": "Węglowy"
   },
   "subscriptions": {
-    "title": "Zarządzaj subskrypcjami",
     "subtitle": "Zarządzaj swoimi subskrypcjami",
     "pageTabs": {
-      "subscriptions": "Zarządzaj",
+      "subscriptions": "Zarządzaj subskrypcjami",
       "paymentHistory": "Historia płatności"
     },
     "history": {
@@ -269,7 +268,6 @@
     }
   },
   "settings": {
-    "title": "Ustawienia",
     "tabs": {
       "profile": "Profil",
       "preferences": "Preferencje"

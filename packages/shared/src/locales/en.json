@@ -127,7 +127,6 @@
     "Charcoal": "Charcoal"
   },
   "subscriptions": {
-    "title": "Manage Subscriptions",
     "subtitle": "Manage all your recurring subscriptions",
     "import": "Import",
     "export": "Export",
@@ -135,7 +134,7 @@
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
     "pageTabs": {
-      "subscriptions": "Manage",
+      "subscriptions": "Manage Subscriptions",
       "paymentHistory": "Payment History"
     },
     "history": {
@@ -261,7 +260,6 @@
     }
   },
   "settings": {
-    "title": "Settings",
     "tabs": {
       "profile": "Profile",
       "preferences": "Preferences"
