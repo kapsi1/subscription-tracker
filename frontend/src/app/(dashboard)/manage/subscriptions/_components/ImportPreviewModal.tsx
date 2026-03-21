@@ -14,11 +14,12 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
 
 interface ImportPreviewData {
   subscriptions?: Array<{ name: string; amount: number; currency: string }>;
-  categories?: Array<{ name: string }>;
-  payments?: Array<{ subscriptionName: string; amount: number; currency: string }>;
+  categories?: Array<{ name: string; color: string }>;
+  payments?: Array<{ subscriptionName: string; amount: number; currency: string; paidAt: string }>;
 }
 
 interface ImportPreviewModalProps {
@@ -47,7 +48,7 @@ export function ImportPreviewModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileJson className="w-5 h-5 text-primary" />
@@ -102,35 +103,91 @@ export function ImportPreviewModal({
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             <h4 className="text-sm font-medium flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
-              {t('subscriptions.importPreview.summary')}
+              {t('subscriptions.importPreview.itemsToImport')}
             </h4>
-            <div className="max-h-[120px] w-full rounded-md border p-2 overflow-y-auto">
-              <div className="space-y-1.5">
-                {data.subscriptions?.slice(0, 5).map((s) => (
-                  <div
-                    key={s.name}
-                    className="text-xs flex justify-between items-center py-1 border-b last:border-0 border-accent/50"
-                  >
-                    <span className="truncate max-w-[180px]">{s.name}</span>
-                    <span className="font-mono text-muted-foreground">
-                      {s.amount} {s.currency}
-                    </span>
+            
+            <div className="max-h-[300px] w-full rounded-md border p-4 overflow-y-auto space-y-6 bg-accent/10">
+              {/* Subscriptions Section */}
+              {subCount > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <CreditCard className="w-3 h-3" />
+                    {t('subscriptions.importPreview.subscriptions')}
+                  </h5>
+                  <div className="space-y-1">
+                    {data.subscriptions?.map((s, idx) => (
+                      <div
+                        key={`${s.name}-${idx}`}
+                        className="text-xs flex justify-between items-center py-1.5 border-b last:border-0 border-accent/50"
+                      >
+                        <span className="truncate font-medium">{s.name}</span>
+                        <span className="font-mono text-muted-foreground">
+                          {s.amount} {s.currency}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                {subCount > 5 && (
-                  <p className="text-[10px] text-center text-muted-foreground py-1 italic">
-                    + {subCount - 5} more items
-                  </p>
-                )}
-                {subCount === 0 && (
-                  <p className="text-xs text-center text-muted-foreground py-4">
-                    No subscriptions found in file
-                  </p>
-                )}
-              </div>
+                </div>
+              )}
+
+              {/* Categories Section */}
+              {catCount > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <LayoutGrid className="w-3 h-3" />
+                    {t('subscriptions.importPreview.categories')}
+                  </h5>
+                  <div className="flex flex-wrap gap-2">
+                    {data.categories?.map((c, idx) => (
+                      <Badge 
+                        key={`${c.name}-${idx}`} 
+                        variant="outline" 
+                        className="font-normal"
+                        style={{ borderLeftColor: c.color, borderLeftWidth: '4px' }}
+                      >
+                        {c.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Standalone Payments Section */}
+              {payCount > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                    <History className="w-3 h-3" />
+                    {t('subscriptions.importPreview.payments')}
+                  </h5>
+                  <div className="space-y-1">
+                    {data.payments?.map((p, idx) => (
+                      <div
+                        key={`${p.subscriptionName}-${idx}`}
+                        className="text-xs flex justify-between items-center py-1.5 border-b last:border-0 border-accent/50"
+                      >
+                        <div className="flex flex-col gap-0.5">
+                          <span className="truncate font-medium">{p.subscriptionName}</span>
+                          <span className="text-[10px] text-muted-foreground">
+                            {new Date(p.paidAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <span className="font-mono text-muted-foreground">
+                          {p.amount} {p.currency}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {(subCount === 0 && catCount === 0 && payCount === 0) && (
+                <p className="text-xs text-center text-muted-foreground py-8">
+                  No items found in file
+                </p>
+              )}
             </div>
           </div>
         </div>
