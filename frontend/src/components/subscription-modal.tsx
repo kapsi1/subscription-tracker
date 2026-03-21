@@ -351,8 +351,8 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[600px] max-h-screen p-0 flex flex-col">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle>
             {subscription ? t('subscriptions.modal.editTitle') : t('subscriptions.modal.addTitle')}
           </DialogTitle>
@@ -361,29 +361,31 @@ export function SubscriptionModal({
           </DialogDescription>
         </DialogHeader>
 
-        {isEditing ? (
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="w-full">
-              <TabsTrigger value="details" className="flex-1">
-                {t('subscriptions.modal.tabs.details')}
-              </TabsTrigger>
-              <TabsTrigger value="payments" className="flex-1">
-                {t('subscriptions.modal.tabs.payments')}
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="details">{detailsForm}</TabsContent>
-            <TabsContent value="payments">
-              {subscription && (
-                <PaymentHistoryTab
-                  subscriptionId={subscription.id}
-                  currency={subscription.currency}
-                />
-              )}
-            </TabsContent>
-          </Tabs>
-        ) : (
-          detailsForm
-        )}
+        <div className="flex-1 overflow-y-auto p-6 pt-0">
+          {isEditing ? (
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="w-full">
+                <TabsTrigger value="details" className="flex-1">
+                  {t('subscriptions.modal.tabs.details')}
+                </TabsTrigger>
+                <TabsTrigger value="payments" className="flex-1">
+                  {t('subscriptions.modal.tabs.payments')}
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="details">{detailsForm}</TabsContent>
+              <TabsContent value="payments">
+                {subscription && (
+                  <PaymentHistoryTab
+                    subscriptionId={subscription.id}
+                    currency={subscription.currency}
+                  />
+                )}
+              </TabsContent>
+            </Tabs>
+          ) : (
+            detailsForm
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
