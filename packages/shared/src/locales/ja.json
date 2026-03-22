@@ -175,7 +175,7 @@
     "search": "サービス名やカテゴリで検索...",
     "all": "すべてのサブスクリプション",
     "pageTabs": {
-      "subscriptions": "サブスクリプション管理",
+      "subscriptions": "サブスクリプション",
       "paymentHistory": "支払い履歴",
       "categories": "カテゴリ"
     },

@@ -175,7 +175,7 @@
     "search": "이름 또는 카테고리로 검색...",
     "all": "전체 구독 목록",
     "pageTabs": {
-      "subscriptions": "구독 관리",
+      "subscriptions": "구독",
       "paymentHistory": "결제 내역",
       "categories": "카테고리"
     },

@@ -175,7 +175,7 @@
     "search": "Rechercher des abonnements par nom ou catégorie...",
     "all": "Tous les Abonnements",
     "pageTabs": {
-      "subscriptions": "Gérer les Abonnements",
+      "subscriptions": "Abonnements",
       "paymentHistory": "Historique des paiements",
       "categories": "Catégories"
     },

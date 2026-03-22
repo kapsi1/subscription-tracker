@@ -175,7 +175,7 @@
     "search": "通过名称或分类搜索订阅...",
     "all": "所有订阅",
     "pageTabs": {
-      "subscriptions": "管理订阅",
+      "subscriptions": "订阅",
       "paymentHistory": "付款历史",
       "categories": "分类"
     },

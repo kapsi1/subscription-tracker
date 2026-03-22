@@ -175,7 +175,7 @@
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
     "pageTabs": {
-      "subscriptions": "Manage Subscriptions",
+      "subscriptions": "Subscriptions",
       "paymentHistory": "Payment History",
       "categories": "Categories"
     },
