@@ -180,58 +180,61 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <span className="font-semibold text-lg hidden sm:inline">SubTracker</span>
           </Link>
 
-          <nav className="ml-1 flex min-w-0 items-center gap-1 sm:ml-2 md:ml-4">
-            <Link href="/dashboard">
+          <nav className="ml-1 flex flex-1 sm:flex-none min-w-0 items-center gap-1 sm:ml-2 md:ml-4">
+            <Link href="/dashboard" className="flex-1 sm:flex-none">
               <Button
                 variant="ghost"
                 className={cn(
-                  'gap-2 px-2 min-[860px]:px-3 transition-colors',
+                  'w-full sm:w-auto h-10 sm:h-8 gap-2 px-2 min-[860px]:px-3 transition-colors',
                   pathname === '/dashboard' || pathname.startsWith('/dashboard/')
                     ? 'nav-item-active hover:bg-transparent font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}
                 size="sm"
               >
-                <LayoutDashboard className="w-4 h-4" />
+                <LayoutDashboard className="w-5 h-5 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">{t('nav.dashboard')}</span>
               </Button>
             </Link>
             <Link
               href="/manage"
-              className={user?.hasSeenManageHint === false ? 'animate-btn-glow' : undefined}
+              className={cn(
+                'flex-1 sm:flex-none',
+                user?.hasSeenManageHint === false ? 'animate-btn-glow' : undefined
+              )}
             >
               <Button
                 variant="ghost"
                 className={cn(
-                  'gap-2 px-2 min-[860px]:px-3 transition-colors',
+                  'w-full sm:w-auto h-10 sm:h-8 gap-2 px-2 min-[860px]:px-3 transition-colors',
                   pathname === '/manage' || pathname.startsWith('/manage/')
                     ? 'nav-item-active hover:bg-transparent font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}
                 size="sm"
               >
-                <ListChecks className="w-4 h-4" />
+                <ListChecks className="w-5 h-5 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">{t('nav.manage')}</span>
               </Button>
             </Link>
-            <Link href="/settings">
+            <Link href="/settings" className="flex-1 sm:flex-none">
               <Button
                 variant="ghost"
                 className={cn(
-                  'gap-2 px-2 min-[860px]:px-3 transition-colors',
+                  'w-full sm:w-auto h-10 sm:h-8 gap-2 px-2 min-[860px]:px-3 transition-colors',
                   pathname === '/settings' || pathname.startsWith('/settings/')
                     ? 'nav-item-active hover:bg-transparent font-medium'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                 )}
                 size="sm"
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-5 h-5 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">{t('nav.settings')}</span>
               </Button>
             </Link>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1 sm:gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

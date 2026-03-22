@@ -359,4 +359,4 @@
 - [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
 - [x] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
 - [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
-- [ ] Make the tab buttons in nav bar bigger on mobile devices. They should fill available space.
+- [x] Make the tab buttons in nav bar bigger on mobile devices. They should fill available space.
