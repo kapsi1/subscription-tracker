@@ -351,11 +351,11 @@
 - [ ] Push notifications not working on Opera
 - [ ] Push notifications not working when Chrome is not running
 - [ ] Email notifications on production
-- [ ] Default reminders
-- [ ] Budget threshold alerts
+- [x] Default reminders
+- [x] Budget threshold alerts
 - [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
-- [ ] Add more translations for major languages
+- [ ] Add more translations for major languages: German, Spanish, French, Italian, Portuguese, Russian, Chinese, Japanese, Korean
 - [ ] Improve UI & UX on small screens
 - [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
-- [ ] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
+- [x] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
 - [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
