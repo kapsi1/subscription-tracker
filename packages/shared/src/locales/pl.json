@@ -140,7 +140,8 @@
     "subtitle": "Zarządzaj swoimi subskrypcjami",
     "pageTabs": {
       "subscriptions": "Zarządzaj subskrypcjami",
-      "paymentHistory": "Historia płatności"
+      "paymentHistory": "Historia płatności",
+      "categories": "Kategorie"
     },
     "history": {
       "title": "Wszystkie płatności",

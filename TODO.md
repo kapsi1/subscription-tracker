@@ -359,8 +359,8 @@ full width
 - [x] Google Calendar export for subscriptions: in Subscriptions tab show a button to export each subscription row to Google Calendar. Skip the above-table bulk Google Calendar button because the app does not currently have Google Calendar API authorization/storage for exporting all subscriptions. Add unit and E2E tests.
 - [x] Show a translated string for Polish, for "Network error" in toast. Find other places with hardcoded strings and add translations for them.
 - [ ] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
-- [ ] After user's first login, add a glow/slow pulsate effect to the Manage Subscriptions button, to direct user's attention to it.
-- [ ] Move category management from Settings to Manage tab, as a new sub-tab.
+- [x] After user's first login, add a glow/slow pulsate effect to the Manage Subscriptions button, to direct user's attention to it.
+- [x] Move category management from Settings to Manage tab, as a new sub-tab.
 - [x] On tabs with sub-tabs, when changing sub-tab update the tab's title (<h1> element) to match the sub-tab name.
 - [x] Import data functionality: after a file is selected by user and validated, show a modal with a preview of the data to be imported. Let user confirm or cancel the import. Add a checkbox to replace existing data with imported data. Add unit and E2E tests.
 - [x] Clicking on a standalone payment in Dashboard shows an error. Instead it should open a modal with payment name, date, amount, and buttons to edit/delete. Make it look similar to Payment History in Edit Subscription. Title it "Payment Details". Also rename Edit Subscription modal to "Subscription Details". Add "Add Payment" button to Manage page, to the left of "Add Subscription".

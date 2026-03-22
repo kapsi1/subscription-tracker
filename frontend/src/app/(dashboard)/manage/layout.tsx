@@ -20,6 +20,11 @@ export default function ManageLayout({ children }: { children: React.ReactNode }
       label: t('subscriptions.pageTabs.paymentHistory'),
       href: '/manage/history',
     },
+    {
+      id: 'categories',
+      label: t('subscriptions.pageTabs.categories'),
+      href: '/manage/categories',
+    },
   ];
 
   return (

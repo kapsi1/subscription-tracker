@@ -26,6 +26,7 @@ import { IconPicker } from '@/components/IconPicker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { SearchHighlight } from './SettingsSearchContext';
 import api from '@/lib/api';
 
 interface CategoryRowProps {
@@ -157,13 +158,15 @@ function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps
   );
 }
 
+
 const EMPTY_CATEGORIES: Category[] = [];
 
-import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
+interface CategorySectionProps {
+  searchQuery?: string;
+}
 
-export function CategorySection() {
+export function CategorySection({ searchQuery = '' }: CategorySectionProps) {
   const { t } = useTranslation();
-  const { searchQuery } = useSettingsSearch();
   const queryClient = useQueryClient();
   const [newCategoryId, setNewCategoryId] = useState<string | null>(null);
 

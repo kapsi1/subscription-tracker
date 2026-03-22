@@ -36,19 +36,7 @@ export const SETTINGS_SECTIONS: SectionMetadata[] = [
       'settings.appearance.accentDesc',
     ],
   },
-  {
-    id: 'categories',
-    tab: 'preferences',
-    titleKey: 'settings.categories.title',
-    descKey: 'settings.categories.desc',
-    searchKeys: [
-      'settings.categories.addCategory',
-      'settings.categories.namePlaceholder',
-      'reorder',
-      'icons',
-      'colors',
-    ],
-  },
+
   {
     id: 'email',
     tab: 'preferences',
