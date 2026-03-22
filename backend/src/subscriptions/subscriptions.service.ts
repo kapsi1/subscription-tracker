@@ -13,8 +13,14 @@ export class SubscriptionsService {
   constructor(private prisma: PrismaService) {}
 
   async create(userId: string, createDto: CreateSubscriptionDto) {
-    if (createDto.billingCycle === BillingCycle.custom && !createDto.intervalDays) {
-      throw new BadRequestException('intervalDays is required for custom billing cycle');
+    if (
+      createDto.billingCycle === BillingCycle.custom &&
+      !createDto.intervalDays &&
+      (!createDto.billingDays || createDto.billingDays.length === 0)
+    ) {
+      throw new BadRequestException(
+        'intervalDays or billingDays is required for custom billing cycle',
+      );
     }
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
@@ -22,7 +28,14 @@ export class SubscriptionsService {
 
     const nextBillingDate = createDto.nextBillingDate
       ? new Date(createDto.nextBillingDate)
-      : calculateNextBillingDate(createDto.billingCycle, new Date(), createDto.intervalDays);
+      : calculateNextBillingDate(
+          createDto.billingCycle,
+          new Date(),
+          createDto.intervalDays,
+          createDto.billingDays,
+          createDto.billingMonthShortageOffset,
+          createDto.billingMonthShortageDirection as 'before' | 'after' | 'skip',
+        );
 
     return this.prisma.subscription.create({
       data: {
@@ -32,6 +45,9 @@ export class SubscriptionsService {
         currency: user.currency,
         billingCycle: createDto.billingCycle,
         intervalDays: createDto.intervalDays || null,
+        billingDays: createDto.billingDays || [],
+        billingMonthShortageOffset: createDto.billingMonthShortageOffset || 0,
+        billingMonthShortageDirection: createDto.billingMonthShortageDirection || 'before',
         category: createDto.category,
         nextBillingDate,
         reminderEnabled: createDto.reminderEnabled ?? user.defaultReminderEnabled,
@@ -87,6 +103,9 @@ export class SubscriptionsService {
         currency: sub.currency,
         billingCycle: sub.billingCycle,
         intervalDays: sub.intervalDays,
+        billingDays: sub.billingDays,
+        billingMonthShortageOffset: sub.billingMonthShortageOffset,
+        billingMonthShortageDirection: sub.billingMonthShortageDirection,
         category: sub.category,
         nextBillingDate: sub.nextBillingDate,
         reminderEnabled: sub.reminderEnabled,
@@ -155,16 +174,27 @@ export class SubscriptionsService {
       // 2. Import Subscriptions
       if (importDto.subscriptions?.length) {
         for (const sub of importDto.subscriptions) {
-          if (sub.billingCycle === BillingCycle.custom && !sub.intervalDays) {
+          if (
+            sub.billingCycle === BillingCycle.custom &&
+            !sub.intervalDays &&
+            (!sub.billingDays || sub.billingDays.length === 0)
+          ) {
             throw new BadRequestException(
-              `intervalDays is required for custom billing cycle on subscription: ${sub.name}`,
+              `intervalDays or billingDays is required for custom billing cycle on subscription: ${sub.name}`,
             );
           }
 
           const subId = crypto.randomUUID();
           const nextBillingDate = sub.nextBillingDate
             ? new Date(sub.nextBillingDate)
-            : calculateNextBillingDate(sub.billingCycle, new Date(), sub.intervalDays);
+            : calculateNextBillingDate(
+                sub.billingCycle,
+                new Date(),
+                sub.intervalDays,
+                sub.billingDays,
+                sub.billingMonthShortageOffset,
+                sub.billingMonthShortageDirection as 'before' | 'after' | 'skip',
+              );
 
           await tx.subscription.create({
             data: {
@@ -175,6 +205,9 @@ export class SubscriptionsService {
               currency: sub.currency || user.currency,
               billingCycle: sub.billingCycle,
               intervalDays: sub.intervalDays || null,
+              billingDays: sub.billingDays || [],
+              billingMonthShortageOffset: sub.billingMonthShortageOffset || 0,
+              billingMonthShortageDirection: sub.billingMonthShortageDirection || 'before',
               category: sub.category,
               nextBillingDate,
               reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
@@ -242,9 +275,24 @@ export class SubscriptionsService {
     const billingCycle = updateDto.billingCycle || existing.billingCycle;
     const intervalDays =
       updateDto.intervalDays !== undefined ? updateDto.intervalDays : existing.intervalDays;
+    const billingDays =
+      updateDto.billingDays !== undefined ? updateDto.billingDays : existing.billingDays;
+    const shortageOffset =
+      updateDto.billingMonthShortageOffset !== undefined
+        ? updateDto.billingMonthShortageOffset
+        : existing.billingMonthShortageOffset;
+    const shortageDirection =
+      (updateDto.billingMonthShortageDirection as 'before' | 'after' | 'skip') ||
+      existing.billingMonthShortageDirection;
 
-    if (billingCycle === BillingCycle.custom && !intervalDays) {
-      throw new BadRequestException('intervalDays is required for custom billing cycle');
+    if (
+      billingCycle === BillingCycle.custom &&
+      !intervalDays &&
+      (!billingDays || billingDays.length === 0)
+    ) {
+      throw new BadRequestException(
+        'intervalDays or billingDays is required for custom billing cycle',
+      );
     }
 
     // If nextBillingDate is provided in DTO, use it.
@@ -252,8 +300,15 @@ export class SubscriptionsService {
     let nextBillingDate = existing.nextBillingDate;
     if (updateDto.nextBillingDate) {
       nextBillingDate = new Date(updateDto.nextBillingDate);
-    } else if (updateDto.billingCycle || updateDto.intervalDays) {
-      nextBillingDate = calculateNextBillingDate(billingCycle, new Date(), intervalDays);
+    } else if (updateDto.billingCycle || updateDto.intervalDays || updateDto.billingDays) {
+      nextBillingDate = calculateNextBillingDate(
+        billingCycle,
+        new Date(),
+        intervalDays,
+        billingDays,
+        shortageOffset,
+        shortageDirection as 'before' | 'after' | 'skip',
+      );
     }
 
     return this.prisma.subscription.update({
@@ -273,7 +328,10 @@ export class SubscriptionsService {
           reminderDays: updateDto.reminderDays,
         }),
         billingCycle,
-        intervalDays,
+        intervalDays: intervalDays ?? null,
+        billingDays: billingDays ?? [],
+        billingMonthShortageOffset: shortageOffset,
+        billingMonthShortageDirection: shortageDirection,
         nextBillingDate,
       },
     });

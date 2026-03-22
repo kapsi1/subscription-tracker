@@ -31,6 +31,20 @@ export class CreateSubscriptionDto {
   @Min(1)
   intervalDays?: number;
 
+  @ValidateIf((o) => o.billingCycle === BillingCycle.custom)
+  @IsArray()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  billingDays?: number[];
+
+  @IsOptional()
+  @IsInt()
+  billingMonthShortageOffset?: number;
+
+  @IsOptional()
+  @IsString()
+  billingMonthShortageDirection?: string;
+
   @IsString()
   category!: string;
 

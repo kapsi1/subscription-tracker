@@ -165,6 +165,23 @@
       "serviceName": "Nazwa usługi",
       "currency": "Waluta"
     },
+    "customBilling": {
+      "title": "Własne dni płatności",
+      "desc": "Wybierz dni miesiąca dla tej subskrypcji",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "tooltip": "Dni płatności: {{days}}",
+      "label_one": "Własny: {{count}} dzień",
+      "label_few": "Własny: {{count}} dni",
+      "label_many": "Własny: {{count}} dni",
+      "label_other": "Własny: {{count}} dni",
+      "shortMonth": "Jeśli miesiąc jest krótszy niż wybrany dzień, ustaw płatność na:",
+      "days": "dni",
+      "before": "przed",
+      "after": "po",
+      "skip": "Nie płać",
+      "theSelectedDay": "wybranym dniu"
+    },
     "search": "Szukaj subskrypcji po nazwie lub kategorii...",
     "all": "Wszystkie subskrypcje",
     "foundCount_one": "Znaleziono {{count}} subskrypcję",
@@ -251,7 +268,7 @@
       "billingCycles": {
         "monthly": "Miesięcznie",
         "yearly": "Rocznie",
-        "custom": "Własny"
+        "custom": "Własny..."
       },
       "tabs": {
         "details": "Szczegóły",

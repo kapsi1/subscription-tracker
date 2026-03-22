@@ -76,6 +76,7 @@ export class PaymentsService {
           sub.billingCycle,
           sub.nextBillingDate,
           sub.intervalDays,
+          sub.billingDays,
         );
 
         // Update subscription

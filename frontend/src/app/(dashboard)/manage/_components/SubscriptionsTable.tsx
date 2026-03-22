@@ -1,13 +1,5 @@
 import type { Category, Subscription } from '@subtracker/shared';
-import {
-  ArrowUpDown,
-  CalendarPlus,
-  ChevronDown,
-  ChevronUp,
-  Pencil,
-  Tag,
-  Trash2,
-} from 'lucide-react';
+import { ArrowUpDown, CalendarPlus, ChevronDown, ChevronUp, Tag, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DynamicIcon } from '@/components/DynamicIcon';
@@ -193,7 +185,26 @@ export function SubscriptionsTable({
                     {formatCurrency(subscription.amount, subscription.currency)}
                   </TableCell>
                   <TableCell>
-                    {t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)}
+                    {subscription.billingCycle === 'custom' && subscription.billingDays?.length ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-help underline decoration-dotted underline-offset-4">
+                              {t('subscriptions.customBilling.label', {
+                                count: subscription.billingDays.length,
+                              })}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {t('subscriptions.customBilling.tooltip', {
+                              days: subscription.billingDays.join(', '),
+                            })}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      t(`subscriptions.modal.billingCycles.${subscription.billingCycle}`)
+                    )}
                   </TableCell>
                   <TableCell>
                     {subscription.nextBillingDate

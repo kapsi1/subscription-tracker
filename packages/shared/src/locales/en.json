@@ -140,6 +140,21 @@
       "serviceName": "Service Name",
       "currency": "Currency"
     },
+    "customBilling": {
+      "title": "Custom Billing Days",
+      "desc": "Select days of the month for this subscription",
+      "save": "Save",
+      "cancel": "Cancel",
+      "tooltip": "Billed on: {{days}}",
+      "label_one": "Custom: {{count}} day",
+      "label_other": "Custom: {{count}} days",
+      "shortMonth": "If the month is shorter than the selected day, set payment to:",
+      "days": "day(s)",
+      "before": "before",
+      "after": "after",
+      "skip": "Don't pay",
+      "theSelectedDay": "the selected day"
+    },
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
     "pageTabs": {
@@ -243,7 +258,7 @@
       "billingCycles": {
         "monthly": "Monthly",
         "yearly": "Yearly",
-        "custom": "Custom"
+        "custom": "Custom..."
       },
       "tabs": {
         "details": "Details",

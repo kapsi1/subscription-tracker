@@ -4,6 +4,10 @@ export interface Subscription {
   amount: number;
   currency: string;
   billingCycle: string;
+  intervalDays?: number | null;
+  billingDays?: number[];
+  billingMonthShortageOffset?: number;
+  billingMonthShortageDirection?: 'before' | 'after' | 'skip';
   nextBillingDate?: string;
   category: string;
   isActive?: boolean;

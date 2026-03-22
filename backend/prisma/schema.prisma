@@ -68,6 +68,9 @@ model Subscription {
   currency        String
   billingCycle    BillingCycle
   intervalDays    Int?
+  billingDays     Int[]            @default([])
+  billingMonthShortageOffset Int     @default(0)
+  billingMonthShortageDirection String @default("before")
   nextBillingDate DateTime
   category        String
   isActive        Boolean          @default(true)

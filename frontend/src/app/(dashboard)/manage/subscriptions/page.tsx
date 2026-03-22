@@ -288,7 +288,11 @@ export default function ManageSubscriptionsPage() {
             <Download className="w-4 h-4" />
             {t('subscriptions.export')}
           </Button>
-          <Button variant="outline" onClick={() => setAddPaymentOpen(true)} className="gap-2 shrink-0">
+          <Button
+            variant="outline"
+            onClick={() => setAddPaymentOpen(true)}
+            className="gap-2 shrink-0"
+          >
             <Plus className="w-4 h-4" />
             {t('subscriptions.addPayment')}
           </Button>
@@ -325,11 +329,7 @@ export default function ManageSubscriptionsPage() {
         onSave={handleSave}
       />
 
-      <PaymentDetailsModal
-        open={addPaymentOpen}
-        onOpenChange={setAddPaymentOpen}
-        payment={null}
-      />
+      <PaymentDetailsModal open={addPaymentOpen} onOpenChange={setAddPaymentOpen} payment={null} />
 
       <ImportPreviewModal
         open={previewModalOpen}

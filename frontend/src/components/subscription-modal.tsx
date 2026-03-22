@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '@/lib/api';
 import { useAuth } from './auth-provider';
+import { CustomBillingModal } from './custom-billing-modal';
 import { PaymentHistoryTab } from './payment-history-tab';
 import { Button } from './ui/button';
 import {
@@ -19,6 +20,7 @@ import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Switch } from './ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 interface SubscriptionModalProps {
   open: boolean;
@@ -57,7 +59,11 @@ export function SubscriptionModal({
     nextBillingDate: new Date().toISOString().split('T')[0],
     reminderEnabled: true,
     reminderDays: '3',
+    billingDays: [] as number[],
+    billingMonthShortageOffset: 0,
+    billingMonthShortageDirection: 'before' as 'before' | 'after' | 'skip',
   });
+  const [customBillingOpen, setCustomBillingOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -75,6 +81,10 @@ export function SubscriptionModal({
           : new Date().toISOString().split('T')[0],
         reminderEnabled: subscription.reminderEnabled ?? true,
         reminderDays: (subscription.reminderDays ?? 3).toString(),
+        billingDays: subscription.billingDays ?? [],
+        billingMonthShortageOffset: subscription.billingMonthShortageOffset ?? 0,
+        billingMonthShortageDirection:
+          (subscription.billingMonthShortageDirection as 'before' | 'after' | 'skip') ?? 'before',
       });
     } else if (!subscription && open) {
       setFormData({
@@ -85,6 +95,9 @@ export function SubscriptionModal({
         nextBillingDate: new Date().toISOString().split('T')[0],
         reminderEnabled: user?.defaultReminderEnabled ?? true,
         reminderDays: (user?.defaultReminderDays ?? 3).toString(),
+        billingDays: [],
+        billingMonthShortageOffset: 0,
+        billingMonthShortageDirection: 'before',
       });
       setIsSubmitted(false);
       setErrors({});
@@ -135,6 +148,9 @@ export function SubscriptionModal({
         nextBillingDate: formData.nextBillingDate,
         reminderEnabled: formData.reminderEnabled,
         reminderDays: parseInt(formData.reminderDays, 10),
+        billingDays: formData.billingDays,
+        billingMonthShortageOffset: formData.billingMonthShortageOffset,
+        billingMonthShortageDirection: formData.billingMonthShortageDirection,
       });
     } catch (_err: unknown) {
       // Backend handles currency
@@ -228,22 +244,64 @@ export function SubscriptionModal({
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label htmlFor="billingCycle">{t('subscriptions.modal.billingCycle')}</Label>
-            <Select
-              name="billingCycle"
-              value={formData.billingCycle}
-              onValueChange={(value) => setFormData({ ...formData, billingCycle: value })}
-            >
-              <SelectTrigger id="billingCycle">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {billingCycles.map((cycle) => (
-                  <SelectItem key={cycle.value} value={cycle.value}>
-                    {t(`subscriptions.modal.billingCycles.${cycle.value}`)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <TooltipProvider>
+              <Tooltip
+                open={
+                  formData.billingCycle === 'custom' && formData.billingDays.length > 0
+                    ? undefined
+                    : false
+                }
+              >
+                <TooltipTrigger asChild>
+                  <div>
+                    <Select
+                      name="billingCycle"
+                      value={formData.billingCycle}
+                      onValueChange={(value) => {
+                        setFormData({ ...formData, billingCycle: value });
+                        if (value === 'custom') {
+                          setCustomBillingOpen(true);
+                        }
+                      }}
+                    >
+                      <SelectTrigger id="billingCycle">
+                        <SelectValue>
+                          {formData.billingCycle === 'custom' && formData.billingDays.length > 0
+                            ? t('subscriptions.customBilling.label', {
+                                count: formData.billingDays.length,
+                              })
+                            : t(`subscriptions.modal.billingCycles.${formData.billingCycle}`)}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {billingCycles.map((cycle) => (
+                          <SelectItem key={cycle.value} value={cycle.value}>
+                            {t(`subscriptions.modal.billingCycles.${cycle.value}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {t('subscriptions.customBilling.tooltip', {
+                      days: formData.billingDays.join(', '),
+                    })}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {formData.billingCycle === 'custom' && (
+              <Button
+                type="button"
+                variant="link"
+                className="h-auto p-0 text-xs"
+                onClick={() => setCustomBillingOpen(true)}
+              >
+                {t('subscriptions.customBilling.title')}
+              </Button>
+            )}
           </div>
 
           <div className="space-y-2 col-span-2">
@@ -388,6 +446,31 @@ export function SubscriptionModal({
           )}
         </div>
       </DialogContent>
+      <CustomBillingModal
+        open={customBillingOpen}
+        onOpenChange={(open) => {
+          setCustomBillingOpen(open);
+          if (!open) {
+            setFormData((prev) => {
+              if (prev.billingDays.length === 0) {
+                return { ...prev, billingCycle: 'monthly' };
+              }
+              return prev;
+            });
+          }
+        }}
+        days={formData.billingDays}
+        shortageOffset={formData.billingMonthShortageOffset}
+        shortageDirection={formData.billingMonthShortageDirection}
+        onSave={(days, offset, direction) =>
+          setFormData((prev) => ({
+            ...prev,
+            billingDays: days,
+            billingMonthShortageOffset: offset,
+            billingMonthShortageDirection: direction,
+          }))
+        }
+      />
     </Dialog>
   );
 }

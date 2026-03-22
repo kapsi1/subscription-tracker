@@ -1,7 +1,7 @@
 {
   "name": "subtracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "Track your subscriptions",
   "main": "index.js",
   "scripts": {
     "build": "pnpm -r build",
@@ -14,12 +14,11 @@
     "dev:frontend": "pnpm --filter frontend dev",
     "lint": "biome check .",
     "lint:write": "biome check --write .",
-    "tsc": "tsc --noEmit",
+    "tsc": "pnpm --filter backend tsc --noEmit && pnpm --filter frontend tsc --noEmit",
     "e2e": "node scripts/run-e2e.mjs",
     "e2e:ui": "node scripts/run-e2e.mjs --ui",
     "test:all": "node scripts/test-all.mjs"
   },
-  "keywords": [],
   "author": "Kamil Kapsiak",
   "license": "MIT",
   "packageManager": "pnpm@10.32.1",

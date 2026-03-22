@@ -1,5 +1,6 @@
 import { BillingCycle } from '@prisma/client';
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsInt,
@@ -30,6 +31,21 @@ export class UpdateSubscriptionDto {
   @IsInt()
   @Min(1)
   intervalDays?: number;
+
+  @ValidateIf((o) => o.billingCycle === BillingCycle.custom)
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  billingDays?: number[];
+
+  @IsOptional()
+  @IsInt()
+  billingMonthShortageOffset?: number;
+
+  @IsOptional()
+  @IsString()
+  billingMonthShortageDirection?: string;
 
   @IsOptional()
   @IsString()

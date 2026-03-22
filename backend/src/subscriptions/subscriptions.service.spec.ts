@@ -1,14 +1,14 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { SubscriptionsService } from './subscriptions.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { BillingCycle } from '@prisma/client';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { SubscriptionsService } from './subscriptions.service';
 
 describe('SubscriptionsService', () => {
   let service: SubscriptionsService;
-  let prisma: PrismaService;
 
-  const mockPrisma = {
+  // biome-ignore lint/suspicious/noExplicitAny: Mock type
+  const mockPrisma: any = {
     user: {
       findUnique: jest.fn(),
     },
@@ -30,14 +30,10 @@ describe('SubscriptionsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        SubscriptionsService,
-        { provide: PrismaService, useValue: mockPrisma },
-      ],
+      providers: [SubscriptionsService, { provide: PrismaService, useValue: mockPrisma }],
     }).compile();
 
     service = module.get<SubscriptionsService>(SubscriptionsService);
-    prisma = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
@@ -63,7 +59,8 @@ describe('SubscriptionsService', () => {
     it('should delete existing data if replace is true', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({ id: userId, currency: 'USD' });
 
-      await service.import(userId, importDto as any);
+      // biome-ignore lint/suspicious/noExplicitAny: DTO type override
+      await service.import(userId, importDto as unknown as any);
 
       expect(mockPrisma.subscription.deleteMany).toHaveBeenCalledWith({ where: { userId } });
       expect(mockPrisma.category.deleteMany).toHaveBeenCalledWith({ where: { userId } });
@@ -75,7 +72,8 @@ describe('SubscriptionsService', () => {
       mockPrisma.user.findUnique.mockResolvedValue({ id: userId, currency: 'USD' });
       mockPrisma.subscription.deleteMany.mockClear();
 
-      await service.import(userId, { ...importDto, replace: false } as any);
+      // biome-ignore lint/suspicious/noExplicitAny: DTO type override
+      await service.import(userId, { ...importDto, replace: false } as unknown as any);
 
       expect(mockPrisma.subscription.deleteMany).not.toHaveBeenCalled();
       expect(mockPrisma.subscription.create).toHaveBeenCalled();
@@ -84,7 +82,10 @@ describe('SubscriptionsService', () => {
     it('should throw NotFoundException if user not found', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.import(userId, importDto as any)).rejects.toThrow(NotFoundException);
+      // biome-ignore lint/suspicious/noExplicitAny: DTO type override
+      await expect(service.import(userId, importDto as unknown as any)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

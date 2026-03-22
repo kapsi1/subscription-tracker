@@ -1,6 +1,12 @@
 'use client';
 
-import type { Category, DashboardSummary, ForecastItem, PaymentHistory, Subscription } from '@subtracker/shared';
+import type {
+  Category,
+  DashboardSummary,
+  ForecastItem,
+  PaymentHistory,
+  Subscription,
+} from '@subtracker/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -163,7 +169,14 @@ export default function DashboardPage() {
           monthlyPayments={monthlyPayments}
           onEdit={handleEditSubscription}
           onViewPayment={(p) => {
-            setViewingPayment({ id: p.id, subscriptionId: null, subscriptionName: p.name, amount: p.amount, currency: p.currency, paidAt: p.date });
+            setViewingPayment({
+              id: p.id,
+              subscriptionId: null,
+              subscriptionName: p.name,
+              amount: p.amount,
+              currency: p.currency,
+              paidAt: p.date,
+            });
             setPaymentModalOpen(true);
           }}
         />

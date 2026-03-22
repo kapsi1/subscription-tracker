@@ -3,6 +3,7 @@
 import { CheckCircle2, CreditCard, FileJson, History, LayoutGrid } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,7 +15,6 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
 
 interface ImportPreviewData {
   subscriptions?: Array<{ name: string; amount: number; currency: string }>;
@@ -108,7 +108,7 @@ export function ImportPreviewModal({
               <CheckCircle2 className="w-4 h-4 text-green-500" />
               {t('subscriptions.importPreview.itemsToImport')}
             </h4>
-            
+
             <div className="max-h-[300px] w-full rounded-md border p-4 overflow-y-auto space-y-6 bg-accent/10">
               {/* Subscriptions Section */}
               {subCount > 0 && (
@@ -118,9 +118,9 @@ export function ImportPreviewModal({
                     {t('subscriptions.importPreview.subscriptions')}
                   </h5>
                   <div className="space-y-1">
-                    {data.subscriptions?.map((s, idx) => (
+                    {data.subscriptions?.map((s) => (
                       <div
-                        key={`${s.name}-${idx}`}
+                        key={`${s.name}-${Math.random().toString(36).substring(2, 9)}`}
                         className="text-xs flex justify-between items-center py-1.5 border-b last:border-0 border-accent/50"
                       >
                         <span className="truncate font-medium">{s.name}</span>
@@ -141,10 +141,10 @@ export function ImportPreviewModal({
                     {t('subscriptions.importPreview.categories')}
                   </h5>
                   <div className="flex flex-wrap gap-2">
-                    {data.categories?.map((c, idx) => (
-                      <Badge 
-                        key={`${c.name}-${idx}`} 
-                        variant="outline" 
+                    {data.categories?.map((c) => (
+                      <Badge
+                        key={`${c.name}-${Math.random().toString(36).substring(2, 9)}`}
+                        variant="outline"
                         className="font-normal"
                         style={{ borderLeftColor: c.color, borderLeftWidth: '4px' }}
                       >
@@ -163,9 +163,9 @@ export function ImportPreviewModal({
                     {t('subscriptions.importPreview.payments')}
                   </h5>
                   <div className="space-y-1">
-                    {data.payments?.map((p, idx) => (
+                    {data.payments?.map((p) => (
                       <div
-                        key={`${p.subscriptionName}-${idx}`}
+                        key={`${p.subscriptionName}-${Math.random().toString(36).substring(2, 9)}`}
                         className="text-xs flex justify-between items-center py-1.5 border-b last:border-0 border-accent/50"
                       >
                         <div className="flex flex-col gap-0.5">
@@ -183,7 +183,7 @@ export function ImportPreviewModal({
                 </div>
               )}
 
-              {(subCount === 0 && catCount === 0 && payCount === 0) && (
+              {subCount === 0 && catCount === 0 && payCount === 0 && (
                 <p className="text-xs text-center text-muted-foreground py-8">
                   No items found in file
                 </p>

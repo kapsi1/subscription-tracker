@@ -362,3 +362,5 @@ full width
 - [x] Import data functionality: after a file is selected by user and validated, show a modal with a preview of the data to be imported. Let user confirm or cancel the import. Add a checkbox to replace existing data with imported data. Add unit and E2E tests.
 - [x] Clicking on a standalone payment in Dashboard shows an error. Instead it should open a modal with payment name, date, amount, and buttons to edit/delete. Make it look similar to Payment History in Edit Subscription. Title it "Payment Details". Also rename Edit Subscription modal to "Subscription Details". Add "Add Payment" button to Manage page, to the left of "Add Subscription".
 - [x] Edit subscription modal can be cut off if screen height is small. Add a scrollbar to the modal.
+- [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
+- [ ] Find instances of Primary (Save/Add Subscription etc) and Cancel button pairs and make them consistent - primary on the right, cancel on the left. Make styles and distance between them be consistent too.

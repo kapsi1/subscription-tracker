@@ -22,7 +22,11 @@ interface PaymentsHistoryTableProps {
 
 type SortKey = 'paidAt' | 'subscriptionName' | 'amount';
 
-export function PaymentsHistoryTable({ payments, searchQuery, onRowClick }: PaymentsHistoryTableProps) {
+export function PaymentsHistoryTable({
+  payments,
+  searchQuery,
+  onRowClick,
+}: PaymentsHistoryTableProps) {
   const { t } = useTranslation();
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'asc' | 'desc' }>({
     key: 'paidAt',
