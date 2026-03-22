@@ -30,6 +30,37 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
+function makeUser(overrides: Partial<User> = {}): User {
+  return {
+    id: '1',
+    email: 'test@example.com',
+    name: 'Test User',
+    language: 'en',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    defaultReminderEnabled: true,
+    defaultReminderDays: 3,
+    monthlyBudget: null,
+    lastBudgetAlertSentAt: null,
+    theme: 'system',
+    accentColor: 'Indigo',
+    recentAccentColors: [],
+    emailNotifications: true,
+    webhookEnabled: false,
+    webhookUrl: null,
+    dailyDigest: false,
+    weeklyReport: false,
+    dashboardSortBy: 'date',
+    dashboardSortOrder: 'asc',
+    showPaidPayments: true,
+    hasSeenManageHint: false,
+    currency: 'USD',
+    avatarUrl: null,
+    googleId: null,
+    ...overrides,
+  };
+}
+
 const mockLogout = vi.fn();
 const defaultAuthValue: AuthContextType = {
   user: null,
@@ -83,7 +114,7 @@ describe('DeleteAccountSection', () => {
   it('requires password for regular accounts', async () => {
     vi.mocked(useAuth).mockReturnValue({
       ...defaultAuthValue,
-      user: { id: '1', email: 'test@example.com', googleId: null } as User,
+      user: makeUser(),
     });
     vi.mocked(api.delete).mockResolvedValue({});
 
@@ -95,9 +126,7 @@ describe('DeleteAccountSection', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
 
-    const passwordInput = await screen.findByPlaceholderText(
-      'settings.deleteAccount.passwordPlaceholder',
-    );
+    const passwordInput = await screen.findByLabelText(/settings\.deleteAccount\.passwordLabel/i);
     expect(passwordInput).toBeInTheDocument();
 
     const confirmButton = screen.getByRole('button', {
@@ -122,7 +151,7 @@ describe('DeleteAccountSection', () => {
   it('does not require password for Google accounts', async () => {
     vi.mocked(useAuth).mockReturnValue({
       ...defaultAuthValue,
-      user: { id: '1', email: 'test@example.com', googleId: 'google-1' } as User,
+      user: makeUser({ googleId: 'google-1' }),
     });
     vi.mocked(api.delete).mockResolvedValue({});
 
@@ -158,7 +187,7 @@ describe('DeleteAccountSection', () => {
   it('shows error toast on incorrect password', async () => {
     vi.mocked(useAuth).mockReturnValue({
       ...defaultAuthValue,
-      user: { id: '1', email: 'test@example.com', googleId: null } as User,
+      user: makeUser(),
     });
 
     // Simulate axios 401 response
@@ -178,9 +207,7 @@ describe('DeleteAccountSection', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
-    const passwordInput = await screen.findByPlaceholderText(
-      'settings.deleteAccount.passwordPlaceholder',
-    );
+    const passwordInput = await screen.findByLabelText(/settings\.deleteAccount\.passwordLabel/i);
     fireEvent.change(passwordInput, { target: { value: 'wrong-pass' } });
     fireEvent.click(
       screen.getByRole('button', { name: /settings\.deleteAccount\.confirmButton/i }),
@@ -194,7 +221,7 @@ describe('DeleteAccountSection', () => {
   it('closes the dialog and clears password when cancel is clicked', async () => {
     vi.mocked(useAuth).mockReturnValue({
       ...defaultAuthValue,
-      user: { id: '1', email: 'test@example.com', googleId: null } as User,
+      user: makeUser(),
     });
 
     render(
@@ -204,9 +231,7 @@ describe('DeleteAccountSection', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
-    const passwordInput = await screen.findByPlaceholderText(
-      'settings.deleteAccount.passwordPlaceholder',
-    );
+    const passwordInput = await screen.findByLabelText(/settings\.deleteAccount\.passwordLabel/i);
     fireEvent.change(passwordInput, { target: { value: 'some-pass' } });
 
     const cancelButton = screen.getByRole('button', {
@@ -220,8 +245,8 @@ describe('DeleteAccountSection', () => {
 
     // Re-open and check password is empty
     fireEvent.click(screen.getByRole('button', { name: /settings\.deleteAccount\.button/i }));
-    const newPasswordInput = await screen.findByPlaceholderText(
-      'settings.deleteAccount.passwordPlaceholder',
+    const newPasswordInput = await screen.findByLabelText(
+      /settings\.deleteAccount\.passwordLabel/i,
     );
     expect((newPasswordInput as HTMLInputElement).value).toBe('');
   });

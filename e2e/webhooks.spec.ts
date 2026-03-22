@@ -54,9 +54,8 @@ test.describe('Webhooks', () => {
 
     try {
       // 3. Navigate to Settings
-      await page.goto('/settings');
-      await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
-      await page.getByRole('button', { name: 'Preferences' }).click();
+      await page.goto('/settings/preferences');
+      await expect(page.getByRole('heading', { name: 'Preferences', exact: true })).toBeVisible();
 
       // 4. Enable Webhook
       const webhookCard = page.locator('div.shadow-sm', { hasText: 'Webhook Integration' }).last();

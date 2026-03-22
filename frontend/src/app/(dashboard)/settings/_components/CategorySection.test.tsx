@@ -15,9 +15,13 @@ vi.mock('@/lib/api', () => ({
   },
 }));
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
-}));
+vi.mock('react-i18next', async () => {
+  const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next');
+  return {
+    ...actual,
+    useTranslation: () => ({ t: (key: string) => key }),
+  };
+});
 
 vi.mock('sonner', () => ({
   toast: { error: vi.fn(), success: vi.fn() },

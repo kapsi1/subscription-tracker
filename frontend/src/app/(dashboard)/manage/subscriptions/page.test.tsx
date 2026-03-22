@@ -1,39 +1,53 @@
 'use client';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider, useMutation, useQuery } from '@tanstack/react-query';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import api from '@/lib/api';
 import ManageSubscriptionsPage from './page';
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
+vi.mock('react-i18next', async () => {
+  const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next');
+  return {
+    ...actual,
+    useTranslation: () => ({
+      t: (key: string) => key,
+    }),
+  };
+});
 
-jest.mock('@/lib/api');
-jest.mock('@tanstack/react-query', () => {
-  const original = jest.requireActual('@tanstack/react-query');
+vi.mock('@/lib/api', () => ({
+  default: {
+    post: vi.fn(),
+  },
+}));
+vi.mock('@tanstack/react-query', async () => {
+  const original =
+    await vi.importActual<typeof import('@tanstack/react-query')>('@tanstack/react-query');
   return {
     ...original,
-    useQuery: jest.fn(),
-    useMutation: jest.fn(),
+    useQuery: vi.fn(),
+    useMutation: vi.fn(),
   };
 });
 
 describe('ManageSubscriptionsPage - Import Flow', () => {
   let queryClient: QueryClient;
 
+  afterEach(() => {
+    cleanup();
+    vi.clearAllMocks();
+  });
+
   beforeEach(() => {
     queryClient = new QueryClient();
-    (useQuery as jest.Mock).mockReturnValue({
+    vi.mocked(useQuery).mockReturnValue({
       data: [],
       isLoading: false,
-    });
-    (useMutation as jest.Mock).mockReturnValue({
-      mutate: jest.fn(),
-    });
+    } as never);
+    vi.mocked(useMutation).mockReturnValue({
+      mutate: vi.fn(),
+    } as never);
   });
 
   it('should show import preview modal when valid file is selected', async () => {
@@ -57,7 +71,7 @@ describe('ManageSubscriptionsPage - Import Flow', () => {
       </QueryClientProvider>,
     );
 
-    const input = screen.getByLabelText('Import subscriptions from JSON');
+    const input = screen.getAllByLabelText('Import subscriptions from JSON')[0];
     const file = new File([JSON.stringify(mockJson)], 'test.json', { type: 'application/json' });
 
     Object.defineProperty(input, 'files', {
@@ -91,7 +105,7 @@ describe('ManageSubscriptionsPage - Import Flow', () => {
       </QueryClientProvider>,
     );
 
-    const input = screen.getByLabelText('Import subscriptions from JSON');
+    const input = screen.getAllByLabelText('Import subscriptions from JSON')[0];
     const file = new File([JSON.stringify(mockJson)], 'test.json', { type: 'application/json' });
 
     Object.defineProperty(input, 'files', {

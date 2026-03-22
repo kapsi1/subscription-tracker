@@ -1,0 +1,208 @@
+'use client';
+
+import { CalendarDays } from 'lucide-react';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn, formatCurrency } from '@/lib/utils';
+import type { MonthlyPayment } from './MonthlyPayments';
+
+interface MonthlyPaymentsCalendarProps {
+  monthlyPayments: MonthlyPayment[];
+  selectedDate: Date;
+  onSelectDay: (date: Date, payments: MonthlyPayment[]) => void;
+}
+
+function getLocalDateKey(dateValue: Date | string) {
+  const date = new Date(dateValue);
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function getFirstDayOfWeek(locale: string) {
+  try {
+    const weekInfo = (
+      new Intl.Locale(locale) as Intl.Locale & {
+        weekInfo?: { firstDay: number };
+      }
+    ).weekInfo;
+    if (weekInfo) {
+      return weekInfo.firstDay % 7;
+    }
+  } catch {
+    // Fallback below
+  }
+
+  return locale.startsWith('en') ? 0 : 1;
+}
+
+export function MonthlyPaymentsCalendar({
+  monthlyPayments,
+  selectedDate,
+  onSelectDay,
+}: MonthlyPaymentsCalendarProps) {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language || 'en';
+
+  const paymentsByDay = useMemo(() => {
+    return monthlyPayments.reduce<Record<string, MonthlyPayment[]>>((accumulator, payment) => {
+      const dayKey = getLocalDateKey(payment.date);
+      accumulator[dayKey] ??= [];
+      accumulator[dayKey].push(payment);
+      return accumulator;
+    }, {});
+  }, [monthlyPayments]);
+
+  const firstDayOfWeek = useMemo(() => getFirstDayOfWeek(locale), [locale]);
+
+  const weekdayLabels = useMemo(() => {
+    const formatter = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+    const baseSunday = new Date(Date.UTC(2024, 0, 7));
+
+    return Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(baseSunday);
+      date.setUTCDate(baseSunday.getUTCDate() + ((firstDayOfWeek + index) % 7));
+      return formatter.format(date);
+    });
+  }, [firstDayOfWeek, locale]);
+
+  const calendarDays = useMemo(() => {
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+    const firstOfMonth = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const offset = (firstOfMonth.getDay() - firstDayOfWeek + 7) % 7;
+    const todayKey = getLocalDateKey(new Date());
+
+    return [
+      ...Array.from({ length: offset }, (_, i) => ({
+        gridKey: `empty-${i}`,
+        isEmpty: true as const,
+      })),
+      ...Array.from({ length: daysInMonth }, (_, index) => {
+        const date = new Date(year, month, index + 1);
+        const dayKey = getLocalDateKey(date);
+
+        return {
+          date,
+          dayKey,
+          dayNumber: index + 1,
+          isToday: dayKey === todayKey,
+          payments: paymentsByDay[dayKey] ?? [],
+        };
+      }),
+    ];
+  }, [firstDayOfWeek, paymentsByDay, selectedDate]);
+
+  const formatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }),
+    [locale],
+  );
+
+  return (
+    <Card className="min-w-0 shadow-sm">
+      <CardHeader>
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border bg-muted/60">
+            <CalendarDays className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <div className="min-w-0">
+            <CardTitle>{t('dashboard.paymentCalendarTitle')}</CardTitle>
+            <CardDescription>{t('dashboard.paymentCalendarDesc')}</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        <div className="overflow-x-auto">
+          <div className="mx-auto w-fit min-w-max space-y-2">
+            <div className="grid grid-cols-7 justify-items-center gap-2 py-1 text-center text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              {weekdayLabels.map((label) => (
+                <div key={label} className="w-10 py-1">
+                  {label}
+                </div>
+              ))}
+            </div>
+
+            <TooltipProvider delayDuration={150}>
+              <div className="grid grid-cols-7 justify-items-center gap-2 py-1">
+                {calendarDays.map((day) => {
+                  if ('isEmpty' in day) {
+                    return <div key={day.gridKey} className="h-10 w-10" />;
+                  }
+
+                  const formattedDate = formatter.format(day.date);
+                  const paymentCountLabel =
+                    day.payments.length > 0
+                      ? t('subscriptions.paymentCount', { count: day.payments.length })
+                      : '';
+
+                  const button = (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      data-testid={`payment-calendar-day-${day.dayKey}`}
+                      aria-label={`${t('dashboard.paymentCalendarOpenDay', { date: formattedDate })}${paymentCountLabel ? `, ${paymentCountLabel}` : ''}`}
+                      onClick={() => onSelectDay(day.date, day.payments)}
+                      className={cn(
+                        'relative h-10 w-10 p-0 text-base',
+                        'hover:-translate-y-0.5',
+                        day.isToday && 'border-primary/35 bg-primary/6',
+                        day.payments.length > 0 && 'shadow-[0_8px_24px_-18px_rgba(239,68,68,0.9)]',
+                      )}
+                    >
+                      <span className="font-semibold text-foreground">{day.dayNumber}</span>
+
+                      {day.payments.length > 0 ? (
+                        <Badge className="absolute -top-1 -right-1 min-w-4 justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white hover:bg-red-500">
+                          {day.payments.length}
+                        </Badge>
+                      ) : null}
+                    </Button>
+                  );
+
+                  if (day.payments.length === 0) {
+                    return <div key={day.dayKey}>{button}</div>;
+                  }
+
+                  return (
+                    <Tooltip key={day.dayKey}>
+                      <TooltipTrigger asChild>{button}</TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-[260px] space-y-2 p-3">
+                        <p className="font-medium">{formattedDate}</p>
+                        <ul className="space-y-1.5">
+                          {day.payments.map((payment) => (
+                            <li
+                              key={payment.id}
+                              className="flex items-center justify-between gap-3 text-xs"
+                            >
+                              <span className="truncate text-muted-foreground">{payment.name}</span>
+                              <span className="shrink-0 font-medium text-foreground">
+                                {formatCurrency(payment.amount, payment.currency)}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                })}
+              </div>
+            </TooltipProvider>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

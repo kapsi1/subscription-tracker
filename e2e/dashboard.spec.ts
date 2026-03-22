@@ -22,7 +22,8 @@ test.describe('Dashboard Flow', () => {
     // 2. Add two subscriptions via the Subscriptions page
     await page.waitForTimeout(1000);
     await page.goto('/subscriptions');
-    await expect(page.getByRole('heading', { name: 'Subscriptions', exact: true })).toBeVisible();
+    await expect(page).toHaveURL(/\/manage\/subscriptions/);
+    await expect(page.getByRole('heading', { name: 'Manage Subscriptions', exact: true })).toBeVisible();
 
     // Add first sub (Monthly)
     await page.getByRole('button', { name: 'Add Subscription' }).first().click();
@@ -31,7 +32,7 @@ test.describe('Dashboard Flow', () => {
     // Default is monthly, USD. Just save.
     await page.getByRole('button', { name: 'Add Subscription' }).click();
     await expect(page.getByRole('dialog')).not.toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Sub 1' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Sub 1', exact: true })).toBeVisible();
 
     // Add second sub (Yearly)
     await page.getByRole('button', { name: 'Add Subscription' }).first().click();
@@ -44,7 +45,7 @@ test.describe('Dashboard Flow', () => {
     
     await page.getByRole('button', { name: 'Add Subscription' }).click();
     await expect(page.getByRole('dialog')).not.toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Sub 2 Yearly' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Sub 2 Yearly', exact: true })).toBeVisible();
 
     // 3. Verify Dashboard Summary
     await page.goto('/dashboard');
@@ -56,16 +57,26 @@ test.describe('Dashboard Flow', () => {
     // - Total Yearly Cost: paid this year + upcoming this year
     
     // Verify total active subscriptions card
-    await expect(page.locator('.text-4xl').filter({ hasText: '2' }).first()).toBeVisible();
+    const activeSubscriptionsCard = page
+      .getByRole('heading', { name: 'Active Subscriptions' })
+      .locator('xpath=ancestor::div[contains(@class, "shadow-sm")][1]');
+    await expect(activeSubscriptionsCard).toBeVisible();
+    await expect(activeSubscriptionsCard.getByText(/^2$/)).toBeVisible();
 
     // Verify monthly and yearly costs.
+    const monthlyCostCard = page
+      .getByRole('heading', { name: 'Total Monthly Cost' })
+      .locator('xpath=ancestor::div[contains(@class, "shadow-sm")][1]');
+    const yearlyCostCard = page
+      .getByRole('heading', { name: 'Total Yearly Cost' })
+      .locator('xpath=ancestor::div[contains(@class, "shadow-sm")][1]');
+
     // In this flow we only scheduled payments; nothing is marked as paid yet,
-    // so this month's paid total should be $0.00.
-    await expect(page.getByText('$0.00')).toBeVisible();
-    
-    // Yearly cost depends on the current month (it's paid + upcoming this year)
-    // We just verify it's a visible currency amount for now to avoid fragile tests
-    await expect(page.locator('.text-4xl').filter({ hasText: '$' }).nth(1)).toBeVisible();
+    // so this month's paid total should be zero.
+    await expect(monthlyCostCard.getByText(/^\$0(?:\.00)?$/)).toBeVisible();
+
+    // Yearly cost depends on the current month (it's paid + upcoming this year).
+    await expect(yearlyCostCard.getByText(/^\$\d+(?:\.\d{2})?$/)).toBeVisible();
 
     // Verify This Month Payments section exists
     await expect(page.getByRole('heading', { name: "This Month's Payments" }).last()).toBeVisible();

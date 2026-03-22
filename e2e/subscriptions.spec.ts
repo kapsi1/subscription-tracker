@@ -22,6 +22,7 @@ test.describe('Subscriptions Flow', () => {
     // Navigate to Subscriptions
     await page.waitForTimeout(1000);
     await page.goto('/subscriptions');
+    await expect(page).toHaveURL(/\/manage\/subscriptions/);
     await expect(page.getByRole('button', { name: 'Add Subscription' }).first()).toBeVisible();
 
     // Verify empty state
@@ -59,13 +60,15 @@ test.describe('Subscriptions Flow', () => {
     // Clear search
     await page.getByPlaceholder('Search subscriptions').clear();
     
-    // Click edit on the row
-    await page.getByRole('row', { name: /Netflix/ }).getByRole('button').first().click(); // First button is Edit (pencil)
+    // Open details by clicking the row
+    await page.getByRole('row', { name: /Netflix/ }).click();
     
-    await expect(page.getByRole('dialog', { name: 'Edit Subscription' })).toBeVisible();
-    await page.getByLabel('Amount').fill('17.99');
+    const detailsDialog = page.getByRole('dialog');
+    await expect(detailsDialog).toBeVisible();
+    await expect(detailsDialog.getByText('Subscription Details')).toBeVisible();
+    await detailsDialog.getByLabel('Amount').fill('17.99');
     await page.waitForTimeout(500); // Wait for potential state settlement
-    await page.getByRole('button', { name: 'Update Subscription' }).click();
+    await detailsDialog.getByRole('button', { name: 'Update Subscription' }).click();
 
     await expect(page.getByRole('dialog')).not.toBeVisible();
     await expect(page.getByRole('cell', { name: '$17.99' })).toBeVisible();
@@ -74,7 +77,9 @@ test.describe('Subscriptions Flow', () => {
     page.once('dialog', dialog => dialog.accept()); // Handle confirm dialog automatically
     
     // Click delete
-    await page.getByRole('row', { name: /Netflix/ }).getByRole('button').nth(1).click(); // Second button is Trash
+    const netflixRow = page.getByRole('row', { name: /Netflix/ });
+    await netflixRow.hover();
+    await netflixRow.getByRole('button').click();
     
     // Verify it disappeared and empty state returned
     await expect(page.getByRole('cell', { name: 'Netflix', exact: true })).not.toBeVisible();
@@ -108,7 +113,7 @@ test.describe('Subscriptions Flow', () => {
     const downloadPromise = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Export' }).click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toBe('subscriptions.json');
+    expect(download.suggestedFilename()).toBe('subtracker_data.json');
 
     // 7. Test Import
     // We already have 1 subscription. We'll simulate importing a JSON file
@@ -131,6 +136,7 @@ test.describe('Subscriptions Flow', () => {
         buffer: importBuffer
     });
 
+    await page.getByRole('button', { name: 'Confirm Import' }).click();
     await expect(page.getByText('Successfully imported subscriptions')).toBeVisible();
     await expect(page.getByRole('cell', { name: 'Hulu', exact: true })).toBeVisible();
     await expect(page.getByRole('cell', { name: 'AWS', exact: true })).toBeVisible();

@@ -269,6 +269,16 @@
 - [x] Environment variables documentation
 - [x] README.md for Github
 
+# 7. Repeatable tasks
+- [ ] Review translations for spelling, grammar, consistency, capitalization and style.
+- [ ] Review code for security vulnerabilities and best practices.
+- [ ] Review code for performance issues and improvements
+- [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types.
+- [ ] Review code for areas that can be shortened or simplified.
+- [ ] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
+- [ ] Check for and remove unused code and translations
+- [ ] Find and fix compiler & linter errors and warnings.
+
 # 7. Additional
 - [x] Webhook integration
 - [x] Google Auth
@@ -291,14 +301,6 @@
 - [x] Only one currency should be allowed. In settings, add a currency selector. It should be a dropdown with a list of currencies. Each row should show currency code, name and flag. There should be an input field for currency code or name. Design UI and make it look in line with the rest of the app. Validate on backend. Selected currency should be used for all subscriptions. Remove the currency selector in the subscription form.
 - [x] If user is logged with a Google account, show their profile picture in corner, instead of initials. Also add a link to user profile page above the logout button. Settings page should have its subpages in url, so we can link to them.
 - [x] Add "system" theme to existing toggle. The toggle should have 3 states: light, dark and system, with appropriate icons. System should use the system theme.
-- [x] Review translations for spelling, grammar, consistency, capitalization and style.
-- [x] Review code for security vulnerabilities and best practices.
-- [x] Review code for performance issues and improvements
-- [x] Review code for "any" type usage in TypeScript and replace it with appropriate types.
-- [x] Review code for areas that can be shortened or simplified.
-- [x] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
-- [x] Check for and remove unused code and translations
-- [x] Find and fix compiler & linter errors and warnings.
 - [x] Bug: can't scroll the payments list in the 12-month forecast tooltip. Remove the list.
 - [x] Refactor settings page: split it into multiple components, by section
 - [x] Add a language selector to the login/register pages
@@ -364,4 +366,4 @@ full width
 - [x] Edit subscription modal can be cut off if screen height is small. Add a scrollbar to the modal.
 - [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
 - [ ] Find instances of Primary (Save/Add Subscription etc) and Cancel button pairs and make them consistent - primary on the right, cancel on the left. Make styles and distance between them be consistent too. Add missing Cancel buttons.
-- [ ] In Dashboard, under This Month's Payments, add a new section: a calendar showing days (as buttons) of currently selected month. Days with payments in them should have a dot with the payment count, in the style of "unread notifications" dots in other applications (red dot). On hover for the day show a tooltip with list of payments for that day. On click for the day show a modal with a table of payments for that day, looking and acting like the Payment History table in Subscription Details modal.
+- [x] In Dashboard, under This Month's Payments, add a new section: a calendar showing days (as buttons) of currently selected month. Days with payments in them should have a dot with the payment count, in the style of "unread notifications" dots in other applications (red dot). On hover for the day show a tooltip with list of payments for that day. Make the calendar look consistent with the rest of the app. On click for the day show a modal with a table of payments for that day, looking and acting like the Payment History table in Subscription Details modal.

@@ -76,10 +76,9 @@ test.describe('User Settings Persistence', () => {
     const settingsResponse = page.waitForResponse(
       (resp) => resp.url().includes('/users/me') && resp.request().method() === 'GET',
     );
-    await page.goto('/settings');
+    await page.goto('/settings/preferences');
     await settingsResponse;
-    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
-    await page.getByRole('button', { name: 'Preferences' }).click();
+    await expect(page.getByRole('heading', { name: 'Preferences', exact: true })).toBeVisible();
     // Toggle email notifications
     const emailToggle = page.getByLabel('Enable Email Notifications');
     await emailToggle.click();

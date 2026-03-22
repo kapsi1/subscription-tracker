@@ -71,6 +71,7 @@ describe('AlertsProcessor', () => {
       'en',
       'Indigo',
       'system',
+      undefined,
     );
     expect(webhookMock.sendAlert).not.toHaveBeenCalled();
   });

@@ -32,7 +32,7 @@ test.describe('Internationalization (i18n) Flow', () => {
     // 2. Language switch moved to Settings > Preferences > Localization
     await page.goto('/settings/preferences');
     await expect(page).toHaveURL(/\/settings\/preferences/);
-    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Preferences', exact: true })).toBeVisible();
 
     const patchPromise = page.waitForResponse(
       (resp) => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH',
@@ -44,10 +44,10 @@ test.describe('Internationalization (i18n) Flow', () => {
 
     // 3. Verify translation on dashboard navigation
     await page.goto('/dashboard');
-    await expect(page.getByRole('button', { name: 'Subskrypcje' }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /Zarz/i })).toBeVisible();
 
     // 4. Verify persistence
     await page.reload();
-    await expect(page.getByRole('button', { name: 'Subskrypcje' }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /Zarz/i })).toBeVisible();
   });
 });

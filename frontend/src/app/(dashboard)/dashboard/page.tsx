@@ -16,8 +16,10 @@ import { PaymentDetailsModal } from '@/components/payment-details-modal';
 import { SubscriptionModal } from '@/components/subscription-modal';
 import api from '@/lib/api';
 import { CostByCategory } from './_components/CostByCategory';
+import { DayPaymentsModal } from './_components/DayPaymentsModal';
 import { MonthlyForecast } from './_components/MonthlyForecast';
 import { type MonthlyPayment, MonthlyPayments } from './_components/MonthlyPayments';
+import { MonthlyPaymentsCalendar } from './_components/MonthlyPaymentsCalendar';
 import { MonthPicker } from './_components/MonthPicker';
 import { SummaryCards } from './_components/SummaryCards';
 
@@ -45,6 +47,9 @@ export default function DashboardPage() {
   // Payment details modal state
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [viewingPayment, setViewingPayment] = useState<PaymentHistory | null>(null);
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<Date | null>(null);
+  const [selectedCalendarPayments, setSelectedCalendarPayments] = useState<MonthlyPayment[]>([]);
+  const [dayPaymentsModalOpen, setDayPaymentsModalOpen] = useState(false);
 
   const month = selectedDate.getMonth();
   const year = selectedDate.getFullYear();
@@ -127,6 +132,35 @@ export default function DashboardPage() {
     }
   };
 
+  const openStandalonePayment = (payment: MonthlyPayment) => {
+    setViewingPayment({
+      id: payment.id,
+      subscriptionId: null,
+      subscriptionName: payment.name,
+      amount: payment.amount,
+      currency: payment.currency,
+      paidAt: payment.date,
+    });
+    setPaymentModalOpen(true);
+  };
+
+  const handleSelectCalendarDay = (date: Date, payments: MonthlyPayment[]) => {
+    setSelectedCalendarDate(date);
+    setSelectedCalendarPayments(payments);
+    setDayPaymentsModalOpen(true);
+  };
+
+  const handleSelectCalendarPayment = (payment: MonthlyPayment) => {
+    setDayPaymentsModalOpen(false);
+
+    if (payment.subscriptionId) {
+      handleEditSubscription(payment.subscriptionId);
+      return;
+    }
+
+    openStandalonePayment(payment);
+  };
+
   if (isLoading) {
     return <LoadingState message={t('common.loading')} />;
   }
@@ -168,17 +202,13 @@ export default function DashboardPage() {
         <MonthlyPayments
           monthlyPayments={monthlyPayments}
           onEdit={handleEditSubscription}
-          onViewPayment={(p) => {
-            setViewingPayment({
-              id: p.id,
-              subscriptionId: null,
-              subscriptionName: p.name,
-              amount: p.amount,
-              currency: p.currency,
-              paidAt: p.date,
-            });
-            setPaymentModalOpen(true);
-          }}
+          onViewPayment={openStandalonePayment}
+        />
+
+        <MonthlyPaymentsCalendar
+          monthlyPayments={monthlyPayments}
+          selectedDate={selectedDate}
+          onSelectDay={handleSelectCalendarDay}
         />
 
         <MonthlyForecast forecast={forecast} currency={summary.currency} />
@@ -201,6 +231,14 @@ export default function DashboardPage() {
         open={paymentModalOpen}
         onOpenChange={setPaymentModalOpen}
         payment={viewingPayment}
+      />
+
+      <DayPaymentsModal
+        open={dayPaymentsModalOpen}
+        onOpenChange={setDayPaymentsModalOpen}
+        selectedDate={selectedCalendarDate}
+        payments={selectedCalendarPayments}
+        onPaymentSelect={handleSelectCalendarPayment}
       />
     </div>
   );

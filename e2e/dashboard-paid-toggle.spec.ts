@@ -23,8 +23,8 @@ test.describe('Dashboard Paid Toggle', () => {
       const sub = subRes.rows[0];
       
       await client.query(
-        'INSERT INTO "PaymentHistory" (id, "subscriptionId", amount, currency, "paidAt") VALUES ($1, $2, $3, $4, $5)',
-        [crypto.randomUUID(), sub.id, sub.amount, sub.currency, new Date()]
+        'INSERT INTO "PaymentHistory" (id, "userId", "subscriptionId", "subscriptionName", amount, currency, "paidAt") VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        [crypto.randomUUID(), userId, sub.id, subName, sub.amount, sub.currency, new Date()]
       );
     } finally {
       await client.end();
@@ -43,11 +43,12 @@ test.describe('Dashboard Paid Toggle', () => {
 
     // 2. Add a subscription
     await page.goto('/subscriptions');
+    await expect(page).toHaveURL(/\/manage\/subscriptions/);
     await page.getByRole('button', { name: 'Add Subscription' }).first().click();
     await page.getByLabel('Service Name').fill('Paid Sub');
     await page.getByLabel('Amount').fill('15.00');
     await page.getByRole('button', { name: 'Add Subscription' }).click();
-    await expect(page.getByRole('cell', { name: 'Paid Sub' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Paid Sub', exact: true })).toBeVisible();
 
     // 3. Manually insert a payment record to make it "Done"
     await insertManualPayment(testEmail, 'Paid Sub');

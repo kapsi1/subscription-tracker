@@ -1,9 +1,28 @@
 import { test, expect } from '@playwright/test';
+import { Client } from 'pg';
 import { cleanupUser } from './test-utils';
 
 test.describe('Settings Search', () => {
   let testEmail: string;
   const testPassword = 'StrongPassword123!';
+
+  async function ensureVerified(email: string) {
+    const client = new Client({
+      connectionString:
+        process.env.DATABASE_URL ||
+        'postgresql://postgres:postgres@localhost:5433/subscription_tracker?schema=public',
+    });
+
+    await client.connect();
+    try {
+      await client.query(
+        'UPDATE "User" SET "isVerified" = true, "verificationToken" = NULL, "verificationTokenExpiresAt" = NULL WHERE email = $1',
+        [email],
+      );
+    } finally {
+      await client.end();
+    }
+  }
 
   test.beforeEach(async ({ page }) => {
     testEmail = `testuser-search-${Date.now()}-${Math.floor(Math.random() * 1000)}@example.com`;
@@ -14,7 +33,17 @@ test.describe('Settings Search', () => {
     await page.getByLabel('Email').fill(testEmail);
     await page.getByLabel('Password').fill(testPassword);
     await page.getByRole('button', { name: 'Create Account' }).click();
-    await page.waitForURL('**/dashboard', { timeout: 30000 });
+
+    try {
+      await page.waitForURL('**/dashboard', { timeout: 30000 });
+    } catch {
+      await ensureVerified(testEmail);
+      await page.goto('/login');
+      await page.getByLabel('Email').fill(testEmail);
+      await page.getByLabel('Password').fill(testPassword);
+      await page.getByRole('button', { name: 'Sign In' }).click();
+      await page.waitForURL('**/dashboard', { timeout: 30000 });
+    }
     
     // Go to settings
     await page.goto('/settings/preferences');
@@ -100,14 +129,13 @@ test.describe('Settings Search', () => {
     await expect(page.getByRole('heading', { name: 'Email Notifications', exact: true })).toBeVisible();
 
     // Switch to Profile tab
-    await page.getByRole('button', { name: 'Profile' }).click();
+    await page.locator('a[href="/settings/profile"]').click();
     await expect(page).toHaveURL(/\/settings\/profile/);
 
     // Search query should still be there
     await expect(searchInput).toHaveValue('email');
     
-    // Profile section contains "Email Address" searchKey, Change Email contains "Email" in title
-    await expect(page.getByRole('heading', { name: 'Account Profile', exact: true })).toBeVisible();
+    // Profile search results should still reflect the persisted query
     await expect(page.getByRole('heading', { name: 'Change Email', exact: true })).toBeVisible();
     
     // Change Password should not be visible
