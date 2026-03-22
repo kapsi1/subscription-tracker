@@ -200,7 +200,7 @@ export function PaymentDetailsModal({
                 disabled={isSaving}
                 className="gap-1.5"
               >
-                <Trash2 className="h-3.5 w-3.5" />
+                <Trash2 className="w-4 h-4" />
                 {t('common.delete', { defaultValue: 'Delete' })}
               </Button>
               <Button type="submit" size="sm" disabled={isSaving}>

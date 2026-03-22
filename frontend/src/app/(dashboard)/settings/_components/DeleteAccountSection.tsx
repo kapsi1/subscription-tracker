@@ -61,14 +61,14 @@ export function DeleteAccountSection() {
   };
 
   return (
-    <Card className="shadow-sm border-red-200 dark:border-red-900/50">
+    <Card className="shadow-sm border-destructive/20 dark:border-destructive/30">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
-            <Trash2 className="w-5 h-5 text-red-600" />
+          <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center">
+            <Trash2 className="w-5 h-5 text-destructive" />
           </div>
           <div>
-            <CardTitle className="text-red-600">
+            <CardTitle className="text-destructive">
               <SearchHighlight text={t('settings.deleteAccount.title')} query={searchQuery} />
             </CardTitle>
             <CardDescription>
@@ -84,8 +84,8 @@ export function DeleteAccountSection() {
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <div className="mx-auto w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
+              <div className="mx-auto w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
               </div>
               <DialogTitle className="text-center">
                 {t('settings.deleteAccount.confirmTitle')}

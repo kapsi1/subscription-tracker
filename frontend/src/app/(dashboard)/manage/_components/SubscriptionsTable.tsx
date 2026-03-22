@@ -260,7 +260,7 @@ export function SubscriptionsTable({
                           e.stopPropagation();
                           onDelete(subscription.id);
                         }}
-                        className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="h-8 w-8 text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>

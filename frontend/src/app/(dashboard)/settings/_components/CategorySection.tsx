@@ -148,11 +148,11 @@ function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps
       <Button
         variant="ghost"
         size="icon"
-        className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+        className="h-7 w-7 shrink-0 text-destructive/70 hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all"
         onClick={() => onDelete(category.id)}
         tabIndex={-1}
       >
-        <Trash2 className="w-3.5 h-3.5" />
+        <Trash2 className="w-4 h-4" />
       </Button>
     </div>
   );
