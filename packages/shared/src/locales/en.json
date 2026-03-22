@@ -152,7 +152,7 @@
       "days": "day(s)",
       "before": "before",
       "after": "after",
-      "skip": "Don't pay",
+      "skip": "skip",
       "theSelectedDay": "the selected day"
     },
     "search": "Search subscriptions by name or category...",

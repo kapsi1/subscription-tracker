@@ -91,7 +91,7 @@ export function CustomBillingModal({
                     min={0}
                     max={31}
                     value={tempShortageOffset}
-                    onChange={(e) => setTempShortageOffset(Math.max(0, Number(e.target.value)))}
+                    onChange={(e) => setTempShortageOffset(Math.max(1, Number(e.target.value)))}
                     className="w-16 h-8 text-center"
                   />
                   <span>{t('subscriptions.customBilling.days')}</span>

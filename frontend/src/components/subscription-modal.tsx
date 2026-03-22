@@ -60,7 +60,7 @@ export function SubscriptionModal({
     reminderEnabled: true,
     reminderDays: '3',
     billingDays: [] as number[],
-    billingMonthShortageOffset: 0,
+    billingMonthShortageOffset: 1,
     billingMonthShortageDirection: 'before' as 'before' | 'after' | 'skip',
   });
   const [customBillingOpen, setCustomBillingOpen] = useState(false);
@@ -82,7 +82,7 @@ export function SubscriptionModal({
         reminderEnabled: subscription.reminderEnabled ?? true,
         reminderDays: (subscription.reminderDays ?? 3).toString(),
         billingDays: subscription.billingDays ?? [],
-        billingMonthShortageOffset: subscription.billingMonthShortageOffset ?? 0,
+        billingMonthShortageOffset: subscription.billingMonthShortageOffset || 1,
         billingMonthShortageDirection:
           (subscription.billingMonthShortageDirection as 'before' | 'after' | 'skip') ?? 'before',
       });
@@ -96,7 +96,7 @@ export function SubscriptionModal({
         reminderEnabled: user?.defaultReminderEnabled ?? true,
         reminderDays: (user?.defaultReminderDays ?? 3).toString(),
         billingDays: [],
-        billingMonthShortageOffset: 0,
+        billingMonthShortageOffset: 1,
         billingMonthShortageDirection: 'before',
       });
       setIsSubmitted(false);

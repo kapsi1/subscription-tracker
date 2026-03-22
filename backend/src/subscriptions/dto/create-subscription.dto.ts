@@ -39,6 +39,7 @@ export class CreateSubscriptionDto {
 
   @IsOptional()
   @IsInt()
+  @Min(1)
   billingMonthShortageOffset?: number;
 
   @IsOptional()

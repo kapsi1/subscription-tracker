@@ -69,7 +69,7 @@ model Subscription {
   billingCycle    BillingCycle
   intervalDays    Int?
   billingDays     Int[]            @default([])
-  billingMonthShortageOffset Int     @default(0)
+  billingMonthShortageOffset Int     @default(1)
   billingMonthShortageDirection String @default("before")
   nextBillingDate DateTime
   category        String
