@@ -270,16 +270,16 @@
 - [x] README.md for Github
 
 # 7. Repeatable tasks
-- [ ] Review translations for spelling, grammar, consistency, capitalization and style.
+- [ ] Review translations for spelling, grammar, consistency, capitalization and style. Check for and remove unused translations
 - [ ] Review code for security vulnerabilities and best practices.
 - [ ] Review code for performance issues and improvements
-- [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types.
-- [ ] Review code for areas that can be shortened or simplified.
+- [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types. You can skip any types in test mocks, but add linter exceptions so there's no warnings.
+- [ ] Review code for areas that can be shortened or simplified. Split large files, functions, components, etc. into smaller ones, where it makes sense to do so.
 - [ ] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
-- [ ] Check for and remove unused code and translations
 - [ ] Find and fix compiler & linter errors and warnings.
+- [ ] Remove unused code.
 
-# 7. Additional
+# 8. Additional
 - [x] Webhook integration
 - [x] Google Auth
 - [x] Add category management. In settings, add a category management section. In this section, show a list of categories. Each row should have a color swatch, category name (editable in place), color picker (editable in place), and a delete button. Add a button to add a new category. This should add a new row with an empty name and default color, and focus on the name field. Add a button to reset categories to default values.
