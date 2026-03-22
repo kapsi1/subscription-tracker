@@ -111,7 +111,7 @@ export function DeleteAccountSection() {
               </div>
             )}
 
-            <DialogFooter className="flex-col sm:flex-row gap-2 mt-4">
+            <DialogFooter className="flex-col-reverse sm:flex-row gap-2 mt-4">
               <Button
                 type="button"
                 variant="outline"

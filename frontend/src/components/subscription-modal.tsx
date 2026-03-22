@@ -393,8 +393,13 @@ export function SubscriptionModal({
         )}
       </div>
 
-      <DialogFooter>
-        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+      <DialogFooter className="gap-2 pt-2">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => onOpenChange(false)}
+          disabled={isSaving}
+        >
           {t('subscriptions.modal.cancel')}
         </Button>
         <Button type="submit" disabled={isSaving}>

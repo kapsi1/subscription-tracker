@@ -191,11 +191,10 @@ export function PaymentDetailsModal({
               </div>
             </div>
 
-            <DialogFooter className="gap-2 sm:justify-between">
+            <DialogFooter className="gap-2 sm:justify-between pt-2">
               <Button
                 type="button"
                 variant="destructive"
-                size="sm"
                 onClick={handleDelete}
                 disabled={isSaving}
                 className="gap-1.5"
@@ -203,9 +202,19 @@ export function PaymentDetailsModal({
                 <Trash2 className="w-4 h-4" />
                 {t('common.delete', { defaultValue: 'Delete' })}
               </Button>
-              <Button type="submit" size="sm" disabled={isSaving}>
-                {t('subscriptions.modal.payments.save')}
-              </Button>
+              <div className="flex flex-col-reverse sm:flex-row gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => onOpenChange(false)}
+                  disabled={isSaving}
+                >
+                  {t('subscriptions.modal.cancel')}
+                </Button>
+                <Button type="submit" disabled={isSaving}>
+                  {t('subscriptions.modal.payments.save')}
+                </Button>
+              </div>
             </DialogFooter>
           </form>
         )}
@@ -248,8 +257,13 @@ export function PaymentDetailsModal({
                 />
               </div>
             </div>
-            <DialogFooter className="gap-2">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <DialogFooter className="gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={isSaving}
+              >
                 {t('subscriptions.modal.cancel')}
               </Button>
               <Button type="submit" disabled={isSaving}>

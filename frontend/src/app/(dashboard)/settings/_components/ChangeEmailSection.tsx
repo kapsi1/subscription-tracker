@@ -109,9 +109,22 @@ export function ChangeEmailSection() {
               />
             </div>
           </div>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? t('auth.status.pleaseWait') : t('settings.changeEmail.submit')}
-          </Button>
+          <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setNewEmail('');
+                setCurrentPassword('');
+              }}
+              disabled={isLoading}
+            >
+              {t('subscriptions.modal.cancel')}
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? t('auth.status.pleaseWait') : t('settings.changeEmail.submit')}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>

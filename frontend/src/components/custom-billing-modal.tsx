@@ -119,11 +119,11 @@ export function CustomBillingModal({
           </div>
         )}
 
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <DialogFooter className="gap-2 pt-2">
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             {t('subscriptions.customBilling.cancel')}
           </Button>
-          <Button onClick={handleSave} disabled={selectedDays.length === 0}>
+          <Button type="button" onClick={handleSave} disabled={selectedDays.length === 0}>
             {t('subscriptions.customBilling.save')}
           </Button>
         </DialogFooter>

@@ -174,17 +174,17 @@ export function PaymentHistoryTab({ subscriptionId, currency }: PaymentHistoryTa
             onChange={(e) => setEditState({ ...editState, amount: e.target.value })}
             required
           />
-          <Button type="submit" size="sm" className="h-8 shrink-0" disabled={isSaving}>
-            {t('subscriptions.modal.payments.save')}
-          </Button>
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             className="h-8 shrink-0"
             onClick={() => setEditingId(null)}
           >
             {t('subscriptions.modal.payments.cancel')}
+          </Button>
+          <Button type="submit" size="sm" className="h-8 shrink-0" disabled={isSaving}>
+            {t('subscriptions.modal.payments.save')}
           </Button>
         </form>
       </TableCell>

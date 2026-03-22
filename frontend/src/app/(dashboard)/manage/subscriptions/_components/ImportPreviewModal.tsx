@@ -192,11 +192,11 @@ export function ImportPreviewModal({
           </div>
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={isLoading}>
+        <DialogFooter className="gap-2 pt-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
             {t('subscriptions.importPreview.cancel')}
           </Button>
-          <Button onClick={() => onConfirm(replaceExisting)} disabled={isLoading} className="gap-2">
+          <Button onClick={() => onConfirm(replaceExisting)} disabled={isLoading} className="gap-2 text-white">
             {isLoading ? t('common.loading') : t('subscriptions.importPreview.confirm')}
           </Button>
         </DialogFooter>
