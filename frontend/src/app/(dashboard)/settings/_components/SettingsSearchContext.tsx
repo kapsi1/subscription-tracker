@@ -58,18 +58,6 @@ export const SETTINGS_SECTIONS: SectionMetadata[] = [
     searchKeys: ['settings.notifications.push.enable', 'settings.notifications.push.enableDesc'],
   },
   {
-    id: 'webhook',
-    tab: 'preferences',
-    titleKey: 'settings.notifications.webhook.title',
-    descKey: 'settings.notifications.webhook.desc',
-    searchKeys: [
-      'settings.notifications.webhook.url',
-      'settings.notifications.webhook.secret',
-      'settings.notifications.webhook.enable',
-      'settings.notifications.webhook.enableDesc',
-    ],
-  },
-  {
     id: 'reminder',
     tab: 'preferences',
     titleKey: 'settings.notifications.default.title',

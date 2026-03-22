@@ -256,25 +256,6 @@ export class UsersController {
   }
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
-  @Post('test-webhook')
-  async testWebhook(@Req() req: RequestWithUser, @Body() body: { url: string; secret?: string }) {
-    this.assertTestEndpointsEnabled();
-
-    if (!body.url) {
-      throw new BadRequestException('Webhook URL is required');
-    }
-
-    try {
-      await this.usersService.testWebhook(req.user.userId, body.url, body.secret);
-      return { message: 'Test webhook sent successfully.' };
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Test webhook failed: ${message}`);
-      throw new BadRequestException(`Test webhook failed: ${message}`);
-    }
-  }
-
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Patch('change-password')
   async changePassword(@Req() req: RequestWithUser, @Body() dto: ChangePasswordDto) {
     await this.usersService.changePassword(req.user.userId, dto.currentPassword, dto.newPassword);

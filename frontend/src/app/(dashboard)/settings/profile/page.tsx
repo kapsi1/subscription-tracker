@@ -107,7 +107,6 @@ export default function ProfilePage() {
           {isSectionVisible('categories', 'profile') && <CategorySection />}
           {isSectionVisible('email', 'profile') && <EmailNotificationsSearchWrapper />}
           {isSectionVisible('push', 'profile') && <PushNotificationsSearchWrapper />}
-          {isSectionVisible('webhook', 'profile') && <WebhookSearchWrapper />}
           {isSectionVisible('reminder', 'profile') && <ReminderSearchWrapper />}
           {isSectionVisible('budget', 'profile') && <BudgetSearchWrapper />}
         </>
@@ -127,7 +126,6 @@ import { LocalizationSection } from '../_components/LocalizationSection';
 import { PushNotificationsSection } from '../_components/PushNotificationsSection';
 import { ReminderSection } from '../_components/ReminderSection';
 import { SETTINGS_SECTIONS, useSettingsSearch } from '../_components/SettingsSearchContext';
-import { WebhookSection } from '../_components/WebhookSection';
 
 // Helper to use preferences state in wrappers
 function usePreferencesState() {
@@ -137,9 +135,6 @@ function usePreferencesState() {
     defaultReminderDays: 3,
     emailNotifications: true,
     emailAddress: '',
-    webhookEnabled: false,
-    webhookUrl: '',
-    webhookSecret: '',
     dailyDigest: false,
     weeklyReport: true,
     monthlyBudget: null,
@@ -161,9 +156,6 @@ function usePreferencesState() {
             ? parseFloat(response.data.monthlyBudget)
             : null,
           emailNotifications: response.data.emailNotifications,
-          webhookEnabled: response.data.webhookEnabled,
-          webhookUrl: response.data.webhookUrl || '',
-          webhookSecret: response.data.webhookSecret || '',
           dailyDigest: response.data.dailyDigest,
           weeklyReport: response.data.weeklyReport,
           pushEnabled: false,
@@ -175,9 +167,6 @@ function usePreferencesState() {
           defaultReminderDays: loadedSettings.defaultReminderDays,
           monthlyBudget: loadedSettings.monthlyBudget,
           emailNotifications: loadedSettings.emailNotifications,
-          webhookEnabled: loadedSettings.webhookEnabled,
-          webhookUrl: loadedSettings.webhookUrl,
-          webhookSecret: loadedSettings.webhookSecret,
           dailyDigest: loadedSettings.dailyDigest,
           weeklyReport: loadedSettings.weeklyReport,
           currency: loadedSettings.currency,
@@ -198,9 +187,6 @@ function usePreferencesState() {
       defaultReminderDays: settings.defaultReminderDays,
       monthlyBudget: settings.monthlyBudget,
       emailNotifications: settings.emailNotifications,
-      webhookEnabled: settings.webhookEnabled,
-      webhookUrl: settings.webhookUrl,
-      webhookSecret: settings.webhookSecret,
       dailyDigest: settings.dailyDigest,
       weeklyReport: settings.weeklyReport,
       currency: settings.currency,
@@ -305,22 +291,6 @@ function PushNotificationsSearchWrapper() {
       onTestPush={async () => {}}
       isSendingTest={false}
       onResetPush={async () => {}}
-    />
-  );
-}
-
-function WebhookSearchWrapper() {
-  const { settings, handleSettingsChange } = usePreferencesState();
-  const showTestControls = process.env.NODE_ENV !== 'production';
-  return (
-    <WebhookSection
-      webhookEnabled={settings.webhookEnabled}
-      webhookUrl={settings.webhookUrl ?? ''}
-      webhookSecret={settings.webhookSecret ?? ''}
-      onSettingsChange={handleSettingsChange}
-      showTestControls={showTestControls}
-      onTestWebhook={async () => {}}
-      isSendingWebhookTest={false}
     />
   );
 }

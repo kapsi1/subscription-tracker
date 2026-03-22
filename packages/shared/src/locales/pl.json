@@ -376,22 +376,6 @@
         "disabled": "Powiadomienia push wyłączone",
         "error": "Nie udało się przełączyć powiadomień push"
       },
-      "webhook": {
-        "title": "Integracja webhook",
-        "desc": "Wysyłaj alerty do zewnętrznych serwisów",
-        "enable": "Włącz webhooki",
-        "enableDesc": "Wysyłaj dane o płatnościach na swój URL webhooka",
-        "url": "URL webhooka",
-        "urlDesc": "Wyślemy żądanie POST ze szczegółami płatności na ten adres URL",
-        "secret": "Klucz tajny webhooka",
-        "secretDesc": "Opcjonalny klucz tajny do podpisywania żądań. Zostanie wysłany w nagłówku X-Webhook-Signature.",
-        "testTitle": "Testuj integrację webhook",
-        "testDesc": "Wyślij przykładowe powiadomienie na skonfigurowany adres URL.",
-        "testSend": "Wyślij testowy webhook",
-        "testSending": "Wysyłanie...",
-        "testSuccess": "Testowy webhook wysłany pomyślnie",
-        "testError": "Nie udało się wysłać testowego webhooka"
-      },
       "default": {
         "title": "Domyślne ustawienia przypomnień",
         "desc": "Domyślne ustawienia dla nowych subskrypcji",

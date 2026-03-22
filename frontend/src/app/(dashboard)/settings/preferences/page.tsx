@@ -14,7 +14,6 @@ import { EmailNotificationsSection } from '../_components/EmailNotificationsSect
 import { LocalizationSection } from '../_components/LocalizationSection';
 import { PushNotificationsSection } from '../_components/PushNotificationsSection';
 import { ReminderSection } from '../_components/ReminderSection';
-import { WebhookSection } from '../_components/WebhookSection';
 
 export default function PreferencesPage() {
   const { t } = useTranslation();
@@ -25,9 +24,6 @@ export default function PreferencesPage() {
     defaultReminderDays: 3,
     emailNotifications: true,
     emailAddress: '',
-    webhookEnabled: false,
-    webhookUrl: '',
-    webhookSecret: '',
     dailyDigest: false,
     weeklyReport: true,
     monthlyBudget: null,
@@ -42,7 +38,6 @@ export default function PreferencesPage() {
   const [isSendingBudgetTestEmail, setIsSendingBudgetTestEmail] = useState(false);
   const [isSendingDailyTest, setIsSendingDailyTest] = useState(false);
   const [isSendingWeeklyTest, setIsSendingWeeklyTest] = useState(false);
-  const [isSendingWebhookTest, setIsSendingWebhookTest] = useState(false);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
   const hasLoadedSettingsRef = useRef(false);
   const lastSavedPreferencesRef = useRef<string | null>(null);
@@ -60,9 +55,6 @@ export default function PreferencesPage() {
             ? parseFloat(response.data.monthlyBudget)
             : null,
           emailNotifications: response.data.emailNotifications,
-          webhookEnabled: response.data.webhookEnabled,
-          webhookUrl: response.data.webhookUrl || '',
-          webhookSecret: response.data.webhookSecret || '',
           dailyDigest: response.data.dailyDigest,
           weeklyReport: response.data.weeklyReport,
           pushEnabled: false,
@@ -77,9 +69,6 @@ export default function PreferencesPage() {
           defaultReminderDays: loadedSettings.defaultReminderDays,
           monthlyBudget: loadedSettings.monthlyBudget,
           emailNotifications: loadedSettings.emailNotifications,
-          webhookEnabled: loadedSettings.webhookEnabled,
-          webhookUrl: loadedSettings.webhookUrl,
-          webhookSecret: loadedSettings.webhookSecret,
           dailyDigest: loadedSettings.dailyDigest,
           weeklyReport: loadedSettings.weeklyReport,
           currency: loadedSettings.currency,
@@ -119,9 +108,6 @@ export default function PreferencesPage() {
       defaultReminderDays: settings.defaultReminderDays,
       monthlyBudget: settings.monthlyBudget,
       emailNotifications: settings.emailNotifications,
-      webhookEnabled: settings.webhookEnabled,
-      webhookUrl: settings.webhookUrl,
-      webhookSecret: settings.webhookSecret,
       dailyDigest: settings.dailyDigest,
       weeklyReport: settings.weeklyReport,
       currency: settings.currency,
@@ -262,22 +248,6 @@ export default function PreferencesPage() {
     }
   };
 
-  const handleTestWebhook = async () => {
-    setIsSendingWebhookTest(true);
-    try {
-      const res = await api.post('/users/test-webhook', {
-        url: settings.webhookUrl || '',
-        secret: settings.webhookSecret || '',
-      });
-      toast.success(res.data.message || t('settings.notifications.webhook.testSuccess'));
-    } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || t('settings.notifications.webhook.testError'));
-    } finally {
-      setIsSendingWebhookTest(false);
-    }
-  };
-
   const handleSettingsChange = (updates: Partial<Settings>) => {
     setSettings((prev) => ({ ...prev, ...updates }));
   };
@@ -350,18 +320,6 @@ export default function PreferencesPage() {
           onTestPush={handleTestPush}
           isSendingTest={isSendingTest}
           onResetPush={handleResetPush}
-        />
-      )}
-
-      {isSectionVisible('webhook', 'preferences') && (
-        <WebhookSection
-          webhookEnabled={settings.webhookEnabled}
-          webhookUrl={settings.webhookUrl ?? ''}
-          webhookSecret={settings.webhookSecret ?? ''}
-          onSettingsChange={handleSettingsChange}
-          showTestControls={showTestControls}
-          onTestWebhook={handleTestWebhook}
-          isSendingWebhookTest={isSendingWebhookTest}
         />
       )}
 

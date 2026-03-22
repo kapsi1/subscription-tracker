@@ -92,8 +92,6 @@ export class AlertsService {
         sub,
         alert.type,
         alert.daysBefore,
-        alert.webhookUrl ?? undefined,
-        alert.webhookSecret ?? undefined,
       );
       if (success) enqueued++;
       else skipped++;
@@ -126,8 +124,6 @@ export class AlertsService {
     sub: SubWithUser,
     type: AlertType,
     daysBefore: number,
-    webhookUrl?: string,
-    webhookSecret?: string,
   ): Promise<boolean> {
     const now = new Date();
     const thresholdDate = new Date();
@@ -148,8 +144,6 @@ export class AlertsService {
           subscriptionName: sub.name,
           amount: Number(sub.amount),
           currency: sub.currency,
-          webhookUrl,
-          webhookSecret,
         } as AlertJobData,
         {
           jobId,

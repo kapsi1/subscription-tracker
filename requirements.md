@@ -45,7 +45,6 @@
 - The system shall support alert thresholds defined as “X days before billing date.”
 - The system shall execute scheduled background checks for upcoming billing events.
 - The system shall send email notifications when alert conditions are met.
-- The system shall optionally support webhook notifications.
 - The system shall prevent duplicate alerts for the same billing event.
 
 ---

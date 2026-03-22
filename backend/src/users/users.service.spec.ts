@@ -1,7 +1,6 @@
 import { BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
-import { WebhookService } from '../notifications/webhook/webhook.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from './users.service';
 
@@ -13,10 +12,6 @@ describe('UsersService', () => {
     user: Record<string, jest.Mock>;
     pushSubscription: Record<string, jest.Mock>;
     $transaction: jest.Mock;
-  };
-
-  const mockWebhookService = {
-    // mock methods if necessary
   };
 
   const mockUser = {
@@ -45,7 +40,6 @@ describe('UsersService', () => {
       providers: [
         UsersService,
         { provide: PrismaService, useValue: prismaMock },
-        { provide: WebhookService, useValue: mockWebhookService },
       ],
     }).compile();
 

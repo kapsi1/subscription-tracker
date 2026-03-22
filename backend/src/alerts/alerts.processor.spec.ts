@@ -1,9 +1,7 @@
-import { ConfigService } from '@nestjs/config';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { AlertType } from '@prisma/client';
 import type { Job } from 'bullmq';
 import { EmailService } from '../notifications/email/email.service';
-import { WebhookService } from '../notifications/webhook/webhook.service';
 import { WebPushService } from '../notifications/webpush/webpush.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AlertsProcessor } from './alerts.processor';
@@ -12,7 +10,6 @@ import type { AlertJobData } from './alerts.types';
 describe('AlertsProcessor', () => {
   let processor: AlertsProcessor;
   let emailMock: { sendAlert: jest.Mock };
-  let webhookMock: { sendAlert: jest.Mock };
   let webPushMock: { sendNotification: jest.Mock };
   let prismaMock: {
     pushSubscription: { findMany: jest.Mock; delete: jest.Mock };
@@ -21,7 +18,6 @@ describe('AlertsProcessor', () => {
 
   beforeEach(async () => {
     emailMock = { sendAlert: jest.fn() };
-    webhookMock = { sendAlert: jest.fn() };
     webPushMock = { sendNotification: jest.fn() };
     prismaMock = {
       pushSubscription: { findMany: jest.fn(), delete: jest.fn() },
@@ -36,13 +32,8 @@ describe('AlertsProcessor', () => {
       providers: [
         AlertsProcessor,
         { provide: EmailService, useValue: emailMock },
-        { provide: WebhookService, useValue: webhookMock },
         { provide: WebPushService, useValue: webPushMock },
         { provide: PrismaService, useValue: prismaMock },
-        {
-          provide: ConfigService,
-          useValue: { get: jest.fn().mockReturnValue('mock-secret') },
-        },
       ],
     }).compile();
 
@@ -73,7 +64,6 @@ describe('AlertsProcessor', () => {
       'system',
       undefined,
     );
-    expect(webhookMock.sendAlert).not.toHaveBeenCalled();
   });
 
   it('should throw if emailService fails', async () => {

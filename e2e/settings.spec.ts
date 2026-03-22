@@ -83,10 +83,6 @@ test.describe('User Settings Persistence', () => {
     const emailToggle = page.getByLabel('Enable Email Notifications');
     await emailToggle.click();
 
-    // Set a webhook URL
-    await page.getByLabel('Enable Webhooks').click();
-    await page.getByLabel('Webhook URL').fill('https://example.com/webhook');
-
     // Autosave should persist these changes
     // Wait for the debounced save to complete
     await page.waitForResponse(
@@ -98,8 +94,7 @@ test.describe('User Settings Persistence', () => {
     await page.reload();
 
     // Verify values persisted
-    // Expect the opposite of default (default is true for email, false for webhook)
+    // Expect the opposite of default (default is true for email)
     await expect(emailToggle).not.toBeChecked();
-    await expect(page.getByLabel('Webhook URL')).toHaveValue('https://example.com/webhook');
   });
 });

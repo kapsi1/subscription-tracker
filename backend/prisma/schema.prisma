@@ -23,10 +23,7 @@ model User {
   dailyDigest            Boolean            @default(false)
   emailNotifications     Boolean            @default(true)
   theme                  String             @default("system")
-  webhookEnabled         Boolean            @default(false)
-  webhookUrl             String?
   weeklyReport           Boolean            @default(true)
-  webhookSecret          String?
   googleId               String?            @unique
   name                   String?
   dashboardSortBy        String             @default("date")
@@ -105,8 +102,6 @@ model Alert {
   type           AlertType
   daysBefore     Int
   isEnabled      Boolean      @default(true)
-  webhookSecret  String?
-  webhookUrl     String?
   subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
   @@index([subscriptionId])
@@ -137,6 +132,5 @@ enum BillingCycle {
 
 enum AlertType {
   email
-  webhook
   webpush
 }

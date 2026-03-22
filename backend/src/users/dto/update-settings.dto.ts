@@ -5,7 +5,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
   Min,
   ValidateIf,
 } from 'class-validator';
@@ -49,20 +48,6 @@ export class UpdateSettingsDto {
   @IsOptional()
   @IsBoolean()
   emailNotifications?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  webhookEnabled?: boolean;
-
-  @IsOptional()
-  @IsString()
-  @ValidateIf((_o, value) => value !== '' && value !== null)
-  @IsUrl({ protocols: ['http', 'https'], require_tld: false })
-  webhookUrl?: string;
-
-  @IsOptional()
-  @IsString()
-  webhookSecret?: string;
 
   @IsOptional()
   @IsBoolean()

@@ -10,8 +10,6 @@ export interface AlertJobData {
   subscriptionName: string;
   amount: number;
   currency: string;
-  webhookUrl?: string;
-  webhookSecret?: string;
 }
 
 export interface BudgetAlertJobData {

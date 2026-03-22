@@ -46,8 +46,6 @@ function makeUser(overrides: Partial<User> = {}): User {
     accentColor: 'Indigo',
     recentAccentColors: [],
     emailNotifications: true,
-    webhookEnabled: false,
-    webhookUrl: null,
     dailyDigest: false,
     weeklyReport: false,
     dashboardSortBy: 'date',

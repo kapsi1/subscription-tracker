@@ -70,12 +70,6 @@ A ready-to-use template for development is at [`backend/.env.example`](../backen
 | `VAPID_PRIVATE_KEY` | ⬜ | – | VAPID private key. Keep secret. |
 | `VAPID_SUBJECT` | ⬜ | – | Contact URI shown to push services (e.g. `mailto:you@example.com`). |
 
-### Webhooks
-
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `WEBHOOK_SECRET_KEY` | ⬜ | – | AES encryption key used to store per-subscription webhook secrets. Recommended in production. |
-
 ### Testing
 
 | Variable | Required | Default | Description |
@@ -132,7 +126,6 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 ## Example: Production Checklist
 
 - [ ] Generate a strong `JWT_SECRET` (e.g. `openssl rand -hex 64`)
-- [ ] Generate a strong `WEBHOOK_SECRET_KEY` (e.g. `openssl rand -hex 32`)
 - [ ] Set `NODE_ENV=production`
 - [ ] Configure `SMTP_*` for a real relay (e.g. Brevo / SendGrid)
 - [ ] Set `FRONTEND_URL` to your actual frontend origin

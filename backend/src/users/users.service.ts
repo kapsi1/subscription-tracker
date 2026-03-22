@@ -7,8 +7,6 @@ import {
 } from '@nestjs/common';
 import type { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { WebhookService } from '../notifications/webhook/webhook.service';
-
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -17,7 +15,6 @@ export class UsersService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly webhookService: WebhookService,
   ) {}
 
   async findByEmail(email: string): Promise<User | null> {
@@ -93,10 +90,6 @@ export class UsersService {
     return this.prisma.pushSubscription.deleteMany({
       where: { userId, endpoint },
     });
-  }
-
-  async testWebhook(_userId: string, url: string, secret?: string) {
-    return this.webhookService.sendAlert(url, secret, 'Test Subscription', 3, 19.99, 'USD');
   }
 
   async changePassword(id: string, currentPassword: string, newPassword: string): Promise<void> {

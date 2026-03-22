@@ -58,7 +58,7 @@
 - [x] Create `Alert` model
   - [x] id
   - [x] subscriptionId (relation)
-  - [x] type (enum: email, webhook)
+  - [x] type (enum: email, webpush)
   - [x] daysBefore
   - [x] isEnabled
 
@@ -133,7 +133,6 @@
 ### 1.6.3 Worker
 - [x] Create queue processor
 - [x] Implement email sender service
-- [x] Implement webhook sender
 - [x] Log failed jobs
 - [x] Add idempotency protection (prevent duplicates)
 
@@ -207,9 +206,8 @@
 
 ## 2.5 Alert Management UI
 - [x] Add alert configuration
-- [x] Enable/disable alerts (email + webhook toggles)
+- [x] Enable/disable alerts (email)
 - [x] Set daysBefore value
-- [x] Configure webhook URL
 
 ---
 
@@ -258,7 +256,6 @@
 - [x] CSRF protection (if needed)
 - [x] Input sanitization
 - [x] Secure JWT handling
-- [x] Encrypt webhook secrets
 
 ---
 
@@ -281,7 +278,6 @@
 - [ ] Update documentation and AI_DEVELOPMENT_GUIDE.md to reflect current state of the project.
 
 # 8. Additional
-- [x] Webhook integration
 - [x] Google Auth
 - [x] Add category management. In settings, add a category management section. In this section, show a list of categories. Each row should have a color swatch, category name (editable in place), color picker (editable in place), and a delete button. Add a button to add a new category. This should add a new row with an empty name and default color, and focus on the name field. Add a button to reset categories to default values.
 - [x] Currency management
@@ -320,25 +316,11 @@
 - [x] Add a new logo, include different versions of it for different contexts (favicon, app icon, etc.). Include it in email templates as well.
 - [x] Branding: find instances of "Subscription Tracker" visible to the user, and replace them with "SubTracker". Also replace "Subscription Tracker" with "SubTracker" in code, if it's not used anywhere else.
 - [x] In Profile/Account Profile remove Email Address section. Remove "Member since".
-- [ ] Push notifications not working on Opera
-- [ ] Push notifications not working when Chrome is not running
-- [ ] Email notifications on production
-- [ ] Default reminders
-- [ ] Budget threshold alerts
-- [ ] Custom billing cycle: when selecting it in a form, open a calendar. Inside user can toggle days in the current month, and the selected days will be the billing days for each month. Add Save and Cancel buttons. Change "Custom" to "Custom..." in the dropdown. If a subscription's billing cycle is set to custom, change the dropdown text to "Custom: x days" and show the selected days in the tooltip.
+- [x] Custom billing cycle: when selecting it in a form, open a calendar. Inside user can toggle days in the current month, and the selected days will be the billing days for each month. Add Save and Cancel buttons. Change "Custom" to "Custom..." in the dropdown. If a subscription's billing cycle is set to custom, change the dropdown text to "Custom: x days" and show the selected days in the tooltip.
 - [x] Delete Account flow in user profile. Include a full screen warning/confirmation modal. Add tests.
-- [ ] Support multiple currencies. Add a toggle in Settings, that enables multiple currencies. When toggle is enabled, the currency selected in the currency selector should be the target currency for conversion. This currency will be what all other currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. The subscription add/edit form should have a currency selector (same as in Settings). Use an external service to convert currencies. Show me a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
-
-To consider: what happens when we disable the toggle after adding some subscriptions with different currencies?
-
-- [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
-- [ ] Add more translations for major languages
-- [ ] Improve UI & UX on small screens
 - [x] Make the tooltip in Cost by Category chart have the same style and appearance as the tooltip on 12-month forecast chart
 - [x] Make the app look more "premium". Add some animations, transitions, etc. Make it more "alive" and "fun" to use.
-- [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
-- [x] In /settings make search switch search input with tab chooser, make search
-full width
+- [x] In /settings make search switch search input with tab chooser, make search full width
 - [x] Make error toasts have red background, and success toasts green.
 - [x] On login page, instead of "Invalid credentials" show "Invalid email or password". Also add a 5 second lock for the login button, so user can't spam it.
 - [x] Don't show the "Successfully logged in" toast after login.
@@ -358,13 +340,22 @@ full width
 - [x] Add payment history: propose UI to manage payment history. I'm thinking of adding a tab in the Edit Subscription modal, but I'm open to suggestions. It should show previous payments, and allow user to edit, add or delete them. Instead of just a Subscription, we should have a Payment entity. Subscription should have a list of payments. Each payment should have a date, amount, and a link to the subscription. User should be able to update subscription cost. Make sure already paid payments don't change. When deleting a subscription, make sure previous payments aren't deleted.
 - [x] Google Calendar export for subscriptions: in Subscriptions tab show a button to export each subscription row to Google Calendar. Skip the above-table bulk Google Calendar button because the app does not currently have Google Calendar API authorization/storage for exporting all subscriptions. Add unit and E2E tests.
 - [x] Show a translated string for Polish, for "Network error" in toast. Find other places with hardcoded strings and add translations for them.
-- [ ] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
 - [x] After user's first login, add a glow/slow pulsate effect to the Manage Subscriptions button, to direct user's attention to it.
 - [x] Move category management from Settings to Manage tab, as a new sub-tab.
 - [x] On tabs with sub-tabs, when changing sub-tab update the tab's title (<h1> element) to match the sub-tab name.
 - [x] Import data functionality: after a file is selected by user and validated, show a modal with a preview of the data to be imported. Let user confirm or cancel the import. Add a checkbox to replace existing data with imported data. Add unit and E2E tests.
 - [x] Clicking on a standalone payment in Dashboard shows an error. Instead it should open a modal with payment name, date, amount, and buttons to edit/delete. Make it look similar to Payment History in Edit Subscription. Title it "Payment Details". Also rename Edit Subscription modal to "Subscription Details". Add "Add Payment" button to Manage page, to the left of "Add Subscription".
 - [x] Edit subscription modal can be cut off if screen height is small. Add a scrollbar to the modal.
-- [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
 - [x] Find instances of Primary (Save/Add Subscription etc) and Cancel button pairs and make them consistent - primary on the right, cancel on the left. Make styles and distance between them be consistent too. Add missing Cancel buttons.
 - [x] In Dashboard, under This Month's Payments, add a new section: a calendar showing days (as buttons) of currently selected month. Days with payments in them should have a dot with the payment count, in the style of "unread notifications" dots in other applications (red dot). On hover for the day show a tooltip with list of payments for that day. Make the calendar look consistent with the rest of the app. On click for the day show a modal with a table of payments for that day, looking and acting like the Payment History table in Subscription Details modal.
+- [ ] Push notifications not working on Opera
+- [ ] Push notifications not working when Chrome is not running
+- [ ] Email notifications on production
+- [ ] Default reminders
+- [ ] Budget threshold alerts
+- [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
+- [ ] Add more translations for major languages
+- [ ] Improve UI & UX on small screens
+- [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
+- [ ] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
+- [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.

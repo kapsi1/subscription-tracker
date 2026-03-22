@@ -21,9 +21,6 @@ export interface Settings {
   defaultReminderDays: number;
   emailNotifications: boolean;
   emailAddress?: string;
-  webhookEnabled: boolean;
-  webhookUrl?: string;
-  webhookSecret?: string;
   dailyDigest: boolean;
   weeklyReport: boolean;
   monthlyBudget?: number | null;

@@ -2,7 +2,7 @@ import { decrypt, encrypt } from './encryption.util';
 
 describe('EncryptionUtil', () => {
   const secret = 'test-secret-key-12345678901234567890123456789012';
-  const text = 'sensitive-webhook-secret';
+  const text = 'sensitive-data-to-encrypt';
 
   it('should encrypt and decrypt correctly', () => {
     const encrypted = encrypt(text, secret);

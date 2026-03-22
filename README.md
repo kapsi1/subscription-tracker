@@ -5,10 +5,10 @@
 ## Features
 
 - 📊 **Dashboard** – Monthly & yearly cost summaries, cost-by-category charts, 12-month forecast, and an interactive payment calendar
-- 🔔 **Alerts** – Email and webhook reminders before each billing date; daily digest emails
+- 🔔 **Alerts** – Email and web-push reminders before each billing date; daily digest emails
 - 🗂️ **Subscription Management** – CRUD with search/filter/sort; bulk import via JSON; payment history
 - 👤 **Accounts** – Email/password and Google OAuth; email verification; forgot-password flow; profile settings
-- ⚙️ **Settings** – Custom categories (with icons & colors), accent-color picker, language selector, currency selector, push notifications, webhooks
+- ⚙️ **Settings** – Custom categories (with icons & colors), accent-color picker, language selector, currency selector, push notifications
 - 🌐 **Internationalisation** – Multiple languages via `next-intl`
 - 🔒 **Security** – JWT + refresh tokens, rate limiting, Helmet headers, input sanitisation, bcrypt passwords
 

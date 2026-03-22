@@ -1,13 +1,9 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 import { AlertType } from '@prisma/client';
 import type { Job } from 'bullmq';
-import { decrypt } from '../common/utils/encryption.util';
 import { EmailService } from '../notifications/email/email.service';
-
-import { WebhookService } from '../notifications/webhook/webhook.service';
 
 import { WebPushService } from '../notifications/webpush/webpush.service';
 
@@ -21,9 +17,7 @@ export class AlertsProcessor extends WorkerHost {
 
   constructor(
     private readonly emailService: EmailService,
-    private readonly webhookService: WebhookService,
     private readonly webPushService: WebPushService,
-    private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
   ) {
     super();
@@ -46,20 +40,7 @@ export class AlertsProcessor extends WorkerHost {
       daysBefore,
       amount,
       currency,
-      webhookUrl,
-      webhookSecret: encryptedSecret,
     } = data;
-
-    let webhookSecret: string | undefined;
-    if (encryptedSecret) {
-      const encryptionSecret = this.configService.get<string>('WEBHOOK_SECRET_KEY');
-      if (!encryptionSecret) {
-        throw new Error(
-          'WEBHOOK_SECRET_KEY must be set in the environment to process webhooks with secrets',
-        );
-      }
-      webhookSecret = decrypt(encryptedSecret, encryptionSecret);
-    }
 
     this.logger.log({
       msg: 'Processing alert job',
@@ -96,22 +77,6 @@ export class AlertsProcessor extends WorkerHost {
           alertId,
           subscriptionId,
           recipient: userEmail,
-        });
-      } else if (type === AlertType.webhook && webhookUrl) {
-        await this.webhookService.sendAlert(
-          webhookUrl,
-          webhookSecret,
-          subscriptionName,
-          daysBefore,
-          amount,
-          currency,
-        );
-        this.logger.log({
-          msg: 'Webhook alert sent successfully',
-          event: 'alert_webhook_sent',
-          jobId: job.id,
-          alertId,
-          subscriptionId,
         });
       } else if (type === AlertType.webpush) {
         // Fetch push subscriptions for the user

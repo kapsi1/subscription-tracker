@@ -37,8 +37,8 @@
            └──────────────┘    └─────────────────┘
                                         │
                                ┌────────▼───────────┐
-                               │  Email / Webhook / │
-                               │  Web Push sender   │
+                               │  Email / Web Push  │
+                               │  sender            │
                                │  (Mailpit dev,     │
                                │   SMTP relay prod) │
                                └────────────────────┘
@@ -88,7 +88,7 @@ A workspace package (`@subtracker/shared`) that provides TypeScript types and ut
 The alert system uses **BullMQ** (backed by Redis) with two moving parts:
 
 1. **Scheduler (cron)** – runs periodically, queries upcoming billing dates, and enqueues alert jobs for subscriptions that cross an alert threshold.
-2. **Worker (processor)** – consumes jobs from the queue and dispatches email / webhook / web-push notifications. Implements idempotency to prevent duplicate sends and exponential backoff on failure.
+2. **Worker (processor)** – consumes jobs from the queue and dispatches email / web-push notifications. Implements idempotency to prevent duplicate sends and exponential backoff on failure.
 
 ## Data Model
 
@@ -104,7 +104,7 @@ User
 ### Key relationships
 
 - Each **User** owns many **Subscriptions** (cascading delete).
-- Each **Subscription** has an optional list of **Alerts** (email, webhook, web-push).
+- Each **Subscription** has an optional list of **Alerts** (email, web-push).
 - **PaymentHistory** records are appended each time a subscription billing cycle rolls over.
 - **Category** is user-owned; each row has a name, color, and optional icon. A subscription references a category by name string.
 
@@ -113,7 +113,7 @@ User
 | Enum | Values |
 |------|--------|
 | `BillingCycle` | `monthly`, `yearly`, `custom` |
-| `AlertType` | `email`, `webhook`, `webpush` |
+| `AlertType` | `email`, `webpush` |
 
 ## Authentication Flow
 
@@ -146,7 +146,6 @@ Access tokens expire after 1 hour by default (`JWT_EXPIRES_IN`). A refresh token
 | Security headers | Helmet (CSP, HSTS, …) |
 | Input sanitisation | Custom `SanitizePipe` strips XSS payloads |
 | Validation | `class-validator` + `ValidationPipe` (whitelist + forbidNonWhitelisted) |
-| Webhook secrets | Stored AES-encrypted in the database |
 | CORS | Explicit allowlist of frontend origin(s) |
 
 ## Observability

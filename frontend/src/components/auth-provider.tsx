@@ -19,8 +19,6 @@ export interface User {
   accentColor: string;
   recentAccentColors: string[];
   emailNotifications: boolean;
-  webhookEnabled: boolean;
-  webhookUrl: string | null;
   dailyDigest: boolean;
   weeklyReport: boolean;
   dashboardSortBy: string;
