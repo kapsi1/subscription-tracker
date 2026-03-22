@@ -25,9 +25,15 @@ import api from '@/lib/api';
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout, fetchUser } = useAuth();
   const { t, i18n } = useTranslation();
   const { canInstall, install } = useInstallPrompt();
+
+  useEffect(() => {
+    if (pathname.startsWith('/manage') && user?.hasSeenManageHint === false) {
+      api.patch('/users/settings', { hasSeenManageHint: true }).then(() => fetchUser());
+    }
+  }, [pathname, user?.hasSeenManageHint, fetchUser]);
 
   const [backendInitStatus, setBackendInitStatus] = useState<'checking' | 'ready' | 'timeout'>(
     'ready',
@@ -190,7 +196,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <span className="hidden sm:inline">{t('nav.dashboard')}</span>
               </Button>
             </Link>
-            <Link href="/manage">
+            <Link
+              href="/manage"
+              className={user?.hasSeenManageHint === false ? 'animate-btn-glow' : undefined}
+            >
               <Button
                 variant="ghost"
                 className={cn(

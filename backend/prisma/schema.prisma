@@ -32,6 +32,7 @@ model User {
   dashboardSortBy        String             @default("date")
   dashboardSortOrder     String             @default("asc")
   showPaidPayments       Boolean            @default(true)
+  hasSeenManageHint      Boolean            @default(false)
   currency               String             @default("USD")
   avatarUrl              String?
   isVerified             Boolean            @default(false)

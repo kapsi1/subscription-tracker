@@ -84,6 +84,10 @@ export class UpdateSettingsDto {
   showPaidPayments?: boolean;
 
   @IsOptional()
+  @IsBoolean()
+  hasSeenManageHint?: boolean;
+
+  @IsOptional()
   @IsString()
   @IsISO4217CurrencyCode()
   currency?: string;

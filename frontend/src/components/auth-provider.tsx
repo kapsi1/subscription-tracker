@@ -26,6 +26,7 @@ export interface User {
   dashboardSortBy: string;
   dashboardSortOrder: string;
   showPaidPayments: boolean;
+  hasSeenManageHint: boolean;
   avatarUrl: string | null;
   googleId: string | null;
 }

@@ -260,6 +260,18 @@
   }
 }
 
+@keyframes btn-glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  50% {
+    box-shadow: 0 0 18px 5px color-mix(in srgb, var(--primary) 55%, transparent);
+  }
+}
+
 @layer utilities {
   .animate-page-in {
     animation: fade-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -357,6 +369,11 @@
     animation: logo-glow 1.4s ease-in-out infinite;
   }
 
+  .animate-btn-glow {
+    animation: btn-glow-pulse 2s ease-in-out infinite;
+    border-radius: var(--radius);
+  }
+
   .nav-item-active {
     position: relative;
     color: var(--primary) !important;
@@ -402,6 +419,10 @@
   }
 
   .logo-icon-hover:hover {
+    animation: none;
+  }
+
+  .animate-btn-glow {
     animation: none;
   }
 

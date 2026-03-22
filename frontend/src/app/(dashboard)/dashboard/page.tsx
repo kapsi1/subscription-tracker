@@ -2,13 +2,11 @@
 
 import type { Category, DashboardSummary, ForecastItem, Subscription } from '@subtracker/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { LoadingState } from '@/components/loading-state';
 import { SubscriptionModal } from '@/components/subscription-modal';
-import { Button } from '@/components/ui/button';
 import api from '@/lib/api';
 import { CostByCategory } from './_components/CostByCategory';
 import { MonthlyForecast } from './_components/MonthlyForecast';
@@ -22,7 +20,6 @@ export default function DashboardPage() {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [slideDirection, setSlideDirection] = useState<'next' | 'prev' | null>(null);
-
   const handleDateChange = (newDate: Date) => {
     const direction =
       newDate.getFullYear() > selectedDate.getFullYear() ||
@@ -136,13 +133,8 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
-        <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+        <div className="flex items-center gap-2">
           <MonthPicker selectedDate={selectedDate} setSelectedDate={handleDateChange} />
-          <Link href="/subscriptions" className="shrink-0">
-            <Button className="gap-2 whitespace-nowrap">
-              {t('dashboard.manageSubscriptions')}
-            </Button>
-          </Link>
         </div>
       </div>
 
