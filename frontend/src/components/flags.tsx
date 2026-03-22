@@ -32,3 +32,30 @@ export const UKFlag = ({ className }: { className?: string }) => (
 export const PolandFlag = ({ className }: { className?: string }) => (
   <Flag countryCode="pl" className={className} />
 );
+export const GermanFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="de" className={className} />
+);
+export const SpanishFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="es" className={className} />
+);
+export const FrenchFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="fr" className={className} />
+);
+export const ItalianFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="it" className={className} />
+);
+export const PortugalFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="pt" className={className} />
+);
+export const RussianFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="ru" className={className} />
+);
+export const ChineseFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="cn" className={className} />
+);
+export const JapaneseFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="jp" className={className} />
+);
+export const KoreanFlag = ({ className }: { className?: string }) => (
+  <Flag countryCode="kr" className={className} />
+);

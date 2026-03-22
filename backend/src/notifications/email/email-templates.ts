@@ -281,7 +281,7 @@ export function buildAlertEmailHtml(params: {
   daysBefore: number;
   amount: number;
   currency: string;
-  language?: 'en' | 'pl';
+  language?: string;
   accentColor?: string;
   theme?: string;
   name?: string;
@@ -300,7 +300,7 @@ export function buildAlertEmailHtml(params: {
     currency,
     appUrl,
   } = params;
-  const locale = LOCALES[language];
+  const locale = LOCALES[language as keyof typeof LOCALES] || LOCALES.en;
   const emails = locale.emails;
   const themeMode = resolveTheme(theme);
   const safeSubscriptionName = escapeHtml(subscriptionName);
@@ -308,7 +308,21 @@ export function buildAlertEmailHtml(params: {
   const greeting = emails.greetingWithName.replace('{{name}}', name || email);
   const teamNameHtml = locale.emails.teamName;
 
-  const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+  const logInTextMap: Record<string, string> = {
+    en: 'log in to your dashboard',
+    pl: 'zaloguj się do panelu',
+    de: 'melden Sie sich bitte in Ihrem Dashboard an',
+    es: 'inicia sesión en tu panel de control',
+    fr: 'connectez-vous à votre tableau de bord',
+    it: 'accedi alla tua dashboard',
+    pt: 'entre no seu painel',
+    ru: 'войдите в панель управления',
+    zh: '登录仪表板',
+    ja: 'ダッシュボードにログイン',
+    ko: '대시보드에 로그인',
+  };
+
+  const logInText = logInTextMap[language] || logInTextMap.en;
   const managePromptHtml = locale.emails.managePrompt.replace(
     logInText,
     `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
@@ -342,7 +356,7 @@ export function buildBudgetAlertEmailHtml(params: {
   currency: string;
   accentColor?: string;
   theme?: string;
-  language?: 'en' | 'pl';
+  language?: string;
   name?: string;
   appUrl: string;
 }): { subject: string; html: string } {
@@ -357,13 +371,27 @@ export function buildBudgetAlertEmailHtml(params: {
     currency,
     appUrl,
   } = params;
-  const locale = LOCALES[language];
+  const locale = LOCALES[language as keyof typeof LOCALES] || LOCALES.en;
   const emails = locale.emails;
   const themeMode = resolveTheme(theme);
   const greeting = emails.greetingWithName.replace('{{name}}', name || email);
   const teamNameHtml = locale.emails.teamName;
 
-  const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+  const logInTextMap: Record<string, string> = {
+    en: 'log in to your dashboard',
+    pl: 'zaloguj się do panelu',
+    de: 'melden Sie sich bitte in Ihrem Dashboard an',
+    es: 'inicia sesión en tu panel de control',
+    fr: 'connectez-vous à votre tableau de bord',
+    it: 'accedi alla tua dashboard',
+    pt: 'entre no seu painel',
+    ru: 'войдите в панель управления',
+    zh: '登录仪表板',
+    ja: 'ダッシュボードにログイン',
+    ko: '대시보드에 로그인',
+  };
+
+  const logInText = logInTextMap[language] || logInTextMap.en;
   const managePromptHtml = locale.emails.managePrompt.replace(
     logInText,
     `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
@@ -398,7 +426,7 @@ export function buildDailyDigestEmailHtml(params: {
   stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number };
   paidYesterday: { name: string; amount: number; currency: string }[];
   currency: string;
-  language?: 'en' | 'pl';
+  language?: string;
   accentColor?: string;
   theme?: string;
   name?: string;
@@ -415,13 +443,27 @@ export function buildDailyDigestEmailHtml(params: {
     currency,
     appUrl,
   } = params;
-  const locale = LOCALES[language];
+  const locale = LOCALES[language as keyof typeof LOCALES] || LOCALES.en;
   const emails = locale.emails;
   const themeMode = resolveTheme(theme);
   const greeting = emails.greetingWithName.replace('{{name}}', name || email);
   const teamNameHtml = locale.emails.teamName;
 
-  const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+  const logInTextMap: Record<string, string> = {
+    en: 'log in to your dashboard',
+    pl: 'zaloguj się do panelu',
+    de: 'melden Sie sich bitte in Ihrem Dashboard an',
+    es: 'inicia sesión en tu panel de control',
+    fr: 'connectez-vous à votre tableau de bord',
+    it: 'accedi alla tua dashboard',
+    pt: 'entre no seu painel',
+    ru: 'войдите в панель управления',
+    zh: '登录仪表板',
+    ja: 'ダッシュボードにログイン',
+    ko: '대시보드에 로그인',
+  };
+
+  const logInText = logInTextMap[language] || logInTextMap.en;
   const managePromptHtml = locale.emails.managePrompt.replace(
     logInText,
     `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
@@ -481,20 +523,34 @@ export function buildWeeklyReportEmailHtml(params: {
   email: string;
   stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number };
   currency: string;
-  language?: 'en' | 'pl';
+  language?: string;
   accentColor?: string;
   theme?: string;
   name?: string;
   appUrl: string;
 }): { subject: string; html: string } {
   const { language = 'en', accentColor, theme, name, email, stats, currency, appUrl } = params;
-  const locale = LOCALES[language];
+  const locale = LOCALES[language as keyof typeof LOCALES] || LOCALES.en;
   const emails = locale.emails;
   const themeMode = resolveTheme(theme);
   const greeting = emails.greetingWithName.replace('{{name}}', name || email);
   const teamNameHtml = locale.emails.teamName;
 
-  const logInText = language === 'pl' ? 'zaloguj się do panelu' : 'log in to your dashboard';
+  const logInTextMap: Record<string, string> = {
+    en: 'log in to your dashboard',
+    pl: 'zaloguj się do panelu',
+    de: 'melden Sie sich bitte in Ihrem Dashboard an',
+    es: 'inicia sesión en tu panel de control',
+    fr: 'connectez-vous à votre tableau de bord',
+    it: 'accedi alla tua dashboard',
+    pt: 'entre no seu painel',
+    ru: 'войдите в панель управления',
+    zh: '登录仪表板',
+    ja: 'ダッシュボードにログイン',
+    ko: '대시보드에 로그인',
+  };
+
+  const logInText = logInTextMap[language] || logInTextMap.en;
   const managePromptHtml = locale.emails.managePrompt.replace(
     logInText,
     `<a href="${appUrl}" style="color: inherit; text-decoration: underline; font-weight: 600;">${logInText}</a>`,
@@ -531,11 +587,11 @@ export function buildVerificationEmailHtml(params: {
   email: string;
   name: string;
   token: string;
-  language?: 'en' | 'pl';
+  language?: string;
   frontendUrl: string;
 }): { subject: string; html: string } {
   const { language = 'en', name, email, token, frontendUrl } = params;
-  const locale = LOCALES[language];
+  const locale = LOCALES[language as keyof typeof LOCALES] || LOCALES.en;
   const emails = locale.emails;
   const verification = emails.verification;
   const themeMode = resolveTheme('system');
@@ -577,11 +633,11 @@ export function buildPasswordResetEmailHtml(params: {
   email: string;
   name: string;
   token: string;
-  language?: 'en' | 'pl';
+  language?: string;
   frontendUrl: string;
 }): { subject: string; html: string } {
   const { language = 'en', name, email, token, frontendUrl } = params;
-  const locale = LOCALES[language];
+  const locale = LOCALES[language as keyof typeof LOCALES] || LOCALES.en;
   const emails = locale.emails;
   const passwordReset = emails.passwordReset;
   const themeMode = resolveTheme('system');

@@ -21,6 +21,22 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isAuthenticated, user?.language]);
 
+  useEffect(() => {
+    const handleLanguageChange = (lang: string) => {
+      document.documentElement.lang = lang.split('-')[0];
+    };
+
+    i18n.on('languageChanged', handleLanguageChange);
+    // Set initial lang
+    if (i18n.language) {
+      handleLanguageChange(i18n.language);
+    }
+
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
+  }, []);
+
   if (!mounted) {
     // Prevent hydration differences by not rendering until client is mounted
     return null;

@@ -6,12 +6,32 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '@/components/auth-provider';
-import { Flag, PolandFlag, UKFlag } from '@/components/flags';
+import {
+  ChineseFlag,
+  Flag,
+  FrenchFlag,
+  GermanFlag,
+  ItalianFlag,
+  JapaneseFlag,
+  KoreanFlag,
+  PolandFlag,
+  PortugalFlag,
+  RussianFlag,
+  SpanishFlag,
+  UKFlag,
+} from '@/components/flags';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/components/ui/utils';
 import api from '@/lib/api';
 import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
@@ -21,6 +41,20 @@ interface LocalizationSectionProps {
   setCurrency: (currency: string) => void;
 }
 
+const LANGUAGES = [
+  { code: 'en', labelKey: 'language.en', Flag: UKFlag },
+  { code: 'pl', labelKey: 'language.pl', Flag: PolandFlag },
+  { code: 'de', labelKey: 'language.de', Flag: GermanFlag },
+  { code: 'es', labelKey: 'language.es', Flag: SpanishFlag },
+  { code: 'fr', labelKey: 'language.fr', Flag: FrenchFlag },
+  { code: 'it', labelKey: 'language.it', Flag: ItalianFlag },
+  { code: 'pt', labelKey: 'language.pt', Flag: PortugalFlag },
+  { code: 'ru', labelKey: 'language.ru', Flag: RussianFlag },
+  { code: 'zh', labelKey: 'language.zh', Flag: ChineseFlag },
+  { code: 'ja', labelKey: 'language.ja', Flag: JapaneseFlag },
+  { code: 'ko', labelKey: 'language.ko', Flag: KoreanFlag },
+];
+
 export function LocalizationSection({ currency, setCurrency }: LocalizationSectionProps) {
   const { t, i18n } = useTranslation();
   const { searchQuery } = useSettingsSearch();
@@ -28,7 +62,7 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
   const [searchCurrency, setSearchCurrency] = useState('');
   const [isCurrencyPopoverOpen, setIsCurrencyPopoverOpen] = useState(false);
 
-  const currentLanguage = i18n.language || 'en';
+  const currentLanguageCode = (i18n.language || 'en').split('-')[0];
 
   const handleLanguageChange = async (lang: string) => {
     try {
@@ -63,86 +97,28 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <div className="text-sm font-medium leading-none">
+            <Label htmlFor="language-select">
               <SearchHighlight text={t('settings.localization.language')} query={searchQuery} />
-            </div>
+            </Label>
             <p className="text-sm text-muted-foreground">
               <SearchHighlight text={t('settings.localization.languageDesc')} query={searchQuery} />
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-              <button
-                type="button"
-                onClick={() => handleLanguageChange('en')}
-                className={cn(
-                  'flex items-center gap-3 p-3 rounded-lg border transition-all text-left group',
-                  currentLanguage.startsWith('en')
-                    ? 'bg-primary/5 border-primary ring-1 ring-primary shadow-sm'
-                    : 'bg-card hover:bg-muted hover:border-muted-foreground/30',
-                )}
-              >
-                <div className="shrink-0">
-                  <UKFlag className="w-6 h-6 rounded-sm shadow-sm" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p
-                    className={cn(
-                      'text-sm font-medium transition-colors',
-                      currentLanguage.startsWith('en') ? 'text-primary' : 'text-foreground',
-                    )}
-                  >
-                    {t('language.en')}
-                  </p>
-                </div>
-                <div
-                  className={cn(
-                    'w-4 h-4 rounded-full border-2 transition-all flex items-center justify-center',
-                    currentLanguage.startsWith('en')
-                      ? 'border-primary bg-primary'
-                      : 'border-muted-foreground/30',
-                  )}
-                >
-                  {currentLanguage.startsWith('en') && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleLanguageChange('pl')}
-                className={cn(
-                  'flex items-center gap-3 p-3 rounded-lg border transition-all text-left group',
-                  currentLanguage.startsWith('pl')
-                    ? 'bg-primary/5 border-primary ring-1 ring-primary shadow-sm'
-                    : 'bg-card hover:bg-muted hover:border-muted-foreground/30',
-                )}
-              >
-                <div className="shrink-0">
-                  <PolandFlag className="w-6 h-6 rounded-sm shadow-sm" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p
-                    className={cn(
-                      'text-sm font-medium transition-colors',
-                      currentLanguage.startsWith('pl') ? 'text-primary' : 'text-foreground',
-                    )}
-                  >
-                    {t('language.pl')}
-                  </p>
-                </div>
-                <div
-                  className={cn(
-                    'w-4 h-4 rounded-full border-2 transition-all flex items-center justify-center',
-                    currentLanguage.startsWith('pl')
-                      ? 'border-primary bg-primary'
-                      : 'border-muted-foreground/30',
-                  )}
-                >
-                  {currentLanguage.startsWith('pl') && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-              </button>
+            <div className="pt-1">
+              <Select value={currentLanguageCode} onValueChange={handleLanguageChange}>
+                <SelectTrigger id="language-select" className="w-full h-11 dark:bg-input/30">
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  {LANGUAGES.map((lang) => (
+                    <SelectItem key={lang.code} value={lang.code}>
+                      <div className="flex items-center gap-3">
+                        <lang.Flag className="w-5 h-5 rounded-[1px]" />
+                        <span className="text-sm">{t(lang.labelKey)}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

@@ -135,7 +135,7 @@ export class UsersController {
       );
     }
 
-    const language = body?.lang === 'pl' ? 'pl' : 'en';
+    const language = body?.lang || 'en';
 
     await this.emailService.sendAlert(
       user.email,
@@ -173,7 +173,7 @@ export class UsersController {
       );
     }
 
-    const language = body?.lang === 'pl' ? 'pl' : 'en';
+    const language = body?.lang || 'en';
     const budget = user.monthlyBudget ? Number(user.monthlyBudget) : 50;
     const amount = budget + 12.34;
 
@@ -206,7 +206,7 @@ export class UsersController {
     if (!user.emailNotifications)
       throw new BadRequestException('Email notifications are disabled.');
 
-    const language = body?.lang === 'pl' ? 'pl' : 'en';
+    const language = body?.lang || 'en';
 
     await this.emailService.sendDailyDigest(
       user.email,
@@ -237,7 +237,7 @@ export class UsersController {
     if (!user.emailNotifications)
       throw new BadRequestException('Email notifications are disabled.');
 
-    const language = body?.lang === 'pl' ? 'pl' : 'en';
+    const language = body?.lang || 'en';
 
     await this.emailService.sendWeeklyReport(
       user.email,

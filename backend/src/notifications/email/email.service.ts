@@ -101,7 +101,7 @@ export class EmailService {
     daysBefore: number,
     amount: number,
     currency: string,
-    language: 'en' | 'pl' = 'en',
+    language: string = 'en',
     accentColor?: string,
     theme?: string,
     name?: string,
@@ -137,7 +137,7 @@ export class EmailService {
     currency: string,
     accentColor?: string,
     theme?: string,
-    language: 'en' | 'pl' = 'en',
+    language: string = 'en',
     name?: string,
   ) {
     const appUrl =
@@ -171,7 +171,7 @@ export class EmailService {
     stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number },
     paidYesterday: { name: string; amount: number; currency: string }[],
     currency: string,
-    language: 'en' | 'pl' = 'en',
+    language: string = 'en',
     accentColor?: string,
     theme?: string,
     name?: string,
@@ -204,7 +204,7 @@ export class EmailService {
     email: string,
     stats: { totalActive: number; totalMonthly: number; upcomingThisWeek: number },
     currency: string,
-    language: 'en' | 'pl' = 'en',
+    language: string = 'en',
     accentColor?: string,
     theme?: string,
     name?: string,
@@ -236,7 +236,7 @@ export class EmailService {
     email: string,
     name: string,
     token: string,
-    language: 'en' | 'pl' = 'en',
+    language: string = 'en',
   ) {
     const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const { subject, html } = buildVerificationEmailHtml({
@@ -261,7 +261,7 @@ export class EmailService {
     email: string,
     name: string,
     token: string,
-    language: 'en' | 'pl' = 'en',
+    language: string = 'en',
   ) {
     const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const { subject, html } = buildPasswordResetEmailHtml({
