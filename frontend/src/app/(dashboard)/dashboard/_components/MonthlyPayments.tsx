@@ -24,7 +24,7 @@ import {
 
 export type MonthlyPayment = {
   id: string;
-  subscriptionId: string;
+  subscriptionId: string | null;
   name: string;
   category: string;
   amount: number;
@@ -36,9 +36,10 @@ export type MonthlyPayment = {
 interface MonthlyPaymentsProps {
   monthlyPayments: MonthlyPayment[];
   onEdit?: (subscriptionId: string) => void;
+  onViewPayment?: (payment: MonthlyPayment) => void;
 }
 
-export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProps) {
+export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: MonthlyPaymentsProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [paymentSortBy, setPaymentSortBy] = useState<'date' | 'amount'>('date');
@@ -174,7 +175,13 @@ export function MonthlyPayments({ monthlyPayments, onEdit }: MonthlyPaymentsProp
               <button
                 key={payment.id}
                 type="button"
-                onClick={() => onEdit?.(payment.subscriptionId)}
+                onClick={() => {
+                  if (payment.subscriptionId) {
+                    onEdit?.(payment.subscriptionId);
+                  } else {
+                    onViewPayment?.(payment);
+                  }
+                }}
                 className={`animate-list-item flex w-full min-w-0 cursor-pointer flex-col gap-3 rounded-lg border p-4 text-left transition-colors lg:flex-row lg:items-center lg:justify-between ${
                   payment.status === 'done'
                     ? 'border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80'

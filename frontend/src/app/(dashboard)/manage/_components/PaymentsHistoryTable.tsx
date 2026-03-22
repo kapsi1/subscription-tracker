@@ -17,11 +17,12 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 interface PaymentsHistoryTableProps {
   payments: PaymentHistory[];
   searchQuery: string;
+  onRowClick?: (payment: PaymentHistory) => void;
 }
 
 type SortKey = 'paidAt' | 'subscriptionName' | 'amount';
 
-export function PaymentsHistoryTable({ payments, searchQuery }: PaymentsHistoryTableProps) {
+export function PaymentsHistoryTable({ payments, searchQuery, onRowClick }: PaymentsHistoryTableProps) {
   const { t } = useTranslation();
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'asc' | 'desc' }>({
     key: 'paidAt',
@@ -102,7 +103,11 @@ export function PaymentsHistoryTable({ payments, searchQuery }: PaymentsHistoryT
         </TableHeader>
         <TableBody>
           {sorted.map((payment) => (
-            <TableRow key={payment.id} className="animate-row-in">
+            <TableRow
+              key={payment.id}
+              className={`animate-row-in${onRowClick ? ' cursor-pointer hover:bg-accent/50' : ''}`}
+              onClick={() => onRowClick?.(payment)}
+            >
               <TableCell>{formatDate(payment.paidAt)}</TableCell>
               <TableCell className="font-medium max-w-[200px]">
                 <TooltipProvider>

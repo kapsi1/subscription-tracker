@@ -322,9 +322,8 @@
 - [ ] Email notifications on production
 - [ ] Default reminders
 - [ ] Budget threshold alerts
-- [ ] Custom billing cycle
+- [ ] Custom billing cycle: when selecting it in a form, open a calendar. Inside user can toggle days in the current month, and the selected days will be the billing days for each month. Add Save and Cancel buttons. Change "Custom" to "Custom..." in the dropdown. If a subscription's billing cycle is set to custom, change the dropdown text to "Custom: x days" and show the selected days in the tooltip.
 - [x] Delete Account flow in user profile. Include a full screen warning/confirmation modal. Add tests.
-- [ ] Billing cycle -> custom does nothing
 - [ ] Support multiple currencies. Add a toggle in Settings, that enables multiple currencies. When toggle is enabled, the currency selected in the currency selector should be the target currency for conversion. This currency will be what all other currencies will be converted to. Show the converted value in This Month Payments and other places where different currencies appear. Show the converted value in parentheses after the source value. Show the converted value in aggregated values: Total Monthly Cost and Total Yearly Cost, as well as charts. The subscription add/edit form should have a currency selector (same as in Settings). Use an external service to convert currencies. Show me a list of services to choose from. Add unit and E2E tests, and make E2E tests use mocks for the external services.
 
 To consider: what happens when we disable the toggle after adding some subscriptions with different currencies?

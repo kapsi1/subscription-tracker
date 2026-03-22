@@ -247,17 +247,6 @@ export function SubscriptionsTable({
                         size="icon"
                         onClick={(e) => {
                           e.stopPropagation();
-                          onEdit(subscription);
-                        }}
-                        className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation();
                           onDelete(subscription.id);
                         }}
                         className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"

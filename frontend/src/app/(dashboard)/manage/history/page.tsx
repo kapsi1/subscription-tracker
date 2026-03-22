@@ -6,6 +6,7 @@ import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/loading-state';
+import { PaymentDetailsModal } from '@/components/payment-details-modal';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import api from '@/lib/api';
@@ -14,6 +15,8 @@ import { PaymentsHistoryTable } from '../_components/PaymentsHistoryTable';
 export default function ManageHistoryPage() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
+  const [viewingPayment, setViewingPayment] = useState<PaymentHistory | null>(null);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
   const { data: allPayments = [], isLoading } = useQuery<PaymentHistory[]>({
     queryKey: ['payments'],
@@ -52,9 +55,21 @@ export default function ManageHistoryPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <PaymentsHistoryTable payments={filteredPayments} searchQuery={searchQuery} />
+          <PaymentsHistoryTable
+            payments={filteredPayments}
+            searchQuery={searchQuery}
+            onRowClick={(p) => {
+              setViewingPayment(p);
+              setPaymentModalOpen(true);
+            }}
+          />
         </CardContent>
       </Card>
+      <PaymentDetailsModal
+        open={paymentModalOpen}
+        onOpenChange={setPaymentModalOpen}
+        payment={viewingPayment}
+      />
     </>
   );
 }
