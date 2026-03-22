@@ -156,6 +156,15 @@
     "import": "Importuj",
     "export": "Eksportuj",
     "add": "Dodaj subskrypcję",
+    "addPayment": "Dodaj płatność",
+    "paymentDetails": {
+      "title": "Szczegóły płatności",
+      "addTitle": "Dodaj płatność",
+      "viewDesc": "Szczegóły samodzielnej płatności",
+      "addDesc": "Zarejestruj płatność niezwiązaną z subskrypcją",
+      "serviceName": "Nazwa usługi",
+      "currency": "Waluta"
+    },
     "search": "Szukaj subskrypcji po nazwie lub kategorii...",
     "all": "Wszystkie subskrypcje",
     "foundCount_one": "Znaleziono {{count}} subskrypcję",
@@ -205,9 +214,9 @@
     },
     "modal": {
       "addTitle": "Dodaj subskrypcję",
-      "editTitle": "Edytuj subskrypcję",
+      "editTitle": "Szczegóły subskrypcji",
       "addDesc": "Dodaj nową subskrypcję do śledzenia",
-      "editDesc": "Zaktualizuj szczegóły subskrypcji",
+      "editDesc": "Przeglądaj i zarządzaj swoją subskrypcją",
       "serviceName": "Nazwa usługi",
       "servicePlaceholder": "np. Netflix, Spotify",
       "amount": "Kwota",

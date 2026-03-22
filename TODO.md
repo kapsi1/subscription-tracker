@@ -361,5 +361,5 @@ full width
 - [ ] Move category management from Settings to Manage tab, as a new sub-tab.
 - [x] On tabs with sub-tabs, when changing sub-tab update the tab's title (<h1> element) to match the sub-tab name.
 - [x] Import data functionality: after a file is selected by user and validated, show a modal with a preview of the data to be imported. Let user confirm or cancel the import. Add a checkbox to replace existing data with imported data. Add unit and E2E tests.
-- [ ] Clicking on a standalone payment in Dashboard shows an error. Add "add payment" button in Manage page? Subscription details modal has edit/add payments functionality.
+- [x] Clicking on a standalone payment in Dashboard shows an error. Instead it should open a modal with payment name, date, amount, and buttons to edit/delete. Make it look similar to Payment History in Edit Subscription. Title it "Payment Details". Also rename Edit Subscription modal to "Subscription Details". Add "Add Payment" button to Manage page, to the left of "Add Subscription".
 - [x] Edit subscription modal can be cut off if screen height is small. Add a scrollbar to the modal.

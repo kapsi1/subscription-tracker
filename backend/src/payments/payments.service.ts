@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 import { calculateNextBillingDate } from '../subscriptions/utils/billing-date.util';
 import type { CreatePaymentDto } from './dto/create-payment.dto';
+import type { CreateStandalonePaymentDto } from './dto/create-standalone-payment.dto';
 import type { UpdatePaymentDto } from './dto/update-payment.dto';
 
 @Injectable()
@@ -163,6 +164,19 @@ export class PaymentsService {
     }
   }
 
+  async createStandalonePayment(userId: string, dto: CreateStandalonePaymentDto) {
+    return this.prisma.paymentHistory.create({
+      data: {
+        userId,
+        subscriptionId: null,
+        subscriptionName: dto.subscriptionName,
+        amount: dto.amount,
+        currency: dto.currency,
+        paidAt: new Date(dto.paidAt),
+      },
+    });
+  }
+
   async findAllForUser(userId: string) {
     return this.prisma.paymentHistory.findMany({
       where: { userId },
@@ -219,6 +233,7 @@ export class PaymentsService {
         ...(dto.amount !== undefined && { amount: dto.amount }),
         ...(dto.currency && { currency: dto.currency }),
         ...(dto.paidAt && { paidAt: new Date(dto.paidAt) }),
+        ...(dto.subscriptionName && { subscriptionName: dto.subscriptionName }),
       },
     });
   }

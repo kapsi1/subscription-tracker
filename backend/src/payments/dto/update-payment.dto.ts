@@ -14,4 +14,8 @@ export class UpdatePaymentDto {
   @IsOptional()
   @IsString()
   paidAt?: string;
+
+  @IsOptional()
+  @IsString()
+  subscriptionName?: string;
 }

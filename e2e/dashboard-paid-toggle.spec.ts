@@ -56,7 +56,7 @@ test.describe('Dashboard Paid Toggle', () => {
     await page.goto('/dashboard');
     
     // Check toggle is ON by default
-    const toggle = page.getByRole('switch', { name: /Show paid/i });
+    const toggle = page.getByRole('switch', { name: /Show done/i });
     await expect(toggle).toBeChecked();
 
     // Check "Paid Sub" is visible and marked as "Done"
@@ -78,14 +78,14 @@ test.describe('Dashboard Paid Toggle', () => {
     await page.waitForURL('**/dashboard');
     
     // Verify toggle is still OFF
-    await expect(page.getByRole('switch', { name: /Show paid/i })).not.toBeChecked();
+    await expect(page.getByRole('switch', { name: /Show done/i })).not.toBeChecked();
     
     // Verify "Paid Sub" is still HIDDEN
     await expect(page.getByText('Paid Sub')).not.toBeVisible();
 
     // 7. Toggle back ON
-    await page.getByRole('switch', { name: /Show paid/i }).click();
-    await expect(page.getByRole('switch', { name: /Show paid/i })).toBeChecked();
+    await page.getByRole('switch', { name: /Show done/i }).click();
+    await expect(page.getByRole('switch', { name: /Show done/i })).toBeChecked();
     
     // Verify "Paid Sub" is VISIBLE again
     await expect(page.getByText('Paid Sub')).toBeVisible();

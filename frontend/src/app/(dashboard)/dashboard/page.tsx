@@ -1,11 +1,12 @@
 'use client';
 
-import type { Category, DashboardSummary, ForecastItem, Subscription } from '@subtracker/shared';
+import type { Category, DashboardSummary, ForecastItem, PaymentHistory, Subscription } from '@subtracker/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { LoadingState } from '@/components/loading-state';
+import { PaymentDetailsModal } from '@/components/payment-details-modal';
 import { SubscriptionModal } from '@/components/subscription-modal';
 import api from '@/lib/api';
 import { CostByCategory } from './_components/CostByCategory';
@@ -31,9 +32,13 @@ export default function DashboardPage() {
     setSelectedDate(newDate);
   };
 
-  // Modal state
+  // Subscription modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
+
+  // Payment details modal state
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [viewingPayment, setViewingPayment] = useState<PaymentHistory | null>(null);
 
   const month = selectedDate.getMonth();
   const year = selectedDate.getFullYear();
@@ -154,7 +159,14 @@ export default function DashboardPage() {
           monthlyPaymentsTotalCount={monthlyPayments.length}
         />
 
-        <MonthlyPayments monthlyPayments={monthlyPayments} onEdit={handleEditSubscription} />
+        <MonthlyPayments
+          monthlyPayments={monthlyPayments}
+          onEdit={handleEditSubscription}
+          onViewPayment={(p) => {
+            setViewingPayment({ id: p.id, subscriptionId: null, subscriptionName: p.name, amount: p.amount, currency: p.currency, paidAt: p.date });
+            setPaymentModalOpen(true);
+          }}
+        />
 
         <MonthlyForecast forecast={forecast} currency={summary.currency} />
 
@@ -170,6 +182,12 @@ export default function DashboardPage() {
         onOpenChange={setModalOpen}
         subscription={editingSubscription}
         onSave={handleSaveSubscription}
+      />
+
+      <PaymentDetailsModal
+        open={paymentModalOpen}
+        onOpenChange={setPaymentModalOpen}
+        payment={viewingPayment}
       />
     </div>
   );

@@ -172,34 +172,60 @@ export function SubscriptionModal({
           )}
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="amount">{t('subscriptions.modal.amount')}</Label>
-          <Input
-            id="amount"
-            name="amount"
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="0.00"
-            value={formData.amount}
-            onChange={(e) => {
-              setFormData({ ...formData, amount: e.target.value });
-              if (errors.amount) {
-                const newErrors = { ...errors };
-                delete newErrors.amount;
-                setErrors(newErrors);
-              }
-            }}
-            aria-invalid={isSubmitted && !!errors.amount}
-          />
-          {isSubmitted && errors.amount && (
-            <p className="text-xs font-medium text-destructive">
-              {t(`subscriptions.modal.errors.${errors.amount}`)}
-            </p>
-          )}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="amount">{t('subscriptions.modal.amount')}</Label>
+            <Input
+              id="amount"
+              name="amount"
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+              value={formData.amount}
+              onChange={(e) => {
+                setFormData({ ...formData, amount: e.target.value });
+                if (errors.amount) {
+                  const newErrors = { ...errors };
+                  delete newErrors.amount;
+                  setErrors(newErrors);
+                }
+              }}
+              aria-invalid={isSubmitted && !!errors.amount}
+            />
+            {isSubmitted && errors.amount && (
+              <p className="text-xs font-medium text-destructive">
+                {t(`subscriptions.modal.errors.${errors.amount}`)}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="nextBillingDate">{t('subscriptions.modal.nextBillingDate')}</Label>
+            <Input
+              id="nextBillingDate"
+              name="nextBillingDate"
+              type="date"
+              value={formData.nextBillingDate}
+              onChange={(e) => {
+                setFormData({ ...formData, nextBillingDate: e.target.value });
+                if (errors.nextBillingDate) {
+                  const newErrors = { ...errors };
+                  delete newErrors.nextBillingDate;
+                  setErrors(newErrors);
+                }
+              }}
+              aria-invalid={isSubmitted && !!errors.nextBillingDate}
+            />
+            {isSubmitted && errors.nextBillingDate && (
+              <p className="text-xs font-medium text-destructive">
+                {t(`subscriptions.modal.errors.${errors.nextBillingDate}`)}
+              </p>
+            )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label htmlFor="billingCycle">{t('subscriptions.modal.billingCycle')}</Label>
             <Select
@@ -220,7 +246,7 @@ export function SubscriptionModal({
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 col-span-2">
             <Label htmlFor="category">{t('subscriptions.modal.category')}</Label>
             <Select
               name="category"
@@ -266,71 +292,46 @@ export function SubscriptionModal({
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="nextBillingDate">{t('subscriptions.modal.nextBillingDate')}</Label>
-          <Input
-            id="nextBillingDate"
-            name="nextBillingDate"
-            type="date"
-            value={formData.nextBillingDate}
-            onChange={(e) => {
-              setFormData({ ...formData, nextBillingDate: e.target.value });
-              if (errors.nextBillingDate) {
-                const newErrors = { ...errors };
-                delete newErrors.nextBillingDate;
-                setErrors(newErrors);
-              }
-            }}
-            aria-invalid={isSubmitted && !!errors.nextBillingDate}
-          />
-          {isSubmitted && errors.nextBillingDate && (
-            <p className="text-xs font-medium text-destructive">
-              {t(`subscriptions.modal.errors.${errors.nextBillingDate}`)}
-            </p>
-          )}
-        </div>
-
-        <div className="flex items-center justify-between border-t pt-4">
-          <div className="space-y-0.5">
-            <Label htmlFor="reminderEnabled">{t('subscriptions.modal.reminders')}</Label>
-            <p className="text-sm text-muted-foreground">
-              {t('subscriptions.modal.remindersDesc')}
-            </p>
-          </div>
+        <div className="flex items-center gap-4 border-t pt-4">
           <Switch
             id="reminderEnabled"
             name="reminderEnabled"
             checked={formData.reminderEnabled}
             onCheckedChange={(checked) => setFormData({ ...formData, reminderEnabled: checked })}
           />
+          <Label htmlFor="reminderEnabled" className="cursor-pointer">
+            {t('subscriptions.modal.reminders')}
+          </Label>
+          {formData.reminderEnabled && (
+            <div className="flex items-center gap-2 ml-auto">
+              <Label htmlFor="reminderDays" className="text-sm whitespace-nowrap">
+                {t('subscriptions.modal.reminderDays')}
+              </Label>
+              <Input
+                id="reminderDays"
+                name="reminderDays"
+                type="number"
+                min="0"
+                max="30"
+                className="w-20"
+                value={formData.reminderDays}
+                onChange={(e) => {
+                  setFormData({ ...formData, reminderDays: e.target.value });
+                  if (errors.reminderDays) {
+                    const newErrors = { ...errors };
+                    delete newErrors.reminderDays;
+                    setErrors(newErrors);
+                  }
+                }}
+                aria-invalid={isSubmitted && !!errors.reminderDays}
+              />
+            </div>
+          )}
         </div>
-
-        {formData.reminderEnabled && (
-          <div className="space-y-2">
-            <Label htmlFor="reminderDays">{t('subscriptions.modal.reminderDays')}</Label>
-            <Input
-              id="reminderDays"
-              name="reminderDays"
-              type="number"
-              min="0"
-              max="30"
-              value={formData.reminderDays}
-              onChange={(e) => {
-                setFormData({ ...formData, reminderDays: e.target.value });
-                if (errors.reminderDays) {
-                  const newErrors = { ...errors };
-                  delete newErrors.reminderDays;
-                  setErrors(newErrors);
-                }
-              }}
-              aria-invalid={isSubmitted && !!errors.reminderDays}
-            />
-            {isSubmitted && errors.reminderDays && (
-              <p className="text-xs font-medium text-destructive">
-                {t(`subscriptions.modal.errors.${errors.reminderDays}`)}
-              </p>
-            )}
-          </div>
+        {isSubmitted && errors.reminderDays && (
+          <p className="text-xs font-medium text-destructive">
+            {t(`subscriptions.modal.errors.${errors.reminderDays}`)}
+          </p>
         )}
       </div>
 

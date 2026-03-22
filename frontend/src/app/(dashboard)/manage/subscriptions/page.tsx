@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { LoadingState } from '@/components/loading-state';
+import { PaymentDetailsModal } from '@/components/payment-details-modal';
 import { SubscriptionModal } from '@/components/subscription-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,6 +63,7 @@ export default function ManageSubscriptionsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
+  const [addPaymentOpen, setAddPaymentOpen] = useState(false);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [importPreviewData, setImportPreviewData] = useState<z.infer<
     typeof importDataSchema
@@ -286,6 +288,10 @@ export default function ManageSubscriptionsPage() {
             <Download className="w-4 h-4" />
             {t('subscriptions.export')}
           </Button>
+          <Button variant="outline" onClick={() => setAddPaymentOpen(true)} className="gap-2 shrink-0">
+            <Plus className="w-4 h-4" />
+            {t('subscriptions.addPayment')}
+          </Button>
           <Button onClick={handleAddNew} className="gap-2 shrink-0">
             <Plus className="w-4 h-4" />
             {t('subscriptions.add')}
@@ -317,6 +323,12 @@ export default function ManageSubscriptionsPage() {
         onOpenChange={setModalOpen}
         subscription={editingSubscription}
         onSave={handleSave}
+      />
+
+      <PaymentDetailsModal
+        open={addPaymentOpen}
+        onOpenChange={setAddPaymentOpen}
+        payment={null}
       />
 
       <ImportPreviewModal

@@ -94,7 +94,7 @@
     "sortByAmount": "Amount",
     "sortDirectionAsc": "Sort ascending",
     "sortDirectionDesc": "Sort descending",
-    "showPaid": "Show paid"
+    "showPaid": "Show done"
   },
   "theme": {
     "light": "Switch to light mode",
@@ -131,6 +131,15 @@
     "import": "Import",
     "export": "Export",
     "add": "Add Subscription",
+    "addPayment": "Add Payment",
+    "paymentDetails": {
+      "title": "Payment Details",
+      "addTitle": "Add Payment",
+      "viewDesc": "Standalone payment details",
+      "addDesc": "Record a payment not tied to a subscription",
+      "serviceName": "Service Name",
+      "currency": "Currency"
+    },
     "search": "Search subscriptions by name or category...",
     "all": "All Subscriptions",
     "pageTabs": {
@@ -197,9 +206,9 @@
     },
     "modal": {
       "addTitle": "Add Subscription",
-      "editTitle": "Edit Subscription",
+      "editTitle": "Subscription Details",
       "addDesc": "Add a new subscription to track",
-      "editDesc": "Update your subscription details",
+      "editDesc": "View and manage your subscription",
       "serviceName": "Service Name",
       "servicePlaceholder": "e.g. Netflix, Spotify",
       "amount": "Amount",

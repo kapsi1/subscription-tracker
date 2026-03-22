@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } fro
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { RequestWithUser } from '../common/interfaces/request.interface';
 import { CreatePaymentDto } from './dto/create-payment.dto';
+import { CreateStandalonePaymentDto } from './dto/create-standalone-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { PaymentsService } from './payments.service';
 
@@ -13,6 +14,25 @@ export class PaymentsAllController {
   @Get()
   findAll(@Req() req: RequestWithUser) {
     return this.paymentsService.findAllForUser(req.user.userId);
+  }
+
+  @Post()
+  create(@Req() req: RequestWithUser, @Body() dto: CreateStandalonePaymentDto) {
+    return this.paymentsService.createStandalonePayment(req.user.userId, dto);
+  }
+
+  @Patch(':paymentId')
+  update(
+    @Req() req: RequestWithUser,
+    @Param('paymentId') paymentId: string,
+    @Body() dto: UpdatePaymentDto,
+  ) {
+    return this.paymentsService.updatePayment(req.user.userId, paymentId, dto);
+  }
+
+  @Delete(':paymentId')
+  remove(@Req() req: RequestWithUser, @Param('paymentId') paymentId: string) {
+    return this.paymentsService.removePayment(req.user.userId, paymentId);
   }
 }
 
