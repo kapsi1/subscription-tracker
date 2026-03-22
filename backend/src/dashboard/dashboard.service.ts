@@ -1,22 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BillingCycle, type Subscription } from '@prisma/client';
+import { type ForecastItem } from '@subtracker/shared';
 import { PrismaService } from '../prisma/prisma.service';
-
-export interface ForecastPayment {
-  id: string;
-  name: string;
-  amount: number;
-  currency: string;
-  date: Date;
-}
-
-export interface ForecastItem {
-  month: string;
-  year: number;
-  amount: number;
-  currency: string;
-  payments: ForecastPayment[];
-}
 
 @Injectable()
 export class DashboardService {
@@ -358,7 +343,7 @@ export class DashboardService {
             name: sub.name,
             amount: amount,
             currency: sub.currency,
-            date: new Date(currentBillingDate),
+            date: currentBillingDate.toISOString(),
           });
         }
 

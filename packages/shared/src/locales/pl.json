@@ -19,10 +19,8 @@
       "email": "Email",
       "emailPlaceholder": "ty@example.com",
       "password": "Hasło",
-      "passwordPlaceholder": "••••••••",
       "newPassword": "Nowe hasło",
-      "confirmPassword": "Potwierdź nowe hasło",
-      "confirmPasswordPlaceholder": "••••••••"
+      "confirmPassword": "Potwierdź nowe hasło"
     },
     "social": {
       "title": "Lub kontynuuj przez",

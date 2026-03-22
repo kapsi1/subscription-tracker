@@ -276,8 +276,9 @@
 - [ ] Review code for "any" type usage in TypeScript and replace it with appropriate types. You can skip any types in test mocks, but add linter exceptions so there's no warnings.
 - [ ] Review code for areas that can be shortened or simplified. Split large files, functions, components, etc. into smaller ones, where it makes sense to do so.
 - [ ] Review code for areas where interfaces can be shared between frontend and backend, then extract them and share.
-- [ ] Find and fix compiler & linter errors and warnings.
+- [ ] Find and fix compiler & linter errors and warnings. Use pnpm lint:write first, then fix the remaining errors manually.
 - [ ] Remove unused code.
+- [ ] Update documentation and AI_DEVELOPMENT_GUIDE.md to reflect current state of the project.
 
 # 8. Additional
 - [x] Webhook integration
@@ -367,3 +368,6 @@ full width
 - [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
 - [ ] Find instances of Primary (Save/Add Subscription etc) and Cancel button pairs and make them consistent - primary on the right, cancel on the left. Make styles and distance between them be consistent too. Add missing Cancel buttons.
 - [x] In Dashboard, under This Month's Payments, add a new section: a calendar showing days (as buttons) of currently selected month. Days with payments in them should have a dot with the payment count, in the style of "unread notifications" dots in other applications (red dot). On hover for the day show a tooltip with list of payments for that day. Make the calendar look consistent with the rest of the app. On click for the day show a modal with a table of payments for that day, looking and acting like the Payment History table in Subscription Details modal.
+- [ ] Security: Access tokens and refresh tokens are stored in localStorage (XSS risk). Migrate to httpOnly cookies for token storage. See frontend/src/lib/api.ts and frontend/src/components/auth-provider.tsx.
+- [ ] Security: CSP headers in backend/src/main.ts contain 'unsafe-eval' and 'unsafe-inline' for scripts/styles. These should be removed/tightened to reduce XSS attack surface.
+- [ ] Security: OAuth callback in backend/src/auth/auth.controller.ts passes tokens as URL query parameters (visible in server logs, browser history). Should use POST body or httpOnly cookies instead.
