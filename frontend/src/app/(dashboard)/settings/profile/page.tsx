@@ -106,7 +106,6 @@ export default function ProfilePage() {
           {isSectionVisible('appearance', 'profile') && <AppearanceSection />}
           {isSectionVisible('categories', 'profile') && <CategorySection />}
           {isSectionVisible('email', 'profile') && <EmailNotificationsSearchWrapper />}
-          {isSectionVisible('push', 'profile') && <PushNotificationsSearchWrapper />}
           {isSectionVisible('reminder', 'profile') && <ReminderSearchWrapper />}
           {isSectionVisible('budget', 'profile') && <BudgetSearchWrapper />}
         </>
@@ -117,13 +116,12 @@ export default function ProfilePage() {
 
 // Wrapper components for Preferences sections to handle their own data fetching
 import type { Settings } from '@subtracker/shared';
-import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from '@/lib/push';
+import { registerServiceWorker, subscribeToPush } from '@/lib/push';
 import { AppearanceSection } from '../_components/AppearanceSection';
 import { BudgetSection } from '../_components/BudgetSection';
 import { CategorySection } from '../_components/CategorySection';
 import { EmailNotificationsSection } from '../_components/EmailNotificationsSection';
 import { LocalizationSection } from '../_components/LocalizationSection';
-import { PushNotificationsSection } from '../_components/PushNotificationsSection';
 import { ReminderSection } from '../_components/ReminderSection';
 import { SETTINGS_SECTIONS, useSettingsSearch } from '../_components/SettingsSearchContext';
 
@@ -131,15 +129,14 @@ import { SETTINGS_SECTIONS, useSettingsSearch } from '../_components/SettingsSea
 function usePreferencesState() {
   const { t } = useTranslation();
   const [settings, setSettings] = useState<Settings>({
-    defaultReminderEnabled: true,
-    defaultReminderDays: 3,
+    defaultReminderEnabled: false,
+    defaultReminders: [],
     emailNotifications: true,
     emailAddress: '',
     dailyDigest: false,
     previousWeekReport: false,
     nextWeekReport: false,
     monthlyBudget: null,
-    pushEnabled: false,
     currency: 'USD',
   });
   const hasLoadedSettingsRef = useRef(false);
@@ -151,7 +148,7 @@ function usePreferencesState() {
         const response = await api.get('/users/me');
         const loadedSettings = {
           defaultReminderEnabled: response.data.defaultReminderEnabled,
-          defaultReminderDays: parseInt(response.data.defaultReminderDays, 10) || 3,
+          defaultReminders: response.data.defaultReminders ?? [],
           emailAddress: response.data.email,
           monthlyBudget: response.data.monthlyBudget
             ? parseFloat(response.data.monthlyBudget)
@@ -160,13 +157,12 @@ function usePreferencesState() {
           dailyDigest: response.data.dailyDigest,
           previousWeekReport: response.data.previousWeekReport,
           nextWeekReport: response.data.nextWeekReport,
-          pushEnabled: false,
           currency: response.data.currency || 'USD',
         };
         setSettings((prev) => ({ ...prev, ...loadedSettings }));
         lastSavedPreferencesRef.current = JSON.stringify({
           defaultReminderEnabled: loadedSettings.defaultReminderEnabled,
-          defaultReminderDays: loadedSettings.defaultReminderDays,
+          defaultReminders: loadedSettings.defaultReminders,
           monthlyBudget: loadedSettings.monthlyBudget,
           emailNotifications: loadedSettings.emailNotifications,
           dailyDigest: loadedSettings.dailyDigest,
@@ -187,7 +183,7 @@ function usePreferencesState() {
     if (!hasLoadedSettingsRef.current) return;
     const payload = {
       defaultReminderEnabled: settings.defaultReminderEnabled,
-      defaultReminderDays: settings.defaultReminderDays,
+      defaultReminders: settings.defaultReminders,
       monthlyBudget: settings.monthlyBudget,
       emailNotifications: settings.emailNotifications,
       dailyDigest: settings.dailyDigest,
@@ -269,50 +265,24 @@ function EmailNotificationsSearchWrapper() {
   );
 }
 
-function PushNotificationsSearchWrapper() {
-  const { settings, setSettings } = usePreferencesState();
-  const [isTogglingPush, setIsTogglingPush] = useState(false);
-  const showTestControls = process.env.NODE_ENV !== 'production';
-
-  const handlePushToggle = async (checked: boolean) => {
-    setIsTogglingPush(true);
-    try {
-      if (checked) {
-        await registerServiceWorker();
-        const sub = await subscribeToPush();
-        await api.post('/users/push-subscription', sub.toJSON());
-        setSettings((s) => ({ ...s, pushEnabled: true }));
-      } else {
-        await unsubscribeFromPush();
-        setSettings((s) => ({ ...s, pushEnabled: false }));
-      }
-    } finally {
-      setIsTogglingPush(false);
-    }
-  };
-
-  return (
-    <PushNotificationsSection
-      pushEnabled={settings.pushEnabled ?? false}
-      onPushToggle={handlePushToggle}
-      isTogglingPush={isTogglingPush}
-      showTestControls={showTestControls}
-      testDelay="0"
-      setTestDelay={() => {}}
-      onTestPush={async () => {}}
-      isSendingTest={false}
-      onResetPush={async () => {}}
-    />
-  );
-}
-
 function ReminderSearchWrapper() {
   const { settings, handleSettingsChange } = usePreferencesState();
+  const handleRequestPushPermission = async (): Promise<boolean> => {
+    try {
+      await registerServiceWorker();
+      const sub = await subscribeToPush();
+      await api.post('/users/push-subscription', sub.toJSON());
+      return true;
+    } catch {
+      return false;
+    }
+  };
   return (
     <ReminderSection
       defaultReminderEnabled={settings.defaultReminderEnabled}
-      defaultReminderDays={settings.defaultReminderDays}
+      defaultReminders={settings.defaultReminders}
       onSettingsChange={handleSettingsChange}
+      onRequestPushPermission={handleRequestPushPermission}
     />
   );
 }

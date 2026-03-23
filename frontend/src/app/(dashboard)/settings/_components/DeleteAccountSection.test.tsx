@@ -40,6 +40,7 @@ function makeUser(overrides: Partial<User> = {}): User {
     updatedAt: new Date().toISOString(),
     defaultReminderEnabled: true,
     defaultReminderDays: 3,
+    defaultReminders: [],
     monthlyBudget: null,
     lastBudgetAlertSentAt: null,
     theme: 'system',
