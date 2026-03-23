@@ -350,13 +350,13 @@
 - [x] In Dashboard, under This Month's Payments, add a new section: a calendar showing days (as buttons) of currently selected month. Days with payments in them should have a dot with the payment count, in the style of "unread notifications" dots in other applications (red dot). On hover for the day show a tooltip with list of payments for that day. Make the calendar look consistent with the rest of the app. On click for the day show a modal with a table of payments for that day, looking and acting like the Payment History table in Subscription Details modal.
 - [ ] Push notifications not working on Opera
 - [ ] Push notifications not working when Chrome is not running
-- [ ] Email notifications on production
 - [x] Default reminders
 - [x] Budget threshold alerts
-- [ ] Analyze code and tests, find functionalities with missing or incomplete tests and add them. Include unit and E2E tests.
 - [x] Add more translations for major languages: German, Spanish, French, Italian, Portuguese, Russian, Chinese, Japanese, Korean
-- [ ] Improve UI & UX on small screens
-- [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices. TODO test this
+- [x] Improve UI & UX on small screens
+- [ ] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices.
 - [x] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
-- [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
 - [x] Make the tab buttons in nav bar bigger on mobile devices. They should fill available space.
+- [ ] Production deployment checklist:
+    - [ ] Email notifications - set an external service
+    - [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
