@@ -229,6 +229,15 @@
     "importErrorDesc": "我们在您的文件中发现了一些问题。请修复它们并重试。",
     "generalError": "通用错误",
     "jsonSnippet": "JSON 片段",
+    "errorPhrases": {
+      "invalid": "无效输入",
+      "expectedNumber": "应为数字，实际为字符串",
+      "notLessThan": "不能小于",
+      "mustBeInteger": "必须是整数",
+      "mustBeArray": "必须是数组",
+      "eachValue": "每个值",
+      "tooSmall": "数字必须至少为 1"
+    },
     "importPreview": {
       "title": "预览导入数据",
       "desc": "检查将添加到您账号的项目",

@@ -229,6 +229,15 @@
     "importErrorDesc": "ファイル内にいくつかの問題が見つかりました。修正してからもう一度お試しください。",
     "generalError": "一般的なエラー",
     "jsonSnippet": "JSON スニペット",
+    "errorPhrases": {
+      "invalid": "無効な入力",
+      "expectedNumber": "数値が必要ですが、文字列を受け取りました",
+      "notLessThan": "未満であってはなりません",
+      "mustBeInteger": "整数である必要があります",
+      "mustBeArray": "配列である必要があります",
+      "eachValue": "内の各値",
+      "tooSmall": "数値は1以上でなければなりません"
+    },
     "importPreview": {
       "title": "インポートデータのプレビュー",
       "desc": "アカウントに追加される項目を確認してください",

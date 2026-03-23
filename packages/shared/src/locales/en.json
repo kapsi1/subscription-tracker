@@ -229,6 +229,15 @@
     "importErrorDesc": "We found some issues in your file. Please fix them and try again.",
     "generalError": "General Error",
     "jsonSnippet": "JSON Snippet",
+    "errorPhrases": {
+      "invalid": "Invalid input",
+      "expectedNumber": "Expected number, received string",
+      "notLessThan": "must not be less than",
+      "mustBeInteger": "must be an integer number",
+      "mustBeArray": "must be an array",
+      "eachValue": "each value in",
+      "tooSmall": "Number must be at least 1"
+    },
     "importPreview": {
       "title": "Preview Import Data",
       "desc": "Review the items that will be added to your account",

@@ -229,6 +229,15 @@
     "importErrorDesc": "Hemos encontrado algunos problemas en su archivo. Por favor, corríjalos e inténtelo de nuevo.",
     "generalError": "Error general",
     "jsonSnippet": "Fragmento JSON",
+    "errorPhrases": {
+      "invalid": "Entrada no válida",
+      "expectedNumber": "se esperaba un número, se recibió una cadena",
+      "notLessThan": "no debe ser menor que",
+      "mustBeInteger": "debe ser un número entero",
+      "mustBeArray": "debe ser un arreglo",
+      "eachValue": "cada valor en",
+      "tooSmall": "El número debe ser al menos 1"
+    },
     "importPreview": {
       "title": "Vista previa de los datos a importar",
       "desc": "Revisa los elementos que se añadirán a tu cuenta",

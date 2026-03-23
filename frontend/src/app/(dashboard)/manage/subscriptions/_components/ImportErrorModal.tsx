@@ -53,6 +53,29 @@ export function ImportErrorModal({
     return acc;
   }, {} as Record<string, { type: string; index: number; messages: string[] }>);
 
+  const translateError = (error: string) => {
+    let translated = error;
+
+    // Simple phrase replacement for common errors
+    const phrases = [
+      { search: 'Invalid input', key: 'invalid' },
+      { search: 'expected number, received string', key: 'expectedNumber' },
+      { search: 'must not be less than', key: 'notLessThan' },
+      { search: 'must be an integer number', key: 'mustBeInteger' },
+      { search: 'must be an array', key: 'mustBeArray' },
+      { search: 'each value in', key: 'eachValue' },
+      { search: 'Too small: expected number to be >=1', key: 'tooSmall' }
+    ];
+
+    for (const phrase of phrases) {
+      if (translated.includes(phrase.search)) {
+        translated = translated.replace(phrase.search, t(`subscriptions.errorPhrases.${phrase.key}`));
+      }
+    }
+
+    return translated;
+  };
+
   const getSnippet = (type: string, index: number) => {
     if (type === 'general' || !importData) return null;
     try {
@@ -111,7 +134,7 @@ export function ImportErrorModal({
                     <ul className="list-disc list-inside space-y-1">
                       {group.messages.map((msg, idx) => (
                         <li key={`${key}-${idx}-${msg.length}`} className="text-sm text-foreground/90">
-                          {msg}
+                          {translateError(msg)}
                         </li>
                       ))}
                     </ul>

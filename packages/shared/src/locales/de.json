@@ -229,6 +229,15 @@
     "importErrorDesc": "Wir haben einige Probleme in Ihrer Datei gefunden. Bitte beheben Sie diese und versuchen Sie es erneut.",
     "generalError": "Allgemeiner Fehler",
     "jsonSnippet": "JSON-Fragment",
+    "errorPhrases": {
+      "invalid": "Ungültige Eingabe",
+      "expectedNumber": "Zahl erwartet, Zeichenfolge erhalten",
+      "notLessThan": "darf nicht kleiner sein als",
+      "mustBeInteger": "muss eine Ganzzahl sein",
+      "mustBeArray": "muss ein Array sein",
+      "eachValue": "jeder Wert in",
+      "tooSmall": "Die Zahl muss mindestens 1 sein"
+    },
     "importPreview": {
       "title": "Vorschau der Importdaten",
       "desc": "Überprüfen Sie die Elemente, die Ihrem Konto hinzugefügt werden",
