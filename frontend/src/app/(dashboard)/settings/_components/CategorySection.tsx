@@ -26,8 +26,8 @@ import { IconPicker } from '@/components/IconPicker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { SearchHighlight } from './SettingsSearchContext';
 import api from '@/lib/api';
+import { SearchHighlight } from './SettingsSearchContext';
 
 interface CategoryRowProps {
   category: Category;
@@ -157,7 +157,6 @@ function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps
     </div>
   );
 }
-
 
 const EMPTY_CATEGORIES: Category[] = [];
 

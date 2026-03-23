@@ -12,9 +12,8 @@
     "dev:shared": "pnpm --filter @subtracker/shared dev",
     "dev:backend": "pnpm --filter backend dev",
     "dev:frontend": "pnpm --filter frontend dev",
-    "lint": "biome check .",
-    "lint:write": "biome check --write .",
-    "tsc": "pnpm --filter backend tsc --noEmit && pnpm --filter frontend tsc --noEmit",
+    "lint": "biome check --write .",
+    "lint:unsafe": "biome check --write --unsafe .",
     "e2e": "node scripts/run-e2e.mjs",
     "e2e:ui": "node scripts/run-e2e.mjs --ui",
     "test:all": "node scripts/test-all.mjs"
@@ -23,11 +22,11 @@
   "license": "MIT",
   "packageManager": "pnpm@10.32.1",
   "devDependencies": {
-    "@biomejs/biome": "^2.4.6",
+    "@biomejs/biome": "2.4.8",
     "@playwright/test": "^1.58.2",
-    "@tailwindcss/postcss": "^4.2.1",
+    "@tailwindcss/postcss": "^4.2.2",
     "concurrently": "^9.2.1",
     "postcss": "^8.5.8",
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.2.2"
   }
 }

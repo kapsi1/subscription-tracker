@@ -286,8 +286,6 @@ export default function PreferencesPage() {
 
       {isSectionVisible('appearance', 'preferences') && <AppearanceSection />}
 
-
-
       {isSectionVisible('email', 'preferences') && (
         <EmailNotificationsSection
           emailNotifications={settings.emailNotifications}

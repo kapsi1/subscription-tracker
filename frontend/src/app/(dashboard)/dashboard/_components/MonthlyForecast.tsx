@@ -37,7 +37,7 @@ interface CustomTooltipProps {
 }
 
 const CustomTooltip = ({ active, payload, label, t, currency = 'USD' }: CustomTooltipProps) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     const data = payload[0].payload as ForecastItem;
     const monthlySpending = payload.find((p) => p.dataKey === 'amount')?.value;
     const cumulativeSpending = payload.find((p) => p.dataKey === 'cumulativeAmount')?.value;
@@ -121,7 +121,9 @@ export function MonthlyForecast({ forecast, currency = 'USD' }: MonthlyForecastP
             />
             <Legend
               iconType="circle"
-              formatter={(value) => <span className="text-muted-foreground text-[15px]">{value}</span>}
+              formatter={(value) => (
+                <span className="text-muted-foreground text-[15px]">{value}</span>
+              )}
             />
             <Bar
               yAxisId="right"

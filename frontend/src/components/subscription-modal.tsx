@@ -352,16 +352,16 @@ export function SubscriptionModal({
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 border-t pt-4">
           <div className="flex items-center gap-4">
-          <Switch
-            id="reminderEnabled"
-            name="reminderEnabled"
-            checked={formData.reminderEnabled}
-            onCheckedChange={(checked) => setFormData({ ...formData, reminderEnabled: checked })}
-          />
-          <Label htmlFor="reminderEnabled" className="cursor-pointer">
-            {t('subscriptions.modal.reminders')}
-          </Label>
-        </div>
+            <Switch
+              id="reminderEnabled"
+              name="reminderEnabled"
+              checked={formData.reminderEnabled}
+              onCheckedChange={(checked) => setFormData({ ...formData, reminderEnabled: checked })}
+            />
+            <Label htmlFor="reminderEnabled" className="cursor-pointer">
+              {t('subscriptions.modal.reminders')}
+            </Label>
+          </div>
           {formData.reminderEnabled && (
             <div className="flex items-center gap-2 sm:ml-auto w-full sm:w-auto sm:justify-end">
               <Label htmlFor="reminderDays" className="text-sm whitespace-nowrap">

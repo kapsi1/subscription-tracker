@@ -200,7 +200,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href="/manage"
               className={cn(
                 'flex-1 sm:flex-none',
-                user?.hasSeenManageHint === false ? 'animate-btn-glow' : undefined
+                user?.hasSeenManageHint === false ? 'animate-btn-glow' : undefined,
               )}
             >
               <Button

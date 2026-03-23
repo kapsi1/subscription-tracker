@@ -130,72 +130,81 @@ export function MonthlyPaymentsCalendar({
             ))}
           </div>
 
-            <TooltipProvider delayDuration={150}>
-              <div className="grid grid-cols-7 justify-items-stretch gap-1.5 py-1 sm:gap-2">
-                {calendarDays.map((day) => {
-                  if ('isEmpty' in day) {
-                    return <div key={day.gridKey} className="h-auto w-full aspect-square sm:h-[60px] sm:w-[60px]" />;
-                  }
-
-                  const formattedDate = formatter.format(day.date);
-                  const paymentCountLabel =
-                    day.payments.length > 0
-                      ? t('subscriptions.paymentCount', { count: day.payments.length })
-                      : '';
-
-                  const button = (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      data-testid={`payment-calendar-day-${day.dayKey}`}
-                      aria-label={`${t('dashboard.paymentCalendarOpenDay', { date: formattedDate })}${paymentCountLabel ? `, ${paymentCountLabel}` : ''}`}
-                      onClick={() => onSelectDay(day.date, day.payments)}
-                      className={cn(
-                        'relative h-auto w-full aspect-square p-0 text-base sm:h-[60px] sm:w-[60px] sm:text-lg',
-                        'hover:-translate-y-0.5',
-                        day.isToday && 'border-primary/35 bg-primary/6',
-                      )}
-                    >
-                      <span className="font-semibold text-foreground">{day.dayNumber}</span>
-
-                      {day.payments.length > 0 ? (
-                        <Badge className="absolute -top-2 -right-2 min-w-6 h-6 justify-center rounded-full bg-red-500 px-1 text-[13px] font-bold text-white hover:bg-red-500">
-                          {day.payments.length}
-                        </Badge>
-                      ) : null}
-                    </Button>
-                  );
-
-                  if (day.payments.length === 0) {
-                    return <div key={day.dayKey} className="w-full">{button}</div>;
-                  }
-
+          <TooltipProvider delayDuration={150}>
+            <div className="grid grid-cols-7 justify-items-stretch gap-1.5 py-1 sm:gap-2">
+              {calendarDays.map((day) => {
+                if ('isEmpty' in day) {
                   return (
-                    <Tooltip key={day.dayKey}>
-                      <TooltipTrigger asChild>{button}</TooltipTrigger>
-                      <TooltipContent side="top" className="max-w-[260px] space-y-2 p-3">
-                        <p className="font-medium">{formattedDate}</p>
-                        <ul className="space-y-1.5">
-                          {day.payments.map((payment) => (
-                            <li
-                              key={payment.id}
-                              className="flex items-center justify-between gap-3 text-[14px]"
-                            >
-                              <span className="truncate text-muted-foreground">{payment.name}</span>
-                              <span className="shrink-0 font-medium text-foreground">
-                                {formatCurrency(payment.amount, payment.currency)}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </TooltipContent>
-                    </Tooltip>
+                    <div
+                      key={day.gridKey}
+                      className="h-auto w-full aspect-square sm:h-[60px] sm:w-[60px]"
+                    />
                   );
-                })}
-          </div>
-        </TooltipProvider>
-      </div>
-    </CardContent>
-  </Card>
-);
+                }
+
+                const formattedDate = formatter.format(day.date);
+                const paymentCountLabel =
+                  day.payments.length > 0
+                    ? t('subscriptions.paymentCount', { count: day.payments.length })
+                    : '';
+
+                const button = (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    data-testid={`payment-calendar-day-${day.dayKey}`}
+                    aria-label={`${t('dashboard.paymentCalendarOpenDay', { date: formattedDate })}${paymentCountLabel ? `, ${paymentCountLabel}` : ''}`}
+                    onClick={() => onSelectDay(day.date, day.payments)}
+                    className={cn(
+                      'relative h-auto w-full aspect-square p-0 text-base sm:h-[60px] sm:w-[60px] sm:text-lg',
+                      'hover:-translate-y-0.5',
+                      day.isToday && 'border-primary/35 bg-primary/6',
+                    )}
+                  >
+                    <span className="font-semibold text-foreground">{day.dayNumber}</span>
+
+                    {day.payments.length > 0 ? (
+                      <Badge className="absolute -top-2 -right-2 min-w-6 h-6 justify-center rounded-full bg-red-500 px-1 text-[13px] font-bold text-white hover:bg-red-500">
+                        {day.payments.length}
+                      </Badge>
+                    ) : null}
+                  </Button>
+                );
+
+                if (day.payments.length === 0) {
+                  return (
+                    <div key={day.dayKey} className="w-full">
+                      {button}
+                    </div>
+                  );
+                }
+
+                return (
+                  <Tooltip key={day.dayKey}>
+                    <TooltipTrigger asChild>{button}</TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-[260px] space-y-2 p-3">
+                      <p className="font-medium">{formattedDate}</p>
+                      <ul className="space-y-1.5">
+                        {day.payments.map((payment) => (
+                          <li
+                            key={payment.id}
+                            className="flex items-center justify-between gap-3 text-[14px]"
+                          >
+                            <span className="truncate text-muted-foreground">{payment.name}</span>
+                            <span className="shrink-0 font-medium text-foreground">
+                              {formatCurrency(payment.amount, payment.currency)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })}
+            </div>
+          </TooltipProvider>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

@@ -232,12 +232,7 @@ export class EmailService {
     this.logger.log(`[SMTP] Successfully sent weekly report email to ${email}`);
   }
 
-  async sendVerificationEmail(
-    email: string,
-    name: string,
-    token: string,
-    language: string = 'en',
-  ) {
+  async sendVerificationEmail(email: string, name: string, token: string, language: string = 'en') {
     const frontendUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     const { subject, html } = buildVerificationEmailHtml({
       email,

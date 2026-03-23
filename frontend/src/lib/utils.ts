@@ -82,10 +82,7 @@ export function getCurrencySymbol(
 export function formatDate(dateString: string, options?: Intl.DateTimeFormatOptions): string {
   const date = new Date(dateString);
   const locale = i18n.language || 'en-US';
-  return date.toLocaleDateString(
-    locale,
-    options || { month: 'short', day: 'numeric' },
-  );
+  return date.toLocaleDateString(locale, options || { month: 'short', day: 'numeric' });
 }
 
 /**

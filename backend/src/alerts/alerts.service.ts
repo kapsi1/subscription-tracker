@@ -87,12 +87,7 @@ export class AlertsService {
     // Process legacy alerts
     for (const alert of alerts) {
       const sub = alert.subscription;
-      const success = await this.enqueueIfNecessary(
-        alert.id,
-        sub,
-        alert.type,
-        alert.daysBefore,
-      );
+      const success = await this.enqueueIfNecessary(alert.id, sub, alert.type, alert.daysBefore);
       if (success) enqueued++;
       else skipped++;
     }

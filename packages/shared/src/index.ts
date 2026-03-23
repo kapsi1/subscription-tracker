@@ -1,16 +1,16 @@
 import colors from './colors.json';
 import currencies from './currencies.json';
-import en from './locales/en.json';
-import pl from './locales/pl.json';
 import de from './locales/de.json';
+import en from './locales/en.json';
 import es from './locales/es.json';
 import fr from './locales/fr.json';
 import it from './locales/it.json';
+import ja from './locales/ja.json';
+import ko from './locales/ko.json';
+import pl from './locales/pl.json';
 import pt from './locales/pt.json';
 import ru from './locales/ru.json';
 import zh from './locales/zh.json';
-import ja from './locales/ja.json';
-import ko from './locales/ko.json';
 
 export const COLORS = colors;
 export const CURRENCIES = currencies as Currency[];
