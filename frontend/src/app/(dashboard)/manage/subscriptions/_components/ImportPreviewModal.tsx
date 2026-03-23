@@ -83,7 +83,13 @@ export function ImportPreviewModal({
           </div>
 
           <div className="space-y-3">
-            <div className="flex items-start justify-between p-3 rounded-md border border-orange-200 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-900/50">
+            <div className="flex items-start gap-3 p-3 rounded-md border border-orange-200 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-900/50">
+              <Switch
+                id="replace-data"
+                checked={replaceExisting}
+                onCheckedChange={(checked: boolean) => setReplaceExisting(checked)}
+                className="mt-1"
+              />
               <div className="space-y-1">
                 <Label
                   htmlFor="replace-data"
@@ -95,11 +101,6 @@ export function ImportPreviewModal({
                   {t('subscriptions.importPreview.replaceDesc')}
                 </p>
               </div>
-              <Switch
-                id="replace-data"
-                checked={replaceExisting}
-                onCheckedChange={(checked: boolean) => setReplaceExisting(checked)}
-              />
             </div>
           </div>
 

@@ -351,7 +351,7 @@ export function SubscriptionModal({
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 border-t pt-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Switch
               id="reminderEnabled"
               name="reminderEnabled"
@@ -363,7 +363,7 @@ export function SubscriptionModal({
             </Label>
           </div>
           {formData.reminderEnabled && (
-            <div className="flex items-center gap-2 sm:ml-auto w-full sm:w-auto sm:justify-end">
+            <div className="flex items-center gap-3 sm:ml-auto w-full sm:w-auto sm:justify-end">
               <Label htmlFor="reminderDays" className="text-sm whitespace-nowrap">
                 {t('subscriptions.modal.reminderDays')}
               </Label>

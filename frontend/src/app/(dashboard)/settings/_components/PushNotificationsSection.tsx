@@ -53,9 +53,15 @@ export function PushNotificationsSection({
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+        <div className="flex items-center gap-3 hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+          <Switch
+            id="pushEnabled"
+            checked={pushEnabled}
+            onCheckedChange={onPushToggle}
+            disabled={isTogglingPush}
+          />
           <div className="space-y-0.5">
-            <Label htmlFor="pushEnabled">
+            <Label htmlFor="pushEnabled" className="cursor-pointer">
               <SearchHighlight text={t('settings.notifications.push.enable')} query={searchQuery} />
             </Label>
             <p className="text-sm text-muted-foreground">
@@ -65,12 +71,6 @@ export function PushNotificationsSection({
               />
             </p>
           </div>
-          <Switch
-            id="pushEnabled"
-            checked={pushEnabled}
-            onCheckedChange={onPushToggle}
-            disabled={isTogglingPush}
-          />
         </div>
 
         {showTestControls && (

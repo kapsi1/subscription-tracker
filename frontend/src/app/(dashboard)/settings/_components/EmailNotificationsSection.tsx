@@ -69,9 +69,14 @@ export function EmailNotificationsSection({
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+        <div className="flex items-center gap-3 hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+          <Switch
+            id="emailEnabled"
+            checked={emailNotifications}
+            onCheckedChange={(checked) => onSettingsChange({ emailNotifications: checked })}
+          />
           <div className="space-y-0.5">
-            <Label htmlFor="emailEnabled">
+            <Label htmlFor="emailEnabled" className="cursor-pointer">
               <SearchHighlight
                 text={t('settings.notifications.email.enable')}
                 query={searchQuery}
@@ -84,11 +89,6 @@ export function EmailNotificationsSection({
               />
             </p>
           </div>
-          <Switch
-            id="emailEnabled"
-            checked={emailNotifications}
-            onCheckedChange={(checked) => onSettingsChange({ emailNotifications: checked })}
-          />
         </div>
 
         {emailNotifications && (
@@ -111,9 +111,14 @@ export function EmailNotificationsSection({
             </div>
 
             <div className="border-t pt-2 mb-2">
-              <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+              <div className="flex items-center gap-3 hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+                <Switch
+                  id="dailyDigest"
+                  checked={dailyDigest}
+                  onCheckedChange={(checked) => onSettingsChange({ dailyDigest: checked })}
+                />
                 <div className="space-y-0.5">
-                  <Label htmlFor="dailyDigest">
+                  <Label htmlFor="dailyDigest" className="cursor-pointer">
                     <SearchHighlight
                       text={t('settings.notifications.email.daily')}
                       query={searchQuery}
@@ -126,18 +131,18 @@ export function EmailNotificationsSection({
                     />
                   </p>
                 </div>
-                <Switch
-                  id="dailyDigest"
-                  checked={dailyDigest}
-                  onCheckedChange={(checked) => onSettingsChange({ dailyDigest: checked })}
-                />
               </div>
             </div>
 
             <div className="border-t pt-2 mb-2">
-              <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+              <div className="flex items-center gap-3 hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+                <Switch
+                  id="previousWeekReport"
+                  checked={previousWeekReport}
+                  onCheckedChange={(checked) => onSettingsChange({ previousWeekReport: checked })}
+                />
                 <div className="space-y-0.5">
-                  <Label htmlFor="previousWeekReport">
+                  <Label htmlFor="previousWeekReport" className="cursor-pointer">
                     <SearchHighlight
                       text={t('settings.notifications.email.previousWeekReport')}
                       query={searchQuery}
@@ -150,18 +155,18 @@ export function EmailNotificationsSection({
                     />
                   </p>
                 </div>
-                <Switch
-                  id="previousWeekReport"
-                  checked={previousWeekReport}
-                  onCheckedChange={(checked) => onSettingsChange({ previousWeekReport: checked })}
-                />
               </div>
             </div>
 
             <div className="border-t pt-2 mb-2">
-              <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+              <div className="flex items-center gap-3 hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+                <Switch
+                  id="nextWeekReport"
+                  checked={nextWeekReport}
+                  onCheckedChange={(checked) => onSettingsChange({ nextWeekReport: checked })}
+                />
                 <div className="space-y-0.5">
-                  <Label htmlFor="nextWeekReport">
+                  <Label htmlFor="nextWeekReport" className="cursor-pointer">
                     <SearchHighlight
                       text={t('settings.notifications.email.nextWeekReport')}
                       query={searchQuery}
@@ -174,11 +179,6 @@ export function EmailNotificationsSection({
                     />
                   </p>
                 </div>
-                <Switch
-                  id="nextWeekReport"
-                  checked={nextWeekReport}
-                  onCheckedChange={(checked) => onSettingsChange({ nextWeekReport: checked })}
-                />
               </div>
             </div>
 

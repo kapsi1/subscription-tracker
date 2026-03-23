@@ -119,7 +119,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
             <CardDescription>{t('dashboard.monthlyPaymentsDesc')}</CardDescription>
           </div>
           <div className="flex max-w-full flex-wrap items-center justify-end gap-3 self-end md:gap-4">
-            <div className="mr-2 flex shrink-0 items-center space-x-2">
+            <div className="mr-2 flex shrink-0 items-center gap-3">
               <Switch id="show-paid" checked={showPaid} onCheckedChange={handleToggleShowPaid} />
               <Label htmlFor="show-paid" className="text-sm font-medium cursor-pointer">
                 {t('dashboard.showPaid')}

@@ -47,9 +47,14 @@ export function ReminderSection({
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+        <div className="flex items-center gap-3 hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+          <Switch
+            id="defaultEnabled"
+            checked={defaultReminderEnabled}
+            onCheckedChange={(checked) => onSettingsChange({ defaultReminderEnabled: checked })}
+          />
           <div className="space-y-0.5">
-            <Label htmlFor="defaultEnabled">
+            <Label htmlFor="defaultEnabled" className="cursor-pointer">
               <SearchHighlight
                 text={t('settings.notifications.default.enable')}
                 query={searchQuery}
@@ -62,11 +67,6 @@ export function ReminderSection({
               />
             </p>
           </div>
-          <Switch
-            id="defaultEnabled"
-            checked={defaultReminderEnabled}
-            onCheckedChange={(checked) => onSettingsChange({ defaultReminderEnabled: checked })}
-          />
         </div>
 
         <div className="space-y-2">
