@@ -44,12 +44,12 @@ const CustomTooltip = ({ active, payload, label, t, currency = 'USD' }: CustomTo
     const payments = data.payments || [];
 
     return (
-      <div className="z-100 min-w-[180px] max-w-[220px] rounded-md bg-card p-2 text-xs text-foreground border shadow-lg animate-in fade-in-0 zoom-in-95">
+      <div className="z-100 min-w-[180px] max-w-[220px] rounded-md bg-card p-2 text-[14px] text-foreground border shadow-lg animate-in fade-in-0 zoom-in-95">
         <div className="flex justify-between items-baseline font-bold mb-1 border-b pb-1">
           <span>
             {label} {data.year}
           </span>
-          <span className="text-[10px] font-medium opacity-70">
+          <span className="text-[12px] font-medium opacity-70">
             {t('subscriptions.paymentCount', {
               count: payments.length,
               defaultValue: `${payments.length} payment${payments.length === 1 ? '' : 's'}`,
@@ -93,15 +93,15 @@ export function MonthlyForecast({ forecast, currency = 'USD' }: MonthlyForecastP
             <XAxis
               dataKey="month"
               stroke="#64748b"
-              fontSize={12}
+              fontSize={15}
               tickLine={false}
               axisLine={false}
-              height={30}
+              height={40}
             />
             <YAxis
               yAxisId="left"
               stroke="#64748b"
-              fontSize={12}
+              fontSize={15}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => formatCurrency(value, currency, 0)}
@@ -110,7 +110,7 @@ export function MonthlyForecast({ forecast, currency = 'USD' }: MonthlyForecastP
               yAxisId="right"
               orientation="right"
               stroke="#94a3b8"
-              fontSize={10}
+              fontSize={12.5}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => formatCurrency(value, currency, 0)}
@@ -121,7 +121,7 @@ export function MonthlyForecast({ forecast, currency = 'USD' }: MonthlyForecastP
             />
             <Legend
               iconType="circle"
-              formatter={(value) => <span className="text-muted-foreground text-sm">{value}</span>}
+              formatter={(value) => <span className="text-muted-foreground text-[15px]">{value}</span>}
             />
             <Bar
               yAxisId="right"

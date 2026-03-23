@@ -1,6 +1,5 @@
 'use client';
 
-import { CalendarDays } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
@@ -180,7 +179,7 @@ export function MonthlyPaymentsCalendar({
                           {day.payments.map((payment) => (
                             <li
                               key={payment.id}
-                              className="flex items-center justify-between gap-3 text-xs"
+                              className="flex items-center justify-between gap-3 text-[14px]"
                             >
                               <span className="truncate text-muted-foreground">{payment.name}</span>
                               <span className="shrink-0 font-medium text-foreground">

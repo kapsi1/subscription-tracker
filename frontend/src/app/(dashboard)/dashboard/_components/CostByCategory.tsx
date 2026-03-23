@@ -70,7 +70,7 @@ const CustomTooltip = ({ active, payload, label, currency, t }: CustomTooltipPro
   const color = item.color || item.payload?.color || 'var(--primary)';
 
   return (
-    <div className="z-100 min-w-[180px] max-w-[220px] rounded-md border bg-card p-2 text-xs text-foreground shadow-lg animate-in fade-in-0 zoom-in-95">
+    <div className="z-100 min-w-[180px] max-w-[220px] rounded-md border bg-card p-2 text-[13px] text-foreground shadow-lg animate-in fade-in-0 zoom-in-95">
       <div className="flex items-center justify-between gap-3 font-bold">
         <span>{translatedCategoryName}</span>
         <span className="flex items-center gap-1.5 text-primary">
@@ -138,7 +138,7 @@ export function CostByCategory({
         x={x}
         y={y}
         fill="currentColor"
-        fontSize={12}
+        fontSize={14}
         textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
       >

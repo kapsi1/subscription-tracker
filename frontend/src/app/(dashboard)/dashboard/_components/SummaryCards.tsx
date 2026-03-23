@@ -47,7 +47,7 @@ function SummaryCard({
         </div>
       </CardHeader>
       <CardContent className="px-4 pb-4 sm:px-6 md:pb-5 lg:pb-6">
-        <div className="overflow-hidden text-center text-[2.2rem] font-semibold leading-none text-balance wrap-break-word sm:text-[2.65rem] md:text-[3rem] lg:text-[1.6rem]">
+        <div className="overflow-hidden text-center text-[2.2rem] font-semibold leading-none text-balance wrap-break-word sm:text-[2.65rem] md:text-[3rem] lg:text-[2.4rem]">
           {value}
         </div>
       </CardContent>
