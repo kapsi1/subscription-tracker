@@ -84,7 +84,7 @@ export function formatDate(dateString: string, options?: Intl.DateTimeFormatOpti
   const locale = i18n.language || 'en-US';
   return date.toLocaleDateString(
     locale,
-    options || { month: 'short', day: 'numeric', year: 'numeric' },
+    options || { month: 'short', day: 'numeric' },
   );
 }
 

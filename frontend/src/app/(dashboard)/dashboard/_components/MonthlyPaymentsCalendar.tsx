@@ -111,12 +111,9 @@ export function MonthlyPaymentsCalendar({
   );
 
   return (
-    <Card className="min-w-0 shadow-sm">
-      <CardHeader>
+    <Card className="min-w-0 overflow-hidden shadow-sm">
+      <CardHeader className="px-4 sm:px-6">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border bg-muted/60">
-            <CalendarDays className="h-5 w-5 text-muted-foreground" />
-          </div>
           <div className="min-w-0">
             <CardTitle>{t('dashboard.paymentCalendarTitle')}</CardTitle>
             <CardDescription>{t('dashboard.paymentCalendarDesc')}</CardDescription>
@@ -124,7 +121,7 @@ export function MonthlyPaymentsCalendar({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 px-4 sm:px-6">
         <div className="overflow-x-auto">
           <div className="mx-auto w-fit min-w-max space-y-2">
             <div className="grid grid-cols-7 justify-items-center gap-2 py-1 text-center text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">

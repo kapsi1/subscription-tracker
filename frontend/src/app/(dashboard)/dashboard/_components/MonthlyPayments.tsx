@@ -112,7 +112,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
 
   return (
     <Card className="min-w-0 shadow-sm">
-      <CardHeader>
+      <CardHeader className="px-4 sm:px-6">
         <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
             <CardTitle>{t('dashboard.monthlyPaymentsTitle')}</CardTitle>
@@ -164,7 +164,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4 sm:px-6">
         {sortedMonthlyPayments.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
             {t('dashboard.noMonthlyPayments')}
@@ -183,7 +183,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
                       onViewPayment?.(payment);
                     }
                   }}
-                  className={`animate-list-item flex w-full min-w-0 cursor-pointer flex-col gap-3 rounded-lg border p-4 text-left transition-colors lg:flex-row lg:items-center lg:justify-between ${
+                  className={`animate-list-item flex w-full min-w-0 cursor-pointer flex-col gap-2 rounded-lg border p-3.5 text-left transition-colors sm:gap-3 sm:p-4 lg:flex-row lg:items-center lg:justify-between ${
                     payment.status === 'done'
                       ? 'border-dashed bg-muted opacity-70 hover:opacity-100 hover:bg-muted/80'
                       : 'bg-card hover:bg-accent/50'
@@ -191,7 +191,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-4">
                     <div
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border"
+                      className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border md:flex"
                       style={getCategoryStyle(
                         findCategoryColor(categories, payment.category),
                         'dashboard',
@@ -211,7 +211,8 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <p className="max-w-full cursor-pointer truncate font-medium md:max-w-[260px] lg:max-w-[350px]">
+                                  {/* <p className="max-w-full cursor-pointer truncate font-medium md:max-w-[260px] lg:max-w-[350px]"> */}
+                                  <p className="max-w-full cursor-pointer truncate font-medium">
                                     {payment.name}
                                   </p>
                                 </TooltipTrigger>
@@ -225,6 +226,7 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
                             </TooltipProvider>
                           </div>
                           <div className="mt-2 flex flex-wrap items-center gap-2 lg:hidden">
+                            {/* className="max-w-[140px] gap-1.5" */}
                             <Badge
                               variant="outline"
                               className="gap-1.5"
@@ -238,9 +240,11 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
                                 fallback={Tag}
                                 className="w-3.5 h-3.5"
                               />
-                              {t(`subscriptions.modal.categories.${payment.category}`, {
-                                defaultValue: payment.category,
-                              })}
+                              <span className="truncate">
+                                {t(`subscriptions.modal.categories.${payment.category}`, {
+                                  defaultValue: payment.category,
+                                })}
+                              </span>
                             </Badge>
                             {payment.status === 'done' ? (
                               <Badge variant="secondary" className="shrink-0">
