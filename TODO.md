@@ -359,6 +359,7 @@
 - [x] Make the tab buttons in nav bar bigger on mobile devices. They should fill available space.
 - [ ] Production deployment checklist:
     - [ ] Email notifications - set an external service
-    - [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
-    - [ ] Google Auth setup in Google Cloud Console
+    - [x] Delete production database and DB migrations from code, we'll deploy it from scratch.
+    - [x] Google Auth setup in Google Cloud Console
     - [ ] App installation on mobile
+    - [x] Add a domain: done - subtracker.cc
