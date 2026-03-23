@@ -528,8 +528,9 @@ export function buildWeeklyReportEmailHtml(params: {
   theme?: string;
   name?: string;
   appUrl: string;
+  reportType?: 'previous' | 'next';
 }): { subject: string; html: string } {
-  const { language = 'en', accentColor, theme, name, email, stats, currency, appUrl } = params;
+  const { language = 'en', accentColor, theme, name, email, stats, currency, appUrl, reportType = 'next' } = params;
   const locale = LOCALES[language as keyof typeof LOCALES] || LOCALES.en;
   const emails = locale.emails;
   const themeMode = resolveTheme(theme);
@@ -557,18 +558,32 @@ export function buildWeeklyReportEmailHtml(params: {
   );
 
   const digest = emails.digest;
+  const isPrevious = reportType === 'previous';
+
+  const title = isPrevious
+    ? (emails.previousWeekReportTitle ?? emails.weeklyReportTitle)
+    : (emails.nextWeekReportTitle ?? emails.weeklyReportTitle);
+  const subject = isPrevious
+    ? (emails.previousWeekReportSubject ?? emails.weeklyReportSubject)
+    : (emails.nextWeekReportSubject ?? emails.weeklyReportSubject);
+  const summary = isPrevious
+    ? (digest.previousWeekSummary ?? digest.summary)
+    : (digest.nextWeekSummary ?? digest.summary);
+  const upcomingLabel = isPrevious
+    ? (digest.paidLastWeek ?? digest.upcomingThisWeek)
+    : (digest.upcomingNextWeek ?? digest.upcomingThisWeek);
 
   const bodyHtml = `
     <div class="email-card">
       <div class="email-topbar-bg"></div>
       <div class="email-content">
         ${getEmailHeader(appUrl)}
-        <h2 class="email-title">${emails.weeklyReportTitle}</h2>
+        <h2 class="email-title">${title}</h2>
         <p class="email-greeting">${greeting}</p>
-        <p class="email-text">${digest.summary}</p>
+        <p class="email-text">${summary}</p>
         <div class="email-highlight">
           <p class="email-metric"><strong>${digest.totalActive}:</strong> ${stats.totalActive}</p>
-          <p class="email-metric"><strong>${digest.upcomingThisWeek}:</strong> ${stats.upcomingThisWeek}</p>
+          <p class="email-metric"><strong>${upcomingLabel}:</strong> ${stats.upcomingThisWeek}</p>
           <p class="email-metric"><strong>${digest.totalMonthly}:</strong> <span class="email-amount">${stats.totalMonthly.toFixed(2)} ${currency}</span></p>
         </div>
         <p class="email-text">${managePromptHtml}</p>
@@ -578,7 +593,7 @@ export function buildWeeklyReportEmailHtml(params: {
   `;
 
   return {
-    subject: emails.weeklyReportSubject,
+    subject,
     html: buildEmailDocument(bodyHtml, accentColor, themeMode),
   };
 }

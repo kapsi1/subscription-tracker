@@ -4,7 +4,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { AlertType, type Prisma, type Subscription } from '@prisma/client';
 import type { Queue } from 'bullmq';
 import { DashboardService } from '../dashboard/dashboard.service';
-
+import { EmailService } from '../notifications/email/email.service';
 import { PaymentsService } from '../payments/payments.service';
 
 import { PrismaService } from '../prisma/prisma.service';
@@ -35,6 +35,7 @@ export class AlertsService {
     private readonly prisma: PrismaService,
     private readonly dashboardService: DashboardService,
     private readonly paymentsService: PaymentsService,
+    private readonly emailService: EmailService,
     @InjectQueue('alertQueue') private readonly alertQueue: Queue,
   ) {}
 
@@ -266,5 +267,81 @@ export class AlertsService {
       msg: 'Daily digest scheduler completed',
       event: 'daily_digest_scheduler_complete',
     });
+  }
+
+  // Previous week report — sent every Monday at 8 AM
+  @Cron('0 8 * * 1')
+  async handlePreviousWeekReportCron() {
+    this.logger.log({ msg: 'Previous week report scheduler started', event: 'prev_week_report_start' });
+
+    const users = await this.prisma.user.findMany({
+      where: { emailNotifications: true, previousWeekReport: true },
+    });
+
+    for (const user of users) {
+      try {
+        const subs = await this.prisma.subscription.findMany({
+          where: { userId: user.id, isActive: true },
+        });
+        const summary = this.dashboardService.calculateCosts(subs);
+        await this.emailService.sendWeeklyReport(
+          user.email,
+          { totalActive: summary.activeSubscriptions, totalMonthly: summary.totalMonthlyCost, upcomingThisWeek: 0 },
+          user.currency,
+          user.language,
+          user.accentColor,
+          user.theme,
+          user.name ?? undefined,
+          'previous',
+        );
+      } catch (error) {
+        this.logger.error(`Previous week report failed for user ${user.id}: ${error.message}`);
+      }
+    }
+
+    this.logger.log({ msg: 'Previous week report scheduler completed', event: 'prev_week_report_complete', userCount: users.length });
+  }
+
+  // Next week report — sent every Sunday at 8 AM
+  @Cron('0 8 * * 0')
+  async handleNextWeekReportCron() {
+    this.logger.log({ msg: 'Next week report scheduler started', event: 'next_week_report_start' });
+
+    const users = await this.prisma.user.findMany({
+      where: { emailNotifications: true, nextWeekReport: true },
+    });
+
+    for (const user of users) {
+      try {
+        const subs = await this.prisma.subscription.findMany({
+          where: { userId: user.id, isActive: true },
+        });
+        const summary = this.dashboardService.calculateCosts(subs);
+
+        const nextWeekStart = new Date();
+        nextWeekStart.setDate(nextWeekStart.getDate() + 1);
+        const nextWeekEnd = new Date(nextWeekStart);
+        nextWeekEnd.setDate(nextWeekEnd.getDate() + 6);
+
+        const upcomingNextWeek = subs.filter((s) => {
+          const d = new Date(s.nextBillingDate);
+          return d >= nextWeekStart && d <= nextWeekEnd;
+        }).length;
+
+        await this.emailService.sendWeeklyReport(
+          user.email,
+          { totalActive: summary.activeSubscriptions, totalMonthly: summary.totalMonthlyCost, upcomingThisWeek: upcomingNextWeek },
+          user.currency,
+          user.language,
+          user.accentColor,
+          user.theme,
+          user.name ?? undefined,
+        );
+      } catch (error) {
+        this.logger.error(`Next week report failed for user ${user.id}: ${error.message}`);
+      }
+    }
+
+    this.logger.log({ msg: 'Next week report scheduler completed', event: 'next_week_report_complete', userCount: users.length });
   }
 }

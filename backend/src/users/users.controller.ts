@@ -228,8 +228,39 @@ export class UsersController {
   }
 
   @Throttle({ default: { limit: 5, ttl: 60000 } })
-  @Post('test-weekly-report')
-  async testWeeklyReport(@Req() req: RequestWithUser, @Body() body: { lang?: string }) {
+  @Post('test-previous-week-report')
+  async testPreviousWeekReport(@Req() req: RequestWithUser, @Body() body: { lang?: string }) {
+    this.assertTestEndpointsEnabled();
+
+    const user = await this.usersService.findById(req.user.userId);
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.emailNotifications)
+      throw new BadRequestException('Email notifications are disabled.');
+
+    const language = body?.lang || 'en';
+
+    await this.emailService.sendWeeklyReport(
+      user.email,
+      { totalActive: 5, totalMonthly: 125.5, upcomingThisWeek: 3 },
+      user.currency,
+      language,
+      user.accentColor,
+      user.theme,
+      user.name ?? undefined,
+      'previous',
+    );
+
+    return {
+      message:
+        language === 'pl'
+          ? `Wysłano testowy raport z poprzedniego tygodnia.`
+          : `Test previous week report sent.`,
+    };
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('test-next-week-report')
+  async testNextWeekReport(@Req() req: RequestWithUser, @Body() body: { lang?: string }) {
     this.assertTestEndpointsEnabled();
 
     const user = await this.usersService.findById(req.user.userId);
@@ -242,16 +273,19 @@ export class UsersController {
     await this.emailService.sendWeeklyReport(
       user.email,
       { totalActive: 5, totalMonthly: 125.5, upcomingThisWeek: 2 },
-      'USD',
+      user.currency,
       language,
       user.accentColor,
       user.theme,
       user.name ?? undefined,
+      'next',
     );
 
     return {
       message:
-        language === 'pl' ? `Wysłano testowy raport tygodniowy.` : `Test weekly report sent.`,
+        language === 'pl'
+          ? `Wysłano testowy raport na następny tydzień.`
+          : `Test next week report sent.`,
     };
   }
 

@@ -208,6 +208,7 @@ export class EmailService {
     accentColor?: string,
     theme?: string,
     name?: string,
+    reportType: 'previous' | 'next' = 'next',
   ) {
     const appUrl = this.configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
 
@@ -220,6 +221,7 @@ export class EmailService {
       theme,
       name,
       appUrl,
+      reportType,
     });
 
     await this.sendEmail({

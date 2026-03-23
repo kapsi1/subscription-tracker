@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "이메일 알림",
-        "desc": "이메일로 알림을 받습니다",
-        "enable": "이메일 알림 활성화",
-        "enableDesc": "결제 리마인더를 이메일로 전송합니다",
+        "title": "이메일 보고서",
+        "desc": "이메일로 예약된 보고서를 받아보세요",
+        "enable": "이메일 보고서 활성화",
+        "enableDesc": "예약된 보고서를 이메일로 전송합니다",
         "address": "이메일 주소",
         "daily": "일일 요약 (Daily Digest)",
         "dailyDesc": "오늘의 결제 요약을 받습니다",
-        "weekly": "주간 리포트",
-        "weeklyDesc": "구독 현황의 주간 요약을 받습니다",
         "testTitle": "테스트 알림 메일",
         "testDesc": "SMTP 설정을 확인하기 위해 샘플 이메일을 보냅니다.",
         "testLanguage": "테스트 메일 언어",
@@ -378,7 +376,11 @@
         "testSuccess": "테스트 알림 메일이 전송되었습니다",
         "testError": "테스트 이메일 전송에 실패했습니다",
         "testBudgetSuccess": "테스트 예산 알림 메일이 전송되었습니다",
-        "testBudgetError": "테스트 예산 메일 전송에 실패했습니다"
+        "testBudgetError": "테스트 예산 메일 전송에 실패했습니다",
+        "previousWeekReport": "지난주 보고서",
+        "previousWeekReportDesc": "지난주 구독 결제 요약을 받아보세요",
+        "nextWeekReport": "다음 주 미리보기",
+        "nextWeekReportDesc": "다음 주 예정된 결제 미리보기를 받아보세요"
       },
       "push": {
         "title": "브라우저 푸시 알림",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "이번 주 예정",
       "totalMonthly": "총 월간 비용",
       "paidYesterday": "어제 결제된 항목",
-      "noPaymentsPaidYesterday": "어제 결제된 구독 항목이 없습니다."
+      "noPaymentsPaidYesterday": "어제 결제된 구독 항목이 없습니다.",
+      "previousWeekSummary": "지난주 구독 활동 요약입니다.",
+      "nextWeekSummary": "다음 주 예정된 구독 결제 미리보기입니다.",
+      "paidLastWeek": "지난주 결제됨",
+      "upcomingNextWeek": "다음 주 예정"
     },
     "verification": {
       "subject": "이메일 인증을 완료하세요 - SubTracker",
@@ -507,7 +513,11 @@
       "text": "비밀번호 재설정 요청을 받았습니다. 새 비밀번호를 만들려면 아래 버튼을 눌러주세요. 링크는 1시간 동안 유효합니다:",
       "button": "비밀번호 재설정",
       "footer": "비밀번호 재설정을 요청하신 적이 없다면 이 메일을 무시해 주세요. 비밀번호는 변경되지 않습니다."
-    }
+    },
+    "previousWeekReportSubject": "지난주 구독 보고서",
+    "previousWeekReportTitle": "지난주 보고서",
+    "nextWeekReportSubject": "다음 주 예정 구독",
+    "nextWeekReportTitle": "다음 주 미리보기"
   },
   "footer": {
     "madeBy": "Kamil Kapsiak 제작.",

@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "メール通知",
-        "desc": "メールでアラートを受け取ります",
-        "enable": "メール通知を有効化",
-        "enableDesc": "支払いリマインダーをメールで送信する",
+        "title": "メールレポート",
+        "desc": "定期レポートをメールで受け取る",
+        "enable": "メールレポートを有効にする",
+        "enableDesc": "定期レポートをメールアドレスに送信する",
         "address": "メールアドレス",
         "daily": "毎日の要約 (Daily Digest)",
         "dailyDesc": "本日の支払い要約を受け取る",
-        "weekly": "週刊レポート",
-        "weeklyDesc": "サブスクリプションの週刊要約を受け取る",
         "testTitle": "テストリマインダーを送信",
         "testDesc": "SMTP設定を確認するためにサンプルメールを送信します。",
         "testLanguage": "テストメールの言語",
@@ -378,7 +376,11 @@
         "testSuccess": "テストリマインダーを送信しました",
         "testError": "テストメールの送信に失敗しました",
         "testBudgetSuccess": "テスト予算アラートを送信しました",
-        "testBudgetError": "テスト予算メールの送信に失敗しました"
+        "testBudgetError": "テスト予算メールの送信に失敗しました",
+        "previousWeekReport": "先週のレポート",
+        "previousWeekReportDesc": "先週のサブスクリプション支払いのまとめを受け取る",
+        "nextWeekReport": "来週のプレビュー",
+        "nextWeekReportDesc": "来週の予定支払いのプレビューを受け取る"
       },
       "push": {
         "title": "ブラウザプッシュ通知",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "今週の予定",
       "totalMonthly": "月間合計コスト",
       "paidYesterday": "昨日支払われたサブスクリプション",
-      "noPaymentsPaidYesterday": "昨日支払われたサブスクリプションはありませんでした。"
+      "noPaymentsPaidYesterday": "昨日支払われたサブスクリプションはありませんでした。",
+      "previousWeekSummary": "先週のサブスクリプション活動の概要です。",
+      "nextWeekSummary": "来週の予定サブスクリプション支払いのプレビューです。",
+      "paidLastWeek": "先週支払済み",
+      "upcomingNextWeek": "来週の予定"
     },
     "verification": {
       "subject": "メールアドレスの認証 - SubTracker",
@@ -507,7 +513,11 @@
       "text": "パスワード再設定のリクエストを受け付けました。1時間以内にボタンをクリックして新しいパスワードを作成してください:",
       "button": "パスワードを再設定する",
       "footer": "リクエストした覚えがない場合は、このメールを無視してください。パスワードは変更されません。"
-    }
+    },
+    "previousWeekReportSubject": "先週のサブスクリプションレポート",
+    "previousWeekReportTitle": "先週のレポート",
+    "nextWeekReportSubject": "来週の予定サブスクリプション",
+    "nextWeekReportTitle": "来週のプレビュー"
   },
   "footer": {
     "madeBy": "Kamil Kapsiak 作。",

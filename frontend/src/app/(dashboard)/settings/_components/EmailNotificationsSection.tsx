@@ -14,18 +14,21 @@ interface EmailNotificationsSectionProps {
   emailNotifications: boolean;
   emailAddress: string;
   dailyDigest: boolean;
-  weeklyReport: boolean;
+  previousWeekReport: boolean;
+  nextWeekReport: boolean;
   onSettingsChange: (updates: Partial<Settings>) => void;
   showTestControls: boolean;
   testEmailLanguage: 'en' | 'pl';
   setTestEmailLanguage: (lang: 'en' | 'pl') => void;
   onTestEmail: () => void;
   onTestDailyDigest: () => void;
-  onTestWeeklyReport: () => void;
+  onTestPreviousWeekReport: () => void;
+  onTestNextWeekReport: () => void;
   isLoading: {
     email: boolean;
     daily: boolean;
-    weekly: boolean;
+    previousWeekly: boolean;
+    nextWeekly: boolean;
   };
 }
 
@@ -33,14 +36,16 @@ export function EmailNotificationsSection({
   emailNotifications,
   emailAddress,
   dailyDigest,
-  weeklyReport,
+  previousWeekReport,
+  nextWeekReport,
   onSettingsChange,
   showTestControls,
   testEmailLanguage,
   setTestEmailLanguage,
   onTestEmail,
   onTestDailyDigest,
-  onTestWeeklyReport,
+  onTestPreviousWeekReport,
+  onTestNextWeekReport,
   isLoading,
 }: EmailNotificationsSectionProps) {
   const { t } = useTranslation();
@@ -132,23 +137,47 @@ export function EmailNotificationsSection({
             <div className="border-t pt-2 mt-2">
               <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
                 <div className="space-y-0.5">
-                  <Label htmlFor="weeklyReport">
+                  <Label htmlFor="previousWeekReport">
                     <SearchHighlight
-                      text={t('settings.notifications.email.weekly')}
+                      text={t('settings.notifications.email.previousWeekReport')}
                       query={searchQuery}
                     />
                   </Label>
                   <p className="text-sm text-muted-foreground">
                     <SearchHighlight
-                      text={t('settings.notifications.email.weeklyDesc')}
+                      text={t('settings.notifications.email.previousWeekReportDesc')}
                       query={searchQuery}
                     />
                   </p>
                 </div>
                 <Switch
-                  id="weeklyReport"
-                  checked={weeklyReport}
-                  onCheckedChange={(checked) => onSettingsChange({ weeklyReport: checked })}
+                  id="previousWeekReport"
+                  checked={previousWeekReport}
+                  onCheckedChange={(checked) => onSettingsChange({ previousWeekReport: checked })}
+                />
+              </div>
+            </div>
+
+            <div className="border-t pt-2 mt-2">
+              <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
+                <div className="space-y-0.5">
+                  <Label htmlFor="nextWeekReport">
+                    <SearchHighlight
+                      text={t('settings.notifications.email.nextWeekReport')}
+                      query={searchQuery}
+                    />
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    <SearchHighlight
+                      text={t('settings.notifications.email.nextWeekReportDesc')}
+                      query={searchQuery}
+                    />
+                  </p>
+                </div>
+                <Switch
+                  id="nextWeekReport"
+                  checked={nextWeekReport}
+                  onCheckedChange={(checked) => onSettingsChange({ nextWeekReport: checked })}
                 />
               </div>
             </div>
@@ -203,7 +232,7 @@ export function EmailNotificationsSection({
                     variant="outline"
                     size="sm"
                     onClick={onTestEmail}
-                    disabled={isLoading.email || isLoading.daily || isLoading.weekly}
+                    disabled={isLoading.email || isLoading.daily || isLoading.previousWeekly || isLoading.nextWeekly}
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />
@@ -215,7 +244,7 @@ export function EmailNotificationsSection({
                     variant="outline"
                     size="sm"
                     onClick={onTestDailyDigest}
-                    disabled={isLoading.email || isLoading.daily || isLoading.weekly}
+                    disabled={isLoading.email || isLoading.daily || isLoading.previousWeekly || isLoading.nextWeekly}
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />
@@ -226,14 +255,26 @@ export function EmailNotificationsSection({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={onTestWeeklyReport}
-                    disabled={isLoading.email || isLoading.daily || isLoading.weekly}
+                    onClick={onTestPreviousWeekReport}
+                    disabled={isLoading.email || isLoading.daily || isLoading.previousWeekly || isLoading.nextWeekly}
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />
-                    {isLoading.weekly
+                    {isLoading.previousWeekly
                       ? t('settings.notifications.email.testSending')
-                      : 'Test Weekly Report'}
+                      : 'Test Previous Week Report'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onTestNextWeekReport}
+                    disabled={isLoading.email || isLoading.daily || isLoading.previousWeekly || isLoading.nextWeekly}
+                    className="gap-1.5"
+                  >
+                    <SendHorizonal className="w-4 h-4" />
+                    {isLoading.nextWeekly
+                      ? t('settings.notifications.email.testSending')
+                      : 'Test Next Week Report'}
                   </Button>
                 </div>
               </div>

@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "Notifications Email",
-        "desc": "Recevez des alertes par email",
-        "enable": "Activer les notifications par email",
-        "enableDesc": "Envoyer des rappels de paiement par email",
+        "title": "Rapports par e-mail",
+        "desc": "Recevez des rapports planifiés par e-mail",
+        "enable": "Activer les rapports par e-mail",
+        "enableDesc": "Envoyer des rapports planifiés à votre adresse e-mail",
         "address": "Adresse Email",
         "daily": "Résumé Quotidien",
         "dailyDesc": "Recevez un résumé de vos paiements du jour",
-        "weekly": "Rapport Hebdomadaire",
-        "weeklyDesc": "Recevez un rapport hebdomadaire de vos abonnements",
         "testTitle": "Email de Rappel de Test",
         "testDesc": "Envoyez un email d'exemple pour vérifier votre configuration SMTP.",
         "testLanguage": "Langue de l'email de test",
@@ -378,7 +376,11 @@
         "testSuccess": "Email de test envoyé",
         "testError": "Échec de l'envoi de l'email de test",
         "testBudgetSuccess": "Email d'alerte de budget de test envoyé",
-        "testBudgetError": "Échec de l'envoi de l'email de budget de test"
+        "testBudgetError": "Échec de l'envoi de l'email de budget de test",
+        "previousWeekReport": "Rapport de la semaine précédente",
+        "previousWeekReportDesc": "Recevez un résumé des paiements d'abonnement de la semaine dernière",
+        "nextWeekReport": "Aperçu de la semaine prochaine",
+        "nextWeekReportDesc": "Recevez un aperçu des paiements à venir pour la semaine prochaine"
       },
       "push": {
         "title": "Notifications Web (Push)",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "À venir cette semaine",
       "totalMonthly": "Coût mensuel total",
       "paidYesterday": "Abonnements payés hier",
-      "noPaymentsPaidYesterday": "Aucun abonnement payé hier."
+      "noPaymentsPaidYesterday": "Aucun abonnement payé hier.",
+      "previousWeekSummary": "Voici un résumé de votre activité d'abonnements de la semaine dernière.",
+      "nextWeekSummary": "Voici un aperçu de vos paiements d'abonnements à venir pour la semaine prochaine.",
+      "paidLastWeek": "Payé la semaine dernière",
+      "upcomingNextWeek": "À venir la semaine prochaine"
     },
     "verification": {
       "subject": "Vérifiez votre email - SubTracker",
@@ -507,7 +513,11 @@
       "text": "Nous avons reçu une demande de changement de mot de passe. Cliquez sur le bouton ci-dessous pour en créer un nouveau (valable 1h) :",
       "button": "Réinitialiser le mot de passe",
       "footer": "Si vous n'avez pas demandé ce changement, vous pouvez ignorer cet email. Votre mot de passe restera inchangé."
-    }
+    },
+    "previousWeekReportSubject": "Rapport d'abonnements de la semaine dernière",
+    "previousWeekReportTitle": "Rapport de la semaine précédente",
+    "nextWeekReportSubject": "Abonnements à venir – semaine prochaine",
+    "nextWeekReportTitle": "Aperçu de la semaine prochaine"
   },
   "footer": {
     "madeBy": "Créé par Kamil Kapsiak.",

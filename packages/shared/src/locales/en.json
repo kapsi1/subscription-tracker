@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "Email Notifications",
-        "desc": "Receive alerts via email",
-        "enable": "Enable Email Notifications",
-        "enableDesc": "Send payment reminders to your email",
+        "title": "Email Reports",
+        "desc": "Receive scheduled reports via email",
+        "enable": "Enable Email Reports",
+        "enableDesc": "Send scheduled reports to your email",
         "address": "Email Address",
         "daily": "Daily Digest",
         "dailyDesc": "Receive a summary of today's payments",
-        "weekly": "Weekly Report",
-        "weeklyDesc": "Receive a weekly summary of your subscriptions",
         "testTitle": "Test Reminder Email",
         "testDesc": "Send a sample reminder email to verify your SMTP setup.",
         "testLanguage": "Test Email Language",
@@ -378,7 +376,11 @@
         "testSuccess": "Test reminder email sent",
         "testError": "Failed to send test email",
         "testBudgetSuccess": "Test budget alert email sent",
-        "testBudgetError": "Failed to send test budget email"
+        "testBudgetError": "Failed to send test budget email",
+        "previousWeekReport": "Previous Week Report",
+        "previousWeekReportDesc": "Receive a summary of last week's subscription payments",
+        "nextWeekReport": "Next Week Preview",
+        "nextWeekReportDesc": "Receive a preview of upcoming payments for next week"
       },
       "push": {
         "title": "Browser Push Notifications",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "Upcoming This Week",
       "totalMonthly": "Total Monthly Cost",
       "paidYesterday": "Subscriptions Paid Yesterday",
-      "noPaymentsPaidYesterday": "No subscriptions were paid yesterday."
+      "noPaymentsPaidYesterday": "No subscriptions were paid yesterday.",
+      "previousWeekSummary": "Here is a summary of your subscription activity from last week.",
+      "nextWeekSummary": "Here is a preview of your upcoming subscription payments for next week.",
+      "paidLastWeek": "Paid Last Week",
+      "upcomingNextWeek": "Upcoming Next Week"
     },
     "verification": {
       "subject": "Verify your email - SubTracker",
@@ -507,7 +513,11 @@
       "text": "We received a request to reset your password. Click the button below to create a new password. The link is valid for 1 hour:",
       "button": "Reset Password",
       "footer": "If you didn't request a password reset, you can safely ignore this email. Your password will not be changed."
-    }
+    },
+    "previousWeekReportSubject": "Previous Week Subscription Report",
+    "previousWeekReportTitle": "Previous Week Report",
+    "nextWeekReportSubject": "Upcoming Subscriptions – Next Week",
+    "nextWeekReportTitle": "Next Week Preview"
   },
   "footer": {
     "madeBy": "Made by Kamil Kapsiak.",

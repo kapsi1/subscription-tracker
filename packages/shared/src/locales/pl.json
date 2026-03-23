@@ -368,15 +368,13 @@
     },
     "notifications": {
       "email": {
-        "title": "Powiadomienia e-mail",
-        "desc": "Otrzymuj alerty pocztą elektroniczną",
-        "enable": "Włącz powiadomienia e-mail",
-        "enableDesc": "Wysyłaj przypomnienia o płatnościach na Twój e-mail",
+        "title": "Raporty e-mail",
+        "desc": "Otrzymuj zaplanowane raporty przez e-mail",
+        "enable": "Włącz raporty e-mail",
+        "enableDesc": "Wysyłaj zaplanowane raporty na swój adres e-mail",
         "address": "Adres e-mail",
         "daily": "Dzienny przegląd",
         "dailyDesc": "Otrzymuj podsumowanie dzisiejszych płatności",
-        "weekly": "Raport tygodniowy",
-        "weeklyDesc": "Otrzymuj cotygodniowe podsumowanie swoich subskrypcji",
         "testTitle": "Testowy e-mail przypomnienia",
         "testDesc": "Wyślij próbny e-mail, aby sprawdzić konfigurację SMTP.",
         "testSend": "Wyślij testowy e-mail",
@@ -388,7 +386,11 @@
         "testSuccess": "Wysłano testowy e-mail przypomnienia",
         "testError": "Nie udało się wysłać testowego e-maila",
         "testBudgetSuccess": "Wysłano testowy e-mail alertu budżetowego",
-        "testBudgetError": "Nie udało się wysłać testowego alertu budżetowego"
+        "testBudgetError": "Nie udało się wysłać testowego alertu budżetowego",
+        "previousWeekReport": "Raport z poprzedniego tygodnia",
+        "previousWeekReportDesc": "Otrzymaj podsumowanie płatności subskrypcji z poprzedniego tygodnia",
+        "nextWeekReport": "Podgląd następnego tygodnia",
+        "nextWeekReportDesc": "Otrzymaj podgląd nadchodzących płatności na następny tydzień"
       },
       "push": {
         "title": "Powiadomienia push w przeglądarce",
@@ -502,7 +504,11 @@
       "upcomingThisWeek": "Nadchodzące w tym tygodniu",
       "totalMonthly": "Miesięczny koszt całkowity",
       "paidYesterday": "Subskrypcje opłacone wczoraj",
-      "noPaymentsPaidYesterday": "Wczoraj nie opłacono żadnych subskrypcji."
+      "noPaymentsPaidYesterday": "Wczoraj nie opłacono żadnych subskrypcji.",
+      "previousWeekSummary": "Oto podsumowanie aktywności subskrypcji z poprzedniego tygodnia.",
+      "nextWeekSummary": "Oto podgląd nadchodzących płatności subskrypcji na następny tydzień.",
+      "paidLastWeek": "Opłacone w poprzednim tygodniu",
+      "upcomingNextWeek": "Nadchodzące w następnym tygodniu"
     },
     "verification": {
       "subject": "Zweryfikuj swój adres e-mail - SubTracker",
@@ -517,7 +523,11 @@
       "text": "Otrzymaliśmy prośbę o zresetowanie hasła. Kliknij poniższy przycisk, aby ustawić nowe hasło. Link jest ważny przez 1 godzinę:",
       "button": "Zresetuj hasło",
       "footer": "Jeśli nie prosiłeś o zresetowanie hasła, możesz bezpiecznie zignorować tę wiadomość. Twoje hasło nie zostanie zmienione."
-    }
+    },
+    "previousWeekReportSubject": "Raport subskrypcji z poprzedniego tygodnia",
+    "previousWeekReportTitle": "Raport z poprzedniego tygodnia",
+    "nextWeekReportSubject": "Nadchodzące subskrypcje – następny tydzień",
+    "nextWeekReportTitle": "Podgląd następnego tygodnia"
   },
   "footer": {
     "madeBy": "Stworzone przez Kamila Kapsiaka.",

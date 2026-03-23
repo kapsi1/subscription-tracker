@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "Notificaciones por correo electrónico",
-        "desc": "Recibe alertas por correo electrónico",
-        "enable": "Activar notificaciones por correo electrónico",
-        "enableDesc": "Enviar recordatorios de pago a tu correo electrónico",
+        "title": "Informes por correo",
+        "desc": "Recibe informes programados por correo electrónico",
+        "enable": "Activar informes por correo",
+        "enableDesc": "Enviar informes programados a tu correo electrónico",
         "address": "Dirección de correo electrónico",
         "daily": "Resumen diario",
         "dailyDesc": "Recibe un resumen de los pagos de hoy",
-        "weekly": "Informe semanal",
-        "weeklyDesc": "Recibe un resumen semanal de tus suscripciones",
         "testTitle": "Correo de prueba de recordatorio",
         "testDesc": "Envía un correo de prueba para verificar tu configuración SMTP.",
         "testLanguage": "Idioma del correo de prueba",
@@ -378,7 +376,11 @@
         "testSuccess": "Correo de prueba de recordatorio enviado",
         "testError": "Error al enviar el correo de prueba",
         "testBudgetSuccess": "Correo de prueba de alerta de presupuesto enviado",
-        "testBudgetError": "Error al enviar el correo de prueba de presupuesto"
+        "testBudgetError": "Error al enviar el correo de prueba de presupuesto",
+        "previousWeekReport": "Informe de la semana anterior",
+        "previousWeekReportDesc": "Recibe un resumen de los pagos de suscripción de la semana pasada",
+        "nextWeekReport": "Vista previa de la próxima semana",
+        "nextWeekReportDesc": "Recibe una vista previa de los pagos próximos de la semana que viene"
       },
       "push": {
         "title": "Notificaciones push del navegador",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "Próximos esta semana",
       "totalMonthly": "Coste mensual total",
       "paidYesterday": "Suscripciones pagadas ayer",
-      "noPaymentsPaidYesterday": "Ayer no se pagó ninguna suscripción."
+      "noPaymentsPaidYesterday": "Ayer no se pagó ninguna suscripción.",
+      "previousWeekSummary": "Aquí tienes un resumen de tu actividad de suscripciones de la semana pasada.",
+      "nextWeekSummary": "Aquí tienes una vista previa de los próximos pagos de suscripciones para la semana que viene.",
+      "paidLastWeek": "Pagado la semana pasada",
+      "upcomingNextWeek": "Próximo la semana que viene"
     },
     "verification": {
       "subject": "Verifica tu correo electrónico - SubTracker",
@@ -507,7 +513,11 @@
       "text": "Hemos recibido una solicitud para restablecer tu contraseña. Haz clic en el botón de abajo para crear una nueva contraseña. El enlace es válido durante 1 hora:",
       "button": "Restablecer contraseña",
       "footer": "Si no has solicitado restablecer tu contraseña, puedes ignorar este correo de forma segura. Tu contraseña no cambiará."
-    }
+    },
+    "previousWeekReportSubject": "Informe de suscripciones de la semana pasada",
+    "previousWeekReportTitle": "Informe de la semana anterior",
+    "nextWeekReportSubject": "Suscripciones próximas – semana que viene",
+    "nextWeekReportTitle": "Vista previa de la próxima semana"
   },
   "footer": {
     "madeBy": "Creado por Kamil Kapsiak.",

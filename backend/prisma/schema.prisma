@@ -19,9 +19,10 @@ model User {
   language                    String             @default("en")
   accentColor                 String             @default("Indigo")
   dailyDigest                 Boolean            @default(false)
-  emailNotifications          Boolean            @default(true)
+  emailNotifications          Boolean            @default(false)
   theme                       String             @default("system")
-  weeklyReport                Boolean            @default(true)
+  previousWeekReport          Boolean            @default(false)
+  nextWeekReport              Boolean            @default(false)
   googleId                    String?            @unique
   name                        String?
   dashboardSortBy             String             @default("date")

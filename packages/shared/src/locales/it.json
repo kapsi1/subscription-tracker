@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "Notifiche Email",
-        "desc": "Ricevi avvisi via email",
-        "enable": "Abilita Notifiche Email",
-        "enableDesc": "Invia promemoria di pagamento alla tua email",
+        "title": "Report via email",
+        "desc": "Ricevi report pianificati via email",
+        "enable": "Abilita report via email",
+        "enableDesc": "Invia report pianificati alla tua email",
         "address": "Indirizzo Email",
         "daily": "Digest Quotidiano",
         "dailyDesc": "Ricevi un riepilogo dei pagamenti di oggi",
-        "weekly": "Rapporto Settimanale",
-        "weeklyDesc": "Ricevi un riepilogo settimanale dei tuoi abbonamenti",
         "testTitle": "Email di Prova Promemoria",
         "testDesc": "Invia un'email di prova per verificare la configurazione SMTP.",
         "testLanguage": "Lingua Email di Prova",
@@ -378,7 +376,11 @@
         "testSuccess": "Email di prova promemoria inviata",
         "testError": "Impossibile inviare l'email di prova",
         "testBudgetSuccess": "Email di prova avviso budget inviata",
-        "testBudgetError": "Impossibile inviare l'email di prova budget"
+        "testBudgetError": "Impossibile inviare l'email di prova budget",
+        "previousWeekReport": "Report settimana precedente",
+        "previousWeekReportDesc": "Ricevi un riepilogo dei pagamenti degli abbonamenti della settimana scorsa",
+        "nextWeekReport": "Anteprima settimana prossima",
+        "nextWeekReportDesc": "Ricevi un'anteprima dei pagamenti in arrivo per la prossima settimana"
       },
       "push": {
         "title": "Notifiche Push Browser",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "In arrivo questa settimana",
       "totalMonthly": "Costo mensile totale",
       "paidYesterday": "Abbonamenti pagati ieri",
-      "noPaymentsPaidYesterday": "Ieri non sono stati pagati abbonamenti."
+      "noPaymentsPaidYesterday": "Ieri non sono stati pagati abbonamenti.",
+      "previousWeekSummary": "Ecco un riepilogo della tua attività abbonamenti della settimana scorsa.",
+      "nextWeekSummary": "Ecco un'anteprima dei tuoi pagamenti abbonamenti in arrivo per la settimana prossima.",
+      "paidLastWeek": "Pagato la settimana scorsa",
+      "upcomingNextWeek": "In arrivo la settimana prossima"
     },
     "verification": {
       "subject": "Verifica la tua email - SubTracker",
@@ -507,7 +513,11 @@
       "text": "Abbiamo ricevuto una richiesta di reimpostazione della password. Fai clic sul pulsante qui sotto per creare una nuova password. Il link è valido per 1 ora:",
       "button": "Reimposta Password",
       "footer": "Se non hai richiesto la reimpostazione della password, puoi ignorare questa email. La tua password non verrà modificata."
-    }
+    },
+    "previousWeekReportSubject": "Report abbonamenti della settimana scorsa",
+    "previousWeekReportTitle": "Report settimana precedente",
+    "nextWeekReportSubject": "Abbonamenti in arrivo – settimana prossima",
+    "nextWeekReportTitle": "Anteprima settimana prossima"
   },
   "footer": {
     "madeBy": "Creato da Kamil Kapsiak.",

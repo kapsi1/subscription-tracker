@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "E-Mail-Benachrichtigungen",
-        "desc": "Benachrichtigungen per E-Mail erhalten",
-        "enable": "E-Mail-Benachrichtigungen aktivieren",
-        "enableDesc": "Zahlungserinnerungen an Ihre E-Mail senden",
+        "title": "E-Mail-Berichte",
+        "desc": "Erhalten Sie geplante Berichte per E-Mail",
+        "enable": "E-Mail-Berichte aktivieren",
+        "enableDesc": "Geplante Berichte an Ihre E-Mail-Adresse senden",
         "address": "E-Mail-Adresse",
         "daily": "Daily Digest",
         "dailyDesc": "Erhalten Sie eine Zusammenfassung der heutigen Zahlungen",
-        "weekly": "Wochensbericht",
-        "weeklyDesc": "Erhalten Sie eine wöchentliche Zusammenfassung Ihrer Abonnements",
         "testTitle": "Test-Erinnerungs-E-Mail",
         "testDesc": "Senden Sie eine Beispiel-E-Mail, um Ihr SMTP-Setup zu überprüfen.",
         "testLanguage": "Sprache der Test-E-Mail",
@@ -378,7 +376,11 @@
         "testSuccess": "Test-Erinnerungs-E-Mail gesendet",
         "testError": "Senden der Test-E-Mail fehlgeschlagen",
         "testBudgetSuccess": "Test-Budget-Alert-E-Mail gesendet",
-        "testBudgetError": "Senden der Test-Budget-E-Mail fehlgeschlagen"
+        "testBudgetError": "Senden der Test-Budget-E-Mail fehlgeschlagen",
+        "previousWeekReport": "Bericht der Vorwoche",
+        "previousWeekReportDesc": "Erhalten Sie eine Zusammenfassung der Abonnementzahlungen der letzten Woche",
+        "nextWeekReport": "Vorschau nächste Woche",
+        "nextWeekReportDesc": "Erhalten Sie eine Vorschau der anstehenden Zahlungen für nächste Woche"
       },
       "push": {
         "title": "Browser-Push-Benachrichtigungen",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "Anstehend in dieser Woche",
       "totalMonthly": "Monatliche Gesamtkosten",
       "paidYesterday": "Gestern bezahlte Abonnements",
-      "noPaymentsPaidYesterday": "Gestern wurden keine Abonnements bezahlt."
+      "noPaymentsPaidYesterday": "Gestern wurden keine Abonnements bezahlt.",
+      "previousWeekSummary": "Hier ist eine Zusammenfassung Ihrer Abonnementaktivitäten der letzten Woche.",
+      "nextWeekSummary": "Hier ist eine Vorschau Ihrer bevorstehenden Abonnementzahlungen für nächste Woche.",
+      "paidLastWeek": "Letzte Woche bezahlt",
+      "upcomingNextWeek": "Nächste Woche bevorstehend"
     },
     "verification": {
       "subject": "E-Mail verifizieren - SubTracker",
@@ -507,7 +513,11 @@
       "text": "Wir haben eine Anfrage zum Zurücksetzen Ihres Passworts erhalten. Klicken Sie auf die Schaltfläche unten, um ein neues Passwort zu erstellen. Der Link ist 1 Stunde lang gültig:",
       "button": "Passwort zurücksetzen",
       "footer": "Wenn Sie kein Zurücksetzen des Passworts angefordert haben, können Sie diese E-Mail ignorieren. Ihr Passwort wird nicht geändert."
-    }
+    },
+    "previousWeekReportSubject": "Abonnementbericht der letzten Woche",
+    "previousWeekReportTitle": "Bericht der Vorwoche",
+    "nextWeekReportSubject": "Bevorstehende Abonnements – nächste Woche",
+    "nextWeekReportTitle": "Vorschau nächste Woche"
   },
   "footer": {
     "madeBy": "Erstellt von Kamil Kapsiak.",

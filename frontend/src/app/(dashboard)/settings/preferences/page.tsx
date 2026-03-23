@@ -22,10 +22,11 @@ export default function PreferencesPage() {
   const [settings, setSettings] = useState<Settings>({
     defaultReminderEnabled: true,
     defaultReminderDays: 3,
-    emailNotifications: true,
+    emailNotifications: false,
     emailAddress: '',
     dailyDigest: false,
-    weeklyReport: true,
+    previousWeekReport: false,
+    nextWeekReport: false,
     monthlyBudget: null,
     pushEnabled: false,
     currency: 'USD',
@@ -37,7 +38,8 @@ export default function PreferencesPage() {
   const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
   const [isSendingBudgetTestEmail, setIsSendingBudgetTestEmail] = useState(false);
   const [isSendingDailyTest, setIsSendingDailyTest] = useState(false);
-  const [isSendingWeeklyTest, setIsSendingWeeklyTest] = useState(false);
+  const [isSendingPreviousWeeklyTest, setIsSendingPreviousWeeklyTest] = useState(false);
+  const [isSendingNextWeeklyTest, setIsSendingNextWeeklyTest] = useState(false);
   const [isTogglingPush, setIsTogglingPush] = useState(false);
   const hasLoadedSettingsRef = useRef(false);
   const lastSavedPreferencesRef = useRef<string | null>(null);
@@ -56,7 +58,8 @@ export default function PreferencesPage() {
             : null,
           emailNotifications: response.data.emailNotifications,
           dailyDigest: response.data.dailyDigest,
-          weeklyReport: response.data.weeklyReport,
+          previousWeekReport: response.data.previousWeekReport,
+          nextWeekReport: response.data.nextWeekReport,
           pushEnabled: false,
           currency: response.data.currency || 'USD',
         };
@@ -70,7 +73,8 @@ export default function PreferencesPage() {
           monthlyBudget: loadedSettings.monthlyBudget,
           emailNotifications: loadedSettings.emailNotifications,
           dailyDigest: loadedSettings.dailyDigest,
-          weeklyReport: loadedSettings.weeklyReport,
+          previousWeekReport: loadedSettings.previousWeekReport,
+          nextWeekReport: loadedSettings.nextWeekReport,
           currency: loadedSettings.currency,
         });
         hasLoadedSettingsRef.current = true;
@@ -109,7 +113,8 @@ export default function PreferencesPage() {
       monthlyBudget: settings.monthlyBudget,
       emailNotifications: settings.emailNotifications,
       dailyDigest: settings.dailyDigest,
-      weeklyReport: settings.weeklyReport,
+      previousWeekReport: settings.previousWeekReport,
+      nextWeekReport: settings.nextWeekReport,
       currency: settings.currency,
     };
 
@@ -235,16 +240,29 @@ export default function PreferencesPage() {
     }
   };
 
-  const handleTestWeeklyReport = async () => {
-    setIsSendingWeeklyTest(true);
+  const handleTestPreviousWeekReport = async () => {
+    setIsSendingPreviousWeeklyTest(true);
     try {
-      const res = await api.post('/users/test-weekly-report', { lang: testEmailLanguage });
-      toast.success(res.data.message || 'Test weekly report sent');
+      const res = await api.post('/users/test-previous-week-report', { lang: testEmailLanguage });
+      toast.success(res.data.message || 'Test previous week report sent');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || 'Failed to send test weekly report');
+      toast.error(err.response?.data?.message || 'Failed to send test previous week report');
     } finally {
-      setIsSendingWeeklyTest(false);
+      setIsSendingPreviousWeeklyTest(false);
+    }
+  };
+
+  const handleTestNextWeekReport = async () => {
+    setIsSendingNextWeeklyTest(true);
+    try {
+      const res = await api.post('/users/test-next-week-report', { lang: testEmailLanguage });
+      toast.success(res.data.message || 'Test next week report sent');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to send test next week report');
+    } finally {
+      setIsSendingNextWeeklyTest(false);
     }
   };
 
@@ -291,18 +309,21 @@ export default function PreferencesPage() {
           emailNotifications={settings.emailNotifications}
           emailAddress={settings.emailAddress ?? ''}
           dailyDigest={settings.dailyDigest}
-          weeklyReport={settings.weeklyReport}
+          previousWeekReport={settings.previousWeekReport}
+          nextWeekReport={settings.nextWeekReport}
           onSettingsChange={handleSettingsChange}
           showTestControls={showTestControls}
           testEmailLanguage={testEmailLanguage}
           setTestEmailLanguage={setTestEmailLanguage}
           onTestEmail={handleTestEmail}
           onTestDailyDigest={handleTestDailyDigest}
-          onTestWeeklyReport={handleTestWeeklyReport}
+          onTestPreviousWeekReport={handleTestPreviousWeekReport}
+          onTestNextWeekReport={handleTestNextWeekReport}
           isLoading={{
             email: isSendingTestEmail,
             daily: isSendingDailyTest,
-            weekly: isSendingWeeklyTest,
+            previousWeekly: isSendingPreviousWeeklyTest,
+            nextWeekly: isSendingNextWeeklyTest,
           }}
         />
       )}

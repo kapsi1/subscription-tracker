@@ -55,7 +55,12 @@ export class UpdateSettingsDto {
 
   @IsOptional()
   @IsBoolean()
-  weeklyReport?: boolean;
+  previousWeekReport?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  nextWeekReport?: boolean;
+
   @IsOptional()
   @IsString()
   dashboardSortBy?: string;

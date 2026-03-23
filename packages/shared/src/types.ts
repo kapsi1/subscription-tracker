@@ -22,7 +22,8 @@ export interface Settings {
   emailNotifications: boolean;
   emailAddress?: string;
   dailyDigest: boolean;
-  weeklyReport: boolean;
+  previousWeekReport: boolean;
+  nextWeekReport: boolean;
   monthlyBudget?: number | null;
   pushEnabled?: boolean;
   currency: string;

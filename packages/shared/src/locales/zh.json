@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "电子邮件通知",
-        "desc": "通过邮件接收提醒",
-        "enable": "启用邮件通知",
-        "enableDesc": "将付款提醒发送到您的电子邮箱",
+        "title": "电子邮件报告",
+        "desc": "通过电子邮件接收定期报告",
+        "enable": "启用电子邮件报告",
+        "enableDesc": "将定期报告发送到您的电子邮件",
         "address": "收件地址",
         "daily": "每日日报",
         "dailyDesc": "接收今日付款的概况摘要",
-        "weekly": "每周周报",
-        "weeklyDesc": "接收本周订阅支出的摘要",
         "testTitle": "发送测试提醒邮件",
         "testDesc": "发送一封样邮件以验证 SMTP 设置。",
         "testLanguage": "测试邮件语言",
@@ -378,7 +376,11 @@
         "testSuccess": "测试提醒邮件已发送",
         "testError": "发送测试邮件失败",
         "testBudgetSuccess": "测试预算提醒邮件已发送",
-        "testBudgetError": "发送测试预算邮件失败"
+        "testBudgetError": "发送测试预算邮件失败",
+        "previousWeekReport": "上周报告",
+        "previousWeekReportDesc": "接收上周订阅付款的摘要",
+        "nextWeekReport": "下周预览",
+        "nextWeekReportDesc": "接收下周即将到来的付款预览"
       },
       "push": {
         "title": "浏览器推送通知",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "本周待付数",
       "totalMonthly": "月总成本",
       "paidYesterday": "昨日已付订阅",
-      "noPaymentsPaidYesterday": "昨日没有已付订阅。"
+      "noPaymentsPaidYesterday": "昨日没有已付订阅。",
+      "previousWeekSummary": "以下是您上周的订阅活动摘要。",
+      "nextWeekSummary": "以下是您下周即将到来的订阅付款预览。",
+      "paidLastWeek": "上周已付款",
+      "upcomingNextWeek": "下周即将到来"
     },
     "verification": {
       "subject": "验证您的电子邮件 - SubTracker",
@@ -507,7 +513,11 @@
       "text": "我们收到了重置密码的请求。点击下方按钮即可创建新密码（链接在 1 小时内有效）：",
       "button": "重置密码",
       "footer": "如果您未曾请求重置密码，请忽略此邮件。您的密码将保持不变。"
-    }
+    },
+    "previousWeekReportSubject": "上周订阅报告",
+    "previousWeekReportTitle": "上周报告",
+    "nextWeekReportSubject": "即将到来的订阅 – 下周",
+    "nextWeekReportTitle": "下周预览"
   },
   "footer": {
     "madeBy": "由 Kamil Kapsiak 制作。",

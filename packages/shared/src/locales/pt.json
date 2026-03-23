@@ -358,15 +358,13 @@
     },
     "notifications": {
       "email": {
-        "title": "Notificações por E-mail",
-        "desc": "Receba alertas por e-mail",
-        "enable": "Ativar Notificações por E-mail",
-        "enableDesc": "Enviar lembretes de pagamento para o seu e-mail",
+        "title": "Relatórios por e-mail",
+        "desc": "Receba relatórios agendados por e-mail",
+        "enable": "Ativar relatórios por e-mail",
+        "enableDesc": "Enviar relatórios agendados para o seu e-mail",
         "address": "Endereço de E-mail",
         "daily": "Digest Diário",
         "dailyDesc": "Receba um resumo dos pagamentos de hoje",
-        "weekly": "Relatório Semanal",
-        "weeklyDesc": "Receba um resumo semanal das suas subscrições",
         "testTitle": "E-mail de Teste de Lembrete",
         "testDesc": "Envie um e-mail de amostra para verificar a sua configuração SMTP.",
         "testLanguage": "Idioma do E-mail de Teste",
@@ -378,7 +376,11 @@
         "testSuccess": "E-mail de teste enviado",
         "testError": "Falha ao enviar e-mail de teste",
         "testBudgetSuccess": "E-mail de teste de orçamento enviado",
-        "testBudgetError": "Falha ao enviar e-mail de orçamento"
+        "testBudgetError": "Falha ao enviar e-mail de orçamento",
+        "previousWeekReport": "Relatório da semana anterior",
+        "previousWeekReportDesc": "Receba um resumo dos pagamentos de assinatura da semana passada",
+        "nextWeekReport": "Prévia da próxima semana",
+        "nextWeekReportDesc": "Receba uma prévia dos pagamentos futuros da próxima semana"
       },
       "push": {
         "title": "Notificações Browser (Push)",
@@ -492,7 +494,11 @@
       "upcomingThisWeek": "Próximos esta semana",
       "totalMonthly": "Custo mensal total",
       "paidYesterday": "Subscrições pagas ontem",
-      "noPaymentsPaidYesterday": "Nenhuma subscrição paga ontem."
+      "noPaymentsPaidYesterday": "Nenhuma subscrição paga ontem.",
+      "previousWeekSummary": "Aqui está um resumo da sua atividade de assinaturas da semana passada.",
+      "nextWeekSummary": "Aqui está uma prévia dos seus pagamentos de assinaturas da próxima semana.",
+      "paidLastWeek": "Pago na semana passada",
+      "upcomingNextWeek": "Próximo na semana que vem"
     },
     "verification": {
       "subject": "Verifique o seu e-mail - SubTracker",
@@ -507,7 +513,11 @@
       "text": "Recebemos um pedido para redefinir a sua senha. Clique no botão abaixo para criar uma nova (válido por 1 hora):",
       "button": "Redefinir Senha",
       "footer": "Se não pediu, ignore este e-mail. A sua senha não será alterada."
-    }
+    },
+    "previousWeekReportSubject": "Relatório de assinaturas da semana passada",
+    "previousWeekReportTitle": "Relatório da semana anterior",
+    "nextWeekReportSubject": "Assinaturas próximas – semana que vem",
+    "nextWeekReportTitle": "Prévia da próxima semana"
   },
   "footer": {
     "madeBy": "Criado por Kamil Kapsiak.",
