@@ -110,7 +110,7 @@ export function EmailNotificationsSection({
               />
             </div>
 
-            <div className="border-t pt-2 mt-2">
+            <div className="border-t pt-2 mb-2">
               <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
                 <div className="space-y-0.5">
                   <Label htmlFor="dailyDigest">
@@ -134,7 +134,7 @@ export function EmailNotificationsSection({
               </div>
             </div>
 
-            <div className="border-t pt-2 mt-2">
+            <div className="border-t pt-2 mb-2">
               <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
                 <div className="space-y-0.5">
                   <Label htmlFor="previousWeekReport">
@@ -158,7 +158,7 @@ export function EmailNotificationsSection({
               </div>
             </div>
 
-            <div className="border-t pt-2 mt-2">
+            <div className="border-t pt-2 mb-2">
               <div className="flex items-center justify-between hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
                 <div className="space-y-0.5">
                   <Label htmlFor="nextWeekReport">
