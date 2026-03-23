@@ -363,3 +363,5 @@
     - [x] Google Auth setup in Google Cloud Console
     - [ ] App installation on mobile
     - [x] Add a domain: done - subtracker.cc
+- [x] Add a footer with "Made by Kamil Kapsiak" and a link to report an issue.
+- [ ] Reminders: make them work like in Google Calendar. If the Payment Reminders checkbox is on, show 3 inline inputs: Notification/Email (notification means push notification, notification is set default), number (1 by default), unit (minutes, hours, days - days is default). At the end add a delete button. Add a plus button below to add more reminders - adds a new row. Limit to 5 reminders. The same UI should be used in modals and in Settings page, for default reminders. Add unit and E2E tests.
