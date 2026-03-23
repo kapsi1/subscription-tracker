@@ -7,39 +7,39 @@ datasource db {
 }
 
 model User {
-  id                     String             @id @default(uuid())
-  email                  String             @unique
-  passwordHash           String?
-  createdAt              DateTime           @default(now())
-  updatedAt              DateTime           @updatedAt
-  defaultReminderDays    Int                @default(3)
-  defaultReminderEnabled Boolean            @default(true)
-  lastBudgetAlertSentAt  DateTime?
-  monthlyBudget          Decimal?
-  language               String             @default("en")
-  accentColor            String             @default("Indigo")
-  recentAccentColors     String[]
-  dailyDigest            Boolean            @default(false)
-  emailNotifications     Boolean            @default(true)
-  theme                  String             @default("system")
-  weeklyReport           Boolean            @default(true)
-  googleId               String?            @unique
-  name                   String?
-  dashboardSortBy        String             @default("date")
-  dashboardSortOrder     String             @default("asc")
-  showPaidPayments       Boolean            @default(true)
-  hasSeenManageHint      Boolean            @default(false)
-  currency               String             @default("USD")
-  avatarUrl              String?
-  isVerified             Boolean            @default(false)
-  verificationToken      String?            @unique
-  verificationTokenExpiresAt DateTime?
-  passwordResetToken     String?            @unique
+  id                          String             @id @default(uuid())
+  email                       String             @unique
+  passwordHash                String?
+  createdAt                   DateTime           @default(now())
+  updatedAt                   DateTime           @updatedAt
+  defaultReminderDays         Int                @default(3)
+  defaultReminderEnabled      Boolean            @default(true)
+  lastBudgetAlertSentAt       DateTime?
+  monthlyBudget               Decimal?
+  language                    String             @default("en")
+  accentColor                 String             @default("Indigo")
+  dailyDigest                 Boolean            @default(false)
+  emailNotifications          Boolean            @default(true)
+  theme                       String             @default("system")
+  weeklyReport                Boolean            @default(true)
+  googleId                    String?            @unique
+  name                        String?
+  dashboardSortBy             String             @default("date")
+  dashboardSortOrder          String             @default("asc")
+  showPaidPayments            Boolean            @default(true)
+  currency                    String             @default("USD")
+  avatarUrl                   String?
+  isVerified                  Boolean            @default(false)
+  verificationToken           String?            @unique
+  verificationTokenExpiresAt  DateTime?
+  passwordResetToken          String?            @unique
   passwordResetTokenExpiresAt DateTime?
-  categories             Category[]
-  paymentHistory         PaymentHistory[]
-  pushSubscriptions      PushSubscription[]
-  subscriptions          Subscription[]
+  recentAccentColors          String[]
+  hasSeenManageHint           Boolean            @default(false)
+  categories                  Category[]
+  paymentHistory              PaymentHistory[]
+  pushSubscriptions           PushSubscription[]
+  subscriptions               Subscription[]
 }
 
 model Category {
@@ -47,9 +47,9 @@ model Category {
   userId    String
   name      String
   color     String   @default("#6366f1")
-  icon      String?
   createdAt DateTime @default(now())
   order     Int      @default(0)
+  icon      String?
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, name])
@@ -57,26 +57,26 @@ model Category {
 }
 
 model Subscription {
-  id              String           @id @default(uuid())
-  userId          String
-  name            String
-  amount          Decimal
-  currency        String
-  billingCycle    BillingCycle
-  intervalDays    Int?
-  billingDays     Int[]            @default([])
-  billingMonthShortageOffset Int     @default(1)
-  billingMonthShortageDirection String @default("before")
-  nextBillingDate DateTime
-  category        String
-  isActive        Boolean          @default(true)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  reminderDays    Int              @default(3)
-  reminderEnabled Boolean          @default(true)
-  alerts          Alert[]
-  payments        PaymentHistory[]
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                            String           @id @default(uuid())
+  userId                        String
+  name                          String
+  amount                        Decimal
+  currency                      String
+  billingCycle                  BillingCycle
+  intervalDays                  Int?
+  nextBillingDate               DateTime
+  category                      String
+  isActive                      Boolean          @default(true)
+  createdAt                     DateTime         @default(now())
+  updatedAt                     DateTime         @updatedAt
+  reminderDays                  Int              @default(3)
+  reminderEnabled               Boolean          @default(true)
+  billingDays                   Int[]            @default([])
+  billingMonthShortageDirection String           @default("before")
+  billingMonthShortageOffset    Int              @default(1)
+  alerts                        Alert[]
+  payments                      PaymentHistory[]
+  user                          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([nextBillingDate])
@@ -108,13 +108,13 @@ model Alert {
 
 model PaymentHistory {
   id               String        @id @default(uuid())
-  userId           String
   subscriptionId   String?
-  subscriptionName String
   amount           Decimal
   currency         String
   paidAt           DateTime      @default(now())
-  subscription     Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  subscriptionName String
+  userId           String
+  subscription     Subscription? @relation(fields: [subscriptionId], references: [id])
   user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([subscriptionId])

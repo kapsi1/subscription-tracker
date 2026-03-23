@@ -20,9 +20,6 @@ importers:
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
-      pg:
-        specifier: ^8.20.0
-        version: 8.20.0
       postcss:
         specifier: ^8.5.8
         version: 8.5.8
