@@ -33,10 +33,7 @@ export function ReminderList({
 
   const addReminder = () => {
     if (reminders.length >= maxReminders) return;
-    onChange([
-      ...reminders,
-      { id: crypto.randomUUID(), type: 'webpush', value: 1, unit: 'days' },
-    ]);
+    onChange([...reminders, { id: crypto.randomUUID(), type: 'webpush', value: 1, unit: 'days' }]);
   };
 
   const removeReminder = (id: string) => {

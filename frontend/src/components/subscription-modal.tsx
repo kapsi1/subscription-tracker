@@ -8,7 +8,7 @@ import { registerServiceWorker, subscribeToPush } from '@/lib/push';
 import { useAuth } from './auth-provider';
 import { CustomBillingModal } from './custom-billing-modal';
 import { PaymentHistoryTab } from './payment-history-tab';
-import { type ReminderRow, ReminderList } from './reminder-list';
+import { ReminderList, type ReminderRow } from './reminder-list';
 import { Button } from './ui/button';
 import {
   Dialog,
@@ -383,7 +383,14 @@ export function SubscriptionModal({
               onCheckedChange={(checked) => {
                 const reminders =
                   checked && formData.reminders.length === 0
-                    ? [{ id: crypto.randomUUID(), type: 'webpush' as const, value: 1, unit: 'days' as const }]
+                    ? [
+                        {
+                          id: crypto.randomUUID(),
+                          type: 'webpush' as const,
+                          value: 1,
+                          unit: 'days' as const,
+                        },
+                      ]
                     : formData.reminders;
                 setFormData({ ...formData, reminderEnabled: checked, reminders });
               }}

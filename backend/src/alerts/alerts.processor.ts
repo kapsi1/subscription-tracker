@@ -87,11 +87,12 @@ export class AlertsProcessor extends WorkerHost {
         });
 
         if (user && user.pushSubscriptions.length > 0) {
-          const timeLabel = unit === 'minutes'
-            ? `${daysBefore} minute(s)`
-            : unit === 'hours'
-              ? `${daysBefore} hour(s)`
-              : `${daysBefore} day(s)`;
+          const timeLabel =
+            unit === 'minutes'
+              ? `${daysBefore} minute(s)`
+              : unit === 'hours'
+                ? `${daysBefore} hour(s)`
+                : `${daysBefore} day(s)`;
           const payload = {
             title: `Subscription Alert: ${subscriptionName}`,
             body: `Amount: ${amount} ${currency}\nRenewing in: ${timeLabel}`,

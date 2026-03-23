@@ -14,7 +14,11 @@ describe('AlertsService', () => {
     subscription: { findMany: jest.Mock };
   };
   let queueMock: { add: jest.Mock };
-  let dashboardMock: { getMonthlyTotal: jest.Mock; getSummary: jest.Mock; calculateCosts: jest.Mock };
+  let dashboardMock: {
+    getMonthlyTotal: jest.Mock;
+    getSummary: jest.Mock;
+    calculateCosts: jest.Mock;
+  };
   let paymentsMock: { processPaymentsAndSendDigests: jest.Mock };
   let emailServiceMock: { sendWeeklyReport: jest.Mock; sendAlert: jest.Mock };
 

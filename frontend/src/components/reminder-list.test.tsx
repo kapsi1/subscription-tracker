@@ -18,11 +18,7 @@ vi.mock('./ui/select', () => ({
     onValueChange: (v: string) => void;
     children: React.ReactNode;
   }) => (
-    <select
-      data-testid="select"
-      value={value}
-      onChange={(e) => onValueChange(e.target.value)}
-    >
+    <select data-testid="select" value={value} onChange={(e) => onValueChange(e.target.value)}>
       {children}
     </select>
   ),
@@ -42,7 +38,13 @@ vi.mock('./ui/button', () => ({
     'data-testid': testId,
     className,
   }: React.ButtonHTMLAttributes<HTMLButtonElement> & { 'data-testid'?: string }) => (
-    <button type="button" onClick={onClick} disabled={disabled} data-testid={testId} className={className}>
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      data-testid={testId}
+      className={className}
+    >
       {children}
     </button>
   ),
@@ -62,7 +64,10 @@ const makeRow = (overrides: Partial<ReminderRow> = {}): ReminderRow => ({
 
 describe('ReminderList', () => {
   it('renders reminder rows', () => {
-    const reminders = [makeRow({ id: 'r1', value: 2 }), makeRow({ id: 'r2', value: 5, unit: 'hours' })];
+    const reminders = [
+      makeRow({ id: 'r1', value: 2 }),
+      makeRow({ id: 'r2', value: 5, unit: 'hours' }),
+    ];
     const { container } = render(
       <ReminderList reminders={reminders} onChange={vi.fn()} context="settings" />,
     );
@@ -173,7 +178,11 @@ describe('ReminderList', () => {
   it('clamps value input to minimum of 1', () => {
     const onChange = vi.fn();
     const { container } = render(
-      <ReminderList reminders={[makeRow({ id: 'r1', value: 3 })]} onChange={onChange} context="settings" />,
+      <ReminderList
+        reminders={[makeRow({ id: 'r1', value: 3 })]}
+        onChange={onChange}
+        context="settings"
+      />,
     );
 
     const valueInput = container.querySelector('input[type="number"]') as HTMLInputElement;

@@ -242,9 +242,16 @@ export class SubscriptionsService {
               category: sub.category,
               nextBillingDate,
               reminderEnabled: importReminderEnabled,
-              alerts: importReminderEnabled && importReminders.length > 0
-                ? { create: importReminders.map((r) => ({ type: r.type, daysBefore: r.value, unit: r.unit })) }
-                : undefined,
+              alerts:
+                importReminderEnabled && importReminders.length > 0
+                  ? {
+                      create: importReminders.map((r) => ({
+                        type: r.type,
+                        daysBefore: r.value,
+                        unit: r.unit,
+                      })),
+                    }
+                  : undefined,
               isActive: sub.isActive ?? true,
             },
           });

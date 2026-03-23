@@ -14,7 +14,10 @@ vi.mock('./SettingsSearchContext', () => ({
 }));
 
 vi.mock('@/components/reminder-list', () => ({
-  ReminderList: ({ reminders, onChange }: {
+  ReminderList: ({
+    reminders,
+    onChange,
+  }: {
     reminders: Array<{ id: string; type: string; value: number; unit: string }>;
     onChange: (r: typeof reminders) => void;
   }) => (
@@ -60,6 +63,7 @@ vi.mock('@/components/ui/switch', () => ({
 }));
 
 vi.mock('@/components/ui/label', () => ({
+  // biome-ignore lint/a11y/noLabelWithoutControl: <bla>
   Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
 }));
 
