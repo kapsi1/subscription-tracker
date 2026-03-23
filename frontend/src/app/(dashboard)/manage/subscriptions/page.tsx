@@ -265,41 +265,46 @@ export default function ManageSubscriptionsPage() {
             aria-label={t('subscriptions.search')}
           />
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <input
-            id="subscription-import"
-            name="subscription-import"
-            type="file"
-            accept=".json"
-            className="hidden"
-            ref={fileInputRef}
-            onChange={handleImport}
-            aria-label="Import subscriptions from JSON"
-          />
-          <Button
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="gap-2 shrink-0"
-          >
-            <Upload className="w-4 h-4" />
-            {t('subscriptions.import')}
-          </Button>
-          <Button variant="outline" onClick={handleExport} className="gap-2 shrink-0">
-            <Download className="w-4 h-4" />
-            {t('subscriptions.export')}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setAddPaymentOpen(true)}
-            className="gap-2 shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            {t('subscriptions.addPayment')}
-          </Button>
-          <Button onClick={handleAddNew} className="gap-2 shrink-0">
-            <Plus className="w-4 h-4" />
-            {t('subscriptions.add')}
-          </Button>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2">
+            <input
+              id="subscription-import"
+              name="subscription-import"
+              type="file"
+              accept=".json"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleImport}
+              aria-label="Import subscriptions from JSON"
+            />
+            <Button
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              className="gap-2 w-full sm:w-auto"
+            >
+              <Upload className="w-4 h-4" />
+              {t('subscriptions.import')}
+            </Button>
+            <Button variant="outline" onClick={handleExport} className="gap-2 w-full sm:w-auto">
+              <Download className="w-4 h-4" />
+              {t('subscriptions.export')}
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setAddPaymentOpen(true)}
+              className="gap-2 w-full sm:w-auto"
+            >
+              <Plus className="w-4 h-4" />
+              {t('subscriptions.addPayment')}
+            </Button>
+            <Button onClick={handleAddNew} className="gap-2 w-full sm:w-auto">
+              <Plus className="w-4 h-4" />
+              {t('subscriptions.add')}
+            </Button>
+          </div>
         </div>
       </div>
 

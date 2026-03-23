@@ -191,6 +191,11 @@
   select {
     cursor: pointer;
   }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    margin-inline-start: -1.6rem;
+  }
 }
 
 .custom-scrollbar::-webkit-scrollbar {

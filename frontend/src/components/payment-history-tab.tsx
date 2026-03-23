@@ -158,7 +158,7 @@ export function PaymentHistoryTab({ subscriptionId, currency }: PaymentHistoryTa
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
           <Input
             type="date"
-            className="h-8 text-sm"
+            className="h-8 text-sm w-[130px]"
             value={editState.paidAt}
             onChange={(e) => setEditState({ ...editState, paidAt: e.target.value })}
             required
@@ -169,7 +169,7 @@ export function PaymentHistoryTab({ subscriptionId, currency }: PaymentHistoryTa
             step="0.01"
             min="0"
             placeholder="0.00"
-            className="h-8 text-sm w-28"
+            className="h-8 text-sm w-[70px]"
             value={editState.amount}
             onChange={(e) => setEditState({ ...editState, amount: e.target.value })}
             required

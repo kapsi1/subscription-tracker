@@ -241,7 +241,7 @@ export function SubscriptionModal({
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label htmlFor="billingCycle">{t('subscriptions.modal.billingCycle')}</Label>
             <TooltipProvider>
@@ -304,7 +304,7 @@ export function SubscriptionModal({
             )}
           </div>
 
-          <div className="space-y-2 col-span-2">
+          <div className="space-y-2 col-span-1 sm:col-span-2">
             <Label htmlFor="category">{t('subscriptions.modal.category')}</Label>
             <Select
               name="category"
@@ -350,7 +350,8 @@ export function SubscriptionModal({
           </div>
         </div>
 
-        <div className="flex items-center gap-4 border-t pt-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 border-t pt-4">
+          <div className="flex items-center gap-4">
           <Switch
             id="reminderEnabled"
             name="reminderEnabled"
@@ -360,8 +361,9 @@ export function SubscriptionModal({
           <Label htmlFor="reminderEnabled" className="cursor-pointer">
             {t('subscriptions.modal.reminders')}
           </Label>
+        </div>
           {formData.reminderEnabled && (
-            <div className="flex items-center gap-2 ml-auto">
+            <div className="flex items-center gap-2 sm:ml-auto w-full sm:w-auto sm:justify-end">
               <Label htmlFor="reminderDays" className="text-sm whitespace-nowrap">
                 {t('subscriptions.modal.reminderDays')}
               </Label>
