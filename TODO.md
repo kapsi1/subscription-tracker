@@ -360,3 +360,4 @@
 - [ ] Production deployment checklist:
     - [ ] Email notifications - set an external service
     - [ ] Delete production database and DB migrations from code, we'll deploy it from scratch.
+    - [ ] Google Auth setup in Google Cloud Console
