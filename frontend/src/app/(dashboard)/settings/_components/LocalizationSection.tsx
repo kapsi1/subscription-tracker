@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/select';
 import { cn } from '@/components/ui/utils';
 import api from '@/lib/api';
+import { changeI18nLanguage } from '@/lib/i18n';
 import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface LocalizationSectionProps {
@@ -66,7 +67,7 @@ export function LocalizationSection({ currency, setCurrency }: LocalizationSecti
 
   const handleLanguageChange = async (lang: string) => {
     try {
-      await i18n.changeLanguage(lang);
+      await changeI18nLanguage(lang);
       if (isAuthenticated) {
         await api.patch('/users/settings', { language: lang });
       }

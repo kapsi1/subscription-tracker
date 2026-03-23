@@ -28,10 +28,11 @@ const loadedLanguages = new Set<SupportedLanguage>();
 let initializationPromise: Promise<typeof i18n> | null = null;
 
 function normalizeLanguage(language?: string | null): SupportedLanguage {
-  const normalized = language?.split('-')[0]?.toLowerCase();
-  return (SUPPORTED_LANGUAGES as readonly string[]).includes(normalized ?? '')
-    ? (normalized as SupportedLanguage)
-    : DEFAULT_LANGUAGE;
+  const lang = (language || '').split('-')[0].toLowerCase();
+  if ((SUPPORTED_LANGUAGES as readonly string[]).includes(lang)) {
+    return lang as SupportedLanguage;
+  }
+  return DEFAULT_LANGUAGE;
 }
 
 function detectPreferredLanguage(): SupportedLanguage {
@@ -116,7 +117,7 @@ export async function initializeI18n(preferredLanguage?: string | null) {
     targetLanguage === DEFAULT_LANGUAGE ? Promise.resolve() : ensureLanguageResources(DEFAULT_LANGUAGE),
   ]);
 
-  if (i18n.resolvedLanguage !== targetLanguage) {
+  if (i18n.language !== targetLanguage) {
     await i18n.changeLanguage(targetLanguage);
   }
 
@@ -133,7 +134,7 @@ export async function changeI18nLanguage(language: string) {
     targetLanguage === DEFAULT_LANGUAGE ? Promise.resolve() : ensureLanguageResources(DEFAULT_LANGUAGE),
   ]);
 
-  if (i18n.resolvedLanguage !== targetLanguage) {
+  if (i18n.language !== targetLanguage) {
     await i18n.changeLanguage(targetLanguage);
   }
 
