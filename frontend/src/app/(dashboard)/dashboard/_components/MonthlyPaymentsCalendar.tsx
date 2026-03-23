@@ -122,21 +122,20 @@ export function MonthlyPaymentsCalendar({
       </CardHeader>
 
       <CardContent className="space-y-4 px-4 sm:px-6">
-        <div className="overflow-x-auto">
-          <div className="mx-auto w-fit min-w-max space-y-2">
-            <div className="grid grid-cols-7 justify-items-center gap-2 py-1 text-center text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-              {weekdayLabels.map((label) => (
-                <div key={label} className="w-10 py-1">
-                  {label}
-                </div>
-              ))}
-            </div>
+        <div className="mx-auto w-full space-y-2 sm:w-fit">
+          <div className="grid grid-cols-7 justify-items-stretch gap-1.5 py-1 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:gap-2 sm:text-xs">
+            {weekdayLabels.map((label) => (
+              <div key={label} className="w-full py-1 sm:w-[60px]">
+                {label}
+              </div>
+            ))}
+          </div>
 
             <TooltipProvider delayDuration={150}>
-              <div className="grid grid-cols-7 justify-items-center gap-2 py-1">
+              <div className="grid grid-cols-7 justify-items-stretch gap-1.5 py-1 sm:gap-2">
                 {calendarDays.map((day) => {
                   if ('isEmpty' in day) {
-                    return <div key={day.gridKey} className="h-10 w-10" />;
+                    return <div key={day.gridKey} className="h-auto w-full aspect-square sm:h-[60px] sm:w-[60px]" />;
                   }
 
                   const formattedDate = formatter.format(day.date);
@@ -153,16 +152,15 @@ export function MonthlyPaymentsCalendar({
                       aria-label={`${t('dashboard.paymentCalendarOpenDay', { date: formattedDate })}${paymentCountLabel ? `, ${paymentCountLabel}` : ''}`}
                       onClick={() => onSelectDay(day.date, day.payments)}
                       className={cn(
-                        'relative h-10 w-10 p-0 text-base',
+                        'relative h-auto w-full aspect-square p-0 text-base sm:h-[60px] sm:w-[60px] sm:text-lg',
                         'hover:-translate-y-0.5',
                         day.isToday && 'border-primary/35 bg-primary/6',
-                        day.payments.length > 0 && 'shadow-[0_8px_24px_-18px_rgba(239,68,68,0.9)]',
                       )}
                     >
                       <span className="font-semibold text-foreground">{day.dayNumber}</span>
 
                       {day.payments.length > 0 ? (
-                        <Badge className="absolute -top-1 -right-1 min-w-4 justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white hover:bg-red-500">
+                        <Badge className="absolute -top-2 -right-2 min-w-6 h-6 justify-center rounded-full bg-red-500 px-1 text-[13px] font-bold text-white hover:bg-red-500">
                           {day.payments.length}
                         </Badge>
                       ) : null}
@@ -170,7 +168,7 @@ export function MonthlyPaymentsCalendar({
                   );
 
                   if (day.payments.length === 0) {
-                    return <div key={day.dayKey}>{button}</div>;
+                    return <div key={day.dayKey} className="w-full">{button}</div>;
                   }
 
                   return (
@@ -195,11 +193,10 @@ export function MonthlyPaymentsCalendar({
                     </Tooltip>
                   );
                 })}
-              </div>
-            </TooltipProvider>
           </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+        </TooltipProvider>
+      </div>
+    </CardContent>
+  </Card>
+);
 }
