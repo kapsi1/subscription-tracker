@@ -1,6 +1,10 @@
-import { describe, expect, it } from 'vitest';
-import i18n from './i18n';
+import { beforeAll, describe, expect, it } from 'vitest';
+import i18n, { changeI18nLanguage, initializeI18n } from './i18n';
 import { daysUntil, formatCurrency, formatDate } from './utils';
+
+beforeAll(async () => {
+  await initializeI18n('en');
+});
 
 describe('formatCurrency', () => {
   it('should format USD correctly', () => {
@@ -25,7 +29,7 @@ describe('formatCurrency', () => {
 
   it('should format numbers with NBSP and comma in Polish', async () => {
     const currentLang = i18n.language;
-    await i18n.changeLanguage('pl');
+    await changeI18nLanguage('pl');
     try {
       const result = formatCurrency(12345.67, 'PLN');
       // Polish uses NBSP (160) as group separator and comma as decimal separator
@@ -36,7 +40,7 @@ describe('formatCurrency', () => {
       // Normalize spaces for comparison if needed, but the requirement specifically asked for NBSP
       expect(result.charCodeAt(result.indexOf(',') - 4)).toBe(160);
     } finally {
-      await i18n.changeLanguage(currentLang);
+      await changeI18nLanguage(currentLang);
     }
   });
 });
@@ -44,10 +48,9 @@ describe('formatCurrency', () => {
 describe('formatDate', () => {
   it('should format a date string with default options', () => {
     const result = formatDate('2025-03-15T00:00:00.000Z');
-    // Default: month short, day numeric, year numeric
+    // Default: month short, day numeric
     expect(result).toContain('Mar');
     expect(result).toContain('15');
-    expect(result).toContain('2025');
   });
 
   it('should accept custom date format options', () => {

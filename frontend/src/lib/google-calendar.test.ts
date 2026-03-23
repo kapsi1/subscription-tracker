@@ -1,10 +1,12 @@
 import type { Subscription } from '@subtracker/shared';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { buildGoogleCalendarUrl } from './google-calendar';
-import i18n from './i18n';
+import { changeI18nLanguage, initializeI18n } from './i18n';
 
 describe('buildGoogleCalendarUrl', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
+    const i18n = await initializeI18n('en');
+
     i18n.addResourceBundle(
       'en',
       'translation',
@@ -110,8 +112,8 @@ describe('buildGoogleCalendarUrl', () => {
   });
 
   it('localizes the event description', async () => {
-    const previousLanguage = i18n.language;
-    await i18n.changeLanguage('pl');
+    const previousLanguage = (await initializeI18n()).language;
+    await changeI18nLanguage('pl');
 
     try {
       const subscription: Subscription = {
@@ -137,7 +139,7 @@ describe('buildGoogleCalendarUrl', () => {
       expect(details).toContain('Cykl rozliczeniowy: Miesięcznie');
       expect(details).toContain('Kategoria: Rozrywka');
     } finally {
-      await i18n.changeLanguage(previousLanguage);
+      await changeI18nLanguage(previousLanguage);
     }
   });
 });

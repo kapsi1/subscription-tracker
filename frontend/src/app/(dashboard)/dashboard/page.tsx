@@ -8,20 +8,113 @@ import type {
   Subscription,
 } from '@subtracker/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { LoadingState } from '@/components/loading-state';
-import { PaymentDetailsModal } from '@/components/payment-details-modal';
-import { SubscriptionModal } from '@/components/subscription-modal';
 import api from '@/lib/api';
-import { CostByCategory } from './_components/CostByCategory';
-import { DayPaymentsModal } from './_components/DayPaymentsModal';
-import { MonthlyForecast } from './_components/MonthlyForecast';
 import { type MonthlyPayment, MonthlyPayments } from './_components/MonthlyPayments';
 import { MonthlyPaymentsCalendar } from './_components/MonthlyPaymentsCalendar';
 import { MonthPicker } from './_components/MonthPicker';
 import { SummaryCards } from './_components/SummaryCards';
+
+const SubscriptionModal = dynamic(
+  () =>
+    import('@/components/subscription-modal').then((module) => ({
+      default: module.SubscriptionModal,
+    })),
+  { ssr: false },
+);
+const PaymentDetailsModal = dynamic(
+  () =>
+    import('@/components/payment-details-modal').then((module) => ({
+      default: module.PaymentDetailsModal,
+    })),
+  { ssr: false },
+);
+const DayPaymentsModal = dynamic(
+  () =>
+    import('./_components/DayPaymentsModal').then((module) => ({
+      default: module.DayPaymentsModal,
+    })),
+  { ssr: false },
+);
+const MonthlyForecast = dynamic(
+  () =>
+    import('./_components/MonthlyForecast').then((module) => ({
+      default: module.MonthlyForecast,
+    })),
+  {
+    ssr: false,
+    loading: () => <DashboardSectionSkeleton minHeight={350} />,
+  },
+);
+const CostByCategory = dynamic(
+  () =>
+    import('./_components/CostByCategory').then((module) => ({
+      default: module.CostByCategory,
+    })),
+  {
+    ssr: false,
+    loading: () => <DashboardSectionSkeleton minHeight={300} />,
+  },
+);
+
+function DashboardSectionSkeleton({ minHeight }: { minHeight: number }) {
+  return (
+    <div
+      className="rounded-xl border bg-card/60 p-6 shadow-sm"
+      style={{ minHeight }}
+      aria-hidden="true"
+    >
+      <div className="h-6 w-40 rounded-md bg-muted" />
+      <div className="mt-3 h-4 w-64 rounded-md bg-muted/80" />
+      <div className="mt-6 h-[calc(100%-3rem)] min-h-[220px] rounded-xl bg-muted/50" />
+    </div>
+  );
+}
+
+function DeferredSection({
+  children,
+  minHeight,
+  rootMargin = '200px',
+}: {
+  children: React.ReactNode;
+  minHeight: number;
+  rootMargin?: string;
+}) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (isVisible) {
+      return;
+    }
+
+    const element = ref.current;
+    if (!element || typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [isVisible, rootMargin]);
+
+  return <div ref={ref}>{isVisible ? children : <DashboardSectionSkeleton minHeight={minHeight} />}</div>;
+}
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -172,6 +265,9 @@ export default function DashboardPage() {
   const monthlyPaymentsDoneCount = monthlyPayments.filter(
     (payment) => payment.status === 'done',
   ).length;
+  const shouldRenderSubscriptionModal = modalOpen || editingSubscription !== null;
+  const shouldRenderPaymentModal = paymentModalOpen || viewingPayment !== null;
+  const shouldRenderDayPaymentsModal = dayPaymentsModalOpen || selectedCalendarDate !== null;
 
   return (
     <div className="min-w-0 space-y-6 animate-page-in">
@@ -211,35 +307,49 @@ export default function DashboardPage() {
           onSelectDay={handleSelectCalendarDay}
         />
 
-        <MonthlyForecast forecast={forecast} currency={summary.currency} />
+        <DeferredSection minHeight={350}>
+          <Suspense fallback={<DashboardSectionSkeleton minHeight={350} />}>
+            <MonthlyForecast forecast={forecast} currency={summary.currency} />
+          </Suspense>
+        </DeferredSection>
 
-        <CostByCategory
-          categoryBreakdown={summary.categoryBreakdown}
-          currency={summary.currency}
-          categories={categories}
-        />
+        <DeferredSection minHeight={300}>
+          <Suspense fallback={<DashboardSectionSkeleton minHeight={300} />}>
+            <CostByCategory
+              categoryBreakdown={summary.categoryBreakdown}
+              currency={summary.currency}
+              categories={categories}
+            />
+          </Suspense>
+        </DeferredSection>
       </div>
 
-      <SubscriptionModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        subscription={editingSubscription}
-        onSave={handleSaveSubscription}
-      />
+      {shouldRenderSubscriptionModal ? (
+        <SubscriptionModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          subscription={editingSubscription}
+          onSave={handleSaveSubscription}
+        />
+      ) : null}
 
-      <PaymentDetailsModal
-        open={paymentModalOpen}
-        onOpenChange={setPaymentModalOpen}
-        payment={viewingPayment}
-      />
+      {shouldRenderPaymentModal ? (
+        <PaymentDetailsModal
+          open={paymentModalOpen}
+          onOpenChange={setPaymentModalOpen}
+          payment={viewingPayment}
+        />
+      ) : null}
 
-      <DayPaymentsModal
-        open={dayPaymentsModalOpen}
-        onOpenChange={setDayPaymentsModalOpen}
-        selectedDate={selectedCalendarDate}
-        payments={selectedCalendarPayments}
-        onPaymentSelect={handleSelectCalendarPayment}
-      />
+      {shouldRenderDayPaymentsModal ? (
+        <DayPaymentsModal
+          open={dayPaymentsModalOpen}
+          onOpenChange={setDayPaymentsModalOpen}
+          selectedDate={selectedCalendarDate}
+          payments={selectedCalendarPayments}
+          onPaymentSelect={handleSelectCalendarPayment}
+        />
+      ) : null}
     </div>
   );
 }

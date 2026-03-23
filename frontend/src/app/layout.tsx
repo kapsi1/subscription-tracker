@@ -1,8 +1,8 @@
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { cookies } from 'next/headers';
+import { DeferredAnalytics } from '@/components/deferred-analytics';
 import { Providers } from '@/components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -23,9 +23,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        {gtmId && <GoogleTagManager gtmId={gtmId} />}
         <Providers initialToken={token}>{children}</Providers>
-        {gaId && <GoogleAnalytics gaId={gaId} />}
+        <DeferredAnalytics gaId={gaId} gtmId={gtmId} />
       </body>
     </html>
   );

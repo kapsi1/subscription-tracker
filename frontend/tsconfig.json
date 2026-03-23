@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@subtracker/shared": ["../packages/shared/src"]
+      "@subtracker/shared": ["../packages/shared/src"],
+      "@subtracker/shared/*": ["../packages/shared/src/*"]
     }
   },
   "include": [

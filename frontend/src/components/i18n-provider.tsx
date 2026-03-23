@@ -3,31 +3,43 @@
 import { useEffect, useState } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { useAuth } from '@/components/auth-provider';
-import i18n from '@/lib/i18n';
+import i18n, { initializeI18n } from '@/lib/i18n';
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated } = useAuth();
-  const [mounted, setMounted] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    let isActive = true;
 
-  useEffect(() => {
-    if (isAuthenticated && user?.language) {
-      if (i18n.language !== user.language) {
-        i18n.changeLanguage(user.language);
-      }
-    }
+    initializeI18n(isAuthenticated ? user?.language : undefined)
+      .then(() => {
+        if (isActive) {
+          setIsReady(true);
+        }
+      })
+      .catch(() => {
+        if (isActive) {
+          setIsReady(true);
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
   }, [isAuthenticated, user?.language]);
 
   useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
     const handleLanguageChange = (lang: string) => {
       document.documentElement.lang = lang.split('-')[0];
     };
 
     i18n.on('languageChanged', handleLanguageChange);
-    // Set initial lang
+
     if (i18n.language) {
       handleLanguageChange(i18n.language);
     }
@@ -35,10 +47,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     return () => {
       i18n.off('languageChanged', handleLanguageChange);
     };
-  }, []);
+  }, [isReady]);
 
-  if (!mounted) {
-    // Prevent hydration differences by not rendering until client is mounted
+  if (!isReady) {
     return null;
   }
 

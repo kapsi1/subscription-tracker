@@ -20,7 +20,8 @@ export interface User {
   recentAccentColors: string[];
   emailNotifications: boolean;
   dailyDigest: boolean;
-  weeklyReport: boolean;
+  previousWeekReport: boolean;
+  nextWeekReport: boolean;
   dashboardSortBy: string;
   dashboardSortOrder: string;
   showPaidPayments: boolean;

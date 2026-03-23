@@ -172,6 +172,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               alt="SubTracker"
               width={64}
               height={64}
+              fetchPriority="high"
+              sizes="64px"
               style={{ width: 64, height: 64 }}
               className="mx-auto"
               priority
