@@ -224,6 +224,9 @@
     "exportError": "导出订阅失败",
     "importSuccess": "订阅導入成功",
     "importError": "解析或导入 JSON 文件失败",
+    "importErrorTitle": "发现导入错误",
+    "importErrorDesc": "我们在您的文件中发现了一些问题。请修复它们并重试。",
+    "generalError": "通用错误",
     "importPreview": {
       "title": "预览导入数据",
       "desc": "检查将添加到您账号的项目",

@@ -224,6 +224,9 @@
     "exportError": "Impossibile esportare gli abbonamenti",
     "importSuccess": "Abbonamenti importati correttamente",
     "importError": "Impossibile analizzare o importare il file JSON",
+    "importErrorTitle": "Errori di importazione trovati",
+    "importErrorDesc": "Abbiamo trovato alcuni problemi nel tuo file. Per favore correggili e riprova.",
+    "generalError": "Errore generale",
     "importPreview": {
       "title": "Anteprima Dati Importati",
       "desc": "Rivedi gli elementi che verranno aggiunti al tuo account",

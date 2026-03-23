@@ -224,6 +224,9 @@
     "exportError": "Export der Abonnements fehlgeschlagen",
     "importSuccess": "Abonnements erfolgreich importiert",
     "importError": "Importieren oder Parsen der JSON-Datei fehlgeschlagen",
+    "importErrorTitle": "Importfehler gefunden",
+    "importErrorDesc": "Wir haben einige Probleme in Ihrer Datei gefunden. Bitte beheben Sie diese und versuchen Sie es erneut.",
+    "generalError": "Allgemeiner Fehler",
     "importPreview": {
       "title": "Vorschau der Importdaten",
       "desc": "Überprüfen Sie die Elemente, die Ihrem Konto hinzugefügt werden",

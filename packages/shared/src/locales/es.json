@@ -224,6 +224,9 @@
     "exportError": "Error al exportar suscripciones",
     "importSuccess": "Suscripciones importadas correctamente",
     "importError": "Error al analizar o importar el archivo JSON",
+    "importErrorTitle": "Errores de importación encontrados",
+    "importErrorDesc": "Hemos encontrado algunos problemas en su archivo. Por favor, corríjalos e inténtelo de nuevo.",
+    "generalError": "Error general",
     "importPreview": {
       "title": "Vista previa de los datos a importar",
       "desc": "Revisa los elementos que se añadirán a tu cuenta",

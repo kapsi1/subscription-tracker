@@ -224,6 +224,9 @@
     "exportError": "サブスクリプションのエクスポートに失敗しました",
     "importSuccess": "サブスクリプションをインポートしました",
     "importError": "JSON ファイルの解析またはインポートに失敗しました",
+    "importErrorTitle": "インポートエラーが見つかりました",
+    "importErrorDesc": "ファイル内にいくつかの問題が見つかりました。修正してからもう一度お試しください。",
+    "generalError": "一般的なエラー",
     "importPreview": {
       "title": "インポートデータのプレビュー",
       "desc": "アカウントに追加される項目を確認してください",
