@@ -1,27 +1,46 @@
 'use client';
 
-import type { Settings } from '@subtracker/shared';
+import type { Reminder, Settings } from '@subtracker/shared';
 import { Bell } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ReminderList, type ReminderRow } from '@/components/reminder-list';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface ReminderSectionProps {
   defaultReminderEnabled: boolean;
-  defaultReminderDays: number;
+  defaultReminders: Reminder[];
   onSettingsChange: (updates: Partial<Settings>) => void;
+  onRequestPushPermission: () => Promise<boolean>;
 }
 
 export function ReminderSection({
   defaultReminderEnabled,
-  defaultReminderDays,
+  defaultReminders,
   onSettingsChange,
+  onRequestPushPermission,
 }: ReminderSectionProps) {
   const { t } = useTranslation();
   const { searchQuery } = useSettingsSearch();
+
+  const [rows, setRows] = useState<ReminderRow[]>(() =>
+    defaultReminders.map((r) => ({
+      id: r.id ?? crypto.randomUUID(),
+      type: r.type,
+      value: r.value,
+      unit: r.unit,
+    })),
+  );
+
+  const handleRemindersChange = (reminders: ReminderRow[]) => {
+    setRows(reminders);
+    onSettingsChange({
+      defaultReminders: reminders.map(({ type, value, unit }) => ({ type, value, unit })),
+    });
+  };
 
   return (
     <Card className="shadow-sm">
@@ -51,7 +70,13 @@ export function ReminderSection({
           <Switch
             id="defaultEnabled"
             checked={defaultReminderEnabled}
-            onCheckedChange={(checked) => onSettingsChange({ defaultReminderEnabled: checked })}
+            onCheckedChange={(checked) => {
+              onSettingsChange({ defaultReminderEnabled: checked });
+              if (!checked) {
+                setRows([]);
+                onSettingsChange({ defaultReminders: [] });
+              }
+            }}
           />
           <div className="space-y-0.5">
             <Label htmlFor="defaultEnabled" className="cursor-pointer">
@@ -69,37 +94,14 @@ export function ReminderSection({
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="defaultDays">
-            <SearchHighlight text={t('settings.notifications.default.days')} query={searchQuery} />
-          </Label>
-          <div className="flex gap-2 items-center">
-            <Input
-              id="defaultDays"
-              name="defaultDays"
-              type="number"
-              min="1"
-              max="30"
-              className="max-w-24"
-              value={defaultReminderDays.toString()}
-              onChange={(e) =>
-                onSettingsChange({ defaultReminderDays: parseInt(e.target.value, 10) || 0 })
-              }
-            />
-            <span className="text-sm text-muted-foreground">
-              <SearchHighlight
-                text={t('settings.notifications.default.beforePayment')}
-                query={searchQuery}
-              />
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            <SearchHighlight
-              text={t('settings.notifications.default.daysDesc')}
-              query={searchQuery}
-            />
-          </p>
-        </div>
+        {defaultReminderEnabled && (
+          <ReminderList
+            reminders={rows}
+            onChange={handleRemindersChange}
+            context="settings"
+            onRequestPushPermission={onRequestPushPermission}
+          />
+        )}
       </CardContent>
     </Card>
   );

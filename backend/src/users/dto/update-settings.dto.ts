@@ -1,5 +1,10 @@
+import { AlertType, ReminderUnit } from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  IsArray,
   IsBoolean,
+  IsEnum,
   IsInt,
   IsISO4217CurrencyCode,
   IsNumber,
@@ -7,7 +12,20 @@ import {
   IsString,
   Min,
   ValidateIf,
+  ValidateNested,
 } from 'class-validator';
+
+export class DefaultReminderDto {
+  @IsEnum(AlertType)
+  type!: AlertType;
+
+  @IsInt()
+  @Min(1)
+  value!: number;
+
+  @IsEnum(ReminderUnit)
+  unit!: ReminderUnit;
+}
 
 export class UpdateSettingsDto {
   @IsOptional()
@@ -19,9 +37,11 @@ export class UpdateSettingsDto {
   defaultReminderEnabled?: boolean;
 
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  defaultReminderDays?: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => DefaultReminderDto)
+  @ArrayMaxSize(5)
+  defaultReminders?: DefaultReminderDto[];
 
   @ValidateIf((_o, value) => value !== null)
   @IsOptional()

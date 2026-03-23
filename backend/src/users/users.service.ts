@@ -8,6 +8,7 @@ import {
 import type { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
+import type { DefaultReminderDto, UpdateSettingsDto } from './dto/update-settings.dto';
 
 @Injectable()
 export class UsersService {
@@ -25,6 +26,39 @@ export class UsersService {
     return this.prisma.user.findUnique({
       where: { id },
     });
+  }
+
+  async findByIdWithDefaultReminders(id: string) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: { defaultReminders: true },
+    });
+  }
+
+  async updateSettings(id: string, dto: UpdateSettingsDto): Promise<User> {
+    const { defaultReminders, ...userFields } = dto;
+
+    const user = await this.update(id, userFields as Prisma.UserUpdateInput);
+
+    if (defaultReminders !== undefined) {
+      await this.prisma.$transaction([
+        this.prisma.userDefaultReminder.deleteMany({ where: { userId: id } }),
+        ...(defaultReminders.length > 0
+          ? [
+              this.prisma.userDefaultReminder.createMany({
+                data: (defaultReminders as DefaultReminderDto[]).map((r) => ({
+                  userId: id,
+                  type: r.type,
+                  value: r.value,
+                  unit: r.unit,
+                })),
+              }),
+            ]
+          : []),
+      ]);
+    }
+
+    return user;
   }
 
   async findByGoogleId(googleId: string): Promise<User | null> {

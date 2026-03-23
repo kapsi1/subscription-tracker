@@ -264,7 +264,13 @@
       "nextBillingDate": "Date de la prochaine facturation",
       "reminders": "Rappels de paiement",
       "remindersDesc": "Être notifié avant la date d'échéance",
-      "reminderDays": "Nombre de jours avant le rappel",
+      "reminderTypeNotification": "Notification",
+      "reminderTypeEmail": "E-mail",
+      "reminderUnitMinutes": "minutes",
+      "reminderUnitHours": "heures",
+      "reminderUnitDays": "jours",
+      "addReminder": "Ajouter un rappel",
+      "reminderSettingsHint": "Vous pouvez modifier les rappels par défaut dans les Paramètres",
       "cancel": "Annuler",
       "add": "Ajouter l'abonnement",
       "update": "Modifier l'abonnement",
@@ -285,7 +291,7 @@
         "nameRequired": "Le nom du service est requis",
         "amountRequired": "Un montant valide est nécessaire",
         "nextBillingDateRequired": "La date de facturation est obligatoire",
-        "reminderDaysRequired": "Le rappel doit être compris entre 0 et 30 jours"
+        "reminderValueInvalid": "La valeur du rappel doit être au moins 1"
       },
       "billingCycles": {
         "monthly": "Mensuel",
@@ -396,9 +402,8 @@
         "desc": "Réglages par défaut pour vos nouveaux abonnements",
         "enable": "Activer les rappels",
         "enableDesc": "Activer les rappels par défaut pour chaque nouvel abonnement",
-        "days": "Nombre de jours par défaut",
-        "daysDesc": "Les nouveaux abonnements seront réglés pour vous prévenir ces jours avant l'échéance",
-        "beforePayment": "jour(s) avant le paiement"
+        "addReminder": "Ajouter un rappel",
+        "noReminders": "Aucun rappel par défaut. Ajoutez-en un ci-dessous."
       }
     },
     "categories": {

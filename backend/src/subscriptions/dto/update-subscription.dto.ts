@@ -1,5 +1,7 @@
 import { BillingCycle } from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
   IsArray,
   IsBoolean,
   IsEnum,
@@ -10,7 +12,9 @@ import {
   IsString,
   Min,
   ValidateIf,
+  ValidateNested,
 } from 'class-validator';
+import { ReminderDto } from './create-subscription.dto';
 
 export class UpdateSubscriptionDto {
   @IsOptional()
@@ -61,9 +65,11 @@ export class UpdateSubscriptionDto {
   reminderEnabled?: boolean;
 
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  reminderDays?: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ReminderDto)
+  @ArrayMaxSize(5)
+  reminders?: ReminderDto[];
 
   @IsOptional()
   @IsString()

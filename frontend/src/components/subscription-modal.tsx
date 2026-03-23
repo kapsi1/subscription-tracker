@@ -2,10 +2,13 @@ import type { Category, Subscription } from '@subtracker/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import api from '@/lib/api';
+import { registerServiceWorker, subscribeToPush } from '@/lib/push';
 import { useAuth } from './auth-provider';
 import { CustomBillingModal } from './custom-billing-modal';
 import { PaymentHistoryTab } from './payment-history-tab';
+import { type ReminderRow, ReminderList } from './reminder-list';
 import { Button } from './ui/button';
 import {
   Dialog,
@@ -57,8 +60,8 @@ export function SubscriptionModal({
     billingCycle: 'monthly',
     category: 'Other',
     nextBillingDate: new Date().toISOString().split('T')[0],
-    reminderEnabled: true,
-    reminderDays: '3',
+    reminderEnabled: false,
+    reminders: [] as ReminderRow[],
     billingDays: [] as number[],
     billingMonthShortageOffset: 1,
     billingMonthShortageDirection: 'before' as 'before' | 'after' | 'skip',
@@ -69,8 +72,26 @@ export function SubscriptionModal({
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
 
+  const handleRequestPushPermission = async (): Promise<boolean> => {
+    try {
+      await registerServiceWorker();
+      const sub = await subscribeToPush();
+      await api.post('/users/push-subscription', sub.toJSON());
+      return true;
+    } catch (_err: unknown) {
+      toast.error(t('settings.notifications.push.error'));
+      return false;
+    }
+  };
+
   useEffect(() => {
     if (subscription && open) {
+      const loadedReminders: ReminderRow[] = (subscription.reminders ?? []).map((r) => ({
+        id: r.id ?? crypto.randomUUID(),
+        type: r.type as 'email' | 'webpush',
+        value: r.value,
+        unit: r.unit as ReminderRow['unit'],
+      }));
       setFormData({
         name: subscription.name,
         amount: subscription.amount.toString(),
@@ -79,22 +100,28 @@ export function SubscriptionModal({
         nextBillingDate: subscription.nextBillingDate
           ? new Date(subscription.nextBillingDate).toISOString().split('T')[0]
           : new Date().toISOString().split('T')[0],
-        reminderEnabled: subscription.reminderEnabled ?? true,
-        reminderDays: (subscription.reminderDays ?? 3).toString(),
+        reminderEnabled: subscription.reminderEnabled ?? false,
+        reminders: loadedReminders,
         billingDays: subscription.billingDays ?? [],
         billingMonthShortageOffset: subscription.billingMonthShortageOffset || 1,
         billingMonthShortageDirection:
           (subscription.billingMonthShortageDirection as 'before' | 'after' | 'skip') ?? 'before',
       });
     } else if (!subscription && open) {
+      const defaultReminders: ReminderRow[] = (user?.defaultReminders ?? []).map((r) => ({
+        id: crypto.randomUUID(),
+        type: r.type as 'email' | 'webpush',
+        value: r.value,
+        unit: r.unit as ReminderRow['unit'],
+      }));
       setFormData({
         name: '',
         amount: '',
         billingCycle: 'monthly',
         category: 'Other',
         nextBillingDate: new Date().toISOString().split('T')[0],
-        reminderEnabled: user?.defaultReminderEnabled ?? true,
-        reminderDays: (user?.defaultReminderDays ?? 3).toString(),
+        reminderEnabled: defaultReminders.length > 0,
+        reminders: defaultReminders,
         billingDays: [],
         billingMonthShortageOffset: 1,
         billingMonthShortageDirection: 'before',
@@ -119,10 +146,8 @@ export function SubscriptionModal({
       newErrors.nextBillingDate = 'nextBillingDateRequired';
     }
     if (formData.reminderEnabled) {
-      const days = parseInt(formData.reminderDays, 10);
-      if (Number.isNaN(days) || days < 0 || days > 30) {
-        newErrors.reminderDays = 'reminderDaysRequired';
-      }
+      const invalid = formData.reminders.some((r) => r.value < 1 || Number.isNaN(r.value));
+      if (invalid) newErrors.reminders = 'reminderValueInvalid';
     }
 
     setErrors(newErrors);
@@ -147,7 +172,7 @@ export function SubscriptionModal({
         category: formData.category,
         nextBillingDate: formData.nextBillingDate,
         reminderEnabled: formData.reminderEnabled,
-        reminderDays: parseInt(formData.reminderDays, 10),
+        reminders: formData.reminders.map((r) => ({ type: r.type, value: r.value, unit: r.unit })),
         billingDays: formData.billingDays,
         billingMonthShortageOffset: formData.billingMonthShortageOffset,
         billingMonthShortageDirection: formData.billingMonthShortageDirection,
@@ -350,49 +375,37 @@ export function SubscriptionModal({
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4 border-t pt-4">
+        <div className="border-t pt-4 space-y-3">
           <div className="flex items-center gap-3">
             <Switch
               id="reminderEnabled"
-              name="reminderEnabled"
               checked={formData.reminderEnabled}
-              onCheckedChange={(checked) => setFormData({ ...formData, reminderEnabled: checked })}
+              onCheckedChange={(checked) => {
+                const reminders =
+                  checked && formData.reminders.length === 0
+                    ? [{ id: crypto.randomUUID(), type: 'webpush' as const, value: 1, unit: 'days' as const }]
+                    : formData.reminders;
+                setFormData({ ...formData, reminderEnabled: checked, reminders });
+              }}
             />
             <Label htmlFor="reminderEnabled" className="cursor-pointer">
               {t('subscriptions.modal.reminders')}
             </Label>
           </div>
           {formData.reminderEnabled && (
-            <div className="flex items-center gap-3 sm:ml-auto w-full sm:w-auto sm:justify-end">
-              <Label htmlFor="reminderDays" className="text-sm whitespace-nowrap">
-                {t('subscriptions.modal.reminderDays')}
-              </Label>
-              <Input
-                id="reminderDays"
-                name="reminderDays"
-                type="number"
-                min="0"
-                max="30"
-                className="w-20"
-                value={formData.reminderDays}
-                onChange={(e) => {
-                  setFormData({ ...formData, reminderDays: e.target.value });
-                  if (errors.reminderDays) {
-                    const newErrors = { ...errors };
-                    delete newErrors.reminderDays;
-                    setErrors(newErrors);
-                  }
-                }}
-                aria-invalid={isSubmitted && !!errors.reminderDays}
-              />
-            </div>
+            <ReminderList
+              reminders={formData.reminders}
+              onChange={(reminders) => setFormData({ ...formData, reminders })}
+              context="modal"
+              onRequestPushPermission={handleRequestPushPermission}
+            />
+          )}
+          {isSubmitted && errors.reminders && (
+            <p className="text-xs font-medium text-destructive">
+              {t(`subscriptions.modal.errors.${errors.reminders}`)}
+            </p>
           )}
         </div>
-        {isSubmitted && errors.reminderDays && (
-          <p className="text-xs font-medium text-destructive">
-            {t(`subscriptions.modal.errors.${errors.reminderDays}`)}
-          </p>
-        )}
       </div>
 
       <DialogFooter className="gap-2 pt-2">

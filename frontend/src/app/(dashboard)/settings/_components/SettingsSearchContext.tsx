@@ -51,22 +51,14 @@ export const SETTINGS_SECTIONS: SectionMetadata[] = [
     ],
   },
   {
-    id: 'push',
-    tab: 'preferences',
-    titleKey: 'settings.notifications.push.title',
-    descKey: 'settings.notifications.push.desc',
-    searchKeys: ['settings.notifications.push.enable', 'settings.notifications.push.enableDesc'],
-  },
-  {
     id: 'reminder',
     tab: 'preferences',
     titleKey: 'settings.notifications.default.title',
     descKey: 'settings.notifications.default.desc',
     searchKeys: [
-      'settings.notifications.default.days',
-      'settings.notifications.default.daysDesc',
       'settings.notifications.default.enable',
       'settings.notifications.default.enableDesc',
+      'settings.notifications.default.addReminder',
     ],
   },
   {

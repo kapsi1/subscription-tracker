@@ -264,7 +264,13 @@
       "nextBillingDate": "Próxima fecha de facturación",
       "reminders": "Recordatorios de pago",
       "remindersDesc": "Recibe notificaciones antes de que el pago venza",
-      "reminderDays": "Días antes del recordatorio",
+      "reminderTypeNotification": "Notificación",
+      "reminderTypeEmail": "Correo electrónico",
+      "reminderUnitMinutes": "minutos",
+      "reminderUnitHours": "horas",
+      "reminderUnitDays": "días",
+      "addReminder": "Añadir recordatorio",
+      "reminderSettingsHint": "Puedes cambiar los recordatorios predeterminados en Ajustes",
       "cancel": "Cancelar",
       "add": "Añadir Suscripción",
       "update": "Actualizar Suscripción",
@@ -285,7 +291,7 @@
         "nameRequired": "El nombre del servicio es obligatorio",
         "amountRequired": "Es obligatorio un importe válido",
         "nextBillingDateRequired": "La próxima fecha de facturación es obligatoria",
-        "reminderDaysRequired": "Los días del recordatorio deben estar entre 0 y 30"
+        "reminderValueInvalid": "El valor del recordatorio debe ser al menos 1"
       },
       "billingCycles": {
         "monthly": "Mensual",
@@ -396,9 +402,8 @@
         "desc": "Ajustes por defecto para nuevas suscripciones",
         "enable": "Recordatorios de pago por defecto",
         "enableDesc": "Activa recordatorios por defecto para nuevas suscripciones",
-        "days": "Días de recordatorio por defecto",
-        "daysDesc": "Las nuevas suscripciones se configurarán para recordarte esto con estos días de antelación",
-        "beforePayment": "días antes del pago"
+        "addReminder": "Añadir recordatorio",
+        "noReminders": "Sin recordatorios predeterminados. Añade uno a continuación."
       }
     },
     "categories": {

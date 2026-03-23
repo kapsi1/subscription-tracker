@@ -1,10 +1,11 @@
-import type { AlertType } from '@prisma/client';
+import type { AlertType, ReminderUnit } from '@prisma/client';
 
 export interface AlertJobData {
   alertId: string;
   subscriptionId: string;
   type: AlertType;
   daysBefore: number;
+  unit: ReminderUnit;
   userEmail: string;
   userName?: string;
   subscriptionName: string;

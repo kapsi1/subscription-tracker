@@ -264,7 +264,13 @@
       "nextBillingDate": "次回請求日",
       "reminders": "支払いリマインダー",
       "remindersDesc": "支払期日前に通知を受け取る",
-      "reminderDays": "リマインダーを送信する日数前",
+      "reminderTypeNotification": "通知",
+      "reminderTypeEmail": "メール",
+      "reminderUnitMinutes": "分",
+      "reminderUnitHours": "時間",
+      "reminderUnitDays": "日",
+      "addReminder": "リマインダーを追加",
+      "reminderSettingsHint": "デフォルトのリマインダーは設定で変更できます",
       "cancel": "キャンセル",
       "add": "追加",
       "update": "更新",
@@ -285,7 +291,7 @@
         "nameRequired": "サービス名は必須です",
         "amountRequired": "有効な金額を入力してください",
         "nextBillingDateRequired": "次回請求日は必須です",
-        "reminderDaysRequired": "リマインダー日数は0から30の間で指定してください"
+        "reminderValueInvalid": "リマインダーの値は1以上でなければなりません"
       },
       "billingCycles": {
         "monthly": "毎月",
@@ -396,9 +402,8 @@
         "desc": "新しいサブスクリプションの基本設定",
         "enable": "支払いリマインダー（デフォルト）",
         "enableDesc": "新しいサブスクリプション作成時にリマインダーを既定で有効にする",
-        "days": "リマインダー日数（デフォルト）",
-        "daysDesc": "新しいサブスクリプションは、支払い日の数日前に通知されるよう設定されます",
-        "beforePayment": "日前"
+        "addReminder": "リマインダーを追加",
+        "noReminders": "デフォルトのリマインダーはありません。以下から追加してください。"
       }
     },
     "categories": {

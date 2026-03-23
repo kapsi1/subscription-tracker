@@ -264,7 +264,13 @@
       "nextBillingDate": "다음 청구일",
       "reminders": "결제 알림",
       "remindersDesc": "결제일 전에 알림을 받습니다",
-      "reminderDays": "며칠 전 알림 전송",
+      "reminderTypeNotification": "알림",
+      "reminderTypeEmail": "이메일",
+      "reminderUnitMinutes": "분",
+      "reminderUnitHours": "시간",
+      "reminderUnitDays": "일",
+      "addReminder": "알림 추가",
+      "reminderSettingsHint": "설정에서 기본 알림을 변경할 수 있습니다",
       "cancel": "취소",
       "add": "추가",
       "update": "업데이트",
@@ -285,7 +291,7 @@
         "nameRequired": "서비스명은 필수 입력 항목입니다",
         "amountRequired": "유효한 금액을 입력하세요",
         "nextBillingDateRequired": "다음 청구일은 필수 입력 항목입니다",
-        "reminderDaysRequired": "알림 전송일은 0에서 30 사이여야 합니다"
+        "reminderValueInvalid": "알림 값은 1 이상이어야 합니다"
       },
       "billingCycles": {
         "monthly": "매월",
@@ -396,9 +402,8 @@
         "desc": "새로 추가되는 구독 항목에 대한 기본값",
         "enable": "기본 결제 알림",
         "enableDesc": "새 구독 추가 시 기본적으로 알림을 활성화합니다",
-        "days": "기본 알림 시점 (며칠 전)",
-        "daysDesc": "새 구독 항목은 결제일의 해당 일 수 전에 알림을 보내도록 설정됩니다",
-        "beforePayment": "일 전"
+        "addReminder": "알림 추가",
+        "noReminders": "기본 알림이 없습니다. 아래에서 추가해 주세요."
       }
     },
     "categories": {

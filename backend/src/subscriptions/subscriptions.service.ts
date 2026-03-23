@@ -1,6 +1,6 @@
 import * as crypto from 'node:crypto';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { BillingCycle } from '@prisma/client';
+import { BillingCycle, type Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 import type { CreateSubscriptionDto } from './dto/create-subscription.dto';
@@ -37,7 +37,19 @@ export class SubscriptionsService {
           createDto.billingMonthShortageDirection as 'before' | 'after' | 'skip',
         );
 
-    return this.prisma.subscription.create({
+    // Determine reminders: use provided list, or fall back to user defaults
+    const reminders =
+      createDto.reminders ??
+      (await this.prisma.userDefaultReminder.findMany({ where: { userId } })).map((r) => ({
+        type: r.type,
+        value: r.value,
+        unit: r.unit,
+      }));
+
+    const reminderEnabled =
+      createDto.reminderEnabled !== undefined ? createDto.reminderEnabled : reminders.length > 0;
+
+    const subscription = await this.prisma.subscription.create({
       data: {
         userId,
         name: createDto.name,
@@ -50,17 +62,32 @@ export class SubscriptionsService {
         billingMonthShortageDirection: createDto.billingMonthShortageDirection || 'before',
         category: createDto.category,
         nextBillingDate,
-        reminderEnabled: createDto.reminderEnabled ?? user.defaultReminderEnabled,
-        reminderDays: createDto.reminderDays ?? user.defaultReminderDays,
+        reminderEnabled,
+        alerts: reminderEnabled
+          ? { create: reminders.map((r) => ({ type: r.type, daysBefore: r.value, unit: r.unit })) }
+          : undefined,
       },
+      include: { alerts: true },
     });
+
+    return this.mapSubscription(subscription);
   }
 
   async findAll(userId: string) {
-    return this.prisma.subscription.findMany({
+    const subs = await this.prisma.subscription.findMany({
       where: { userId },
       orderBy: { nextBillingDate: 'asc' },
+      include: { alerts: true },
     });
+    return subs.map((s) => this.mapSubscription(s));
+  }
+
+  private mapSubscription(sub: Prisma.SubscriptionGetPayload<{ include: { alerts: true } }>) {
+    const { alerts, ...rest } = sub;
+    return {
+      ...rest,
+      reminders: alerts.map((a) => ({ id: a.id, type: a.type, value: a.daysBefore, unit: a.unit })),
+    };
   }
 
   async export(userId: string) {
@@ -196,6 +223,10 @@ export class SubscriptionsService {
                 sub.billingMonthShortageDirection as 'before' | 'after' | 'skip',
               );
 
+          const importReminders = sub.reminders ?? [];
+          const importReminderEnabled =
+            sub.reminderEnabled !== undefined ? sub.reminderEnabled : importReminders.length > 0;
+
           await tx.subscription.create({
             data: {
               id: subId,
@@ -210,8 +241,10 @@ export class SubscriptionsService {
               billingMonthShortageDirection: sub.billingMonthShortageDirection || 'before',
               category: sub.category,
               nextBillingDate,
-              reminderEnabled: sub.reminderEnabled ?? user.defaultReminderEnabled,
-              reminderDays: sub.reminderDays ?? user.defaultReminderDays,
+              reminderEnabled: importReminderEnabled,
+              alerts: importReminderEnabled && importReminders.length > 0
+                ? { create: importReminders.map((r) => ({ type: r.type, daysBefore: r.value, unit: r.unit })) }
+                : undefined,
               isActive: sub.isActive ?? true,
             },
           });
@@ -257,11 +290,12 @@ export class SubscriptionsService {
   async findOne(userId: string, id: string) {
     const subscription = await this.prisma.subscription.findFirst({
       where: { id, userId },
+      include: { alerts: true },
     });
     if (!subscription) {
       throw new NotFoundException('Subscription not found');
     }
-    return subscription;
+    return this.mapSubscription(subscription);
   }
 
   async update(userId: string, id: string, updateDto: UpdateSubscriptionDto) {
@@ -311,30 +345,51 @@ export class SubscriptionsService {
       );
     }
 
-    return this.prisma.subscription.update({
-      where: { id },
-      data: {
-        ...(updateDto.name && { name: updateDto.name }),
-        ...(updateDto.amount !== undefined && { amount: updateDto.amount }),
-        currency: user.currency,
-        ...(updateDto.category && { category: updateDto.category }),
-        ...(updateDto.isActive !== undefined && {
-          isActive: updateDto.isActive,
-        }),
-        ...(updateDto.reminderEnabled !== undefined && {
-          reminderEnabled: updateDto.reminderEnabled,
-        }),
-        ...(updateDto.reminderDays !== undefined && {
-          reminderDays: updateDto.reminderDays,
-        }),
-        billingCycle,
-        intervalDays: intervalDays ?? null,
-        billingDays: billingDays ?? [],
-        billingMonthShortageOffset: shortageOffset,
-        billingMonthShortageDirection: shortageDirection,
-        nextBillingDate,
-      },
+    // Determine reminderEnabled: explicit value, or derive from reminders list
+    const reminderEnabled =
+      updateDto.reminderEnabled !== undefined
+        ? updateDto.reminderEnabled
+        : updateDto.reminders !== undefined
+          ? updateDto.reminders.length > 0
+          : undefined;
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      // Replace alert records if reminders provided
+      if (updateDto.reminders !== undefined) {
+        await tx.alert.deleteMany({ where: { subscriptionId: id } });
+        if (updateDto.reminders.length > 0) {
+          await tx.alert.createMany({
+            data: updateDto.reminders.map((r) => ({
+              subscriptionId: id,
+              type: r.type,
+              daysBefore: r.value,
+              unit: r.unit,
+            })),
+          });
+        }
+      }
+
+      return tx.subscription.update({
+        where: { id },
+        data: {
+          ...(updateDto.name && { name: updateDto.name }),
+          ...(updateDto.amount !== undefined && { amount: updateDto.amount }),
+          currency: user.currency,
+          ...(updateDto.category && { category: updateDto.category }),
+          ...(updateDto.isActive !== undefined && { isActive: updateDto.isActive }),
+          ...(reminderEnabled !== undefined && { reminderEnabled }),
+          billingCycle,
+          intervalDays: intervalDays ?? null,
+          billingDays: billingDays ?? [],
+          billingMonthShortageOffset: shortageOffset,
+          billingMonthShortageDirection: shortageDirection,
+          nextBillingDate,
+        },
+        include: { alerts: true },
+      });
     });
+
+    return this.mapSubscription(updated);
   }
 
   async remove(userId: string, id: string) {

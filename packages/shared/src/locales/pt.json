@@ -264,7 +264,13 @@
       "nextBillingDate": "Próxima Data de Faturação",
       "reminders": "Lembretes de Pagamento",
       "remindersDesc": "Seja notificado antes do pagamento vencer",
-      "reminderDays": "Dias antes do lembrete",
+      "reminderTypeNotification": "Notificação",
+      "reminderTypeEmail": "E-mail",
+      "reminderUnitMinutes": "minutos",
+      "reminderUnitHours": "horas",
+      "reminderUnitDays": "dias",
+      "addReminder": "Adicionar lembrete",
+      "reminderSettingsHint": "Pode alterar os lembretes padrão nos Ajustes",
       "cancel": "Cancelar",
       "add": "Adicionar Subscrição",
       "update": "Atualizar Subscrição",
@@ -285,7 +291,7 @@
         "nameRequired": "Nome do serviço é obrigatório",
         "amountRequired": "É necessário um valor válido",
         "nextBillingDateRequired": "Próxima data de faturação é obrigatória",
-        "reminderDaysRequired": "Os dias do lembrete devem estar entre 0 e 30"
+        "reminderValueInvalid": "O valor do lembrete deve ser pelo menos 1"
       },
       "billingCycles": {
         "monthly": "Mensal",
@@ -396,9 +402,8 @@
         "desc": "Ajustes padrão para novas subscrições",
         "enable": "Lembretes de Pagamento Padrão",
         "enableDesc": "Ativar lembretes por padrão para novas subscrições",
-        "days": "Dias de Lembrete Padrão",
-        "daysDesc": "Novas subscrições lembrarão avisos com este número de dias de antecedência",
-        "beforePayment": "dias antes do pagamento"
+        "addReminder": "Adicionar lembrete",
+        "noReminders": "Sem lembretes padrão. Adicione um abaixo."
       }
     },
     "categories": {

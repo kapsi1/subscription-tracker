@@ -264,7 +264,13 @@
       "nextBillingDate": "Next Billing Date",
       "reminders": "Payment Reminders",
       "remindersDesc": "Get notified before payment is due",
-      "reminderDays": "Days Before Reminder",
+      "reminderTypeNotification": "Notification",
+      "reminderTypeEmail": "Email",
+      "reminderUnitMinutes": "minutes",
+      "reminderUnitHours": "hours",
+      "reminderUnitDays": "days",
+      "addReminder": "Add reminder",
+      "reminderSettingsHint": "You can change default reminders in Settings",
       "cancel": "Cancel",
       "add": "Add Subscription",
       "update": "Update Subscription",
@@ -285,7 +291,7 @@
         "nameRequired": "Service name is required",
         "amountRequired": "Valid amount is required",
         "nextBillingDateRequired": "Next billing date is required",
-        "reminderDaysRequired": "Reminder days must be between 0 and 30"
+        "reminderValueInvalid": "Reminder value must be at least 1"
       },
       "billingCycles": {
         "monthly": "Monthly",
@@ -396,9 +402,8 @@
         "desc": "Default settings for new subscriptions",
         "enable": "Default Payment Reminders",
         "enableDesc": "Enable reminders by default for new subscriptions",
-        "days": "Default Reminder Days",
-        "daysDesc": "New subscriptions will be set to remind you this many days before the payment is due",
-        "beforePayment": "days before payment"
+        "addReminder": "Add reminder",
+        "noReminders": "No default reminders. Add one below."
       }
     },
     "categories": {

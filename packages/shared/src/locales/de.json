@@ -264,7 +264,13 @@
       "nextBillingDate": "Nächstes Abrechnungsdatum",
       "reminders": "Zahlungserinnerungen",
       "remindersDesc": "Benachrichtigt werden, bevor die Zahlung fällig ist",
-      "reminderDays": "Tage vor Erinnerung",
+      "reminderTypeNotification": "Benachrichtigung",
+      "reminderTypeEmail": "E-Mail",
+      "reminderUnitMinutes": "Minuten",
+      "reminderUnitHours": "Stunden",
+      "reminderUnitDays": "Tage",
+      "addReminder": "Erinnerung hinzufügen",
+      "reminderSettingsHint": "Sie können Standarderinnerungen in den Einstellungen ändern",
       "cancel": "Abbrechen",
       "add": "Abo hinzufügen",
       "update": "Abo aktualisieren",
@@ -285,7 +291,7 @@
         "nameRequired": "Dienstname ist erforderlich",
         "amountRequired": "Gültiger Betrag ist erforderlich",
         "nextBillingDateRequired": "Nächstes Abrechnungsdatum ist erforderlich",
-        "reminderDaysRequired": "Erinnerungstage müssen zwischen 0 und 30 liegen"
+        "reminderValueInvalid": "Der Erinnerungswert muss mindestens 1 sein"
       },
       "billingCycles": {
         "monthly": "Monatlich",
@@ -396,9 +402,8 @@
         "desc": "Standardeinstellungen für neue Abonnements",
         "enable": "Standard-Zahlungserinnerungen",
         "enableDesc": "Erinnerungen standardmäßig für neue Abos aktivieren",
-        "days": "Standard-Erinnerungstage",
-        "daysDesc": "Neue Abos werden so eingestellt, dass sie Sie so viele Tage vor Fälligkeit der Zahlung erinnern",
-        "beforePayment": "Tage vor der Zahlung"
+        "addReminder": "Erinnerung hinzufügen",
+        "noReminders": "Keine Standard-Erinnerungen. Fügen Sie unten eine hinzu."
       }
     },
     "categories": {

@@ -274,7 +274,13 @@
       "nextBillingDate": "Data następnej płatności",
       "reminders": "Przypomnienia o płatnościach",
       "remindersDesc": "Otrzymuj powiadomienia przed terminem płatności",
-      "reminderDays": "Dni przed przypomnieniem",
+      "reminderTypeNotification": "Powiadomienie",
+      "reminderTypeEmail": "Email",
+      "reminderUnitMinutes": "minuty",
+      "reminderUnitHours": "godziny",
+      "reminderUnitDays": "dni",
+      "addReminder": "Dodaj przypomnienie",
+      "reminderSettingsHint": "Możesz zmienić domyślne przypomnienia w Ustawieniach",
       "cancel": "Anuluj",
       "add": "Dodaj subskrypcję",
       "update": "Zaktualizuj subskrypcję",
@@ -295,7 +301,7 @@
         "nameRequired": "Nazwa usługi jest wymagana",
         "amountRequired": "Wymagana jest poprawna kwota",
         "nextBillingDateRequired": "Data następnej płatności jest wymagana",
-        "reminderDaysRequired": "Dni przypomnienia muszą mieścić się w zakresie od 0 do 30"
+        "reminderValueInvalid": "Wartość przypomnienia musi wynosić co najmniej 1"
       },
       "billingCycles": {
         "monthly": "Miesięcznie",
@@ -406,9 +412,8 @@
         "desc": "Domyślne ustawienia dla nowych subskrypcji",
         "enable": "Domyślne przypomnienia o płatnościach",
         "enableDesc": "Włącz przypomnienia domyślnie dla nowych subskrypcji",
-        "days": "Domyślna liczba dni przypomnienia",
-        "daysDesc": "Nowe subskrypcje będą ustawione na przypomnienie tyle dni przed terminem płatności",
-        "beforePayment": "dni przed płatnością"
+        "addReminder": "Dodaj przypomnienie",
+        "noReminders": "Brak domyślnych przypomnień. Dodaj jedno poniżej."
       }
     },
     "categories": {

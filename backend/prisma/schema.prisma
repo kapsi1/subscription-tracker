@@ -7,37 +7,38 @@ datasource db {
 }
 
 model User {
-  id                          String             @id @default(uuid())
-  email                       String             @unique
+  id                          String                  @id @default(uuid())
+  email                       String                  @unique
   passwordHash                String?
-  createdAt                   DateTime           @default(now())
-  updatedAt                   DateTime           @updatedAt
-  defaultReminderDays         Int                @default(3)
-  defaultReminderEnabled      Boolean            @default(true)
+  createdAt                   DateTime                @default(now())
+  updatedAt                   DateTime                @updatedAt
+  defaultReminderDays         Int                     @default(3)
+  defaultReminderEnabled      Boolean                 @default(false)
   lastBudgetAlertSentAt       DateTime?
   monthlyBudget               Decimal?
-  language                    String             @default("en")
-  accentColor                 String             @default("Indigo")
-  dailyDigest                 Boolean            @default(false)
-  emailNotifications          Boolean            @default(false)
-  theme                       String             @default("system")
-  previousWeekReport          Boolean            @default(false)
-  nextWeekReport              Boolean            @default(false)
-  googleId                    String?            @unique
+  language                    String                  @default("en")
+  accentColor                 String                  @default("Indigo")
+  dailyDigest                 Boolean                 @default(false)
+  emailNotifications          Boolean                 @default(false)
+  theme                       String                  @default("system")
+  previousWeekReport          Boolean                 @default(false)
+  nextWeekReport              Boolean                 @default(false)
+  googleId                    String?                 @unique
   name                        String?
-  dashboardSortBy             String             @default("date")
-  dashboardSortOrder          String             @default("asc")
-  showPaidPayments            Boolean            @default(true)
-  currency                    String             @default("USD")
+  dashboardSortBy             String                  @default("date")
+  dashboardSortOrder          String                  @default("asc")
+  showPaidPayments            Boolean                 @default(true)
+  currency                    String                  @default("USD")
   avatarUrl                   String?
-  isVerified                  Boolean            @default(false)
-  verificationToken           String?            @unique
+  isVerified                  Boolean                 @default(false)
+  verificationToken           String?                 @unique
   verificationTokenExpiresAt  DateTime?
-  passwordResetToken          String?            @unique
+  passwordResetToken          String?                 @unique
   passwordResetTokenExpiresAt DateTime?
   recentAccentColors          String[]
-  hasSeenManageHint           Boolean            @default(false)
+  hasSeenManageHint           Boolean                 @default(false)
   categories                  Category[]
+  defaultReminders            UserDefaultReminder[]
   paymentHistory              PaymentHistory[]
   pushSubscriptions           PushSubscription[]
   subscriptions               Subscription[]
@@ -71,7 +72,7 @@ model Subscription {
   createdAt                     DateTime         @default(now())
   updatedAt                     DateTime         @updatedAt
   reminderDays                  Int              @default(3)
-  reminderEnabled               Boolean          @default(true)
+  reminderEnabled               Boolean          @default(false)
   billingDays                   Int[]            @default([])
   billingMonthShortageDirection String           @default("before")
   billingMonthShortageOffset    Int              @default(1)
@@ -101,10 +102,22 @@ model Alert {
   subscriptionId String
   type           AlertType
   daysBefore     Int
+  unit           ReminderUnit @default(days)
   isEnabled      Boolean      @default(true)
   subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
   @@index([subscriptionId])
+}
+
+model UserDefaultReminder {
+  id     String       @id @default(uuid())
+  userId String
+  type   AlertType
+  value  Int
+  unit   ReminderUnit @default(days)
+  user   User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model PaymentHistory {
@@ -133,4 +146,10 @@ enum BillingCycle {
 enum AlertType {
   email
   webpush
+}
+
+enum ReminderUnit {
+  minutes
+  hours
+  days
 }

@@ -1,3 +1,12 @@
+export type ReminderUnit = 'minutes' | 'hours' | 'days';
+
+export interface Reminder {
+  id?: string;
+  type: 'email' | 'webpush';
+  value: number;
+  unit: ReminderUnit;
+}
+
 export interface Subscription {
   id: string;
   name: string;
@@ -12,13 +21,17 @@ export interface Subscription {
   category: string;
   isActive?: boolean;
   reminderEnabled?: boolean;
+  reminders?: Reminder[];
+  /** @deprecated use reminders instead */
   reminderDays?: number;
 }
 
 export interface Settings {
   name?: string;
   defaultReminderEnabled: boolean;
-  defaultReminderDays: number;
+  defaultReminders: Reminder[];
+  /** @deprecated use defaultReminders instead */
+  defaultReminderDays?: number;
   emailNotifications: boolean;
   emailAddress?: string;
   dailyDigest: boolean;

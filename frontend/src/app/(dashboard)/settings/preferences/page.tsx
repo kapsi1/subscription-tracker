@@ -7,12 +7,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import api from '@/lib/api';
-import { registerServiceWorker, subscribeToPush, unsubscribeFromPush } from '@/lib/push';
+import { registerServiceWorker, subscribeToPush } from '@/lib/push';
 import { AppearanceSection } from '../_components/AppearanceSection';
 import { BudgetSection } from '../_components/BudgetSection';
 import { EmailNotificationsSection } from '../_components/EmailNotificationsSection';
 import { LocalizationSection } from '../_components/LocalizationSection';
-import { PushNotificationsSection } from '../_components/PushNotificationsSection';
 import { ReminderSection } from '../_components/ReminderSection';
 
 export default function PreferencesPage() {
@@ -21,26 +20,23 @@ export default function PreferencesPage() {
   const showTestControls = process.env.NODE_ENV !== 'production';
   const [settings, setSettings] = useState<Settings>({
     defaultReminderEnabled: true,
-    defaultReminderDays: 3,
+    defaultReminders: [],
     emailNotifications: false,
     emailAddress: '',
     dailyDigest: false,
     previousWeekReport: false,
     nextWeekReport: false,
     monthlyBudget: null,
-    pushEnabled: false,
     currency: 'USD',
   });
-  const [testDelay, setTestDelay] = useState('0');
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
   const [testEmailLanguage, setTestEmailLanguage] = useState<'en' | 'pl'>('en');
   const [testBudgetEmailLanguage, setTestBudgetEmailLanguage] = useState<'en' | 'pl'>('en');
-  const [isSendingTest, setIsSendingTest] = useState(false);
   const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
   const [isSendingBudgetTestEmail, setIsSendingBudgetTestEmail] = useState(false);
   const [isSendingDailyTest, setIsSendingDailyTest] = useState(false);
   const [isSendingPreviousWeeklyTest, setIsSendingPreviousWeeklyTest] = useState(false);
   const [isSendingNextWeeklyTest, setIsSendingNextWeeklyTest] = useState(false);
-  const [isTogglingPush, setIsTogglingPush] = useState(false);
   const hasLoadedSettingsRef = useRef(false);
   const lastSavedPreferencesRef = useRef<string | null>(null);
   const latestSaveAttemptRef = useRef<string | null>(null);
@@ -51,7 +47,7 @@ export default function PreferencesPage() {
         const response = await api.get('/users/me');
         const loadedSettings = {
           defaultReminderEnabled: response.data.defaultReminderEnabled,
-          defaultReminderDays: parseInt(response.data.defaultReminderDays, 10) || 3,
+          defaultReminders: response.data.defaultReminders ?? [],
           emailAddress: response.data.email,
           monthlyBudget: response.data.monthlyBudget
             ? parseFloat(response.data.monthlyBudget)
@@ -60,7 +56,6 @@ export default function PreferencesPage() {
           dailyDigest: response.data.dailyDigest,
           previousWeekReport: response.data.previousWeekReport,
           nextWeekReport: response.data.nextWeekReport,
-          pushEnabled: false,
           currency: response.data.currency || 'USD',
         };
         setSettings((prev) => ({
@@ -69,7 +64,13 @@ export default function PreferencesPage() {
         }));
         lastSavedPreferencesRef.current = JSON.stringify({
           defaultReminderEnabled: loadedSettings.defaultReminderEnabled,
-          defaultReminderDays: loadedSettings.defaultReminderDays,
+          defaultReminders: loadedSettings.defaultReminders.map(
+            ({ type, value, unit }: { type: string; value: number; unit: string }) => ({
+              type,
+              value,
+              unit,
+            }),
+          ),
           monthlyBudget: loadedSettings.monthlyBudget,
           emailNotifications: loadedSettings.emailNotifications,
           dailyDigest: loadedSettings.dailyDigest,
@@ -78,30 +79,14 @@ export default function PreferencesPage() {
           currency: loadedSettings.currency,
         });
         hasLoadedSettingsRef.current = true;
+        setSettingsLoaded(true);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 401) return;
         toast.error(t('settings.loadError'));
       }
     };
 
-    const checkPushSubscription = async () => {
-      if ('serviceWorker' in navigator && 'PushManager' in window) {
-        try {
-          const registration = await navigator.serviceWorker.getRegistration('/sw.js');
-          if (registration) {
-            const subscription = await registration.pushManager.getSubscription();
-            if (subscription) {
-              setSettings((s) => ({ ...s, pushEnabled: true }));
-            }
-          }
-        } catch (e) {
-          console.error('Failed to check push subscription', e);
-        }
-      }
-    };
-
     fetchSettings();
-    checkPushSubscription();
   }, [t]);
 
   useEffect(() => {
@@ -109,7 +94,11 @@ export default function PreferencesPage() {
 
     const payload = {
       defaultReminderEnabled: settings.defaultReminderEnabled,
-      defaultReminderDays: settings.defaultReminderDays,
+      defaultReminders: settings.defaultReminders.map(({ type, value, unit }) => ({
+        type,
+        value,
+        unit,
+      })),
       monthlyBudget: settings.monthlyBudget,
       emailNotifications: settings.emailNotifications,
       dailyDigest: settings.dailyDigest,
@@ -140,64 +129,16 @@ export default function PreferencesPage() {
     return () => window.clearTimeout(timer);
   }, [settings, t, queryClient]);
 
-  const handlePushToggle = async (checked: boolean) => {
-    setIsTogglingPush(true);
+  const handleRequestPushPermission = async (): Promise<boolean> => {
     try {
-      if (checked) {
-        await registerServiceWorker();
-        const sub = await subscribeToPush();
-        await api.post('/users/push-subscription', sub.toJSON());
-        setSettings((s) => ({ ...s, pushEnabled: true }));
-        toast.success(t('settings.notifications.push.success'));
-      } else {
-        const registration = await navigator.serviceWorker.getRegistration('/sw.js');
-        if (registration) {
-          const sub = await registration.pushManager.getSubscription();
-          if (sub) {
-            await api.delete(
-              `/users/push-subscription?endpoint=${encodeURIComponent(sub.endpoint)}`,
-            );
-          }
-        }
-        await unsubscribeFromPush();
-        setSettings((s) => ({ ...s, pushEnabled: false }));
-        toast.success(t('settings.notifications.push.disabled'));
-      }
+      await registerServiceWorker();
+      const sub = await subscribeToPush();
+      await api.post('/users/push-subscription', sub.toJSON());
+      return true;
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
-      toast.error(`${t('settings.notifications.push.error')}: ${message}`);
-      setSettings((s) => ({ ...s, pushEnabled: false }));
-    } finally {
-      setIsTogglingPush(false);
-    }
-  };
-
-  const handleResetPush = async () => {
-    if (!confirm('Are you sure? This will unregister the service worker and clear push settings.'))
-      return;
-    try {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      for (const registration of registrations) {
-        await registration.unregister();
-      }
-      setSettings((s) => ({ ...s, pushEnabled: false }));
-      toast.success('Push settings reset. Please refresh and try again.');
-    } catch (_e) {
-      toast.error('Failed to reset push settings');
-    }
-  };
-
-  const handleTestPush = async () => {
-    setIsSendingTest(true);
-    try {
-      const delaySeconds = Math.max(0, parseInt(testDelay, 10) || 0);
-      const res = await api.post('/users/test-push', { delaySeconds });
-      toast.success(res.data.message);
-    } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
-      toast.error(err.response?.data?.message || 'Failed to send test notification');
-    } finally {
-      setIsSendingTest(false);
+      toast.error(message);
+      return false;
     }
   };
 
@@ -328,25 +269,13 @@ export default function PreferencesPage() {
         />
       )}
 
-      {isSectionVisible('push', 'preferences') && (
-        <PushNotificationsSection
-          pushEnabled={settings.pushEnabled ?? false}
-          onPushToggle={handlePushToggle}
-          isTogglingPush={isTogglingPush}
-          showTestControls={showTestControls}
-          testDelay={testDelay}
-          setTestDelay={setTestDelay}
-          onTestPush={handleTestPush}
-          isSendingTest={isSendingTest}
-          onResetPush={handleResetPush}
-        />
-      )}
-
       {isSectionVisible('reminder', 'preferences') && (
         <ReminderSection
+          key={settingsLoaded ? 'loaded' : 'loading'}
           defaultReminderEnabled={settings.defaultReminderEnabled}
-          defaultReminderDays={settings.defaultReminderDays}
+          defaultReminders={settings.defaultReminders}
           onSettingsChange={handleSettingsChange}
+          onRequestPushPermission={handleRequestPushPermission}
         />
       )}
 

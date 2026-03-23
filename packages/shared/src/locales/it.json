@@ -264,7 +264,13 @@
       "nextBillingDate": "Data Prossima Fatturazione",
       "reminders": "Promemoria di Pagamento",
       "remindersDesc": "Ricevi notifiche prima della scadenza del pagamento",
-      "reminderDays": "Giorni prima del promemoria",
+      "reminderTypeNotification": "Notifica",
+      "reminderTypeEmail": "Email",
+      "reminderUnitMinutes": "minuti",
+      "reminderUnitHours": "ore",
+      "reminderUnitDays": "giorni",
+      "addReminder": "Aggiungi promemoria",
+      "reminderSettingsHint": "Puoi modificare i promemoria predefiniti nelle Impostazioni",
       "cancel": "Annulla",
       "add": "Aggiungi Abbonamento",
       "update": "Aggiorna Abbonamento",
@@ -285,7 +291,7 @@
         "nameRequired": "Il nome del servizio è obbligatorio",
         "amountRequired": "Inserire un importo valido",
         "nextBillingDateRequired": "La data della prossima fatturazione è obbligatoria",
-        "reminderDaysRequired": "I giorni del promemoria devono essere compresi tra 0 e 30"
+        "reminderValueInvalid": "Il valore del promemoria deve essere almeno 1"
       },
       "billingCycles": {
         "monthly": "Mensile",
@@ -396,9 +402,8 @@
         "desc": "Impostazioni predefinite per i nuovi abbonamenti",
         "enable": "Promemoria Pagamento Predefiniti",
         "enableDesc": "Abilita i promemoria per impostazione predefinita per i nuovi abbonamenti",
-        "days": "Giorni Promemoria Predefiniti",
-        "daysDesc": "I nuovi abbonamenti saranno impostati per ricordarti la scadenza con questi giorni di anticipo",
-        "beforePayment": "giorni prima del pagamento"
+        "addReminder": "Aggiungi promemoria",
+        "noReminders": "Nessun promemoria predefinito. Aggiungine uno qui sotto."
       }
     },
     "categories": {

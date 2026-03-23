@@ -264,7 +264,13 @@
       "nextBillingDate": "下次账单日期",
       "reminders": "付款提醒",
       "remindersDesc": "在到期前接收通知",
-      "reminderDays": "提前提醒天数",
+      "reminderTypeNotification": "通知",
+      "reminderTypeEmail": "电子邮件",
+      "reminderUnitMinutes": "分钟",
+      "reminderUnitHours": "小时",
+      "reminderUnitDays": "天",
+      "addReminder": "添加提醒",
+      "reminderSettingsHint": "您可以在设置中更改默认提醒",
       "cancel": "取消",
       "add": "添加订阅",
       "update": "更新订阅",
@@ -285,7 +291,7 @@
         "nameRequired": "请输入服务名称",
         "amountRequired": "请输入有效金额",
         "nextBillingDateRequired": "请选择下次账单日期",
-        "reminderDaysRequired": "提醒天数必须在 0 到 30 之间"
+        "reminderValueInvalid": "提醒值至少为 1"
       },
       "billingCycles": {
         "monthly": "每月一次",
@@ -396,9 +402,8 @@
         "desc": "新订阅的默认提醒规则",
         "enable": "默认开启付款提醒",
         "enableDesc": "为新增订阅自动开启提醒",
-        "days": "默认提前提醒天数",
-        "daysDesc": "新增订阅将默认在到期前这些天提醒您",
-        "beforePayment": "天"
+        "addReminder": "添加提醒",
+        "noReminders": "暂无默认提醒。请在下方添加。"
       }
     },
     "categories": {

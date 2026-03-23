@@ -39,22 +39,20 @@ export class AlertsService {
     @InjectQueue('alertQueue') private readonly alertQueue: Queue,
   ) {}
 
-  // Run scheduler every hour
-  @Cron(CronExpression.EVERY_HOUR)
+  // Run scheduler every minute to support minute-granularity reminders
+  @Cron(CronExpression.EVERY_MINUTE)
   async handleCron() {
     this.logger.log({
       msg: 'Alert scheduler started',
       event: 'alert_scheduler_start',
     });
 
-    const _now = new Date();
-
-    // We check all active subscriptions with enabled alerts OR subscription-level reminders
     const alerts = (await this.prisma.alert.findMany({
       where: {
         isEnabled: true,
         subscription: {
           isActive: true,
+          reminderEnabled: true,
         },
       },
       include: {
@@ -66,16 +64,6 @@ export class AlertsService {
       },
     })) as AlertWithSub[];
 
-    const subsWithReminders = (await this.prisma.subscription.findMany({
-      where: {
-        isActive: true,
-        reminderEnabled: true,
-      },
-      include: {
-        user: true,
-      },
-    })) as SubWithUser[];
-
     this.logger.log({
       msg: `Found ${alerts.length} enabled alerts to evaluate`,
       event: 'alert_scheduler_query',
@@ -85,21 +73,14 @@ export class AlertsService {
     let enqueued = 0;
     let skipped = 0;
 
-    // Process legacy alerts
     for (const alert of alerts) {
       const sub = alert.subscription;
-      const success = await this.enqueueIfNecessary(alert.id, sub, alert.type, alert.daysBefore);
-      if (success) enqueued++;
-      else skipped++;
-    }
-
-    // Process subscription-level reminders
-    for (const sub of subsWithReminders) {
       const success = await this.enqueueIfNecessary(
-        `sub-reminder-${sub.id}`,
+        alert.id,
         sub,
-        AlertType.email,
-        sub.reminderDays,
+        alert.type,
+        alert.daysBefore,
+        alert.unit,
       );
       if (success) enqueued++;
       else skipped++;
@@ -109,21 +90,26 @@ export class AlertsService {
       msg: `Alert scheduler completed`,
       event: 'alert_scheduler_complete',
       totalAlerts: alerts.length,
-      totalSubs: subsWithReminders.length,
       enqueued,
       skipped,
     });
+  }
+
+  private toMilliseconds(value: number, unit: string): number {
+    if (unit === 'minutes') return value * 60 * 1000;
+    if (unit === 'hours') return value * 60 * 60 * 1000;
+    return value * 24 * 60 * 60 * 1000; // days
   }
 
   private async enqueueIfNecessary(
     alertId: string,
     sub: SubWithUser,
     type: AlertType,
-    daysBefore: number,
+    value: number,
+    unit: string,
   ): Promise<boolean> {
     const now = new Date();
-    const thresholdDate = new Date();
-    thresholdDate.setDate(thresholdDate.getDate() + daysBefore);
+    const thresholdDate = new Date(now.getTime() + this.toMilliseconds(value, unit));
 
     if (sub.nextBillingDate <= thresholdDate && sub.nextBillingDate >= now) {
       const jobId = `alert-${alertId}-sub-${sub.id}-${sub.nextBillingDate.getTime()}`;
@@ -134,7 +120,8 @@ export class AlertsService {
           alertId,
           subscriptionId: sub.id,
           type,
-          daysBefore,
+          daysBefore: value,
+          unit,
           userEmail: sub.user.email,
           userName: sub.user.name ?? undefined,
           subscriptionName: sub.name,
@@ -156,7 +143,8 @@ export class AlertsService {
         alertType: type,
         subscriptionId: sub.id,
         subscriptionName: sub.name,
-        daysBefore,
+        value,
+        unit,
         nextBillingDate: sub.nextBillingDate.toISOString(),
       });
 

@@ -46,7 +46,7 @@ export class UsersController {
 
   @Get('me')
   async getMe(@Req() req: RequestWithUser) {
-    const user = await this.usersService.findById(req.user.userId);
+    const user = await this.usersService.findByIdWithDefaultReminders(req.user.userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -57,7 +57,7 @@ export class UsersController {
 
   @Patch('settings')
   async updateSettings(@Req() req: RequestWithUser, @Body() updateSettingsDto: UpdateSettingsDto) {
-    return this.usersService.update(req.user.userId, updateSettingsDto);
+    return this.usersService.updateSettings(req.user.userId, updateSettingsDto);
   }
 
   @Post('push-subscription')

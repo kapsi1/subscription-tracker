@@ -13,6 +13,7 @@ export interface User {
   updatedAt: string;
   defaultReminderEnabled: boolean;
   defaultReminderDays: number;
+  defaultReminders: Array<{ id: string; type: 'email' | 'webpush'; value: number; unit: string }>;
   monthlyBudget: number | string | null;
   lastBudgetAlertSentAt: string | null;
   theme: string;

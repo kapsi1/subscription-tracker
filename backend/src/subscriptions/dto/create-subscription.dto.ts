@@ -1,6 +1,7 @@
-import { BillingCycle } from '@prisma/client';
+import { AlertType, BillingCycle, ReminderUnit } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
   IsArray,
   IsBoolean,
   IsEnum,
@@ -14,6 +15,18 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
+
+export class ReminderDto {
+  @IsEnum(AlertType)
+  type!: AlertType;
+
+  @IsInt()
+  @Min(1)
+  value!: number;
+
+  @IsEnum(ReminderUnit)
+  unit!: ReminderUnit;
+}
 
 export class CreateSubscriptionDto {
   @IsString()
@@ -54,9 +67,11 @@ export class CreateSubscriptionDto {
   reminderEnabled?: boolean;
 
   @IsOptional()
-  @IsInt()
-  @Min(0)
-  reminderDays?: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ReminderDto)
+  @ArrayMaxSize(5)
+  reminders?: ReminderDto[];
 
   @IsOptional()
   @IsString()
