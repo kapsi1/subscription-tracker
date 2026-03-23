@@ -14,6 +14,7 @@ describe('AlertsProcessor', () => {
   let prismaMock: {
     pushSubscription: { findMany: jest.Mock; delete: jest.Mock };
     user: { findUnique: jest.Mock };
+    alert: { update: jest.Mock };
   };
 
   beforeEach(async () => {
@@ -26,6 +27,7 @@ describe('AlertsProcessor', () => {
           .fn()
           .mockResolvedValue({ language: 'en', accentColor: 'Indigo', theme: 'system' }),
       },
+      alert: { update: jest.fn().mockResolvedValue({}) },
     };
 
     const module: TestingModule = await Test.createTestingModule({

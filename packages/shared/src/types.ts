@@ -91,6 +91,7 @@ export interface PaymentHistory {
 }
 
 export enum BillingCycle {
+  weekly = 'weekly',
   monthly = 'monthly',
   yearly = 'yearly',
   custom = 'custom',

@@ -8,6 +8,7 @@ import { ReminderList, type ReminderRow } from '@/components/reminder-list';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { generateId } from '@/lib/id';
 import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface ReminderSectionProps {
@@ -28,7 +29,7 @@ export function ReminderSection({
 
   const [rows, setRows] = useState<ReminderRow[]>(() =>
     defaultReminders.map((r) => ({
-      id: r.id ?? crypto.randomUUID(),
+      id: r.id ?? generateId(),
       type: r.type,
       value: r.value,
       unit: r.unit,

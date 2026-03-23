@@ -294,6 +294,7 @@
         "reminderValueInvalid": "提醒值至少为 1"
       },
       "billingCycles": {
+        "weekly": "每周一次",
         "monthly": "每月一次",
         "yearly": "每年一次",
         "custom": "自定义..."

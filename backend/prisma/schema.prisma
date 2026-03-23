@@ -104,6 +104,7 @@ model Alert {
   daysBefore     Int
   unit           ReminderUnit @default(days)
   isEnabled      Boolean      @default(true)
+  lastSentAt     DateTime?
   subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
   @@index([subscriptionId])
@@ -138,6 +139,7 @@ model PaymentHistory {
 }
 
 enum BillingCycle {
+  weekly
   monthly
   yearly
   custom

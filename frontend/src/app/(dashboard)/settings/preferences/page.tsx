@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { useAuth } from '@/components/auth-provider';
 import api from '@/lib/api';
 import { registerServiceWorker, subscribeToPush } from '@/lib/push';
 import { AppearanceSection } from '../_components/AppearanceSection';
@@ -17,6 +18,7 @@ import { ReminderSection } from '../_components/ReminderSection';
 export default function PreferencesPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { fetchUser } = useAuth();
   const showTestControls = process.env.NODE_ENV !== 'production';
   const [settings, setSettings] = useState<Settings>({
     defaultReminderEnabled: true,
@@ -116,6 +118,7 @@ export default function PreferencesPage() {
         await api.patch('/users/settings', payload);
         if (latestSaveAttemptRef.current === serializedPayload) {
           lastSavedPreferencesRef.current = serializedPayload;
+          await fetchUser();
           // Invalidate queries to refresh data across the app (e.g. currency changes)
           queryClient.invalidateQueries({ queryKey: ['dashboard'] });
           queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
@@ -127,7 +130,7 @@ export default function PreferencesPage() {
     }, 500);
 
     return () => window.clearTimeout(timer);
-  }, [settings, t, queryClient]);
+  }, [settings, t, queryClient, fetchUser]);
 
   const handleRequestPushPermission = async (): Promise<boolean> => {
     try {
@@ -305,7 +308,6 @@ export default function PreferencesPage() {
   );
 }
 
-import { useAuth } from '@/components/auth-provider';
 // Wrapper components for Profile sections to handle their own data fetching
 import { ChangeEmailSection } from '../_components/ChangeEmailSection';
 import { ChangePasswordSection } from '../_components/ChangePasswordSection';

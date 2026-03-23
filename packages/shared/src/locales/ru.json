@@ -304,6 +304,7 @@
         "reminderValueInvalid": "Значение напоминания должно быть не менее 1"
       },
       "billingCycles": {
+        "weekly": "Еженедельно",
         "monthly": "Раз в месяц",
         "yearly": "Раз в год",
         "custom": "Свой режим..."

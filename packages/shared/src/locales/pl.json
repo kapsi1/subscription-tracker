@@ -304,6 +304,7 @@
         "reminderValueInvalid": "Wartość przypomnienia musi wynosić co najmniej 1"
       },
       "billingCycles": {
+        "weekly": "Tygodniowo",
         "monthly": "Miesięcznie",
         "yearly": "Rocznie",
         "custom": "Własny..."

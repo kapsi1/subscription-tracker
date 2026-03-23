@@ -81,6 +81,7 @@ export class AlertsService {
         alert.type,
         alert.daysBefore,
         alert.unit,
+        alert.lastSentAt,
       );
       if (success) enqueued++;
       else skipped++;
@@ -107,9 +108,18 @@ export class AlertsService {
     type: AlertType,
     value: number,
     unit: string,
+    lastSentAt: Date | null,
   ): Promise<boolean> {
     const now = new Date();
     const thresholdDate = new Date(now.getTime() + this.toMilliseconds(value, unit));
+
+    // Skip if already sent for this billing cycle
+    if (
+      lastSentAt &&
+      lastSentAt >= new Date(sub.nextBillingDate.getTime() - this.toMilliseconds(value, unit))
+    ) {
+      return false;
+    }
 
     if (sub.nextBillingDate <= thresholdDate && sub.nextBillingDate >= now) {
       const jobId = `alert-${alertId}-sub-${sub.id}-${sub.nextBillingDate.getTime()}`;

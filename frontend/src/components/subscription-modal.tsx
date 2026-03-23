@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import api from '@/lib/api';
+import { generateId } from '@/lib/id';
 import { registerServiceWorker, subscribeToPush } from '@/lib/push';
 import { useAuth } from './auth-provider';
 import { CustomBillingModal } from './custom-billing-modal';
@@ -33,6 +34,7 @@ interface SubscriptionModalProps {
 }
 
 const billingCycles = [
+  { label: 'Weekly', value: 'weekly' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Yearly', value: 'yearly' },
   { label: 'Custom', value: 'custom' },
@@ -87,7 +89,7 @@ export function SubscriptionModal({
   useEffect(() => {
     if (subscription && open) {
       const loadedReminders: ReminderRow[] = (subscription.reminders ?? []).map((r) => ({
-        id: r.id ?? crypto.randomUUID(),
+        id: r.id ?? generateId(),
         type: r.type as 'email' | 'webpush',
         value: r.value,
         unit: r.unit as ReminderRow['unit'],
@@ -109,7 +111,7 @@ export function SubscriptionModal({
       });
     } else if (!subscription && open) {
       const defaultReminders: ReminderRow[] = (user?.defaultReminders ?? []).map((r) => ({
-        id: crypto.randomUUID(),
+        id: generateId(),
         type: r.type as 'email' | 'webpush',
         value: r.value,
         unit: r.unit as ReminderRow['unit'],
@@ -385,7 +387,7 @@ export function SubscriptionModal({
                   checked && formData.reminders.length === 0
                     ? [
                         {
-                          id: crypto.randomUUID(),
+                          id: generateId(),
                           type: 'webpush' as const,
                           value: 1,
                           unit: 'days' as const,

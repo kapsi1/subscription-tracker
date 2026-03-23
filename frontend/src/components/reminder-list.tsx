@@ -3,6 +3,7 @@
 import type { ReminderUnit } from '@subtracker/shared';
 import { Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { generateId } from '@/lib/id';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -33,7 +34,7 @@ export function ReminderList({
 
   const addReminder = () => {
     if (reminders.length >= maxReminders) return;
-    onChange([...reminders, { id: crypto.randomUUID(), type: 'webpush', value: 1, unit: 'days' }]);
+    onChange([...reminders, { id: generateId(), type: 'webpush', value: 1, unit: 'days' }]);
   };
 
   const removeReminder = (id: string) => {

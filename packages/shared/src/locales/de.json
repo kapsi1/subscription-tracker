@@ -294,6 +294,7 @@
         "reminderValueInvalid": "Der Erinnerungswert muss mindestens 1 sein"
       },
       "billingCycles": {
+        "weekly": "Wöchentlich",
         "monthly": "Monatlich",
         "yearly": "Jährlich",
         "custom": "Benutzerdefiniert..."

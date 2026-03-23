@@ -294,6 +294,7 @@
         "reminderValueInvalid": "Il valore del promemoria deve essere almeno 1"
       },
       "billingCycles": {
+        "weekly": "Settimanale",
         "monthly": "Mensile",
         "yearly": "Annuale",
         "custom": "Personalizzato..."

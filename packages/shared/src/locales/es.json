@@ -294,6 +294,7 @@
         "reminderValueInvalid": "El valor del recordatorio debe ser al menos 1"
       },
       "billingCycles": {
+        "weekly": "Semanal",
         "monthly": "Mensual",
         "yearly": "Anual",
         "custom": "Personalizado..."

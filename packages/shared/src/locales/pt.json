@@ -294,6 +294,7 @@
         "reminderValueInvalid": "O valor do lembrete deve ser pelo menos 1"
       },
       "billingCycles": {
+        "weekly": "Semanal",
         "monthly": "Mensal",
         "yearly": "Anual",
         "custom": "Personalizado..."

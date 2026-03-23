@@ -10,7 +10,9 @@ export function calculateNextBillingDate(
 ): Date {
   const nextDate = new Date(startDate);
 
-  if (billingCycle === BillingCycle.monthly) {
+  if (billingCycle === BillingCycle.weekly) {
+    nextDate.setDate(nextDate.getDate() + 7);
+  } else if (billingCycle === BillingCycle.monthly) {
     const currentMonth = nextDate.getMonth();
     nextDate.setMonth(currentMonth + 1);
 

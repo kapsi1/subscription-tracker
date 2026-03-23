@@ -294,6 +294,7 @@
         "reminderValueInvalid": "リマインダーの値は1以上でなければなりません"
       },
       "billingCycles": {
+        "weekly": "毎週",
         "monthly": "毎月",
         "yearly": "毎年",
         "custom": "カスタム..."

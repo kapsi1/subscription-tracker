@@ -149,6 +149,11 @@ export class AlertsProcessor extends WorkerHost {
       throw error; // Let BullMQ catch it and respect the retry backoff configurations
     }
 
+    await this.prisma.alert.update({
+      where: { id: alertId },
+      data: { lastSentAt: new Date() },
+    });
+
     this.logger.log({
       msg: 'Alert job completed',
       event: 'alert_job_completed',

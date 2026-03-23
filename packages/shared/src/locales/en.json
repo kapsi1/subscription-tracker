@@ -294,6 +294,7 @@
         "reminderValueInvalid": "Reminder value must be at least 1"
       },
       "billingCycles": {
+        "weekly": "Weekly",
         "monthly": "Monthly",
         "yearly": "Yearly",
         "custom": "Custom..."
