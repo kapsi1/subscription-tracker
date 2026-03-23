@@ -365,7 +365,7 @@
     - [x] Add a domain: done - subtracker.cc
 - [x] Add a footer with "Made by Kamil Kapsiak" and a link to report an issue.
 - [x] Review the frontend code for switches and make them look consistent - positioned to the left of their labels.
-- [ ] Reminders rework: 
+- [x] Reminders rework:
   - Make them work like in Google Calendar. When the Payment Reminders switch is set on, show 3 inline inputs: Notification/Email (notification means push notification, notification is set default), number (1 by default), unit (minutes, hours, days - days is default). At the end add a delete button. Add a plus button below to add more reminders - adds a new row. Limit to 5 reminders. Reminders are off by default. The same UI should be used in modals and in Settings page, for default reminders. Make sure UI is consistent with the rest of the app. If Payment Reminders switch is turned on in a modal, under the list of reminders show a message: "You can change default reminders in Settings".
   - Remove the "Browser Push Notifications" section from Settings. App should request permission for push notifications when first turning on reminders in Settings or in a modal.
   - Add unit and E2E tests.

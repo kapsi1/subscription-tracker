@@ -141,4 +141,58 @@ test.describe('Subscriptions Flow', () => {
     await expect(page.getByRole('cell', { name: 'Hulu', exact: true })).toBeVisible();
     await expect(page.getByRole('cell', { name: 'AWS', exact: true })).toBeVisible();
   });
+
+  test('should persist reminder rows after saving and reopening a subscription', async ({ page }) => {
+    // Register and login
+    const reminderEmail = `testuser-reminder-subs-${Date.now()}@example.com`;
+    await page.goto('/login');
+    await page.getByRole('button', { name: 'Switch to Register' }).click();
+    await page.getByLabel('Full Name').fill('Reminder Test User');
+    await page.getByLabel('Email').fill(reminderEmail);
+    await page.getByLabel('Password').fill(testPassword);
+    await page.getByRole('button', { name: 'Create Account' }).click();
+    await page.waitForURL('**/dashboard', { timeout: 30_000 });
+    await page.goto('/subscriptions');
+    await expect(page).toHaveURL(/\/manage\/subscriptions/);
+
+    // Open Add Subscription modal
+    await page.getByRole('button', { name: 'Add Subscription' }).first().click();
+    await page.getByLabel('Service Name').fill('ReminderTest');
+    await page.getByLabel('Amount').fill('9.99');
+    await page.getByRole('combobox', { name: /Category/i }).click();
+    await page.getByRole('option', { name: 'Entertainment' }).click();
+
+    // Enable reminders toggle
+    const reminderToggle = page.getByLabel('Payment Reminders');
+    await reminderToggle.click();
+    await expect(reminderToggle).toBeChecked();
+
+    // A default row should have appeared — set value to 5
+    const valueInput = page.getByRole('spinbutton');
+    await valueInput.fill('5');
+
+    // Change unit to hours
+    const unitCombobox = page.getByRole('combobox').last();
+    await unitCombobox.click();
+    await page.getByRole('option', { name: 'hours' }).click();
+
+    // Save subscription
+    await page.getByRole('button', { name: 'Add Subscription' }).click();
+    await expect(page.getByRole('dialog')).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'ReminderTest', exact: true })).toBeVisible();
+
+    // Reopen the subscription
+    await page.getByRole('row', { name: /ReminderTest/ }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+
+    // Verify reminder toggle is still on
+    await expect(dialog.getByLabel('Payment Reminders')).toBeChecked();
+
+    // Verify the reminder row persisted with value=5 and unit=hours
+    await expect(dialog.getByRole('spinbutton')).toHaveValue('5');
+    await expect(dialog.getByRole('combobox').last()).toHaveText('hours');
+
+    await cleanupUser(reminderEmail);
+  });
 });

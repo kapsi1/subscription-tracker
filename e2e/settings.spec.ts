@@ -97,4 +97,48 @@ test.describe('User Settings Persistence', () => {
     // Expect the opposite of default (default is true for email)
     await expect(emailToggle).not.toBeChecked();
   });
+
+  test('should persist default reminder settings across page reloads', async ({ page }) => {
+    const settingsResponse = page.waitForResponse(
+      (resp) => resp.url().includes('/users/me') && resp.request().method() === 'GET',
+    );
+    await page.goto('/settings/preferences');
+    await settingsResponse;
+    await expect(page.getByRole('heading', { name: 'Preferences', exact: true })).toBeVisible();
+
+    // Enable default reminders toggle (default is disabled for new users)
+    const reminderToggle = page.getByLabel('Default Payment Reminders');
+    await reminderToggle.click();
+    await expect(reminderToggle).toBeChecked();
+
+    // Click "Add reminder" to add a row
+    await page.getByRole('button', { name: 'Add reminder' }).click();
+
+    // Set value to 7
+    const valueInput = page.getByRole('spinbutton').first();
+    await valueInput.fill('7');
+
+    // Change unit from days to hours via the unit combobox (second combobox in the row)
+    const comboboxes = page.getByRole('combobox');
+    const unitCombobox = comboboxes.last();
+    await unitCombobox.click();
+    await page.getByRole('option', { name: 'hours' }).click();
+
+    // Wait for autosave
+    await page.waitForResponse(
+      (resp) => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH',
+    );
+    await page.waitForTimeout(1000);
+
+    // Reload and verify persistence
+    await page.reload();
+    await page.waitForResponse(
+      (resp) => resp.url().includes('/users/me') && resp.request().method() === 'GET',
+    );
+    await page.waitForTimeout(500); // allow key-based remount
+
+    await expect(reminderToggle).toBeChecked();
+    await expect(page.getByRole('spinbutton').first()).toHaveValue('7');
+    await expect(page.getByRole('combobox').last()).toHaveText('hours');
+  });
 });
