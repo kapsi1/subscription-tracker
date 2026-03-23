@@ -57,7 +57,8 @@
     "redirectingToLogin": "Redirection vers la page de connexion...",
     "redirectingToDashboard": "Redirection vers le tableau de bord...",
     "previous": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "close": "Fermer"
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -227,6 +228,7 @@
     "importErrorTitle": "Erreurs d'importation trouvées",
     "importErrorDesc": "Nous avons trouvé quelques problèmes dans votre fichier. Veuillez les corriger et réessayer.",
     "generalError": "Erreur générale",
+    "jsonSnippet": "Fragment JSON",
     "importPreview": {
       "title": "Aperçu des données à importer",
       "desc": "Vérifiez les éléments qui seront ajoutés à votre compte",

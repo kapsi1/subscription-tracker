@@ -87,9 +87,9 @@ export function ImportErrorModal({
               const snippet = getSnippet(group.type, group.index);
               const items = group.type !== 'general' ? importData?.[group.type] : null;
               const item = Array.isArray(items) ? (items[group.index] as Record<string, unknown> | undefined) : null;
-              const itemName = (item?.name as string | undefined) || 
+               const itemName = (item?.name as string | undefined) || 
                                (item?.subscriptionName as string | undefined) || 
-                               (group.type !== 'general' && `${group.type} #${group.index + 1}`);
+                               (group.type !== 'general' && `${t(`subscriptions.importPreview.${group.type}`)} #${group.index + 1}`);
 
               return (
                 <div key={key} className="rounded-lg border border-destructive/20 overflow-hidden bg-destructive/5 dark:bg-destructive/10">
@@ -99,7 +99,7 @@ export function ImportErrorModal({
                          t('subscriptions.generalError', { defaultValue: 'General Error' })
                        ) : (
                          <>
-                           <span className="capitalize">{group.type}</span>
+                           <span className="capitalize">{t(`subscriptions.importPreview.${group.type}`)}</span>
                            <ChevronRight className="w-3 h-3 text-muted-foreground" />
                            <span className="text-destructive font-mono text-[10px] bg-destructive/10 px-1 rounded">#{group.index}</span>
                            <span className="text-destructive truncate max-w-[200px]">{itemName}</span>
@@ -119,7 +119,7 @@ export function ImportErrorModal({
                     {snippet && (
                       <div className="relative group">
                         <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-mono bg-background/80 border text-muted-foreground uppercase opacity-0 group-hover:opacity-100 transition-opacity">
-                          JSON snippet
+                          {t('subscriptions.jsonSnippet', { defaultValue: 'JSON snippet' })}
                         </div>
                         <pre className="p-4 rounded-md bg-zinc-950 text-zinc-50 font-mono text-xs overflow-x-auto border shadow-inner">
                           {snippet}

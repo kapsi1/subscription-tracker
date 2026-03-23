@@ -72,6 +72,7 @@ export default function ManageSubscriptionsPage() {
   const [importPreviewData, setImportPreviewData] = useState<z.infer<
     typeof importDataSchema
   > | null>(null);
+  const [rawImportData, setRawImportData] = useState<Record<string, unknown> | null>(null);
   const [importErrors, setImportErrors] = useState<string[]>([]);
   const [errorModalOpen, setErrorModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -198,7 +199,7 @@ export default function ManageSubscriptionsPage() {
         const content = e.target?.result as string;
         const json = JSON.parse(content);
 
-        let importData: z.infer<typeof importDataSchema>;
+        let importData: Record<string, unknown>;
         if (Array.isArray(json)) {
           importData = { subscriptions: json };
         } else if (json.subscriptions || json.categories || json.payments) {
@@ -207,12 +208,19 @@ export default function ManageSubscriptionsPage() {
           importData = { subscriptions: [json] };
         }
 
+        setRawImportData(importData);
+
         const validData = importDataSchema.parse(importData);
         setImportPreviewData(validData);
         setPreviewModalOpen(true);
       } catch (err: unknown) {
         if (err instanceof z.ZodError) {
-          toast.error(`${t('subscriptions.importError')}: Invalid file format`);
+          const zodErrors = err.issues.map((issue) => {
+            const path = issue.path.join('.');
+            return `${path}: ${issue.message}`;
+          });
+          setImportErrors(zodErrors);
+          setErrorModalOpen(true);
         } else {
           toast.error(t('subscriptions.importError'));
         }
@@ -365,7 +373,7 @@ export default function ManageSubscriptionsPage() {
         open={errorModalOpen}
         onOpenChange={setErrorModalOpen}
         errors={importErrors}
-        importData={importPreviewData}
+        importData={rawImportData || importPreviewData}
       />
     </>
   );

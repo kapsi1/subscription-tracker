@@ -57,7 +57,8 @@
     "redirectingToLogin": "Redirecting to login...",
     "redirectingToDashboard": "Redirecting to dashboard...",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "close": "Close"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -227,6 +228,7 @@
     "importErrorTitle": "Import Errors Found",
     "importErrorDesc": "We found some issues in your file. Please fix them and try again.",
     "generalError": "General Error",
+    "jsonSnippet": "JSON Snippet",
     "importPreview": {
       "title": "Preview Import Data",
       "desc": "Review the items that will be added to your account",

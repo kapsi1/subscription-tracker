@@ -57,7 +57,8 @@
     "redirectingToLogin": "Weiterleitung zum Login...",
     "redirectingToDashboard": "Weiterleitung zum Dashboard...",
     "previous": "Vorherige",
-    "next": "Nächste"
+    "next": "Nächste",
+    "close": "Schließen"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -227,6 +228,7 @@
     "importErrorTitle": "Importfehler gefunden",
     "importErrorDesc": "Wir haben einige Probleme in Ihrer Datei gefunden. Bitte beheben Sie diese und versuchen Sie es erneut.",
     "generalError": "Allgemeiner Fehler",
+    "jsonSnippet": "JSON-Fragment",
     "importPreview": {
       "title": "Vorschau der Importdaten",
       "desc": "Überprüfen Sie die Elemente, die Ihrem Konto hinzugefügt werden",

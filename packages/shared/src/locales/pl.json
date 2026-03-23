@@ -57,7 +57,8 @@
     "backendTimeout": "Backend nie odpowiedział w ciągu 15 sekund. Spróbuj ponownie.",
     "tryAgain": "Spróbuj ponownie",
     "redirectingToLogin": "Przekierowywanie do logowania...",
-    "redirectingToDashboard": "Przekierowanie do panelu..."
+    "redirectingToDashboard": "Przekierowanie do panelu...",
+    "close": "Zamknij"
   },
   "nav": {
     "dashboard": "Panel główny",
@@ -237,6 +238,7 @@
     "importErrorTitle": "Znaleziono błędy importu",
     "importErrorDesc": "Znaleźliśmy problemy w Twoim pliku. Proszę je naprawić i spróbować ponownie.",
     "generalError": "Błąd ogólny",
+    "jsonSnippet": "Fragment JSON",
     "importPreview": {
       "title": "Podgląd importowanych danych",
       "desc": "Przejrzyj elementy, które zostaną dodane do Twojego konta",

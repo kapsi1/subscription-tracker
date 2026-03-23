@@ -57,7 +57,8 @@
     "redirectingToLogin": "正在跳转到登录页面...",
     "redirectingToDashboard": "正在跳转到仪表板...",
     "previous": "上一个",
-    "next": "下一个"
+    "next": "下一个",
+    "close": "关闭"
   },
   "nav": {
     "dashboard": "仪表板",
@@ -227,6 +228,7 @@
     "importErrorTitle": "发现导入错误",
     "importErrorDesc": "我们在您的文件中发现了一些问题。请修复它们并重试。",
     "generalError": "通用错误",
+    "jsonSnippet": "JSON 片段",
     "importPreview": {
       "title": "预览导入数据",
       "desc": "检查将添加到您账号的项目",

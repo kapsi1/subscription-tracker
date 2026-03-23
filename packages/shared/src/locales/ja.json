@@ -57,7 +57,8 @@
     "redirectingToLogin": "ログイン画面へ転送中...",
     "redirectingToDashboard": "ダッシュボードへ転送中...",
     "previous": "前へ",
-    "next": "次へ"
+    "next": "次へ",
+    "close": "閉じる"
   },
   "nav": {
     "dashboard": "ダッシュボード",
@@ -227,6 +228,7 @@
     "importErrorTitle": "インポートエラーが見つかりました",
     "importErrorDesc": "ファイル内にいくつかの問題が見つかりました。修正してからもう一度お試しください。",
     "generalError": "一般的なエラー",
+    "jsonSnippet": "JSON スニペット",
     "importPreview": {
       "title": "インポートデータのプレビュー",
       "desc": "アカウントに追加される項目を確認してください",
