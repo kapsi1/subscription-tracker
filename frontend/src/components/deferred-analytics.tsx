@@ -9,11 +9,7 @@ interface DeferredAnalyticsProps {
   delayMs?: number;
 }
 
-export function DeferredAnalytics({
-  gaId,
-  gtmId,
-  delayMs = 3000,
-}: DeferredAnalyticsProps) {
+export function DeferredAnalytics({ gaId, gtmId, delayMs = 3000 }: DeferredAnalyticsProps) {
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
@@ -23,7 +19,10 @@ export function DeferredAnalytics({
 
     type IdleWindow = Window &
       typeof globalThis & {
-        requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number;
+        requestIdleCallback?: (
+          callback: IdleRequestCallback,
+          options?: IdleRequestOptions,
+        ) => number;
         cancelIdleCallback?: (handle: number) => void;
       };
 

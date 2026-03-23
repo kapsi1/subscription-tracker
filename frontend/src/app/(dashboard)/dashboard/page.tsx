@@ -113,7 +113,9 @@ function DeferredSection({
     return () => observer.disconnect();
   }, [isVisible, rootMargin]);
 
-  return <div ref={ref}>{isVisible ? children : <DashboardSectionSkeleton minHeight={minHeight} />}</div>;
+  return (
+    <div ref={ref}>{isVisible ? children : <DashboardSectionSkeleton minHeight={minHeight} />}</div>
+  );
 }
 
 export default function DashboardPage() {

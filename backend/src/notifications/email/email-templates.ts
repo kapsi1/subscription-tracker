@@ -530,7 +530,17 @@ export function buildWeeklyReportEmailHtml(params: {
   appUrl: string;
   reportType?: 'previous' | 'next';
 }): { subject: string; html: string } {
-  const { language = 'en', accentColor, theme, name, email, stats, currency, appUrl, reportType = 'next' } = params;
+  const {
+    language = 'en',
+    accentColor,
+    theme,
+    name,
+    email,
+    stats,
+    currency,
+    appUrl,
+    reportType = 'next',
+  } = params;
   const locale = LOCALES[language as keyof typeof LOCALES] || LOCALES.en;
   const emails = locale.emails;
   const themeMode = resolveTheme(theme);

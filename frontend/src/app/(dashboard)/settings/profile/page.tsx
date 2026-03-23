@@ -259,7 +259,12 @@ function EmailNotificationsSearchWrapper() {
       onTestDailyDigest={async () => {}}
       onTestPreviousWeekReport={async () => {}}
       onTestNextWeekReport={async () => {}}
-      isLoading={{ email: isSendingTestEmail, daily: false, previousWeekly: false, nextWeekly: false }}
+      isLoading={{
+        email: isSendingTestEmail,
+        daily: false,
+        previousWeekly: false,
+        nextWeekly: false,
+      }}
     />
   );
 }

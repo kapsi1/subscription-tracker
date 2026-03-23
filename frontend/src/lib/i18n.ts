@@ -42,9 +42,7 @@ function detectPreferredLanguage(): SupportedLanguage {
 
   const storage = window.localStorage;
   const storedLanguage =
-    storage && typeof storage.getItem === 'function'
-      ? storage.getItem(LANGUAGE_STORAGE_KEY)
-      : null;
+    storage && typeof storage.getItem === 'function' ? storage.getItem(LANGUAGE_STORAGE_KEY) : null;
   if (storedLanguage) {
     return normalizeLanguage(storedLanguage);
   }
@@ -114,7 +112,9 @@ export async function initializeI18n(preferredLanguage?: string | null) {
   await ensureInitialized();
   await Promise.all([
     ensureLanguageResources(targetLanguage),
-    targetLanguage === DEFAULT_LANGUAGE ? Promise.resolve() : ensureLanguageResources(DEFAULT_LANGUAGE),
+    targetLanguage === DEFAULT_LANGUAGE
+      ? Promise.resolve()
+      : ensureLanguageResources(DEFAULT_LANGUAGE),
   ]);
 
   if (i18n.language !== targetLanguage) {
@@ -131,7 +131,9 @@ export async function changeI18nLanguage(language: string) {
   await ensureInitialized();
   await Promise.all([
     ensureLanguageResources(targetLanguage),
-    targetLanguage === DEFAULT_LANGUAGE ? Promise.resolve() : ensureLanguageResources(DEFAULT_LANGUAGE),
+    targetLanguage === DEFAULT_LANGUAGE
+      ? Promise.resolve()
+      : ensureLanguageResources(DEFAULT_LANGUAGE),
   ]);
 
   if (i18n.language !== targetLanguage) {
@@ -142,6 +144,7 @@ export async function changeI18nLanguage(language: string) {
   return targetLanguage;
 }
 
-export { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, normalizeLanguage };
+export { DEFAULT_LANGUAGE, normalizeLanguage, SUPPORTED_LANGUAGES };
+
 void ensureInitialized();
 export default i18n;

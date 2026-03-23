@@ -272,7 +272,10 @@ export class AlertsService {
   // Previous week report — sent every Monday at 8 AM
   @Cron('0 8 * * 1')
   async handlePreviousWeekReportCron() {
-    this.logger.log({ msg: 'Previous week report scheduler started', event: 'prev_week_report_start' });
+    this.logger.log({
+      msg: 'Previous week report scheduler started',
+      event: 'prev_week_report_start',
+    });
 
     const users = await this.prisma.user.findMany({
       where: { emailNotifications: true, previousWeekReport: true },
@@ -286,7 +289,11 @@ export class AlertsService {
         const summary = this.dashboardService.calculateCosts(subs);
         await this.emailService.sendWeeklyReport(
           user.email,
-          { totalActive: summary.activeSubscriptions, totalMonthly: summary.totalMonthlyCost, upcomingThisWeek: 0 },
+          {
+            totalActive: summary.activeSubscriptions,
+            totalMonthly: summary.totalMonthlyCost,
+            upcomingThisWeek: 0,
+          },
           user.currency,
           user.language,
           user.accentColor,
@@ -299,7 +306,11 @@ export class AlertsService {
       }
     }
 
-    this.logger.log({ msg: 'Previous week report scheduler completed', event: 'prev_week_report_complete', userCount: users.length });
+    this.logger.log({
+      msg: 'Previous week report scheduler completed',
+      event: 'prev_week_report_complete',
+      userCount: users.length,
+    });
   }
 
   // Next week report — sent every Sunday at 8 AM
@@ -330,7 +341,11 @@ export class AlertsService {
 
         await this.emailService.sendWeeklyReport(
           user.email,
-          { totalActive: summary.activeSubscriptions, totalMonthly: summary.totalMonthlyCost, upcomingThisWeek: upcomingNextWeek },
+          {
+            totalActive: summary.activeSubscriptions,
+            totalMonthly: summary.totalMonthlyCost,
+            upcomingThisWeek: upcomingNextWeek,
+          },
           user.currency,
           user.language,
           user.accentColor,
@@ -342,6 +357,10 @@ export class AlertsService {
       }
     }
 
-    this.logger.log({ msg: 'Next week report scheduler completed', event: 'next_week_report_complete', userCount: users.length });
+    this.logger.log({
+      msg: 'Next week report scheduler completed',
+      event: 'next_week_report_complete',
+      userCount: users.length,
+    });
   }
 }

@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthenticated, isLoading, logout, fetchUser } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { canInstall, install } = useInstallPrompt();
 
   useEffect(() => {

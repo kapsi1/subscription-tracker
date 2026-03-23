@@ -1,0 +1,26 @@
+
+> frontend@1.0.0 lint
+> biome check .
+
+src\app\(dashboard)\manage\subscriptions\_components\ImportErrorModal.tsx format ━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    155 155 │                       <ul className="list-disc list-inside space-y-1">
+    156 156 │                         {group.messages.map((msg) => (
+    157     │ - ························<li
+    158     │ - ··························key={`${key}-${msg}`}
+    159     │ - ··························className="text-sm·text-foreground/90"
+    160     │ - ························>
+        157 │ + ························<li·key={`${key}-${msg}`}·className="text-sm·text-foreground/90">
+    161 158 │                             {translateError(msg)}
+    162 159 │                           </li>
+  
+
+Checked 100 files in 148ms. No fixes applied.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
