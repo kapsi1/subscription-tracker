@@ -4,6 +4,7 @@ This document is designed to provide high-context, low-token overhead for AI age
 
 ## General instructions
 If there's documentation, update it after changes. For any new feature add unit and E2E tests. Add TODOs when user asks for something that's not in TODOs yet. If there's a TODO done, check it. If user asks to do a TODO, do only that TODO and nothing else.
+All temporary files should go into untracked /temp directory.
 
 ## 🏗️ Architecture Overview
 

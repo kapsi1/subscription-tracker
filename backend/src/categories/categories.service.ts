@@ -127,11 +127,13 @@ export class CategoriesService {
     const defaultCategories = getTranslatedDefaultCategories(targetLang);
 
     await this.prisma.category.createMany({
-      data: defaultCategories.map((c: { name: string; color: string; icon: string }, i: number) => ({
-        ...c,
-        userId,
-        order: i,
-      })),
+      data: defaultCategories.map(
+        (c: { name: string; color: string; icon: string }, i: number) => ({
+          ...c,
+          userId,
+          order: i,
+        }),
+      ),
       skipDuplicates: true,
     });
     return this.prisma.category.findMany({

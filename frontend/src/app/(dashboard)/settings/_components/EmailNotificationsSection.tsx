@@ -232,7 +232,12 @@ export function EmailNotificationsSection({
                     variant="outline"
                     size="sm"
                     onClick={onTestEmail}
-                    disabled={isLoading.email || isLoading.daily || isLoading.previousWeekly || isLoading.nextWeekly}
+                    disabled={
+                      isLoading.email ||
+                      isLoading.daily ||
+                      isLoading.previousWeekly ||
+                      isLoading.nextWeekly
+                    }
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />
@@ -244,7 +249,12 @@ export function EmailNotificationsSection({
                     variant="outline"
                     size="sm"
                     onClick={onTestDailyDigest}
-                    disabled={isLoading.email || isLoading.daily || isLoading.previousWeekly || isLoading.nextWeekly}
+                    disabled={
+                      isLoading.email ||
+                      isLoading.daily ||
+                      isLoading.previousWeekly ||
+                      isLoading.nextWeekly
+                    }
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />
@@ -256,7 +266,12 @@ export function EmailNotificationsSection({
                     variant="outline"
                     size="sm"
                     onClick={onTestPreviousWeekReport}
-                    disabled={isLoading.email || isLoading.daily || isLoading.previousWeekly || isLoading.nextWeekly}
+                    disabled={
+                      isLoading.email ||
+                      isLoading.daily ||
+                      isLoading.previousWeekly ||
+                      isLoading.nextWeekly
+                    }
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />
@@ -268,7 +283,12 @@ export function EmailNotificationsSection({
                     variant="outline"
                     size="sm"
                     onClick={onTestNextWeekReport}
-                    disabled={isLoading.email || isLoading.daily || isLoading.previousWeekly || isLoading.nextWeekly}
+                    disabled={
+                      isLoading.email ||
+                      isLoading.daily ||
+                      isLoading.previousWeekly ||
+                      isLoading.nextWeekly
+                    }
                     className="gap-1.5"
                   >
                     <SendHorizonal className="w-4 h-4" />

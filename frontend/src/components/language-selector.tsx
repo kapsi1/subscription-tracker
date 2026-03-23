@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/components/ui/utils';
 import api from '@/lib/api';
+import { changeI18nLanguage } from '@/lib/i18n';
 
 interface LanguageSelectorProps {
   className?: string;
@@ -55,7 +56,7 @@ export function LanguageSelector({ className, showLabel = false }: LanguageSelec
 
   const handleLanguageChange = async (lang: string) => {
     try {
-      await i18n.changeLanguage(lang);
+      await changeI18nLanguage(lang);
       // Only sync with backend if user is logged in
       if (isAuthenticated) {
         await api.patch('/users/settings', { language: lang });

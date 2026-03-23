@@ -1,8 +1,8 @@
-import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { cookies } from 'next/headers';
+import { DeferredAnalytics } from '@/components/deferred-analytics';
 import { Providers } from '@/components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -17,11 +17,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const cookieStore = await cookies();
   const token = cookieStore.get('accessToken')?.value;
 
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || '';
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID || '';
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers initialToken={token}>{children}</Providers>
-        <GoogleAnalytics gaId="G-XYZ" />
+        <DeferredAnalytics gaId={gaId} gtmId={gtmId} />
       </body>
     </html>
   );

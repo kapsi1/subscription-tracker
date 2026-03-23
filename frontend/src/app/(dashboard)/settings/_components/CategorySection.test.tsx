@@ -19,7 +19,10 @@ vi.mock('react-i18next', async () => {
   const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next');
   return {
     ...actual,
-    useTranslation: () => ({ t: (key: string) => key }),
+    useTranslation: () => ({
+      t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key,
+      i18n: { language: 'en' },
+    }),
   };
 });
 
@@ -146,7 +149,7 @@ describe('CategorySection', () => {
     });
 
     await waitFor(() => {
-      expect(mockApi.post).toHaveBeenCalledWith('/categories/reset');
+      expect(mockApi.post).toHaveBeenCalledWith('/categories/reset?lang=en');
     });
 
     vi.unstubAllGlobals();

@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthenticated, isLoading, logout, fetchUser } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { canInstall, install } = useInstallPrompt();
 
   useEffect(() => {
@@ -172,6 +172,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               alt="SubTracker"
               width={64}
               height={64}
+              fetchPriority="high"
+              sizes="64px"
               style={{ width: 64, height: 64 }}
               className="mx-auto"
               priority

@@ -136,7 +136,8 @@ function usePreferencesState() {
     emailNotifications: true,
     emailAddress: '',
     dailyDigest: false,
-    weeklyReport: true,
+    previousWeekReport: false,
+    nextWeekReport: false,
     monthlyBudget: null,
     pushEnabled: false,
     currency: 'USD',
@@ -157,7 +158,8 @@ function usePreferencesState() {
             : null,
           emailNotifications: response.data.emailNotifications,
           dailyDigest: response.data.dailyDigest,
-          weeklyReport: response.data.weeklyReport,
+          previousWeekReport: response.data.previousWeekReport,
+          nextWeekReport: response.data.nextWeekReport,
           pushEnabled: false,
           currency: response.data.currency || 'USD',
         };
@@ -168,7 +170,8 @@ function usePreferencesState() {
           monthlyBudget: loadedSettings.monthlyBudget,
           emailNotifications: loadedSettings.emailNotifications,
           dailyDigest: loadedSettings.dailyDigest,
-          weeklyReport: loadedSettings.weeklyReport,
+          previousWeekReport: loadedSettings.previousWeekReport,
+          nextWeekReport: loadedSettings.nextWeekReport,
           currency: loadedSettings.currency,
         });
         hasLoadedSettingsRef.current = true;
@@ -188,7 +191,8 @@ function usePreferencesState() {
       monthlyBudget: settings.monthlyBudget,
       emailNotifications: settings.emailNotifications,
       dailyDigest: settings.dailyDigest,
-      weeklyReport: settings.weeklyReport,
+      previousWeekReport: settings.previousWeekReport,
+      nextWeekReport: settings.nextWeekReport,
       currency: settings.currency,
     };
     const serializedPayload = JSON.stringify(payload);
@@ -245,15 +249,22 @@ function EmailNotificationsSearchWrapper() {
       emailNotifications={settings.emailNotifications}
       emailAddress={settings.emailAddress ?? ''}
       dailyDigest={settings.dailyDigest}
-      weeklyReport={settings.weeklyReport}
+      previousWeekReport={settings.previousWeekReport}
+      nextWeekReport={settings.nextWeekReport}
       onSettingsChange={handleSettingsChange}
       showTestControls={showTestControls}
       testEmailLanguage={testEmailLanguage}
       setTestEmailLanguage={setTestEmailLanguage}
       onTestEmail={handleTestEmail}
       onTestDailyDigest={async () => {}}
-      onTestWeeklyReport={async () => {}}
-      isLoading={{ email: isSendingTestEmail, daily: false, weekly: false }}
+      onTestPreviousWeekReport={async () => {}}
+      onTestNextWeekReport={async () => {}}
+      isLoading={{
+        email: isSendingTestEmail,
+        daily: false,
+        previousWeekly: false,
+        nextWeekly: false,
+      }}
     />
   );
 }
