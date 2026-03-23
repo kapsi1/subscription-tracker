@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { DEFAULT_CATEGORIES } from '@subtracker/shared';
+import { DEFAULT_CATEGORIES, getTranslatedDefaultCategories } from '@subtracker/shared';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ReorderCategoriesDto } from './dto/reorder-categories.dto';
@@ -109,14 +109,29 @@ export class CategoriesService {
     );
   }
 
-  async reset(userId: string) {
+  async reset(userId: string, lang?: string) {
     await this.prisma.category.deleteMany({ where: { userId } });
-    return this.createDefaults(userId);
+    return this.createDefaults(userId, lang);
   }
 
-  private async createDefaults(userId: string) {
+  private async createDefaults(userId: string, lang?: string) {
+    let targetLang = lang;
+    if (!targetLang) {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { language: true },
+      });
+      targetLang = user?.language || 'en';
+    }
+
+    const defaultCategories = getTranslatedDefaultCategories(targetLang);
+
     await this.prisma.category.createMany({
-      data: DEFAULT_CATEGORIES.map((c, i) => ({ ...c, userId, order: i })),
+      data: defaultCategories.map((c: { name: string; color: string; icon: string }, i: number) => ({
+        ...c,
+        userId,
+        order: i,
+      })),
       skipDuplicates: true,
     });
     return this.prisma.category.findMany({

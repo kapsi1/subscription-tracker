@@ -3,8 +3,8 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { CategoriesService } from './categories.service';
 
-jest.mock('@subtracker/shared', () => ({
-  DEFAULT_CATEGORIES: [
+jest.mock('@subtracker/shared', () => {
+  const DEFAULT_CATEGORIES = [
     { name: 'Entertainment', color: '#a855f7', icon: 'Play' },
     { name: 'Productivity', color: '#3b82f6', icon: 'CheckSquare' },
     { name: 'Cloud Services', color: '#06b6d4', icon: 'Cloud' },
@@ -16,8 +16,12 @@ jest.mock('@subtracker/shared', () => ({
     { name: 'Services', color: '#14b8a6', icon: 'Settings' },
     { name: 'Education', color: '#eab308', icon: 'Book' },
     { name: 'Other', color: '#64748b', icon: 'Tag' },
-  ],
-}));
+  ];
+  return {
+    DEFAULT_CATEGORIES,
+    getTranslatedDefaultCategories: jest.fn().mockReturnValue(DEFAULT_CATEGORIES),
+  };
+});
 
 // Mirror the mock for assertions
 const DEFAULT_CATEGORIES: Array<{ name: string; color: string; icon: string }> = [
@@ -39,6 +43,7 @@ describe('CategoriesService', () => {
   let prismaMock: {
     category: Record<string, jest.Mock>;
     subscription: Record<string, jest.Mock>;
+    user: Record<string, jest.Mock>;
   };
 
   const userId = 'user-1';
@@ -65,6 +70,9 @@ describe('CategoriesService', () => {
       },
       subscription: {
         updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+      },
+      user: {
+        findUnique: jest.fn().mockResolvedValue({ id: userId, language: 'en' }),
       },
     };
 
@@ -214,10 +222,16 @@ describe('CategoriesService', () => {
 
       expect(prismaMock.category.deleteMany).toHaveBeenCalledWith({ where: { userId } });
       expect(prismaMock.category.createMany).toHaveBeenCalledWith({
-        data: DEFAULT_CATEGORIES.map((c, i) => ({ ...c, userId, order: i })),
+        data: DEFAULT_CATEGORIES.map((c, i: number) => ({ ...c, userId, order: i })),
         skipDuplicates: true,
       });
       expect(result).toHaveLength(DEFAULT_CATEGORIES.length);
+    });
+
+    it('should use provided language in reset', async () => {
+      const { getTranslatedDefaultCategories } = require('@subtracker/shared');
+      await service.reset(userId, 'pl');
+      expect(getTranslatedDefaultCategories).toHaveBeenCalledWith('pl');
     });
   });
 });

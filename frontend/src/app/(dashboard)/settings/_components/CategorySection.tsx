@@ -38,7 +38,10 @@ interface CategoryRowProps {
 
 function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps) {
   const { t } = useTranslation();
-  const [name, setName] = useState(category.name);
+  const translatedName = t(`subscriptions.modal.categories.${category.name}`, {
+    defaultValue: category.name,
+  });
+  const [name, setName] = useState(translatedName);
   const [color, setColor] = useState(category.color);
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -55,9 +58,9 @@ function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps
   const colorSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setName(category.name);
+    setName(translatedName);
     setColor(category.color);
-  }, [category.name, category.color]);
+  }, [translatedName, category.color]);
 
   useEffect(() => {
     return () => {
@@ -75,9 +78,9 @@ function CategoryRow({ category, onSave, onDelete, autoFocus }: CategoryRowProps
   const handleNameBlur = () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      setName(category.name);
+      setName(translatedName);
       toast.error(t('settings.categories.noName'));
-    } else if (trimmed !== category.name) {
+    } else if (trimmed !== translatedName) {
       onSave(category.id, { name: trimmed });
     }
   };
@@ -165,7 +168,7 @@ interface CategorySectionProps {
 }
 
 export function CategorySection({ searchQuery = '' }: CategorySectionProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const [newCategoryId, setNewCategoryId] = useState<string | null>(null);
 
@@ -238,7 +241,7 @@ export function CategorySection({ searchQuery = '' }: CategorySectionProps) {
   });
 
   const resetMutation = useMutation({
-    mutationFn: () => api.post('/categories/reset'),
+    mutationFn: (lang?: string) => api.post(`/categories/reset${lang ? `?lang=${lang}` : ''}`),
     onSuccess: () => {
       setNewCategoryId(null);
       invalidateRelated();
@@ -295,14 +298,21 @@ export function CategorySection({ searchQuery = '' }: CategorySectionProps) {
 
   const handleReset = () => {
     if (confirm(t('settings.categories.resetConfirm'))) {
-      resetMutation.mutate();
+      resetMutation.mutate(i18n.language);
     }
   };
 
-  const filteredCategories = categories.filter(
-    (cat) =>
-      searchQuery.trim() === '' || cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredCategories = categories.filter((cat) => {
+    if (searchQuery.trim() === '') return true;
+    const lowerQuery = searchQuery.toLowerCase();
+    const translatedName = t(`subscriptions.modal.categories.${cat.name}`, {
+      defaultValue: cat.name,
+    });
+    return (
+      cat.name.toLowerCase().includes(lowerQuery) ||
+      translatedName.toLowerCase().includes(lowerQuery)
+    );
+  });
 
   return (
     <Card className="shadow-sm">

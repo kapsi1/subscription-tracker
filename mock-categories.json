@@ -1,0 +1,14 @@
+{
+  "categories": [
+    { "name": "Życie Cyfrowe & Usługi 🌐", "color": "#a855f7", "icon": "Play" },
+    { "name": "Praca & Twórczość Cyfrowa 🎨", "color": "#3b82f6", "icon": "Briefcase" },
+    { "name": "Zdrowie, Fitness & Wellness 🧘‍♂️", "color": "#f43f5e", "icon": "Heart" },
+    { "name": "Biuro Domowe & Sprzęt Zdalny 💻", "color": "#06b6d4", "icon": "Home" },
+    { "name": "Rozrywka & Konsumpcja Mediów 📺", "color": "#eab308", "icon": "Play" },
+    { "name": "Edukacja & Rozwój Osobisty 🎓", "color": "#22c55e", "icon": "GraduationCap" },
+    { "name": "Usługi Domowe & Media ⚡", "color": "#6366f1", "icon": "Zap" },
+    { "name": "Finanse & Zarządzanie Majątkiem 💰", "color": "#10b981", "icon": "Wallet" },
+    { "name": "Transport & Mobilność Miejska 🚗", "color": "#14b8a6", "icon": "Car" },
+    { "name": "Inne Wydatki Osobiste 📦 & Różności", "color": "#64748b", "icon": "MoreHorizontal" }
+  ]
+}

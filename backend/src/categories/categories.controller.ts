@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -34,8 +35,8 @@ export class CategoriesController {
   }
 
   @Post('reset')
-  reset(@Req() req: RequestWithUser) {
-    return this.categoriesService.reset(req.user.userId);
+  reset(@Req() req: RequestWithUser, @Query('lang') lang?: string) {
+    return this.categoriesService.reset(req.user.userId, lang);
   }
 
   @Post('reorder')

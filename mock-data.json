@@ -1,23 +1,11 @@
 {
-  "categories": [
-    { "name": "Życie Cyfrowe & Usługi 🌐", "color": "#a855f7", "icon": "Play" },
-    { "name": "Praca & Twórczość Cyfrowa 🎨", "color": "#3b82f6", "icon": "Briefcase" },
-    { "name": "Zdrowie, Fitness & Wellness 🧘‍♂️", "color": "#f43f5e", "icon": "Heart" },
-    { "name": "Biuro Domowe & Sprzęt Zdalny 💻", "color": "#06b6d4", "icon": "Home" },
-    { "name": "Rozrywka & Konsumpcja Mediów 📺", "color": "#eab308", "icon": "Play" },
-    { "name": "Edukacja & Rozwój Osobisty 🎓", "color": "#22c55e", "icon": "GraduationCap" },
-    { "name": "Usługi Domowe & Media ⚡", "color": "#6366f1", "icon": "Zap" },
-    { "name": "Finanse & Zarządzanie Majątkiem 💰", "color": "#10b981", "icon": "Wallet" },
-    { "name": "Transport & Mobilność Miejska 🚗", "color": "#14b8a6", "icon": "Car" },
-    { "name": "Inne Wydatki Osobiste 📦 & Różności", "color": "#64748b", "icon": "MoreHorizontal" }
-  ],
   "subscriptions": [
     {
       "name": "Netflix Subskrypcja Rodzinna 4K (Dla Żony & Dzieci) 👪",
       "amount": 19.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Rozrywka & Konsumpcja Mediów 📺",
+      "category": "Entertainment",
       "nextBillingDate": "2026-04-15T00:00:00.000Z",
       "payments": [
         { "amount": 19.99, "currency": "USD", "paidAt": "2026-03-15T12:00:00.000Z" },
@@ -31,7 +19,7 @@
       "amount": 15.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Rozrywka & Konsumpcja Mediów 📺",
+      "category": "Entertainment",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
         { "amount": 15.99, "currency": "USD", "paidAt": "2026-03-01T10:00:00.000Z" },
@@ -44,7 +32,7 @@
       "amount": 49.0,
       "currency": "PLN",
       "billingCycle": "yearly",
-      "category": "Życie Cyfrowe & Usługi 🌐",
+      "category": "Cloud Services",
       "nextBillingDate": "2026-11-12T00:00:00.000Z",
       "payments": [
         { "amount": 49.0, "currency": "PLN", "paidAt": "2025-11-12T10:00:00.000Z" },
@@ -56,7 +44,7 @@
       "amount": 14.99,
       "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Życie Cyfrowe & Usługi 🌐",
+      "category": "Cloud Services",
       "nextBillingDate": "2026-04-05T00:00:00.000Z",
       "payments": [
         { "amount": 14.99, "currency": "PLN", "paidAt": "2026-03-05T09:00:00.000Z" },
@@ -68,7 +56,7 @@
       "amount": 13.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Rozrywka & Konsumpcja Mediów 📺",
+      "category": "Entertainment",
       "nextBillingDate": "2026-03-28T00:00:00.000Z",
       "payments": [
         { "amount": 13.99, "currency": "USD", "paidAt": "2026-02-28T11:00:00.000Z" },
@@ -80,7 +68,7 @@
       "amount": 10.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "category": "Professional",
       "nextBillingDate": "2026-04-20T00:00:00.000Z",
       "payments": [
         { "amount": 10.0, "currency": "USD", "paidAt": "2026-03-20T14:00:00.000Z" },
@@ -93,7 +81,7 @@
       "amount": 20.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Życie Cyfrowe & Usługi 🌐",
+      "category": "Cloud Services",
       "nextBillingDate": "2026-04-02T00:00:00.000Z",
       "payments": [
         { "amount": 20.0, "currency": "USD", "paidAt": "2026-03-02T10:00:00.000Z" },
@@ -105,7 +93,7 @@
       "amount": 9.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Życie Cyfrowe & Usługi 🌐",
+      "category": "Cloud Services",
       "nextBillingDate": "2026-04-10T00:00:00.000Z",
       "payments": [
         { "amount": 9.99, "currency": "USD", "paidAt": "2026-03-10T09:00:00.000Z" },
@@ -117,7 +105,7 @@
       "amount": 1.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Życie Cyfrowe & Usługi 🌐",
+      "category": "Cloud Services",
       "nextBillingDate": "2026-03-25T00:00:00.000Z",
       "payments": [
         { "amount": 1.99, "currency": "USD", "paidAt": "2026-02-25T08:00:00.000Z" },
@@ -129,7 +117,7 @@
       "amount": 54.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "category": "Professional",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
         { "amount": 54.99, "currency": "USD", "paidAt": "2026-03-01T15:00:00.000Z" },
@@ -141,7 +129,7 @@
       "amount": 69.99,
       "currency": "USD",
       "billingCycle": "yearly",
-      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "category": "Professional",
       "nextBillingDate": "2027-01-15T00:00:00.000Z",
       "payments": [
         { "amount": 69.99, "currency": "USD", "paidAt": "2026-01-15T11:00:00.000Z" }
@@ -152,7 +140,7 @@
       "amount": 6.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Życie Cyfrowe & Usługi 🌐",
+      "category": "Cloud Services",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
         { "amount": 6.0, "currency": "USD", "paidAt": "2026-03-01T10:00:00.000Z" },
@@ -164,7 +152,7 @@
       "amount": 8.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "category": "Professional",
       "nextBillingDate": "2026-04-12T00:00:00.000Z",
       "payments": [
         { "amount": 8.99, "currency": "USD", "paidAt": "2026-03-12T09:00:00.000Z" }
@@ -175,7 +163,7 @@
       "amount": 10.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "category": "Professional",
       "nextBillingDate": "2026-04-18T00:00:00.000Z",
       "payments": [
         { "amount": 10.0, "currency": "USD", "paidAt": "2026-03-18T14:00:00.000Z" }
@@ -186,7 +174,7 @@
       "amount": 8.75,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "category": "Professional",
       "nextBillingDate": "2026-04-05T00:00:00.000Z",
       "payments": [
         { "amount": 8.75, "currency": "USD", "paidAt": "2026-03-05T13:00:00.000Z" }
@@ -197,7 +185,7 @@
       "amount": 149.9,
       "currency": "USD",
       "billingCycle": "yearly",
-      "category": "Praca & Twórczość Cyfrowa 🎨",
+      "category": "Professional",
       "nextBillingDate": "2026-08-20T00:00:00.000Z",
       "payments": [
         { "amount": 149.9, "currency": "USD", "paidAt": "2025-08-20T09:00:00.000Z" }
@@ -208,7 +196,7 @@
       "amount": 12.99,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "category": "Health",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
         { "amount": 12.99, "currency": "USD", "paidAt": "2026-03-01T07:00:00.000Z" }
@@ -219,7 +207,7 @@
       "amount": 69.99,
       "currency": "USD",
       "billingCycle": "yearly",
-      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "category": "Health",
       "nextBillingDate": "2026-12-05T00:00:00.000Z",
       "payments": [
         { "amount": 69.99, "currency": "USD", "paidAt": "2025-12-05T08:00:00.000Z" }
@@ -230,7 +218,7 @@
       "amount": 199.0,
       "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "category": "Health",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
         { "amount": 199.0, "currency": "PLN", "paidAt": "2026-03-01T10:00:00.000Z" },
@@ -244,7 +232,7 @@
       "billingCycle": "custom",
       "intervalDays": 7,
       "billingDays": [27, 7],
-      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "category": "Health",
       "nextBillingDate": "2026-03-27T00:00:00.000Z",
       "payments": [
         { "amount": 89.99, "currency": "USD", "paidAt": "2026-03-20T12:00:00.000Z" },
@@ -257,7 +245,7 @@
       "amount": 9.99,
       "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Zdrowie, Fitness & Wellness 🧘‍♂️",
+      "category": "Health",
       "nextBillingDate": "2026-04-10T00:00:00.000Z",
       "payments": [
         { "amount": 9.99, "currency": "PLN", "paidAt": "2026-03-10T11:00:00.000Z" }
@@ -268,7 +256,7 @@
       "amount": 5.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Edukacja & Rozwój Osobisty 🎓",
+      "category": "Education",
       "nextBillingDate": "2026-03-30T00:00:00.000Z",
       "payments": [
         { "amount": 5.0, "currency": "USD", "paidAt": "2026-02-28T09:00:00.000Z" }
@@ -279,7 +267,7 @@
       "amount": 180.0,
       "currency": "USD",
       "billingCycle": "yearly",
-      "category": "Edukacja & Rozwój Osobisty 🎓",
+      "category": "Education",
       "nextBillingDate": "2027-02-10T00:00:00.000Z",
       "payments": [
         { "amount": 180.0, "currency": "USD", "paidAt": "2026-02-10T10:00:00.000Z" }
@@ -290,7 +278,7 @@
       "amount": 59.99,
       "currency": "USD",
       "billingCycle": "yearly",
-      "category": "Edukacja & Rozwój Osobisty 🎓",
+      "category": "Education",
       "nextBillingDate": "2026-10-15T00:00:00.000Z",
       "payments": [
         { "amount": 59.99, "currency": "USD", "paidAt": "2025-10-15T09:00:00.000Z" }
@@ -301,7 +289,7 @@
       "amount": 399.0,
       "currency": "USD",
       "billingCycle": "yearly",
-      "category": "Edukacja & Rozwój Osobisty 🎓",
+      "category": "Education",
       "nextBillingDate": "2027-01-01T00:00:00.000Z",
       "payments": [
         { "amount": 399.0, "currency": "USD", "paidAt": "2026-01-01T10:00:00.000Z" }
@@ -312,7 +300,7 @@
       "amount": 250.0,
       "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Usługi Domowe & Media ⚡",
+      "category": "Utilities",
       "nextBillingDate": "2026-04-10T00:00:00.000Z",
       "payments": [
         { "amount": 232.5, "currency": "PLN", "paidAt": "2026-03-10T12:00:00.000Z" },
@@ -324,7 +312,7 @@
       "amount": 45.0,
       "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Usługi Domowe & Media ⚡",
+      "category": "Utilities",
       "nextBillingDate": "2026-04-15T00:00:00.000Z",
       "payments": [
         { "amount": 45.0, "currency": "PLN", "paidAt": "2026-03-15T09:00:00.000Z" }
@@ -335,7 +323,7 @@
       "amount": 3200.0,
       "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Biuro Domowe & Sprzęt Zdalny 💻",
+      "category": "Housing",
       "nextBillingDate": "2026-04-01T00:00:00.000Z",
       "payments": [
         { "amount": 3200.0, "currency": "PLN", "paidAt": "2026-03-01T08:00:00.000Z" },
@@ -347,7 +335,7 @@
       "amount": 150.0,
       "currency": "USD",
       "billingCycle": "monthly",
-      "category": "Finanse & Zarządzanie Majątkiem 💰",
+      "category": "Services",
       "nextBillingDate": "2026-04-05T00:00:00.000Z",
       "payments": [
         { "amount": 150.0, "currency": "USD", "paidAt": "2026-03-05T09:00:00.000Z" }
@@ -358,7 +346,7 @@
       "amount": 89.99,
       "currency": "PLN",
       "billingCycle": "monthly",
-      "category": "Usługi Domowe & Media ⚡",
+      "category": "Utilities",
       "nextBillingDate": "2026-04-20T00:00:00.000Z",
       "payments": [
         { "amount": 89.99, "currency": "PLN", "paidAt": "2026-03-20T10:00:00.000Z" }

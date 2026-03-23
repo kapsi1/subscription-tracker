@@ -103,6 +103,17 @@ export const DEFAULT_CATEGORIES: Array<{ name: string; color: string; icon: stri
   { name: 'Other', color: '#64748b', icon: 'MoreHorizontal' },
 ];
 
+export const getTranslatedDefaultCategories = (lang: string) => {
+  // biome-ignore lint/suspicious/noExplicitAny: locales are structured but may have minor differences between languages
+  const locale = (LOCALES as Record<string, any>)[lang] || LOCALES.en;
+  const translations = (locale.subscriptions?.modal?.categories || {}) as Record<string, string>;
+
+  return DEFAULT_CATEGORIES.map((cat) => ({
+    ...cat,
+    name: translations[cat.name] || cat.name,
+  }));
+};
+
 export const CATEGORY_ICONS = [
   'Play',
   'CheckSquare',

@@ -139,7 +139,7 @@ export function PaymentDetailsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[420px]" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <DialogContent className="sm:max-w-[420px]">
         <DialogHeader>
           <DialogTitle>
             {isCreateMode
