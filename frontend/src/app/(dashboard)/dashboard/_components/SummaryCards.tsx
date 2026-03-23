@@ -30,8 +30,8 @@ function SummaryCard({
   iconBgClass: string;
 }) {
   return (
-    <Card className="min-w-0 shadow-sm animate-card-in bg-card hover:bg-accent/50">
-      <CardHeader className="flex h-20 flex-col justify-center px-4 pb-1 text-center sm:px-6 md:h-22 lg:h-24">
+    <Card className="min-w-0 animate-card-in bg-card transition-all hover:bg-accent/50 @container">
+      <CardHeader className="flex flex-col items-center justify-center px-4 pt-4 pb-0 text-center sm:px-6 sm:pt-6">
         <div className="min-w-0 flex items-center justify-center">
           <div
             className={cn(
@@ -46,8 +46,8 @@ function SummaryCard({
           </CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="px-4 pb-4 sm:px-6 md:pb-5 lg:pb-6">
-        <div className="overflow-hidden text-center text-[2.2rem] font-semibold leading-none text-balance wrap-break-word sm:text-[2.65rem] md:text-[3rem] lg:text-[2.4rem]">
+      <CardContent className="px-4 pb-4 sm:px-6 md:pb-5 lg:pb-6 pt-0">
+        <div className="overflow-hidden text-center text-[clamp(1.5rem,14cqw,2.2rem)] font-semibold leading-none whitespace-nowrap sm:text-[clamp(1.5rem,14cqw,2.65rem)] md:text-[clamp(1.5rem,14cqw,3rem)] lg:text-[clamp(1rem,12cqw,2.4rem)]">
           {value}
         </div>
       </CardContent>
@@ -63,7 +63,7 @@ export function SummaryCards({
   const { t } = useTranslation();
 
   return (
-    <div className="grid min-w-0 grid-cols-1 gap-6 overflow-hidden sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       <SummaryCard
         title={t('dashboard.totalMonthlyCost')}
         icon={<DollarSign className="w-4 h-4 text-[#3b82f6]" />}

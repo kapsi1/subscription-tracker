@@ -122,7 +122,7 @@ export function MonthlyPaymentsCalendar({
 
       <CardContent className="space-y-4 px-4 sm:px-6">
         <div className="mx-auto w-full space-y-2 sm:w-fit">
-          <div className="grid grid-cols-7 justify-items-stretch gap-1.5 py-1 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:gap-2 sm:text-xs">
+          <div className="grid grid-cols-7 justify-items-stretch gap-1.5 py-1 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/60 sm:gap-2 sm:text-xs">
             {weekdayLabels.map((label) => (
               <div key={label} className="w-full py-1 sm:w-[60px]">
                 {label}
@@ -157,11 +157,12 @@ export function MonthlyPaymentsCalendar({
                     onClick={() => onSelectDay(day.date, day.payments)}
                     className={cn(
                       'relative h-auto w-full aspect-square p-0 text-base sm:h-[60px] sm:w-[60px] sm:text-lg',
-                      'hover:-translate-y-0.5',
-                      day.isToday && 'border-primary/35 bg-primary/6',
+                      'hover:-translate-y-0.5 transition-all duration-200',
+                      'border-foreground/15 bg-card shadow-xs',
+                      day.isToday && 'border-primary/50 bg-primary/10 ring-1 ring-primary/20',
                     )}
                   >
-                    <span className="font-semibold text-foreground">{day.dayNumber}</span>
+                    <span className="font-bold text-foreground">{day.dayNumber}</span>
 
                     {day.payments.length > 0 ? (
                       <Badge className="absolute -top-2 -right-2 min-w-6 h-6 justify-center rounded-full bg-red-500 px-1 text-[13px] font-bold text-white hover:bg-red-500">
