@@ -16,6 +16,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import api from '@/lib/api';
 import { SubscriptionsTable } from '../_components/SubscriptionsTable';
+import { ImportErrorModal } from './_components/ImportErrorModal';
 import { ImportPreviewModal } from './_components/ImportPreviewModal';
 
 const paymentSchema = z.object({
@@ -68,6 +69,8 @@ export default function ManageSubscriptionsPage() {
   const [importPreviewData, setImportPreviewData] = useState<z.infer<
     typeof importDataSchema
   > | null>(null);
+  const [importErrors, setImportErrors] = useState<string[]>([]);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: subscriptions = [], isLoading: isFetchLoading } = useQuery<Subscription[]>({
@@ -237,8 +240,19 @@ export default function ManageSubscriptionsPage() {
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       setPreviewModalOpen(false);
-    } catch (_err: unknown) {
-      toast.error(t('subscriptions.importError'));
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string | string[] } } };
+      const backendMessage = error.response?.data?.message;
+
+      if (Array.isArray(backendMessage)) {
+        setImportErrors(backendMessage);
+        setErrorModalOpen(true);
+      } else if (typeof backendMessage === 'string') {
+        setImportErrors([backendMessage]);
+        setErrorModalOpen(true);
+      } else {
+        toast.error(t('subscriptions.importError'));
+      }
       sendGAEvent({ event: 'import_subscriptions', value: 'failed' });
     } finally {
       setIsImportLoading(false);
@@ -342,6 +356,13 @@ export default function ManageSubscriptionsPage() {
         data={importPreviewData}
         onConfirm={confirmImport}
         isLoading={isImportLoading}
+      />
+
+      <ImportErrorModal
+        open={errorModalOpen}
+        onOpenChange={setErrorModalOpen}
+        errors={importErrors}
+        importData={importPreviewData}
       />
     </>
   );

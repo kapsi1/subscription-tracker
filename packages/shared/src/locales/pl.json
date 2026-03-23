@@ -234,6 +234,9 @@
     "exportError": "Nie udało się wyeksportować subskrypcji",
     "importSuccess": "Pomyślnie zaimportowano subskrypcje",
     "importError": "Nie udało się przetworzyć lub zaimportować pliku JSON",
+    "importErrorTitle": "Znaleziono błędy importu",
+    "importErrorDesc": "Znaleźliśmy problemy w Twoim pliku. Proszę je naprawić i spróbować ponownie.",
+    "generalError": "Błąd ogólny",
     "importPreview": {
       "title": "Podgląd importowanych danych",
       "desc": "Przejrzyj elementy, które zostaną dodane do Twojego konta",

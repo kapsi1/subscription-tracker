@@ -224,6 +224,9 @@
     "exportError": "Failed to export subscriptions",
     "importSuccess": "Successfully imported subscriptions",
     "importError": "Failed to parse or import JSON file",
+    "importErrorTitle": "Import Errors Found",
+    "importErrorDesc": "We found some issues in your file. Please fix them and try again.",
+    "generalError": "General Error",
     "importPreview": {
       "title": "Preview Import Data",
       "desc": "Review the items that will be added to your account",
