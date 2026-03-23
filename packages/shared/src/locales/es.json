@@ -508,5 +508,9 @@
       "button": "Restablecer contraseña",
       "footer": "Si no has solicitado restablecer tu contraseña, puedes ignorar este correo de forma segura. Tu contraseña no cambiará."
     }
+  },
+  "footer": {
+    "madeBy": "Creado por Kamil Kapsiak.",
+    "reportIssue": "Haz clic aquí para reportar un problema."
   }
 }

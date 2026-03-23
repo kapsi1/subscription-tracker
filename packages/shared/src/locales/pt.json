@@ -508,5 +508,9 @@
       "button": "Redefinir Senha",
       "footer": "Se não pediu, ignore este e-mail. A sua senha não será alterada."
     }
+  },
+  "footer": {
+    "madeBy": "Criado por Kamil Kapsiak.",
+    "reportIssue": "Clique aqui para reportar um problema."
   }
 }

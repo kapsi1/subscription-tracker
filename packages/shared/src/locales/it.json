@@ -508,5 +508,9 @@
       "button": "Reimposta Password",
       "footer": "Se non hai richiesto la reimpostazione della password, puoi ignorare questa email. La tua password non verrà modificata."
     }
+  },
+  "footer": {
+    "madeBy": "Creato da Kamil Kapsiak.",
+    "reportIssue": "Clicca qui per segnalare un problema."
   }
 }

@@ -508,5 +508,9 @@
       "button": "Passwort zurücksetzen",
       "footer": "Wenn Sie kein Zurücksetzen des Passworts angefordert haben, können Sie diese E-Mail ignorieren. Ihr Passwort wird nicht geändert."
     }
+  },
+  "footer": {
+    "madeBy": "Erstellt von Kamil Kapsiak.",
+    "reportIssue": "Klicken Sie hier, um ein Problem zu melden."
   }
 }

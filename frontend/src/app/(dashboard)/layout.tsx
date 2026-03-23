@@ -117,7 +117,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   const title = 'SubTracker';
-  const _currentLanguage = i18n.language || 'en';
 
   // 1. Initial health check failed
   if (backendInitStatus === 'timeout') {
@@ -302,6 +301,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           children
         )}
       </main>
+
+      <footer className="border-t py-4 text-center text-xs text-muted-foreground">
+        {t('footer.madeBy')}{' '}
+        <a
+          href="https://github.com/kapsi1/subscription-tracker/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-foreground transition-colors underline"
+        >
+          {t('footer.reportIssue')}
+        </a>
+      </footer>
     </div>
   );
 }

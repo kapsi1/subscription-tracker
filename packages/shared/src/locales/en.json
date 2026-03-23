@@ -508,5 +508,9 @@
       "button": "Reset Password",
       "footer": "If you didn't request a password reset, you can safely ignore this email. Your password will not be changed."
     }
+  },
+  "footer": {
+    "madeBy": "Made by Kamil Kapsiak.",
+    "reportIssue": "Click here to report an issue."
   }
 }

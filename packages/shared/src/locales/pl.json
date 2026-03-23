@@ -518,5 +518,9 @@
       "button": "Zresetuj hasło",
       "footer": "Jeśli nie prosiłeś o zresetowanie hasła, możesz bezpiecznie zignorować tę wiadomość. Twoje hasło nie zostanie zmienione."
     }
+  },
+  "footer": {
+    "madeBy": "Stworzone przez Kamila Kapsiaka.",
+    "reportIssue": "Kliknij tutaj, aby zgłosić problem."
   }
 }
