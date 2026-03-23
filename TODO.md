@@ -348,8 +348,8 @@
 - [x] Edit subscription modal can be cut off if screen height is small. Add a scrollbar to the modal.
 - [x] Find instances of Primary (Save/Add Subscription etc) and Cancel button pairs and make them consistent - primary on the right, cancel on the left. Make styles and distance between them be consistent too. Add missing Cancel buttons.
 - [x] In Dashboard, under This Month's Payments, add a new section: a calendar showing days (as buttons) of currently selected month. Days with payments in them should have a dot with the payment count, in the style of "unread notifications" dots in other applications (red dot). On hover for the day show a tooltip with list of payments for that day. Make the calendar look consistent with the rest of the app. On click for the day show a modal with a table of payments for that day, looking and acting like the Payment History table in Subscription Details modal.
-- [ ] Push notifications not working on Opera
-- [ ] Push notifications not working when Chrome is not running
+- [ ] Push notifications not working on Opera (desktop)
+- [ ] Push notifications not working when Chrome (desktop) is not running
 - [x] Default reminders
 - [x] Budget threshold alerts
 - [x] Add more translations for major languages: German, Spanish, French, Italian, Portuguese, Russian, Chinese, Japanese, Korean
