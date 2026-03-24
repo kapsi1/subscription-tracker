@@ -376,3 +376,6 @@
 - [x] Remove email field from Enable Email Reports, since it's not used.
 - [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
 - [x] Remove minutes/hours options for reminders, and remove the dropdown, days should be hardcoded.
+- [ ] Clicking Save in Custom Billing Days shows a warning in console: Tooltip is changing from controlled to uncontrolled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+- [ ] Setting a custom billing cycle should automatically update Next Billing Date, and disable that field from being edited, until Billing Cycle is set to weekly/monthly/yearly.
+- [ ] This Month's Payments and Payment Calendar in Dashboard use only Next Billing Date for subscription and ignore custom billing cycles. Fix this.
