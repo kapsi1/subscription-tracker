@@ -261,8 +261,6 @@
       "remindersDesc": "支払期日前に通知を受け取る",
       "reminderTypeNotification": "通知",
       "reminderTypeEmail": "メール",
-      "reminderUnitMinutes": "分",
-      "reminderUnitHours": "時間",
       "reminderUnitDays": "日",
       "addReminder": "リマインダーを追加",
       "reminderSettingsHint": "デフォルトのリマインダーは設定で変更できます",

@@ -261,8 +261,6 @@
       "remindersDesc": "Ricevi notifiche prima della scadenza del pagamento",
       "reminderTypeNotification": "Notifica",
       "reminderTypeEmail": "Email",
-      "reminderUnitMinutes": "minuti",
-      "reminderUnitHours": "ore",
       "reminderUnitDays": "giorni",
       "addReminder": "Aggiungi promemoria",
       "reminderSettingsHint": "Puoi modificare i promemoria predefiniti nelle Impostazioni",

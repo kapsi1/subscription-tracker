@@ -261,8 +261,6 @@
       "remindersDesc": "결제일 전에 알림을 받습니다",
       "reminderTypeNotification": "알림",
       "reminderTypeEmail": "이메일",
-      "reminderUnitMinutes": "분",
-      "reminderUnitHours": "시간",
       "reminderUnitDays": "일",
       "addReminder": "알림 추가",
       "reminderSettingsHint": "설정에서 기본 알림을 변경할 수 있습니다",

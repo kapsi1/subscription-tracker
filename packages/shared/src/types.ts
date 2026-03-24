@@ -1,4 +1,4 @@
-export type ReminderUnit = 'minutes' | 'hours' | 'days';
+export type ReminderUnit = 'days';
 
 export interface Reminder {
   id?: string;

@@ -271,8 +271,6 @@
       "remindersDesc": "Получать уведомления до наступления даты оплаты",
       "reminderTypeNotification": "Уведомление",
       "reminderTypeEmail": "Эл. почта",
-      "reminderUnitMinutes": "минуты",
-      "reminderUnitHours": "часы",
       "reminderUnitDays": "дни",
       "addReminder": "Добавить напоминание",
       "reminderSettingsHint": "Вы можете изменить стандартные напоминания в Настройках",

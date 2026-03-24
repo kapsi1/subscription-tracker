@@ -261,8 +261,6 @@
       "remindersDesc": "在到期前接收通知",
       "reminderTypeNotification": "通知",
       "reminderTypeEmail": "电子邮件",
-      "reminderUnitMinutes": "分钟",
-      "reminderUnitHours": "小时",
       "reminderUnitDays": "天",
       "addReminder": "添加提醒",
       "reminderSettingsHint": "您可以在设置中更改默认提醒",

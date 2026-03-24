@@ -261,8 +261,6 @@
       "remindersDesc": "Recibe notificaciones antes de que el pago venza",
       "reminderTypeNotification": "Notificación",
       "reminderTypeEmail": "Correo electrónico",
-      "reminderUnitMinutes": "minutos",
-      "reminderUnitHours": "horas",
       "reminderUnitDays": "días",
       "addReminder": "Añadir recordatorio",
       "reminderSettingsHint": "Puedes cambiar los recordatorios predeterminados en Ajustes",

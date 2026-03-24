@@ -85,21 +85,9 @@ export function ReminderList({
             onChange={(e) => updateReminder(reminder.id, 'value', e.target.value)}
           />
 
-          <Select
-            value={reminder.unit}
-            onValueChange={(v) => updateReminder(reminder.id, 'unit', v)}
-          >
-            <SelectTrigger className="w-28">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="minutes">
-                {t('subscriptions.modal.reminderUnitMinutes')}
-              </SelectItem>
-              <SelectItem value="hours">{t('subscriptions.modal.reminderUnitHours')}</SelectItem>
-              <SelectItem value="days">{t('subscriptions.modal.reminderUnitDays')}</SelectItem>
-            </SelectContent>
-          </Select>
+          <span className="text-sm text-muted-foreground min-w-12">
+            {t('subscriptions.modal.reminderUnitDays')}
+          </span>
 
           <Button
             type="button"

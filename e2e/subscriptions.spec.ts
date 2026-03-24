@@ -163,19 +163,15 @@ test.describe('Subscriptions Flow', () => {
     await page.getByRole('combobox', { name: /Category/i }).click();
     await page.getByRole('option', { name: 'Entertainment' }).click();
 
-    // Enable reminders toggle
-    const reminderToggle = page.getByLabel('Payment Reminders');
-    await reminderToggle.click();
-    await expect(reminderToggle).toBeChecked();
+    // Click "Add reminder" to add a row (no toggle anymore)
+    await page.getByRole('button', { name: 'Add reminder' }).click();
 
-    // A default row should have appeared — set value to 5
+    // Set value to 5
     const valueInput = page.getByRole('spinbutton').last();
     await valueInput.fill('5');
 
-    // Change unit to hours
-    const unitCombobox = page.getByRole('combobox').last();
-    await unitCombobox.click();
-    await page.getByRole('option', { name: 'hours' }).click();
+    // Unit is now hardcoded to days
+    await expect(page.getByText(/^days$/)).toBeVisible();
 
     // Save subscription
     await page.getByRole('button', { name: 'Add Subscription' }).click();
@@ -187,12 +183,9 @@ test.describe('Subscriptions Flow', () => {
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
 
-    // Verify reminder toggle is still on
-    await expect(dialog.getByLabel('Payment Reminders')).toBeChecked();
-
-    // Verify the reminder row persisted with value=5 and unit=hours
+    // Verify the reminder row persisted with value=5 and unit=days
     await expect(dialog.getByRole('spinbutton').last()).toHaveValue('5');
-    await expect(dialog.getByRole('combobox').last()).toHaveText('hours');
+    await expect(page.getByText(/^days$/)).toBeVisible();
 
     await cleanupUser(reminderEmail);
   });

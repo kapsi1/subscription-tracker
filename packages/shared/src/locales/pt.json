@@ -261,8 +261,6 @@
       "remindersDesc": "Seja notificado antes do pagamento vencer",
       "reminderTypeNotification": "Notificação",
       "reminderTypeEmail": "E-mail",
-      "reminderUnitMinutes": "minutos",
-      "reminderUnitHours": "horas",
       "reminderUnitDays": "dias",
       "addReminder": "Adicionar lembrete",
       "reminderSettingsHint": "Pode alterar os lembretes padrão nos Ajustes",

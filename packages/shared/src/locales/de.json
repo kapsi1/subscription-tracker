@@ -261,8 +261,6 @@
       "remindersDesc": "Benachrichtigt werden, bevor die Zahlung fällig ist",
       "reminderTypeNotification": "Benachrichtigung",
       "reminderTypeEmail": "E-Mail",
-      "reminderUnitMinutes": "Minuten",
-      "reminderUnitHours": "Stunden",
       "reminderUnitDays": "Tage",
       "addReminder": "Erinnerung hinzufügen",
       "reminderSettingsHint": "Sie können Standarderinnerungen in den Einstellungen ändern",

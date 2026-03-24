@@ -271,8 +271,6 @@
       "remindersDesc": "Otrzymuj powiadomienia przed terminem płatności",
       "reminderTypeNotification": "Powiadomienie",
       "reminderTypeEmail": "Email",
-      "reminderUnitMinutes": "minuty",
-      "reminderUnitHours": "godziny",
       "reminderUnitDays": "dni",
       "addReminder": "Dodaj przypomnienie",
       "reminderSettingsHint": "Możesz zmienić domyślne przypomnienia w Ustawieniach",

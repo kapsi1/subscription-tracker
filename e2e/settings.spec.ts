@@ -113,13 +113,10 @@ test.describe('User Settings Persistence', () => {
     const valueInput = page.getByRole('spinbutton').first();
     await valueInput.fill('7');
 
-    // Change unit from days to hours via the unit combobox (second combobox in the row)
-    const comboboxes = page.getByRole('combobox');
-    const unitCombobox = comboboxes.last();
-    await unitCombobox.click();
-    await page.getByRole('option', { name: 'hours' }).click();
+    // Unit is now hardcoded to days (no second combobox)
+    await expect(page.getByText(/^days$/)).toBeVisible();
 
-    // Wait for autosave
+    // Wait for autosave (triggered by value change)
     await page.waitForResponse(
       (resp) => resp.url().includes('/users/settings') && resp.request().method() === 'PATCH',
     );
@@ -133,6 +130,6 @@ test.describe('User Settings Persistence', () => {
     await page.waitForTimeout(500); // allow key-based remount
 
     await expect(page.getByRole('spinbutton').first()).toHaveValue('7');
-    await expect(page.getByRole('combobox').last()).toHaveText('hours');
+    await expect(page.getByText(/^days$/)).toBeVisible();
   });
 });

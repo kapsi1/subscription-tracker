@@ -261,8 +261,6 @@
       "remindersDesc": "Get notified before payment is due",
       "reminderTypeNotification": "Notification",
       "reminderTypeEmail": "Email",
-      "reminderUnitMinutes": "minutes",
-      "reminderUnitHours": "hours",
       "reminderUnitDays": "days",
       "addReminder": "Add reminder",
       "reminderSettingsHint": "You can change default reminders in Settings",

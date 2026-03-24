@@ -261,8 +261,6 @@
       "remindersDesc": "Être notifié avant la date d'échéance",
       "reminderTypeNotification": "Notification",
       "reminderTypeEmail": "E-mail",
-      "reminderUnitMinutes": "minutes",
-      "reminderUnitHours": "heures",
       "reminderUnitDays": "jours",
       "addReminder": "Ajouter un rappel",
       "reminderSettingsHint": "Vous pouvez modifier les rappels par défaut dans les Paramètres",
