@@ -11,6 +11,7 @@
   "files": [],
   "references": [
     { "path": "./backend" },
-    { "path": "./frontend" }
+    { "path": "./frontend" },
+    { "path": "./e2e" }
   ]
 }
