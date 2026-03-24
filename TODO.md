@@ -348,8 +348,6 @@
 - [x] Edit subscription modal can be cut off if screen height is small. Add a scrollbar to the modal.
 - [x] Find instances of Primary (Save/Add Subscription etc) and Cancel button pairs and make them consistent - primary on the right, cancel on the left. Make styles and distance between them be consistent too. Add missing Cancel buttons.
 - [x] In Dashboard, under This Month's Payments, add a new section: a calendar showing days (as buttons) of currently selected month. Days with payments in them should have a dot with the payment count, in the style of "unread notifications" dots in other applications (red dot). On hover for the day show a tooltip with list of payments for that day. Make the calendar look consistent with the rest of the app. On click for the day show a modal with a table of payments for that day, looking and acting like the Payment History table in Subscription Details modal.
-- [ ] Push notifications not working on Opera (desktop)
-- [ ] Push notifications not working when Chrome (desktop) is not running
 - [x] Default reminders
 - [x] Budget threshold alerts
 - [x] Add more translations for major languages: German, Spanish, French, Italian, Portuguese, Russian, Chinese, Japanese, Korean
@@ -374,8 +372,10 @@
 - [x] Analyze Lighthouse report and create a plan to fix issues. Ask the user for confirmations if proposed changes are very complicated or time consuming.
 - [x] Remove Default Payment Reminders switch in Settings, by default it should be the "Add reminder" button.
 - [x] Remove email field from Enable Email Reports, since it's not used.
-- [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
 - [x] Remove minutes/hours options for reminders, and remove the dropdown, days should be hardcoded.
 - [x] Clicking Save in Custom Billing Days shows a warning in console: Tooltip is changing from controlled to uncontrolled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
 - [x] Setting a custom billing cycle should automatically update Next Billing Date, and disable that field from being edited, until Billing Cycle is set to weekly/monthly/yearly.
 - [x] This Month's Payments and Payment Calendar in Dashboard use only Next Billing Date for subscription and ignore custom billing cycles. Fix this and other places that use billing dates.
+- [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
+- [ ] Push notifications not working on Opera (desktop)
+- [ ] Push notifications not working when Chrome (desktop) is not running
