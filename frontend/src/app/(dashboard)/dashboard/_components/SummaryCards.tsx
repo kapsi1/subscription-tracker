@@ -35,19 +35,20 @@ function SummaryCard({
         <div className="min-w-0 flex items-center justify-center">
           <div
             className={cn(
-              'flex h-9 w-9 min-w-9 items-center justify-center rounded-lg mr-4 lg:mr-0',
+              'hidden sm:flex h-9 w-9 min-w-9 items-center justify-center rounded-lg mr-4 lg:mr-0',
               iconBgClass,
             )}
           >
             {icon}
           </div>
-          <CardTitle className="min-w-0 text-center text-base font-medium leading-tight text-muted-foreground md:text-lg">
+          <CardTitle className="min-w-0 text-center text-sm sm:text-[1rem] font-medium leading-tight text-muted-foreground">
             {title}
           </CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="px-4 pb-4 sm:px-6 md:pb-5 lg:pb-6 pt-0">
-        <div className="overflow-hidden text-center text-[clamp(1.5rem,14cqw,2.2rem)] font-semibold leading-none whitespace-nowrap sm:text-[clamp(1.5rem,14cqw,2.65rem)] md:text-[clamp(1.5rem,14cqw,3rem)] lg:text-[clamp(1rem,12cqw,2.4rem)]">
+      <CardContent className="px-4 pb-4 last:pb-4 sm:px-6 md:pb-5 lg:pb-6 pt-0">
+        {/* <div className="overflow-hidden font-semibold leading-none whitespace-nowrap text-center text-lg sm:text-[clamp(1.5rem,14cqw,2.2rem)] md:text-[clamp(1.5rem,14cqw,3rem)] lg:text-[clamp(1rem,12cqw,2.4rem)]"> */}
+        <div className="overflow-hidden font-semibold leading-none whitespace-nowrap text-center text-md sm:text-[2rem]">
           {value}
         </div>
       </CardContent>
@@ -63,7 +64,7 @@ export function SummaryCards({
   const { t } = useTranslation();
 
   return (
-    <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid min-w-0 gap-2 sm:gap-6 grid-cols-2 lg:grid-cols-4">
       <SummaryCard
         title={t('dashboard.totalMonthlyCost')}
         icon={<DollarSign className="w-4 h-4 text-[#3b82f6]" />}
