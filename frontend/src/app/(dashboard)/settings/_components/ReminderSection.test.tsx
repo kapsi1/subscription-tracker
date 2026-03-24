@@ -42,78 +42,20 @@ vi.mock('@/components/ui/card', () => ({
   CardDescription: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-vi.mock('@/components/ui/switch', () => ({
-  Switch: ({
-    checked,
-    onCheckedChange,
-    id,
-  }: {
-    checked: boolean;
-    onCheckedChange: (v: boolean) => void;
-    id: string;
-  }) => (
-    <input
-      type="checkbox"
-      id={id}
-      checked={checked}
-      onChange={(e) => onCheckedChange(e.target.checked)}
-      data-testid="reminder-toggle"
-    />
-  ),
-}));
-
-vi.mock('@/components/ui/label', () => ({
-  // biome-ignore lint/a11y/noLabelWithoutControl: <bla>
-  Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
-}));
-
 vi.mock('lucide-react', () => ({
   Bell: () => null,
 }));
 
 describe('ReminderSection', () => {
   const baseProps = {
-    defaultReminderEnabled: false,
     defaultReminders: [],
     onSettingsChange: vi.fn(),
     onRequestPushPermission: vi.fn<() => Promise<boolean>>().mockResolvedValue(true),
   };
 
-  it('does NOT render ReminderList when toggle is off', () => {
-    render(<ReminderSection {...baseProps} defaultReminderEnabled={false} />);
-    expect(screen.queryByTestId('reminder-list')).toBeNull();
-  });
-
-  it('renders ReminderList when toggle is on', () => {
-    render(<ReminderSection {...baseProps} defaultReminderEnabled={true} />);
+  it('renders ReminderList by default', () => {
+    render(<ReminderSection {...baseProps} />);
     expect(screen.getByTestId('reminder-list')).toBeTruthy();
-  });
-
-  it('calls onSettingsChange with defaultReminderEnabled=true when toggle is turned on', () => {
-    const onSettingsChange = vi.fn();
-    render(
-      <ReminderSection
-        {...baseProps}
-        defaultReminderEnabled={false}
-        onSettingsChange={onSettingsChange}
-      />,
-    );
-    fireEvent.click(screen.getByTestId('reminder-toggle'));
-    expect(onSettingsChange).toHaveBeenCalledWith({ defaultReminderEnabled: true });
-  });
-
-  it('calls onSettingsChange with defaultReminderEnabled=false and empty reminders when toggled off', () => {
-    const onSettingsChange = vi.fn();
-    render(
-      <ReminderSection
-        {...baseProps}
-        defaultReminderEnabled={true}
-        onSettingsChange={onSettingsChange}
-      />,
-    );
-    fireEvent.click(screen.getByTestId('reminder-toggle'));
-    expect(onSettingsChange).toHaveBeenCalledWith({ defaultReminderEnabled: false });
-    expect(onSettingsChange).toHaveBeenCalledWith({ defaultReminders: [] });
   });
 
   it('initializes ReminderList with defaultReminders mapped from props', () => {
@@ -121,7 +63,6 @@ describe('ReminderSection', () => {
     render(
       <ReminderSection
         {...baseProps}
-        defaultReminderEnabled={true}
         defaultReminders={defaultReminders}
       />,
     );
@@ -133,7 +74,6 @@ describe('ReminderSection', () => {
     render(
       <ReminderSection
         {...baseProps}
-        defaultReminderEnabled={true}
         onSettingsChange={onSettingsChange}
       />,
     );

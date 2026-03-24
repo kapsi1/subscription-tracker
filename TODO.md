@@ -358,7 +358,7 @@
 - [x] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
 - [x] Make the tab buttons in nav bar bigger on mobile devices. They should fill available space.
 - [ ] Production deployment checklist:
-    - [x] Email notifications - set an external service ([see plan](file:///C:/Users/kk/.gemini/antigravity/brain/f92e4640-d421-4ba6-ab79-3f4f1924dcf8/email_setup_plan.md))
+    - [x] Email notifications - set an external service
     - [x] Delete production database and DB migrations from code, we'll deploy it from scratch.
     - [x] Google Auth setup in Google Cloud Console
     - [x] App installation on mobile - works with Chrome
@@ -373,4 +373,5 @@
 - [x] Move the Install App button from the dropdown menu next to (to the left of) the right button on the nav bar. On mobile screens it should instead go on the same line as Dashboard title, but aligned to the right. It should have a "download" icon and Install App text.
 - [x] Analyze Lighthouse report and create a plan to fix issues. Ask the user for confirmations if proposed changes are very complicated or time consuming.
 - [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
-- [ ] Remove Default Payment Reminders switch in Settings, by default it should be the "Add reminder" button.
+- [x] Remove Default Payment Reminders switch in Settings, by default it should be the "Add reminder" button.
+- [ ] Remove email field from Enable Email Reports, since it's not used.

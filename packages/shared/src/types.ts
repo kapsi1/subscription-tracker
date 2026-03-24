@@ -28,7 +28,7 @@ export interface Subscription {
 
 export interface Settings {
   name?: string;
-  defaultReminderEnabled: boolean;
+  defaultReminderEnabled?: boolean;
   defaultReminders: Reminder[];
   /** @deprecated use defaultReminders instead */
   defaultReminderDays?: number;

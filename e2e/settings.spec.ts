@@ -106,12 +106,7 @@ test.describe('User Settings Persistence', () => {
     await settingsResponse;
     await expect(page.getByRole('heading', { name: 'Preferences', exact: true })).toBeVisible();
 
-    // Enable default reminders toggle (default is disabled for new users)
-    const reminderToggle = page.getByLabel('Default Payment Reminders');
-    await reminderToggle.click();
-    await expect(reminderToggle).toBeChecked();
-
-    // Click "Add reminder" to add a row
+    // Click "Add reminder" to add a row (no toggle anymore)
     await page.getByRole('button', { name: 'Add reminder' }).click();
 
     // Set value to 7
@@ -137,7 +132,6 @@ test.describe('User Settings Persistence', () => {
     );
     await page.waitForTimeout(500); // allow key-based remount
 
-    await expect(reminderToggle).toBeChecked();
     await expect(page.getByRole('spinbutton').first()).toHaveValue('7');
     await expect(page.getByRole('combobox').last()).toHaveText('hours');
   });

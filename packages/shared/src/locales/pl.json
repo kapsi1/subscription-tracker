@@ -406,8 +406,6 @@
       "default": {
         "title": "Domyślne ustawienia przypomnień",
         "desc": "Domyślne ustawienia dla nowych subskrypcji",
-        "enable": "Domyślne przypomnienia o płatnościach",
-        "enableDesc": "Włącz przypomnienia domyślnie dla nowych subskrypcji",
         "addReminder": "Dodaj przypomnienie",
         "noReminders": "Brak domyślnych przypomnień. Dodaj jedno poniżej."
       }

@@ -21,7 +21,6 @@ export default function PreferencesPage() {
   const { fetchUser } = useAuth();
   const showTestControls = process.env.NODE_ENV !== 'production';
   const [settings, setSettings] = useState<Settings>({
-    defaultReminderEnabled: true,
     defaultReminders: [],
     emailNotifications: false,
     emailAddress: '',
@@ -48,7 +47,6 @@ export default function PreferencesPage() {
       try {
         const response = await api.get('/users/me');
         const loadedSettings = {
-          defaultReminderEnabled: response.data.defaultReminderEnabled,
           defaultReminders: response.data.defaultReminders ?? [],
           emailAddress: response.data.email,
           monthlyBudget: response.data.monthlyBudget
@@ -65,7 +63,6 @@ export default function PreferencesPage() {
           ...loadedSettings,
         }));
         lastSavedPreferencesRef.current = JSON.stringify({
-          defaultReminderEnabled: loadedSettings.defaultReminderEnabled,
           defaultReminders: loadedSettings.defaultReminders.map(
             ({ type, value, unit }: { type: string; value: number; unit: string }) => ({
               type,
@@ -95,7 +92,6 @@ export default function PreferencesPage() {
     if (!hasLoadedSettingsRef.current) return;
 
     const payload = {
-      defaultReminderEnabled: settings.defaultReminderEnabled,
       defaultReminders: settings.defaultReminders.map(({ type, value, unit }) => ({
         type,
         value,
@@ -275,7 +271,6 @@ export default function PreferencesPage() {
       {isSectionVisible('reminder', 'preferences') && (
         <ReminderSection
           key={settingsLoaded ? 'loaded' : 'loading'}
-          defaultReminderEnabled={settings.defaultReminderEnabled}
           defaultReminders={settings.defaultReminders}
           onSettingsChange={handleSettingsChange}
           onRequestPushPermission={handleRequestPushPermission}

@@ -396,8 +396,6 @@
       "default": {
         "title": "Default Reminder Settings",
         "desc": "Default settings for new subscriptions",
-        "enable": "Default Payment Reminders",
-        "enableDesc": "Enable reminders by default for new subscriptions",
         "addReminder": "Add reminder",
         "noReminders": "No default reminders. Add one below."
       }

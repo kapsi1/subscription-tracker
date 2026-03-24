@@ -55,11 +55,7 @@ export const SETTINGS_SECTIONS: SectionMetadata[] = [
     tab: 'preferences',
     titleKey: 'settings.notifications.default.title',
     descKey: 'settings.notifications.default.desc',
-    searchKeys: [
-      'settings.notifications.default.enable',
-      'settings.notifications.default.enableDesc',
-      'settings.notifications.default.addReminder',
-    ],
+    searchKeys: ['settings.notifications.default.addReminder'],
   },
   {
     id: 'categories',

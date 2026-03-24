@@ -22,7 +22,6 @@ import {
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Switch } from './ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
@@ -62,7 +61,6 @@ export function SubscriptionModal({
     billingCycle: 'monthly',
     category: 'Other',
     nextBillingDate: new Date().toISOString().split('T')[0],
-    reminderEnabled: false,
     reminders: [] as ReminderRow[],
     billingDays: [] as number[],
     billingMonthShortageOffset: 1,
@@ -102,7 +100,6 @@ export function SubscriptionModal({
         nextBillingDate: subscription.nextBillingDate
           ? new Date(subscription.nextBillingDate).toISOString().split('T')[0]
           : new Date().toISOString().split('T')[0],
-        reminderEnabled: subscription.reminderEnabled ?? false,
         reminders: loadedReminders,
         billingDays: subscription.billingDays ?? [],
         billingMonthShortageOffset: subscription.billingMonthShortageOffset || 1,
@@ -122,7 +119,6 @@ export function SubscriptionModal({
         billingCycle: 'monthly',
         category: 'Other',
         nextBillingDate: new Date().toISOString().split('T')[0],
-        reminderEnabled: defaultReminders.length > 0,
         reminders: defaultReminders,
         billingDays: [],
         billingMonthShortageOffset: 1,
@@ -147,7 +143,7 @@ export function SubscriptionModal({
     if (!formData.nextBillingDate) {
       newErrors.nextBillingDate = 'nextBillingDateRequired';
     }
-    if (formData.reminderEnabled) {
+    if (formData.reminders.length > 0) {
       const invalid = formData.reminders.some((r) => r.value < 1 || Number.isNaN(r.value));
       if (invalid) newErrors.reminders = 'reminderValueInvalid';
     }
@@ -173,7 +169,6 @@ export function SubscriptionModal({
         billingCycle: formData.billingCycle,
         category: formData.category,
         nextBillingDate: formData.nextBillingDate,
-        reminderEnabled: formData.reminderEnabled,
         reminders: formData.reminders.map((r) => ({ type: r.type, value: r.value, unit: r.unit })),
         billingDays: formData.billingDays,
         billingMonthShortageOffset: formData.billingMonthShortageOffset,
@@ -378,37 +373,13 @@ export function SubscriptionModal({
         </div>
 
         <div className="border-t pt-4 space-y-3">
-          <div className="flex items-center gap-3">
-            <Switch
-              id="reminderEnabled"
-              checked={formData.reminderEnabled}
-              onCheckedChange={(checked) => {
-                const reminders =
-                  checked && formData.reminders.length === 0
-                    ? [
-                        {
-                          id: generateId(),
-                          type: 'webpush' as const,
-                          value: 1,
-                          unit: 'days' as const,
-                        },
-                      ]
-                    : formData.reminders;
-                setFormData({ ...formData, reminderEnabled: checked, reminders });
-              }}
-            />
-            <Label htmlFor="reminderEnabled" className="cursor-pointer">
-              {t('subscriptions.modal.reminders')}
-            </Label>
-          </div>
-          {formData.reminderEnabled && (
-            <ReminderList
-              reminders={formData.reminders}
-              onChange={(reminders) => setFormData({ ...formData, reminders })}
-              context="modal"
-              onRequestPushPermission={handleRequestPushPermission}
-            />
-          )}
+          <Label className="text-sm font-medium">{t('subscriptions.modal.reminders')}</Label>
+          <ReminderList
+            reminders={formData.reminders}
+            onChange={(reminders) => setFormData({ ...formData, reminders })}
+            context="modal"
+            onRequestPushPermission={handleRequestPushPermission}
+          />
           {isSubmitted && errors.reminders && (
             <p className="text-xs font-medium text-destructive">
               {t(`subscriptions.modal.errors.${errors.reminders}`)}

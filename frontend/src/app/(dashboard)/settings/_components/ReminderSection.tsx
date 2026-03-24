@@ -6,20 +6,16 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReminderList, type ReminderRow } from '@/components/reminder-list';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { generateId } from '@/lib/id';
 import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface ReminderSectionProps {
-  defaultReminderEnabled: boolean;
   defaultReminders: Reminder[];
   onSettingsChange: (updates: Partial<Settings>) => void;
   onRequestPushPermission: () => Promise<boolean>;
 }
 
 export function ReminderSection({
-  defaultReminderEnabled,
   defaultReminders,
   onSettingsChange,
   onRequestPushPermission,
@@ -66,43 +62,13 @@ export function ReminderSection({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-3 hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
-          <Switch
-            id="defaultEnabled"
-            checked={defaultReminderEnabled}
-            onCheckedChange={(checked) => {
-              onSettingsChange({ defaultReminderEnabled: checked });
-              if (!checked) {
-                setRows([]);
-                onSettingsChange({ defaultReminders: [] });
-              }
-            }}
-          />
-          <div className="space-y-0.5">
-            <Label htmlFor="defaultEnabled" className="cursor-pointer">
-              <SearchHighlight
-                text={t('settings.notifications.default.enable')}
-                query={searchQuery}
-              />
-            </Label>
-            <p className="text-sm text-muted-foreground">
-              <SearchHighlight
-                text={t('settings.notifications.default.enableDesc')}
-                query={searchQuery}
-              />
-            </p>
-          </div>
-        </div>
-
-        {defaultReminderEnabled && (
-          <ReminderList
-            reminders={rows}
-            onChange={handleRemindersChange}
-            context="settings"
-            onRequestPushPermission={onRequestPushPermission}
-          />
-        )}
+      <CardContent>
+        <ReminderList
+          reminders={rows}
+          onChange={handleRemindersChange}
+          context="settings"
+          onRequestPushPermission={onRequestPushPermission}
+        />
       </CardContent>
     </Card>
   );
