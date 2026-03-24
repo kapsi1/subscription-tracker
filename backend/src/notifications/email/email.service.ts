@@ -125,7 +125,7 @@ export class EmailService {
       subject,
       html,
       fromKey: 'SMTP_FROM_ALERTS',
-      fallbackFrom: '"SubTracker" <alerts@subtracker.local>',
+      fallbackFrom: '"SubTracker" <alerts@subtracker.cc>',
     });
     this.logger.log(`[SMTP] Successfully sent warning email to ${email} for ${subscriptionName}`);
   }
@@ -161,7 +161,7 @@ export class EmailService {
       subject,
       html,
       fromKey: 'SMTP_FROM_ALERTS',
-      fallbackFrom: '"SubTracker" <alerts@subtracker.local>',
+      fallbackFrom: '"SubTracker" <alerts@subtracker.cc>',
     });
     this.logger.log(`[SMTP] Successfully sent budget alert email to ${email}`);
   }
@@ -195,7 +195,7 @@ export class EmailService {
       subject,
       html,
       fromKey: 'SMTP_FROM_ALERTS',
-      fallbackFrom: '"SubTracker" <alerts@subtracker.local>',
+      fallbackFrom: '"SubTracker" <alerts@subtracker.cc>',
     });
     this.logger.log(`[SMTP] Successfully sent daily digest email to ${email}`);
   }
@@ -229,7 +229,7 @@ export class EmailService {
       subject,
       html,
       fromKey: 'SMTP_FROM_ALERTS',
-      fallbackFrom: '"SubTracker" <alerts@subtracker.local>',
+      fallbackFrom: '"SubTracker" <alerts@subtracker.cc>',
     });
     this.logger.log(`[SMTP] Successfully sent weekly report email to ${email}`);
   }
@@ -249,7 +249,7 @@ export class EmailService {
       subject,
       html,
       fromKey: 'SMTP_FROM_AUTH',
-      fallbackFrom: '"SubTracker" <auth@subtracker.local>',
+      fallbackFrom: '"SubTracker" <auth@subtracker.cc>',
     });
     this.logger.log(`[SMTP] Successfully sent verification email to ${email}`);
   }
@@ -274,7 +274,7 @@ export class EmailService {
       subject,
       html,
       fromKey: 'SMTP_FROM_AUTH',
-      fallbackFrom: '"SubTracker" <auth@subtracker.local>',
+      fallbackFrom: '"SubTracker" <auth@subtracker.cc>',
     });
     this.logger.log(`[SMTP] Successfully sent password reset email to ${email}`);
   }

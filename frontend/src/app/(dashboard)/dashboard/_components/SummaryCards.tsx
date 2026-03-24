@@ -31,7 +31,7 @@ function SummaryCard({
 }) {
   return (
     <Card className="min-w-0 animate-card-in bg-card transition-all hover:bg-accent/50 @container">
-      <CardHeader className="flex flex-col items-center justify-center px-4 pt-4 pb-0 text-center sm:px-6 sm:pt-6">
+      <CardHeader className="flex flex-col items-center justify-center px-4 pt-4 pb-2 text-center sm:px-6 sm:pt-4">
         <div className="min-w-0 flex items-center justify-center">
           <div
             className={cn(
