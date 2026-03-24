@@ -379,3 +379,4 @@
 - [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
 - [ ] Push notifications not working on Opera (desktop)
 - [ ] Push notifications not working when Chrome (desktop) is not running
+- [x] Add SEO (meta tags, sitemap.xml, etc.)
