@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn, formatCurrency } from '@/lib/utils';
 import type { MonthlyPayment } from './MonthlyPayments';
@@ -115,7 +115,6 @@ export function MonthlyPaymentsCalendar({
         <div className="flex min-w-0 items-start gap-3">
           <div className="min-w-0">
             <CardTitle>{t('dashboard.paymentCalendarTitle')}</CardTitle>
-            <CardDescription>{t('dashboard.paymentCalendarDesc')}</CardDescription>
           </div>
         </div>
       </CardHeader>

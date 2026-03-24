@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCurrency } from '@/lib/utils';
 
 interface MonthlyForecastProps {
@@ -84,7 +84,6 @@ export function MonthlyForecast({ forecast, currency = 'USD' }: MonthlyForecastP
     <Card className="shadow-sm hover:shadow-md transition-shadow">
       <CardHeader>
         <CardTitle>{t('dashboard.forecast')}</CardTitle>
-        <CardDescription>{t('dashboard.forecastDesc')}</CardDescription>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={350}>

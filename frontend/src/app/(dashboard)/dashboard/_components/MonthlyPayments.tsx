@@ -9,7 +9,7 @@ import { useAuth } from '@/components/auth-provider';
 import { DynamicIcon } from '@/components/DynamicIcon';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -113,10 +113,9 @@ export function MonthlyPayments({ monthlyPayments, onEdit, onViewPayment }: Mont
   return (
     <Card className="min-w-0 shadow-sm">
       <CardHeader className="px-4 sm:px-6">
-        <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:justify-between">
           <div className="min-w-0">
             <CardTitle>{t('dashboard.monthlyPaymentsTitle')}</CardTitle>
-            <CardDescription>{t('dashboard.monthlyPaymentsDesc')}</CardDescription>
           </div>
           <div className="flex max-w-full flex-wrap items-center justify-end gap-3 self-end md:gap-4">
             <div className="mr-2 flex shrink-0 items-center gap-3">

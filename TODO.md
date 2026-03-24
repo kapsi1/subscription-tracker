@@ -363,6 +363,7 @@
     - [x] Google Auth setup in Google Cloud Console
     - [x] App installation on mobile - works with Chrome
     - [x] Add a domain: done - subtracker.cc
+    - [ ] Test Google Analytics and Google Tag Manager
 - [x] Add a footer with "Made by Kamil Kapsiak" and a link to report an issue.
 - [x] Review the frontend code for switches and make them look consistent - positioned to the left of their labels.
 - [x] Reminders rework:

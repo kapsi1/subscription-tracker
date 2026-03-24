@@ -17,7 +17,7 @@ import {
   YAxis,
 } from 'recharts';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { formatCurrency } from '@/lib/utils';
 
@@ -153,7 +153,6 @@ export function CostByCategory({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>{t('dashboard.costByCategory')}</CardTitle>
-            <CardDescription>{t('dashboard.categoryBreakdownDesc')}</CardDescription>
           </div>
           <div className="flex gap-1 bg-muted rounded-lg p-1">
             <Button
