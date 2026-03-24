@@ -371,3 +371,4 @@
   - Add unit and E2E tests.
 - [x] Move the Install App button from the dropdown menu next to (to the left of) the right button on the nav bar. On mobile screens it should instead go on the same line as Dashboard title, but aligned to the right. It should have a "download" icon and Install App text.
 - [x] Analyze Lighthouse report and create a plan to fix issues. Ask the user for confirmations if proposed changes are very complicated or time consuming.
+- [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
