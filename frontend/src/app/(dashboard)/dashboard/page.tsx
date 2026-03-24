@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { InstallAppButton } from '@/components/install-app-button';
 import { LoadingState } from '@/components/loading-state';
 import api from '@/lib/api';
 import { type MonthlyPayment, MonthlyPayments } from './_components/MonthlyPayments';
@@ -275,7 +276,10 @@ export default function DashboardPage() {
     <div className="min-w-0 space-y-6 animate-page-in">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
+        <div className="flex items-center justify-between w-full sm:w-auto">
+          <h1 className="text-3xl font-semibold">{t('dashboard.title')}</h1>
+          <InstallAppButton variant="outline" className="sm:hidden" />
+        </div>
         <div className="flex items-center gap-2 self-end sm:self-auto">
           <MonthPicker selectedDate={selectedDate} setSelectedDate={handleDateChange} />
         </div>

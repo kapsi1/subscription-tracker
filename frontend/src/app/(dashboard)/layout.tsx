@@ -1,6 +1,6 @@
 'use client';
 
-import { Download, LayoutDashboard, ListChecks, LogOut, Settings, UserRound } from 'lucide-react';
+import { LayoutDashboard, ListChecks, LogOut, Settings, UserRound } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/components/auth-provider';
 import { ErrorState } from '@/components/error-state'; // Assuming this path
+import { InstallAppButton } from '@/components/install-app-button';
 import { LoadingState } from '@/components/loading-state';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,7 +20,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/components/ui/utils';
-import { useInstallPrompt } from '@/hooks/use-install-prompt';
 import api from '@/lib/api';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -27,7 +27,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const { user, isAuthenticated, isLoading, logout, fetchUser } = useAuth();
   const { t } = useTranslation();
-  const { canInstall, install } = useInstallPrompt();
 
   useEffect(() => {
     if (pathname.startsWith('/manage') && user?.hasSeenManageHint === false) {
@@ -236,6 +235,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+            <InstallAppButton variant="ghost" className="hidden h-9 w-auto gap-2 px-3 sm:flex" />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -271,15 +271,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <span>{t('settings.tabs.profile')}</span>
                   </Link>
                 </DropdownMenuItem>
-                {canInstall && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={install} className="gap-2 cursor-pointer">
-                      <Download className="h-4 w-4" />
-                      <span>{t('nav.installApp')}</span>
-                    </DropdownMenuItem>
-                  </>
-                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}
