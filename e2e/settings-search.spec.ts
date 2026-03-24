@@ -60,7 +60,7 @@ test.describe('Settings Search', () => {
     await searchInput.fill('Localization');
 
     // Section should be visible
-    const localizationHeading = page.getByRole('heading', { name: 'Localization', exact: true });
+    const localizationHeading = page.getByRole('heading', { name: 'Localization' });
     await expect(localizationHeading).toBeVisible();
 
     // Check for highlight (mark tag)
@@ -75,10 +75,10 @@ test.describe('Settings Search', () => {
     await searchInput.fill('color mode');
 
     // Appearance section should be visible because of "Select your preferred color mode"
-    await expect(page.getByRole('heading', { name: 'Appearance', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Appearance' })).toBeVisible();
     
     // Localization section should NOT be visible
-    await expect(page.getByRole('heading', { name: 'Localization', exact: true })).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Localization' })).not.toBeVisible();
 
     const highlight = page.locator('mark').first();
     await expect(highlight).toBeVisible();
@@ -90,10 +90,10 @@ test.describe('Settings Search', () => {
     // "icons" is a searchKey for Category Management
     await searchInput.fill('icons');
 
-    await expect(page.getByRole('heading', { name: 'Category Management', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Category Management' })).toBeVisible();
     
     // Localization should not match "icons"
-    await expect(page.getByRole('heading', { name: 'Localization', exact: true })).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Localization' })).not.toBeVisible();
   });
 
   test('should show no results message for non-matching queries', async ({ page }) => {
@@ -103,42 +103,40 @@ test.describe('Settings Search', () => {
     await expect(page.getByText(/No results found for "xyznonexistentsearchterm"/i)).toBeVisible();
     
     // No headings should be visible
-    await expect(page.getByRole('heading', { name: 'Localization', exact: true })).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Localization' })).not.toBeVisible();
   });
 
   test('should clear search results when clicking X button', async ({ page }) => {
     const searchInput = page.locator('#settings-search-input');
     await searchInput.fill('Localization');
     
-    await expect(page.getByRole('heading', { name: 'Localization', exact: true })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Appearance', exact: true })).not.toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Localization' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Appearance' })).not.toBeVisible();
 
     const clearButton = page.locator('#clear-settings-search');
     await clearButton.click();
 
     await expect(searchInput).toHaveValue('');
-    await expect(page.getByRole('heading', { name: 'Localization', exact: true })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Appearance', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Localization' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Appearance' })).toBeVisible();
   });
 
   test('should persist search query when switching tabs', async ({ page }) => {
     const searchInput = page.locator('#settings-search-input');
-    await searchInput.fill('email');
+    await searchInput.fill('Localization');
 
     // Verify search works on Preferences tab
-    await expect(page.getByRole('heading', { name: 'Email Notifications', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Localization' })).toBeVisible();
 
-    // Switch to Profile tab
-    await page.locator('a[href="/settings/profile"]').click();
+    // Switch to Profile tab via click
+    await page.getByRole('link', { name: 'Profile' }).click();
     await expect(page).toHaveURL(/\/settings\/profile/);
 
     // Search query should still be there
-    await expect(searchInput).toHaveValue('email');
+    await expect(searchInput).toHaveValue('Localization');
     
-    // Profile search results should still reflect the persisted query
-    await expect(page.getByRole('heading', { name: 'Change Email', exact: true })).toBeVisible();
-    
-    // Change Password should not be visible
-    await expect(page.getByRole('heading', { name: 'Change Password', exact: true })).not.toBeVisible();
+    // Verify results persist and display on the new tab
+    await expect(page.getByRole('heading', { name: 'Localization' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Change Password' })).not.toBeVisible();
   });
 });

@@ -62,6 +62,19 @@ export const SETTINGS_SECTIONS: SectionMetadata[] = [
     ],
   },
   {
+    id: 'categories',
+    tab: 'preferences',
+    titleKey: 'settings.categories.title',
+    descKey: 'settings.categories.desc',
+    searchKeys: [
+      'settings.categories.addCategory',
+      'settings.categories.resetToDefaults',
+      'settings.categories.categoryName',
+      'settings.categories.pickColor',
+      'icons',
+    ],
+  },
+  {
     id: 'budget',
     tab: 'preferences',
     titleKey: 'settings.budget.title',

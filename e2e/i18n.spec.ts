@@ -39,7 +39,8 @@ test.describe('Internationalization (i18n) Flow', () => {
     );
 
     // Select Polish
-    await page.getByRole('button', { name: /Polski/ }).click();
+    await page.getByLabel('Application Language').click();
+    await page.getByRole('option', { name: 'Polski' }).click();
     await patchPromise;
 
     // 3. Verify translation on dashboard navigation

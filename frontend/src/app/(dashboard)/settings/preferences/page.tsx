@@ -302,6 +302,7 @@ export default function PreferencesPage() {
           {isSectionVisible('profile', 'preferences') && <ProfilePageSearchWrapper />}
           {isSectionVisible('password', 'preferences') && <ChangePasswordSearchWrapper />}
           {isSectionVisible('change-email', 'preferences') && <ChangeEmailSearchWrapper />}
+          {isSectionVisible('categories', 'preferences') && <CategorySection />}
         </>
       )}
     </div>
@@ -309,6 +310,7 @@ export default function PreferencesPage() {
 }
 
 // Wrapper components for Profile sections to handle their own data fetching
+import { CategorySection } from '../_components/CategorySection';
 import { ChangeEmailSection } from '../_components/ChangeEmailSection';
 import { ChangePasswordSection } from '../_components/ChangePasswordSection';
 import { type ProfileData, ProfileSection } from '../_components/ProfileSection';

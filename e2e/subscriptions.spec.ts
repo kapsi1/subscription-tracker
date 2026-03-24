@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import { test, expect } from '@playwright/test';
 import { cleanupUser } from './test-utils';
 
@@ -168,7 +169,7 @@ test.describe('Subscriptions Flow', () => {
     await expect(reminderToggle).toBeChecked();
 
     // A default row should have appeared — set value to 5
-    const valueInput = page.getByRole('spinbutton');
+    const valueInput = page.getByRole('spinbutton').last();
     await valueInput.fill('5');
 
     // Change unit to hours
@@ -190,7 +191,7 @@ test.describe('Subscriptions Flow', () => {
     await expect(dialog.getByLabel('Payment Reminders')).toBeChecked();
 
     // Verify the reminder row persisted with value=5 and unit=hours
-    await expect(dialog.getByRole('spinbutton')).toHaveValue('5');
+    await expect(dialog.getByRole('spinbutton').last()).toHaveValue('5');
     await expect(dialog.getByRole('combobox').last()).toHaveText('hours');
 
     await cleanupUser(reminderEmail);

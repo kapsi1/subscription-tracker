@@ -23,7 +23,7 @@ test.describe('Dashboard Flow', () => {
     await page.waitForTimeout(1000);
     await page.goto('/subscriptions');
     await expect(page).toHaveURL(/\/manage\/subscriptions/);
-    await expect(page.getByRole('heading', { name: 'Manage Subscriptions', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Subscriptions', exact: true })).toBeVisible();
 
     // Add first sub (Monthly)
     await page.getByRole('button', { name: 'Add Subscription' }).first().click();
@@ -58,18 +58,18 @@ test.describe('Dashboard Flow', () => {
     
     // Verify total active subscriptions card
     const activeSubscriptionsCard = page
-      .getByRole('heading', { name: 'Active Subscriptions' })
-      .locator('xpath=ancestor::div[contains(@class, "shadow-sm")][1]');
+      .getByRole('heading', { name: 'Subscriptions' })
+      .locator('xpath=ancestor::div[@data-slot="card"][1]');
     await expect(activeSubscriptionsCard).toBeVisible();
     await expect(activeSubscriptionsCard.getByText(/^2$/)).toBeVisible();
 
     // Verify monthly and yearly costs.
     const monthlyCostCard = page
-      .getByRole('heading', { name: 'Total Monthly Cost' })
-      .locator('xpath=ancestor::div[contains(@class, "shadow-sm")][1]');
+      .getByRole('heading', { name: 'Monthly Cost' })
+      .locator('xpath=ancestor::div[@data-slot="card"][1]');
     const yearlyCostCard = page
-      .getByRole('heading', { name: 'Total Yearly Cost' })
-      .locator('xpath=ancestor::div[contains(@class, "shadow-sm")][1]');
+      .getByRole('heading', { name: 'Yearly Cost' })
+      .locator('xpath=ancestor::div[@data-slot="card"][1]');
 
     // In this flow we only scheduled payments; nothing is marked as paid yet,
     // so this month's paid total should be zero.

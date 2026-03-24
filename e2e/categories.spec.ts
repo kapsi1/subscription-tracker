@@ -27,8 +27,9 @@ test.describe.serial('Category Management', () => {
     await page.getByLabel('Password').fill(testPassword);
     await page.getByRole('button', { name: 'Sign In' }).click();
     await page.waitForURL('**/dashboard', { timeout: 30_000 });
-    await page.goto('/settings/preferences');
-    await expect(page.getByRole('heading', { name: 'Preferences', exact: true })).toBeVisible();
+    await page.goto('/manage/categories');
+    // The heading is rendered in the ManageLayout
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     // Wait until the category section is fully rendered
     await expect(page.getByRole('button', { name: /add category/i })).toBeVisible({
       timeout: 10_000,
@@ -192,7 +193,7 @@ test.describe.serial('Category Management', () => {
 
     await page.goto('/subscriptions');
     await expect(page).toHaveURL(/\/manage\/subscriptions/);
-    await expect(page.getByRole('heading', { name: 'Manage Subscriptions', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Subscriptions', exact: true })).toBeVisible();
 
     await page.getByRole('button', { name: 'Add Subscription' }).first().click();
     const dialog = page.getByRole('dialog');

@@ -79,9 +79,10 @@ test.describe('User Settings Persistence', () => {
     await page.goto('/settings/preferences');
     await settingsResponse;
     await expect(page.getByRole('heading', { name: 'Preferences', exact: true })).toBeVisible();
-    // Toggle email notifications
-    const emailToggle = page.getByLabel('Enable Email Notifications');
+    // Toggle email notifications (default is false for new users)
+    const emailToggle = page.getByLabel('Enable Email Reports');
     await emailToggle.click();
+    await expect(emailToggle).toBeChecked();
 
     // Autosave should persist these changes
     // Wait for the debounced save to complete
@@ -94,8 +95,7 @@ test.describe('User Settings Persistence', () => {
     await page.reload();
 
     // Verify values persisted
-    // Expect the opposite of default (default is true for email)
-    await expect(emailToggle).not.toBeChecked();
+    await expect(emailToggle).toBeChecked();
   });
 
   test('should persist default reminder settings across page reloads', async ({ page }) => {
