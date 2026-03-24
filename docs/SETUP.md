@@ -34,11 +34,14 @@ docker compose up -d
 
 Wait a few seconds for the database to be ready before the next step.
 
-### Step 3 – Install Node dependencies
+### Step 3 – Install & Build Shared Package
 
 ```bash
 pnpm install
+pnpm run build:shared
 ```
+
+The shared package (`@subtracker/shared`) MUST be built before the frontend and backend can be started for the first time.
 
 ### Step 4 – Configure environment variables
 
@@ -48,13 +51,14 @@ cp backend/.env.example backend/.env
 
 Edit `backend/.env` and at minimum set:
 
-- `DATABASE_URL` – update with your Postgres host/credentials
-- `JWT_SECRET` – any random string for development
+- `DATABASE_URL` – your Postgres connection string (defaults to `subtracker.local` in example)
+- `JWT_SECRET` – a random string for technical authentication
 
 For the frontend, create `frontend/.env.local`:
 
 ```bash
 echo "NEXT_PUBLIC_API_URL=http://localhost:3001" > frontend/.env.local
+echo "NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX" >> frontend/.env.local # optional
 ```
 
 See [ENV_VARS.md](ENV_VARS.md) for the full variable reference.
@@ -73,7 +77,7 @@ pnpm prisma db seed
 cd ..
 ```
 
-Or import the bundled test subscriptions JSON via the app's Settings → Import page after creating an account.
+Or import the bundled test subscriptions JSON via the app's **Manage → Import** page after creating an account.
 
 ### Step 6 – Start development servers
 
@@ -83,29 +87,30 @@ pnpm dev
 
 This starts three processes concurrently:
 
-| Process | URL |
-|---------|-----|
-| Next.js frontend | http://localhost:3000 |
-| NestJS backend | http://localhost:3001 |
-| Shared package (watcher) | (build output only) |
+| Process | URL | Notes |
+|---------|-----|-------|
+| Next.js frontend | http://localhost:3000 | Main user interface |
+| NestJS backend | http://localhost:3001 | REST API server |
+| Shared package | – | Watched for type changes |
 
 ### Step 7 – Verify everything works
 
 - Open http://localhost:3000 and create an account.
 - Check http://localhost:8025 (Mailpit) for the verification email.
-- Open http://localhost:3001/api/docs to browse the Swagger API.
+- Open http://localhost:3001/api/docs to browse the Swagger documentation.
+- Check http://localhost:3001/health for system health status.
 
 ---
 
 ## Running Tests
 
-### Unit tests
+### Unit & Integration tests
 
 ```bash
-# Backend
+# Backend (Jest)
 cd backend && pnpm test
 
-# Frontend
+# Frontend (Vitest)
 cd frontend && pnpm test
 
 # All (from root)
@@ -133,21 +138,20 @@ Test reports are saved to `playwright-report/`.
 
 ### Environment variables
 
-Create all required production environment variables on your hosting platform. See [ENV_VARS.md](ENV_VARS.md) and the template at `backend/.env.production.example`.
+Create all required environment variables on your hosting platform. See [ENV_VARS.md](ENV_VARS.md) and the template at `backend/.env.production.example`.
 
-Critical values to set:
+Critical values (example for subtracker.cc):
 
 ```
 NODE_ENV=production
-JWT_SECRET=<long random string>
+JWT_SECRET=<long-random-string>
 DATABASE_URL=postgresql://<user>:<password>@<host>:5432/<db>?schema=public
 REDIS_HOST=<redis-host>
 SMTP_HOST=<your-smtp-relay>
-SMTP_USER=<smtp-user>
-SMTP_PASS=<smtp-password>
-SMTP_FROM="SubTracker" <noreply@yourdomain.com>
-FRONTEND_URL=https://app.yourdomain.com
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+SMTP_FROM="SubTracker" <noreply@subtracker.cc>
+FRONTEND_URL=https://app.subtracker.cc
+NEXT_PUBLIC_API_URL=https://api.subtracker.cc
+NEXT_PUBLIC_GA_ID=<your-ga-id>
 ```
 
 ### Build
@@ -156,11 +160,11 @@ NEXT_PUBLIC_API_URL=https://api.yourdomain.com
 pnpm build
 ```
 
-This builds the shared package, the NestJS backend (`backend/dist`), and the Next.js frontend (`.next/`).
+This builds the shared package, the NestJS backend, and the Next.js frontend (using standalone output).
 
 ### Database migrations
 
-Run migrations against the production database before starting the server:
+Run migrations against the production database before starting the process:
 
 ```bash
 cd backend
@@ -170,40 +174,24 @@ DATABASE_URL=<prod-db-url> pnpm prisma migrate deploy
 ### Starting the processes
 
 **Backend**
-
 ```bash
 node backend/dist/main.js
 ```
 
-Or use a process manager:
-
-```bash
-pm2 start backend/dist/main.js --name subtracker-api
-```
-
 **Frontend**
-
 ```bash
 node frontend/.next/standalone/server.js
 ```
 
-> Enable standalone output in `next.config.ts`: `output: 'standalone'`
+> Ensure `output: 'standalone'` is set in `next.config.ts`.
 
-### Docker-based deployment
+### Docker Deployment
 
-Each sub-app ships with a `Dockerfile`. Adapt `docker-compose.yml` for production by adding the `backend` and `frontend` services and pointing them at production environment variables.
-
-Typical single-server setup:
-
-```
-[Nginx / Caddy reverse proxy]
-   ├── / → frontend:3000
-   └── /api → backend:3001
-```
+Each sub-app ships with a `Dockerfile`. A `docker-compose.yml` is provided for local stack orchestration; adapt it for production as needed.
 
 ### Health checks
 
-The backend exposes a health endpoint at `GET /health` that verifies database and Redis connectivity. Configure your load-balancer or orchestrator to poll this endpoint.
+The backend exposes a health endpoint at `GET /health` that verifies Database, Redis, and BullMQ connectivity. Configure your platform to monitor this endpoint.
 
 ---
 
@@ -211,9 +199,9 @@ The backend exposes a health endpoint at `GET /health` that verifies database an
 
 | Problem | Fix |
 |---------|-----|
-| `ECONNREFUSED 5433` | Run `docker compose up -d` and wait for Postgres to be ready |
+| `ECONNREFUSED 5433` | Run `docker compose up -d` and wait for Postgres |
+| `Shared package types stale` | Run `pnpm run build:shared` then restart `pnpm dev` |
 | `Prisma engine not found` | Run `pnpm install` then `cd backend && pnpm prisma generate` |
-| Emails not arriving (dev) | Open http://localhost:8025 – Mailpit catches all SMTP traffic |
-| `JWT_SECRET` errors | Set `JWT_SECRET` in `backend/.env` |
-| Port 3000 or 3001 already in use | Kill the conflicting process or change `PORT` in `.env` / `next.config.ts` |
-| Google OAuth redirect mismatch | Ensure `GOOGLE_CALLBACK_URL` exactly matches the URI registered in Google Cloud Console |
+| `JWT_SECRET` errors | Ensure `JWT_SECRET` is set in `backend/.env` |
+| Port 3000 or 3001 in use | Kill the conflicting process or change ports in `.env` |
+| Google OAuth redirect mismatch | Ensure `GOOGLE_CALLBACK_URL` matches your registered origin |

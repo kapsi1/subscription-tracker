@@ -4,25 +4,29 @@
 
 ## Features
 
-- 📊 **Dashboard** – Monthly & yearly cost summaries, cost-by-category charts, 12-month forecast, and an interactive payment calendar
-- 🔔 **Alerts** – Email and web-push reminders before each billing date; daily digest emails
-- 🗂️ **Subscription Management** – CRUD with search/filter/sort; bulk import via JSON; payment history
-- 👤 **Accounts** – Email/password and Google OAuth; email verification; forgot-password flow; profile settings
-- ⚙️ **Settings** – Custom categories (with icons & colors), accent-color picker, language selector, currency selector, push notifications
-- 🌐 **Internationalisation** – Multiple languages via `next-intl`
-- 🔒 **Security** – JWT + refresh tokens, rate limiting, Helmet headers, input sanitisation, bcrypt passwords
+- 📊 **Interactive Dashboard** – Monthly & yearly cost summaries, dynamic cost-by-category charts, 12-month forecast, and a monthly payment calendar with tooltips.
+- 🔔 **Intelligent Alerts** – Configurable email reminders (1-30 days before billing) and web-push notifications; daily digest emails for yesterday's payments.
+- 🗂️ **Subscription Management** – CRUD with advanced search/filter/sort; custom billing cycles (specific days of the month); bulk import/export via JSON with data preview.
+- 📅 **External Export** – Export individual subscriptions to **Google Calendar** with a single click.
+- 💰 **Budgeting** – Set monthly budget thresholds and receive email alerts when your total costs exceed your budget.
+- 👤 **Account & Security** – Email/password and **Google OAuth** login; email verification; forgot-password flow; secure profile settings and account deletion.
+- ⚙️ **Customisation** – Advanced category management (custom icons & colors), custom accent-color picker, dark/light/system theme support, and currency selection.
+- 🌍 **Internationalisation** – Support for **11 languages** (English, Polish, German, Spanish, French, Italian, Portuguese, Russian, Chinese, Japanese, Korean) with localized date/number formatting.
+- 📱 **PWA Support** – Installable on mobile devices with modern PWA features for a native-like experience.
+- 🔒 **Security** – JWT + refresh tokens, rate limiting, Helmet headers, input sanitisation, and bcrypt password hashing.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | NestJS · TypeScript · Prisma ORM |
+| Backend | NestJS 11 · TypeScript · Prisma ORM |
 | Database | PostgreSQL |
 | Queue / Cache | Redis + BullMQ |
-| Frontend | Next.js (App Router) · Tailwind CSS |
+| Frontend | Next.js 15 (App Router) · Tailwind CSS · TanStack Query |
+| Analytics | Google Analytics 4 (GA4) · Google Tag Manager (GTM) |
 | Shared types | `@subtracker/shared` workspace package |
 | Email | Nodemailer (dev: Mailpit, prod: SMTP relay) |
-| API Docs | Swagger / OpenAPI at `/api/docs` |
+| API Docs | Swagger / OpenAPI |
 | Testing | Vitest (unit) · Playwright (E2E) |
 | Infra | Docker Compose |
 
@@ -42,10 +46,11 @@ docker compose up -d
 
 This starts PostgreSQL (port **5433**), Redis (port **6379**), and Mailpit (SMTP **1025**, web UI **8025**).
 
-### 2 – Install dependencies
+### 2 – Install & Build
 
 ```bash
 pnpm install
+pnpm run build:shared
 ```
 
 ### 3 – Configure environment
@@ -82,7 +87,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 |-----|-------------|
 | http://localhost:3000 | Frontend application |
 | http://localhost:3001/api/docs | Swagger API documentation |
-| http://localhost:3001/health | Backend health check |
+| http://localhost:3001/health | Backend health check status |
 | http://localhost:8025 | Mailpit email UI (dev) |
 
 ## Project Structure
@@ -91,26 +96,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 subtracker/
 ├── backend/          # NestJS API server
 │   ├── prisma/       # Prisma schema & migrations
-│   └── src/          # Application source
-│       ├── auth/
-│       ├── subscriptions/
-│       ├── dashboard/
-│       ├── alerts/
-│       ├── categories/
-│       ├── payments/
-│       ├── notifications/
-│       ├── users/
-│       └── health/
+│   └── src/          # Application modules (auth, subs, dashboard, alerts, etc.)
 ├── frontend/         # Next.js application
 │   └── src/
 │       ├── app/      # App Router pages & layouts
-│       ├── components/
-│       └── lib/
+│       ├── components/ # Atomic UI components
+│       └── lib/      # API client & i18n config
 ├── packages/
-│   └── shared/       # Shared TypeScript types & utilities
+│   └── shared/       # Shared TypeScript types & localized strings
 ├── e2e/              # Playwright end-to-end tests
 ├── docker-compose.yml
-└── docs/             # Additional documentation
+└── docs/             # Technical documentation & setup guides
 ```
 
 ## Running Tests
@@ -136,27 +132,16 @@ pnpm e2e:ui
 
 See [docs/SETUP.md](docs/SETUP.md) for full production deployment instructions.
 
-Key steps at a glance:
+A Docker-based deployment is recommended. Each service has its own `Dockerfile`. For a manual build:
 
-1. Set all required environment variables (see [docs/ENV_VARS.md](docs/ENV_VARS.md))
-2. Build: `pnpm build`
+1. Set all environment variables (see [docs/ENV_VARS.md](docs/ENV_VARS.md))
+2. Build all: `pnpm build`
 3. Run migrations: `cd backend && pnpm prisma migrate deploy`
-4. Start: `node backend/dist/main.js` and `node frontend/.next/standalone/server.js`
-
-A Docker-based deployment is recommended. Each service (`backend`, `frontend`) has its own `Dockerfile`.
+4. Start processes: `node backend/dist/main.js` and `node frontend/.next/standalone/server.js`
 
 ## API Documentation
 
-Interactive Swagger UI is available at `http://localhost:3001/api/docs` when the backend is running. All endpoints require a `Bearer` JWT token (except `/auth/login` and `/auth/register`).
-
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a high-level API overview.
-
-## Contributing
-
-1. Fork the repo and create a feature branch
-2. Make changes and add/update tests
-3. Run `pnpm lint` and fix any issues
-4. Open a pull request
+Interactive Swagger UI is available at `/api/docs` on the backend port. Most endpoints require a `Bearer` JWT token.
 
 ## License
 
