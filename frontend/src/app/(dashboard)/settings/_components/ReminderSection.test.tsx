@@ -60,23 +60,13 @@ describe('ReminderSection', () => {
 
   it('initializes ReminderList with defaultReminders mapped from props', () => {
     const defaultReminders = [{ id: 'x', type: 'email' as const, value: 7, unit: 'days' as const }];
-    render(
-      <ReminderSection
-        {...baseProps}
-        defaultReminders={defaultReminders}
-      />,
-    );
+    render(<ReminderSection {...baseProps} defaultReminders={defaultReminders} />);
     expect(screen.getByTestId('reminder-count').textContent).toBe('1');
   });
 
   it('calls onSettingsChange with stripped reminders when ReminderList onChange fires', () => {
     const onSettingsChange = vi.fn();
-    render(
-      <ReminderSection
-        {...baseProps}
-        onSettingsChange={onSettingsChange}
-      />,
-    );
+    render(<ReminderSection {...baseProps} onSettingsChange={onSettingsChange} />);
     fireEvent.click(screen.getByTestId('trigger-change'));
     expect(onSettingsChange).toHaveBeenCalledWith({
       defaultReminders: [{ type: 'email', value: 5, unit: 'days' }],
