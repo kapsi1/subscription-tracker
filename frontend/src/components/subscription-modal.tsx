@@ -39,6 +39,51 @@ const billingCycles = [
   { label: 'Custom', value: 'custom' },
 ];
 
+function computeNextBillingDateFromDays(
+  billingDays: number[],
+  shortageOffset: number,
+  shortageDirection: 'before' | 'after' | 'skip',
+): string {
+  const today = new Date();
+  const sortedDays = [...billingDays].sort((a, b) => a - b);
+  const currentDay = today.getDate();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+
+  const clampDay = (day: number, month: number, year: number): Date => {
+    const d = new Date(year, month, day);
+    if (d.getMonth() !== month) {
+      if (shortageDirection === 'skip') {
+        // recurse to next month first day
+        return clampDay(sortedDays[0], (month + 1) % 12, month === 11 ? year + 1 : year);
+      }
+      const adjusted = shortageDirection === 'before' ? day - shortageOffset : day + shortageOffset;
+      const d2 = new Date(year, month, adjusted);
+      if (shortageDirection === 'before' && d2.getMonth() !== month) {
+        return new Date(year, month + 1, 0); // last day of month
+      }
+      return d2;
+    }
+    return d;
+  };
+
+  const nextDay = sortedDays.find((day) => day > currentDay);
+  let result: Date;
+
+  if (nextDay) {
+    result = clampDay(nextDay, currentMonth, currentYear);
+  } else {
+    const nextMonth = (currentMonth + 1) % 12;
+    const nextYear = nextMonth === 0 ? currentYear + 1 : currentYear;
+    result = clampDay(sortedDays[0], nextMonth, nextYear);
+  }
+
+  const y = result.getFullYear();
+  const m = String(result.getMonth() + 1).padStart(2, '0');
+  const d = String(result.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 export function SubscriptionModal({
   open,
   onOpenChange,
@@ -245,6 +290,7 @@ export function SubscriptionModal({
               name="nextBillingDate"
               type="date"
               value={formData.nextBillingDate}
+              disabled={formData.billingCycle === 'custom'}
               onChange={(e) => {
                 setFormData({ ...formData, nextBillingDate: e.target.value });
                 if (errors.nextBillingDate) {
@@ -267,13 +313,7 @@ export function SubscriptionModal({
           <div className="space-y-2">
             <Label htmlFor="billingCycle">{t('subscriptions.modal.billingCycle')}</Label>
             <TooltipProvider>
-              <Tooltip
-                open={
-                  formData.billingCycle === 'custom' && formData.billingDays.length > 0
-                    ? undefined
-                    : false
-                }
-              >
+              <Tooltip open={formData.billingCycle === 'custom' && formData.billingDays.length > 0}>
                 <TooltipTrigger asChild>
                   <div>
                     <Select
@@ -468,6 +508,7 @@ export function SubscriptionModal({
             billingDays: days,
             billingMonthShortageOffset: offset,
             billingMonthShortageDirection: direction,
+            nextBillingDate: computeNextBillingDateFromDays(days, offset, direction),
           }))
         }
       />

@@ -12,10 +12,92 @@ export class DashboardService {
       this.addMonthsClamped(billingDate, 1);
     } else if (subscription.billingCycle === BillingCycle.yearly) {
       this.addYearsClamped(billingDate, 1);
-    } else if (subscription.billingCycle === BillingCycle.custom && subscription.intervalDays) {
-      billingDate.setDate(billingDate.getDate() + subscription.intervalDays);
+    } else if (subscription.billingCycle === BillingCycle.custom) {
+      if (subscription.billingDays && subscription.billingDays.length > 0) {
+        const sortedDays = [...subscription.billingDays].sort((a, b) => a - b);
+        const currentDay = billingDate.getDate();
+        const currentMonth = billingDate.getMonth();
+        const currentYear = billingDate.getFullYear();
+        const shortageOffset = subscription.billingMonthShortageOffset ?? 1;
+        const shortageDirection =
+          (subscription.billingMonthShortageDirection as 'before' | 'after' | 'skip') ?? 'before';
+
+        const nextDay = sortedDays.find((day) => day > currentDay);
+
+        if (nextDay !== undefined) {
+          billingDate.setFullYear(currentYear, currentMonth, nextDay);
+          if (billingDate.getMonth() !== currentMonth) {
+            if (shortageDirection === 'skip') {
+              billingDate.setFullYear(currentYear, currentMonth + 1, sortedDays[0]);
+            } else {
+              const adjusted =
+                shortageDirection === 'before'
+                  ? nextDay - shortageOffset
+                  : nextDay + shortageOffset;
+              billingDate.setFullYear(currentYear, currentMonth, adjusted);
+              if (shortageDirection === 'before' && billingDate.getMonth() !== currentMonth) {
+                billingDate.setDate(0);
+              }
+            }
+          }
+        } else {
+          const nextMonth = currentMonth + 1;
+          billingDate.setFullYear(currentYear, nextMonth, sortedDays[0]);
+          const expectedMonth = nextMonth % 12;
+          if (billingDate.getMonth() !== expectedMonth) {
+            if (shortageDirection === 'skip') {
+              billingDate.setFullYear(currentYear, nextMonth + 1, sortedDays[0]);
+            } else {
+              const adjusted =
+                shortageDirection === 'before'
+                  ? sortedDays[0] - shortageOffset
+                  : sortedDays[0] + shortageOffset;
+              billingDate.setFullYear(currentYear, nextMonth, adjusted);
+              if (shortageDirection === 'before' && billingDate.getMonth() !== expectedMonth) {
+                billingDate.setDate(0);
+              }
+            }
+          }
+        }
+      } else if (subscription.intervalDays) {
+        billingDate.setDate(billingDate.getDate() + subscription.intervalDays);
+      } else {
+        throw new Error('Invalid billing cycle configuration');
+      }
     } else {
       throw new Error('Invalid billing cycle configuration');
+    }
+  }
+
+  /**
+   * For billingDays-based custom subscriptions, the stored nextBillingDate may not be an exact
+   * billing day (e.g. was clamped from a short month). Snap it to the nearest billing day that is
+   * >= the stored date within the same month, or to the first billing day of the next month.
+   */
+  private snapToNearestBillingDay(subscription: Subscription, date: Date): void {
+    if (
+      subscription.billingCycle !== BillingCycle.custom ||
+      !subscription.billingDays ||
+      subscription.billingDays.length === 0
+    ) {
+      return;
+    }
+    const sortedDays = [...subscription.billingDays].sort((a, b) => a - b);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    // Find first billing day >= current day in the same month
+    const validDay = sortedDays.find((d) => d >= day);
+    if (validDay !== undefined) {
+      date.setFullYear(year, month, validDay);
+      // If month overflowed (e.g. day 31 in a 30-day month), move to first billing day next month
+      if (date.getMonth() !== month) {
+        date.setFullYear(year, month + 1, sortedDays[0]);
+      }
+    } else {
+      // All billing days are before current day — move to first billing day of next month
+      date.setFullYear(year, month + 1, sortedDays[0]);
     }
   }
 
@@ -47,6 +129,7 @@ export class DashboardService {
     for (const sub of subscriptions) {
       const amount = Number(sub.amount);
       const billingDate = new Date(sub.nextBillingDate);
+      this.snapToNearestBillingDay(sub, billingDate);
       let loops = 0;
 
       while (billingDate < rangeEnd && loops < 1000) {
@@ -87,7 +170,10 @@ export class DashboardService {
           yearlyEquivalent = amount;
           break;
         case BillingCycle.custom:
-          if (sub.intervalDays && sub.intervalDays > 0) {
+          if (sub.billingDays && sub.billingDays.length > 0) {
+            monthlyEquivalent = amount * sub.billingDays.length;
+            yearlyEquivalent = monthlyEquivalent * 12;
+          } else if (sub.intervalDays && sub.intervalDays > 0) {
             yearlyEquivalent = amount * (365 / sub.intervalDays);
             monthlyEquivalent = yearlyEquivalent / 12;
           }
@@ -237,6 +323,7 @@ export class DashboardService {
 
     for (const sub of subscriptions) {
       const billingDate = new Date(sub.nextBillingDate);
+      this.snapToNearestBillingDay(sub, billingDate);
       let loops = 0;
 
       while (billingDate < nextMonthStart && loops < 1000) {
@@ -320,6 +407,7 @@ export class DashboardService {
     for (const sub of subscriptions) {
       const amount = Number(sub.amount);
       const currentBillingDate = new Date(sub.nextBillingDate);
+      this.snapToNearestBillingDay(sub, currentBillingDate);
 
       // Upper bound date
       const maxDate = new Date(now.getFullYear(), now.getMonth() + months, 1);

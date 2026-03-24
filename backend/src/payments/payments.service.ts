@@ -77,6 +77,8 @@ export class PaymentsService {
           sub.nextBillingDate,
           sub.intervalDays,
           sub.billingDays,
+          sub.billingMonthShortageOffset,
+          sub.billingMonthShortageDirection as 'before' | 'after' | 'skip',
         );
 
         // Update subscription

@@ -96,7 +96,9 @@ export class AlertsService {
     });
   }
 
-  private toMilliseconds(value: number): number {
+  private toMilliseconds(value: number, unit: string): number {
+    if (unit === 'hours') return value * 60 * 60 * 1000;
+    if (unit === 'minutes') return value * 60 * 1000;
     return value * 24 * 60 * 60 * 1000; // days
   }
 
@@ -109,12 +111,12 @@ export class AlertsService {
     lastSentAt: Date | null,
   ): Promise<boolean> {
     const now = new Date();
-    const thresholdDate = new Date(now.getTime() + this.toMilliseconds(value));
+    const thresholdDate = new Date(now.getTime() + this.toMilliseconds(value, unit));
 
     // Skip if already sent for this billing cycle
     if (
       lastSentAt &&
-      lastSentAt >= new Date(sub.nextBillingDate.getTime() - this.toMilliseconds(value))
+      lastSentAt >= new Date(sub.nextBillingDate.getTime() - this.toMilliseconds(value, unit))
     ) {
       return false;
     }
