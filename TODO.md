@@ -357,13 +357,13 @@
 - [x] Make the web app installable on mobile devices. Add a manifest file and a service worker. Add a button to install the app on mobile devices.
 - [x] Add translations for default categories. If "Reset to Defaults" is clicked, the categories should be reset to default values in the current language.
 - [x] Make the tab buttons in nav bar bigger on mobile devices. They should fill available space.
-- [ ] Production deployment checklist:
+- [x] Production deployment checklist:
     - [x] Email notifications - set an external service
     - [x] Delete production database and DB migrations from code, we'll deploy it from scratch.
     - [x] Google Auth setup in Google Cloud Console
     - [x] App installation on mobile - works with Chrome
     - [x] Add a domain: done - subtracker.cc
-    - [ ] Test Google Analytics and Google Tag Manager
+    - [x] Test Google Analytics and Google Tag Manager
 - [x] Add a footer with "Made by Kamil Kapsiak" and a link to report an issue.
 - [x] Review the frontend code for switches and make them look consistent - positioned to the left of their labels.
 - [x] Reminders rework:
@@ -372,6 +372,6 @@
   - Add unit and E2E tests.
 - [x] Move the Install App button from the dropdown menu next to (to the left of) the right button on the nav bar. On mobile screens it should instead go on the same line as Dashboard title, but aligned to the right. It should have a "download" icon and Install App text.
 - [x] Analyze Lighthouse report and create a plan to fix issues. Ask the user for confirmations if proposed changes are very complicated or time consuming.
-- [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
 - [x] Remove Default Payment Reminders switch in Settings, by default it should be the "Add reminder" button.
 - [x] Remove email field from Enable Email Reports, since it's not used.
+- [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
