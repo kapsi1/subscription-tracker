@@ -35,7 +35,7 @@ function SummaryCard({
         <div className="min-w-0 flex items-center justify-center">
           <div
             className={cn(
-              'hidden sm:flex h-9 w-9 min-w-9 items-center justify-center rounded-lg mr-4 lg:mr-0',
+              'hidden sm:flex h-9 w-9 min-w-9 items-center justify-center rounded-lg mr-4',
               iconBgClass,
             )}
           >
@@ -47,7 +47,6 @@ function SummaryCard({
         </div>
       </CardHeader>
       <CardContent className="px-4 pb-4 last:pb-4 sm:px-6 md:pb-5 lg:pb-6 pt-0">
-        {/* <div className="overflow-hidden font-semibold leading-none whitespace-nowrap text-center text-lg sm:text-[clamp(1.5rem,14cqw,2.2rem)] md:text-[clamp(1.5rem,14cqw,3rem)] lg:text-[clamp(1rem,12cqw,2.4rem)]"> */}
         <div className="overflow-hidden font-semibold leading-none whitespace-nowrap text-center text-md sm:text-[2rem]">
           {value}
         </div>
