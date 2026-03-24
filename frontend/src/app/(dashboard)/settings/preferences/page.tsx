@@ -23,7 +23,6 @@ export default function PreferencesPage() {
   const [settings, setSettings] = useState<Settings>({
     defaultReminders: [],
     emailNotifications: false,
-    emailAddress: '',
     dailyDigest: false,
     previousWeekReport: false,
     nextWeekReport: false,
@@ -48,7 +47,6 @@ export default function PreferencesPage() {
         const response = await api.get('/users/me');
         const loadedSettings = {
           defaultReminders: response.data.defaultReminders ?? [],
-          emailAddress: response.data.email,
           monthlyBudget: response.data.monthlyBudget
             ? parseFloat(response.data.monthlyBudget)
             : null,
@@ -247,7 +245,6 @@ export default function PreferencesPage() {
       {isSectionVisible('email', 'preferences') && (
         <EmailNotificationsSection
           emailNotifications={settings.emailNotifications}
-          emailAddress={settings.emailAddress ?? ''}
           dailyDigest={settings.dailyDigest}
           previousWeekReport={settings.previousWeekReport}
           nextWeekReport={settings.nextWeekReport}

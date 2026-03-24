@@ -43,7 +43,6 @@ export const SETTINGS_SECTIONS: SectionMetadata[] = [
     titleKey: 'settings.notifications.email.title',
     descKey: 'settings.notifications.email.desc',
     searchKeys: [
-      'settings.notifications.email.address',
       'settings.notifications.email.daily',
       'settings.notifications.email.dailyDesc',
       'settings.notifications.email.weekly',

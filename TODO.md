@@ -374,4 +374,4 @@
 - [x] Analyze Lighthouse report and create a plan to fix issues. Ask the user for confirmations if proposed changes are very complicated or time consuming.
 - [ ] Make sections in Dashboard collapsible. Collapsed section should show only the title and a chevron icon. Collapse icon should be a chevron, and be positioned in top right. Save collapsed state in database. Add unit and E2E tests.
 - [x] Remove Default Payment Reminders switch in Settings, by default it should be the "Add reminder" button.
-- [ ] Remove email field from Enable Email Reports, since it's not used.
+- [x] Remove email field from Enable Email Reports, since it's not used.

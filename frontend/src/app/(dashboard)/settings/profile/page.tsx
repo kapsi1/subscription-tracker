@@ -132,7 +132,6 @@ function usePreferencesState() {
     defaultReminderEnabled: false,
     defaultReminders: [],
     emailNotifications: true,
-    emailAddress: '',
     dailyDigest: false,
     previousWeekReport: false,
     nextWeekReport: false,
@@ -149,7 +148,6 @@ function usePreferencesState() {
         const loadedSettings = {
           defaultReminderEnabled: response.data.defaultReminderEnabled,
           defaultReminders: response.data.defaultReminders ?? [],
-          emailAddress: response.data.email,
           monthlyBudget: response.data.monthlyBudget
             ? parseFloat(response.data.monthlyBudget)
             : null,
@@ -243,7 +241,6 @@ function EmailNotificationsSearchWrapper() {
   return (
     <EmailNotificationsSection
       emailNotifications={settings.emailNotifications}
-      emailAddress={settings.emailAddress ?? ''}
       dailyDigest={settings.dailyDigest}
       previousWeekReport={settings.previousWeekReport}
       nextWeekReport={settings.nextWeekReport}
@@ -279,7 +276,6 @@ function ReminderSearchWrapper() {
   };
   return (
     <ReminderSection
-      defaultReminderEnabled={settings.defaultReminderEnabled}
       defaultReminders={settings.defaultReminders}
       onSettingsChange={handleSettingsChange}
       onRequestPushPermission={handleRequestPushPermission}

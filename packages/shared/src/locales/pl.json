@@ -374,7 +374,6 @@
         "desc": "Otrzymuj zaplanowane raporty przez e-mail",
         "enable": "Włącz raporty e-mail",
         "enableDesc": "Wysyłaj zaplanowane raporty na swój adres e-mail",
-        "address": "Adres e-mail",
         "daily": "Dzienny przegląd",
         "dailyDesc": "Otrzymuj podsumowanie dzisiejszych płatności",
         "testTitle": "Testowy e-mail przypomnienia",

@@ -33,7 +33,6 @@ export interface Settings {
   /** @deprecated use defaultReminders instead */
   defaultReminderDays?: number;
   emailNotifications: boolean;
-  emailAddress?: string;
   dailyDigest: boolean;
   previousWeekReport: boolean;
   nextWeekReport: boolean;

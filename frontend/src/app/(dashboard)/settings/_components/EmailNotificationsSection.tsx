@@ -5,14 +5,12 @@ import { Mail, SendHorizonal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { SearchHighlight, useSettingsSearch } from './SettingsSearchContext';
 
 interface EmailNotificationsSectionProps {
   emailNotifications: boolean;
-  emailAddress: string;
   dailyDigest: boolean;
   previousWeekReport: boolean;
   nextWeekReport: boolean;
@@ -34,7 +32,6 @@ interface EmailNotificationsSectionProps {
 
 export function EmailNotificationsSection({
   emailNotifications,
-  emailAddress,
   dailyDigest,
   previousWeekReport,
   nextWeekReport,
@@ -93,23 +90,6 @@ export function EmailNotificationsSection({
 
         {emailNotifications && (
           <>
-            <div className="space-y-2">
-              <Label htmlFor="emailAddress">
-                <SearchHighlight
-                  text={t('settings.notifications.email.address')}
-                  query={searchQuery}
-                />
-              </Label>
-              <Input
-                id="emailAddress"
-                name="emailAddress"
-                type="email"
-                placeholder="you@example.com"
-                value={emailAddress}
-                onChange={(e) => onSettingsChange({ emailAddress: e.target.value })}
-              />
-            </div>
-
             <div className="border-t pt-2 mb-2">
               <div className="flex items-center gap-3 hover:bg-muted/50 p-3 -mx-3 rounded-lg transition-colors">
                 <Switch

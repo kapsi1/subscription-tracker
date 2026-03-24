@@ -364,7 +364,6 @@
         "desc": "Receive scheduled reports via email",
         "enable": "Enable Email Reports",
         "enableDesc": "Send scheduled reports to your email",
-        "address": "Email Address",
         "daily": "Daily Digest",
         "dailyDesc": "Receive a summary of today's payments",
         "testTitle": "Test Reminder Email",
