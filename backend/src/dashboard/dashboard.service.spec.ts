@@ -56,20 +56,14 @@ describe('DashboardService', () => {
         nextBillingDate: new Date('2026-04-01T00:00:00.000Z'),
       },
     ]);
-    prismaMock.paymentHistory.aggregate
-      .mockResolvedValueOnce({
-        _sum: { amount: 44.5 },
-      })
-      .mockResolvedValueOnce({
-        _sum: { amount: 200 },
-      });
     prismaMock.paymentHistory.findMany.mockResolvedValue([]);
     prismaMock.user.findUnique.mockResolvedValue({ currency: 'USD' });
 
     const res = await service.getSummary('user-1');
-    expect(res.totalMonthlyCost).toBe(44.5);
-    // 200 paid year-to-date + (Apr-Dec monthly 9 * 15) + one yearly payment (120)
-    expect(res.totalYearlyCost).toBe(455);
+    // monthly: 120/12 (yearly→monthly) + 15 (monthly) = 25
+    expect(res.totalMonthlyCost).toBe(25);
+    // yearly: 120 + 15*12 = 300
+    expect(res.totalYearlyCost).toBe(300);
     expect(res.categoryBreakdown.Cloud).toBe(10);
     expect(res.categoryBreakdown.Video).toBe(15);
   });
@@ -128,5 +122,69 @@ describe('DashboardService', () => {
       name: 'Cloud Storage',
       status: 'upcoming',
     });
+  });
+
+  it('should mark unpaid past dates in the current month as done', async () => {
+    prismaMock.paymentHistory.findMany.mockResolvedValue([]);
+    prismaMock.subscription.findMany.mockResolvedValue([
+      {
+        id: 'sub-1',
+        userId: 'user-1',
+        name: 'DigitalOcean',
+        amount: 6,
+        currency: 'USD',
+        billingCycle: BillingCycle.monthly,
+        intervalDays: null,
+        nextBillingDate: new Date('2026-03-01T00:00:00.000Z'),
+        category: 'Cloud',
+        isActive: true,
+      },
+      {
+        id: 'sub-2',
+        userId: 'user-1',
+        name: 'Future Service',
+        amount: 12,
+        currency: 'USD',
+        billingCycle: BillingCycle.monthly,
+        intervalDays: null,
+        nextBillingDate: new Date('2026-03-20T00:00:00.000Z'),
+        category: 'Other',
+        isActive: true,
+      },
+    ]);
+
+    const result = await service.getMonthlyPayments('user-1');
+
+    expect(result).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'DigitalOcean',
+          status: 'done',
+        }),
+        expect.objectContaining({
+          name: 'Future Service',
+          status: 'upcoming',
+        }),
+      ]),
+    );
+  });
+
+  it('should query monthly payments using UTC month boundaries', async () => {
+    prismaMock.paymentHistory.findMany.mockResolvedValue([]);
+    prismaMock.subscription.findMany.mockResolvedValue([]);
+
+    await service.getMonthlyPayments('user-1', 6, 2026);
+
+    expect(prismaMock.paymentHistory.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          userId: 'user-1',
+          paidAt: {
+            gte: new Date('2026-07-01T00:00:00.000Z'),
+            lt: new Date('2026-08-01T00:00:00.000Z'),
+          },
+        }),
+      }),
+    );
   });
 });

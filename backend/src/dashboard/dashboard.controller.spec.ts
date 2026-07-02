@@ -49,7 +49,7 @@ describe('DashboardController', () => {
   it('should return summary for user', async () => {
     const result = await controller.getSummary(mockReq);
 
-    expect(serviceMock.getSummary).toHaveBeenCalledWith('user-1', undefined, undefined);
+    expect(serviceMock.getSummary).toHaveBeenCalledWith('user-1');
     expect(result).toEqual(mockSummary);
   });
 

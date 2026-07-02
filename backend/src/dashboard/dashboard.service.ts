@@ -119,6 +119,17 @@ export class DashboardService {
     }
   }
 
+  private getUtcMonthRange(year: number, month: number) {
+    return {
+      monthStart: new Date(Date.UTC(year, month, 1)),
+      nextMonthStart: new Date(Date.UTC(year, month + 1, 1)),
+    };
+  }
+
+  private getUtcDayStart(date: Date) {
+    return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  }
+
   private calculateUpcomingAmountInRange(
     subscriptions: Subscription[],
     rangeStart: Date,
@@ -197,33 +208,10 @@ export class DashboardService {
     };
   }
 
-  async getSummary(userId: string, month?: number, year?: number) {
-    const now = new Date();
-    const queryYear = year !== undefined ? Number(year) : now.getFullYear();
-    const queryMonth = month !== undefined ? Number(month) : now.getMonth();
-
-    const monthStart = new Date(queryYear, queryMonth, 1);
-    const nextMonthStart = new Date(queryYear, queryMonth + 1, 1);
-    const yearStart = new Date(queryYear, 0, 1);
-    const nextYearStart = new Date(queryYear + 1, 0, 1);
-
-    const [subscriptions, paidThisMonth, paidThisYear, user] = await Promise.all([
+  async getSummary(userId: string) {
+    const [subscriptions, user] = await Promise.all([
       this.prisma.subscription.findMany({
         where: { userId, isActive: true },
-      }),
-      this.prisma.paymentHistory.aggregate({
-        where: {
-          userId,
-          paidAt: { gte: monthStart, lt: nextMonthStart },
-        },
-        _sum: { amount: true },
-      }),
-      this.prisma.paymentHistory.aggregate({
-        where: {
-          userId,
-          paidAt: { gte: yearStart, lt: nextYearStart },
-        },
-        _sum: { amount: true },
       }),
       this.prisma.user.findUnique({
         where: { id: userId },
@@ -231,21 +219,11 @@ export class DashboardService {
       }),
     ]);
 
-    const { categoryBreakdown } = this.calculateCosts(subscriptions);
-
-    let upcomingThisYear = 0;
-    if (queryYear >= now.getFullYear()) {
-      const startForUpcoming = queryYear === now.getFullYear() ? now : yearStart;
-      upcomingThisYear = this.calculateUpcomingAmountInRange(
-        subscriptions,
-        startForUpcoming,
-        nextYearStart,
-      );
-    }
+    const { totalMonthlyCost, totalYearlyCost, categoryBreakdown } = this.calculateCosts(subscriptions);
 
     return {
-      totalMonthlyCost: Number(paidThisMonth._sum.amount ?? 0),
-      totalYearlyCost: Number(paidThisYear._sum.amount ?? 0) + upcomingThisYear,
+      totalMonthlyCost,
+      totalYearlyCost,
       activeSubscriptions: subscriptions.length,
       categoryBreakdown,
       currency: user?.currency || 'USD',
@@ -257,8 +235,8 @@ export class DashboardService {
     const queryYear = year !== undefined ? Number(year) : now.getFullYear();
     const queryMonth = month !== undefined ? Number(month) : now.getMonth();
 
-    const monthStart = new Date(queryYear, queryMonth, 1);
-    const nextMonthStart = new Date(queryYear, queryMonth + 1, 1);
+    const { monthStart, nextMonthStart } = this.getUtcMonthRange(queryYear, queryMonth);
+    const todayStart = this.getUtcDayStart(now);
 
     const [paidPayments, subscriptions] = await Promise.all([
       this.prisma.paymentHistory.findMany({
@@ -310,7 +288,7 @@ export class DashboardService {
       status: 'done' as const,
     }));
 
-    const upcomingItems: Array<{
+    const scheduledItems: Array<{
       id: string;
       subscriptionId: string;
       name: string;
@@ -318,7 +296,7 @@ export class DashboardService {
       amount: number;
       currency: string;
       date: Date;
-      status: 'upcoming';
+      status: 'done' | 'upcoming';
     }> = [];
 
     for (const sub of subscriptions) {
@@ -333,7 +311,7 @@ export class DashboardService {
           const key = paidKey(sub.id, billingDate);
 
           if (!paidPaymentKeys.has(key)) {
-            upcomingItems.push({
+            scheduledItems.push({
               id: `${sub.id}-${billingDate.toISOString()}`,
               subscriptionId: sub.id,
               name: sub.name,
@@ -341,7 +319,7 @@ export class DashboardService {
               amount: Number(sub.amount),
               currency: sub.currency,
               date: new Date(billingDate),
-              status: 'upcoming',
+              status: billingDate < todayStart ? 'done' : 'upcoming',
             });
           }
         }
@@ -354,7 +332,7 @@ export class DashboardService {
       }
     }
 
-    return [...completedItems, ...upcomingItems].sort((a, b) => {
+    return [...completedItems, ...scheduledItems].sort((a, b) => {
       const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
       if (dateDiff !== 0) {
         return dateDiff;

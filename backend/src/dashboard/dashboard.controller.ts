@@ -17,12 +17,8 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get('summary')
-  async getSummary(
-    @Req() req: RequestWithUser,
-    @Query('month') month?: number,
-    @Query('year') year?: number,
-  ) {
-    return this.dashboardService.getSummary(req.user.userId, month, year);
+  async getSummary(@Req() req: RequestWithUser) {
+    return this.dashboardService.getSummary(req.user.userId);
   }
 
   @Get('monthly-payments')
