@@ -20,7 +20,7 @@
   },
   "author": "Kamil Kapsiak",
   "license": "MIT",
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@11.9.0",
   "devDependencies": {
     "@biomejs/biome": "2.4.8",
     "@playwright/test": "^1.58.2",
@@ -30,6 +30,7 @@
     "concurrently": "^9.2.1",
     "pg": "^8.20.0",
     "postcss": "^8.5.8",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "tscanner": "^0.1.3"
   }
 }
