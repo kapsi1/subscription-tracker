@@ -75,7 +75,7 @@ Built with **NestJS** (modular architecture) using **Prisma** for database acces
 | `categories` | `GET /categories`, `POST /categories`, `PATCH /categories/:id`, `DELETE /categories/:id` | Custom subscription categories |
 | `payments` | `GET /payments`, `GET /subscriptions/:id/payments` | Payment history |
 | `notifications` | `POST /notifications/subscribe`, `DELETE /notifications/subscribe` | Web Push subscriptions |
-| `health` | `GET /health` | Health check (DB + Redis) |
+| `health` | `GET /health` | Backend process liveness check |
 
 > 💡 Full interactive documentation is available at `http://localhost:3001/api/docs` (Swagger UI).
 
@@ -153,4 +153,4 @@ Access tokens expire after 1 hour by default (`JWT_EXPIRES_IN`). A refresh token
 - **Structured logging** via `nestjs-pino` (pretty-print in dev, JSON in prod)
 - **Request IDs** attached to every log line via `X-Request-Id` header
 - **Sensitive headers** (`Authorization`, `Cookie`) are redacted from logs
-- **Health endpoint** at `GET /health` – checks Postgres and Redis connectivity
+- **Health endpoint** at `GET /health` – confirms that the backend process is responding without querying external dependencies

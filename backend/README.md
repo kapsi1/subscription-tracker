@@ -47,7 +47,7 @@ src/
 ├── categories/     # User-owned category management
 ├── payments/       # Payment history
 ├── notifications/  # Web Push subscriptions
-├── health/         # /health endpoint (DB + Redis)
+├── health/         # Lightweight /health liveness endpoint
 └── common/         # Shared filters, pipes, guards, middleware
 ```
 

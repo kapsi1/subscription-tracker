@@ -191,7 +191,7 @@ Each sub-app ships with a `Dockerfile`. A `docker-compose.yml` is provided for l
 
 ### Health checks
 
-The backend exposes a health endpoint at `GET /health` that verifies Database, Redis, and BullMQ connectivity. Configure your platform to monitor this endpoint.
+The backend exposes a lightweight liveness endpoint at `GET /health`. It confirms that the backend process is responding without querying Postgres, Redis, or BullMQ, so deployment platforms can monitor it frequently without keeping external services active.
 
 ---
 

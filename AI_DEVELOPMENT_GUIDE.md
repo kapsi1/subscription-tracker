@@ -46,7 +46,7 @@ The project is a **pnpm monorepo** using a modern TypeScript stack:
 | `categories` | `src/categories/` | Category CRUD, default icons/colors, reset to defaults |
 | `alerts` | `src/alerts/` | Alert config CRUD, cron scheduler, BullMQ job processor |
 | `notifications` | `src/notifications/` | Email (templates + sending), web push |
-| `health` | `src/health/` | Health check endpoint (DB + Redis + Queue) |
+| `health` | `src/health/` | Lightweight backend liveness endpoint |
 | `common` | `src/common/` | Pipes (sanitize, validation), utils, filters |
 
 ## 🖥️ Frontend Routes
