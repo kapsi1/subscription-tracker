@@ -263,6 +263,7 @@
       "reminderTypeEmail": "Correo electrónico",
       "reminderUnitDays": "días",
       "addReminder": "Añadir recordatorio",
+      "reminderScheduleHint": "Los recordatorios se procesan una vez al día, por lo que la hora de entrega puede variar.",
       "reminderSettingsHint": "Puedes cambiar los recordatorios predeterminados en Ajustes",
       "cancel": "Cancelar",
       "add": "Añadir Suscripción",

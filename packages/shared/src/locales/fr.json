@@ -263,6 +263,7 @@
       "reminderTypeEmail": "E-mail",
       "reminderUnitDays": "jours",
       "addReminder": "Ajouter un rappel",
+      "reminderScheduleHint": "Les rappels sont traités une fois par jour ; l’heure de réception peut donc varier.",
       "reminderSettingsHint": "Vous pouvez modifier les rappels par défaut dans les Paramètres",
       "cancel": "Annuler",
       "add": "Ajouter l'abonnement",

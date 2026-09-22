@@ -263,6 +263,7 @@
       "reminderTypeEmail": "E-Mail",
       "reminderUnitDays": "Tage",
       "addReminder": "Erinnerung hinzufügen",
+      "reminderScheduleHint": "Erinnerungen werden einmal täglich verarbeitet, daher kann die Zustellzeit variieren.",
       "reminderSettingsHint": "Sie können Standarderinnerungen in den Einstellungen ändern",
       "cancel": "Abbrechen",
       "add": "Abo hinzufügen",

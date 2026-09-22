@@ -263,6 +263,7 @@
       "reminderTypeEmail": "Email",
       "reminderUnitDays": "giorni",
       "addReminder": "Aggiungi promemoria",
+      "reminderScheduleHint": "I promemoria vengono elaborati una volta al giorno, quindi l’orario di consegna può variare.",
       "reminderSettingsHint": "Puoi modificare i promemoria predefiniti nelle Impostazioni",
       "cancel": "Annulla",
       "add": "Aggiungi Abbonamento",

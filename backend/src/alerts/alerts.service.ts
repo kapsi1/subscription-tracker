@@ -1,7 +1,7 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { AlertType, type Prisma, type Subscription } from '@prisma/client';
+import { AlertType, type Prisma, ReminderUnit, type Subscription } from '@prisma/client';
 import type { Queue } from 'bullmq';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { EmailService } from '../notifications/email/email.service';
@@ -39,8 +39,8 @@ export class AlertsService {
     @InjectQueue('alertQueue') private readonly alertQueue: Queue,
   ) {}
 
-  // Run scheduler every minute to support minute-granularity reminders
-  @Cron(CronExpression.EVERY_MINUTE)
+  // Run once per day so an idle database can scale to zero between checks.
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { timeZone: 'UTC' })
   async handleCron() {
     this.logger.log({
       msg: 'Alert scheduler started',
@@ -80,7 +80,6 @@ export class AlertsService {
         sub,
         alert.type,
         alert.daysBefore,
-        alert.unit,
         alert.lastSentAt,
       );
       if (success) enqueued++;
@@ -96,10 +95,8 @@ export class AlertsService {
     });
   }
 
-  private toMilliseconds(value: number, unit: string): number {
-    if (unit === 'hours') return value * 60 * 60 * 1000;
-    if (unit === 'minutes') return value * 60 * 1000;
-    return value * 24 * 60 * 60 * 1000; // days
+  private toMilliseconds(days: number): number {
+    return days * 24 * 60 * 60 * 1000;
   }
 
   private async enqueueIfNecessary(
@@ -107,16 +104,15 @@ export class AlertsService {
     sub: SubWithUser,
     type: AlertType,
     value: number,
-    unit: string,
     lastSentAt: Date | null,
   ): Promise<boolean> {
     const now = new Date();
-    const thresholdDate = new Date(now.getTime() + this.toMilliseconds(value, unit));
+    const thresholdDate = new Date(now.getTime() + this.toMilliseconds(value));
 
     // Skip if already sent for this billing cycle
     if (
       lastSentAt &&
-      lastSentAt >= new Date(sub.nextBillingDate.getTime() - this.toMilliseconds(value, unit))
+      lastSentAt >= new Date(sub.nextBillingDate.getTime() - this.toMilliseconds(value))
     ) {
       return false;
     }
@@ -131,7 +127,7 @@ export class AlertsService {
           subscriptionId: sub.id,
           type,
           daysBefore: value,
-          unit,
+          unit: ReminderUnit.days,
           userEmail: sub.user.email,
           userName: sub.user.name ?? undefined,
           subscriptionName: sub.name,
@@ -154,7 +150,7 @@ export class AlertsService {
         subscriptionId: sub.id,
         subscriptionName: sub.name,
         value,
-        unit,
+        unit: ReminderUnit.days,
         nextBillingDate: sub.nextBillingDate.toISOString(),
       });
 

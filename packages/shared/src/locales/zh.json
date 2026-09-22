@@ -263,6 +263,7 @@
       "reminderTypeEmail": "电子邮件",
       "reminderUnitDays": "天",
       "addReminder": "添加提醒",
+      "reminderScheduleHint": "提醒每天处理一次，因此送达时间可能有所不同。",
       "reminderSettingsHint": "您可以在设置中更改默认提醒",
       "cancel": "取消",
       "add": "添加订阅",

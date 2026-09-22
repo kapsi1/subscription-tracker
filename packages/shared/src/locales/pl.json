@@ -273,6 +273,7 @@
       "reminderTypeEmail": "Email",
       "reminderUnitDays": "dni",
       "addReminder": "Dodaj przypomnienie",
+      "reminderScheduleHint": "Przypomnienia są przetwarzane raz dziennie, dlatego godzina dostarczenia może się różnić.",
       "reminderSettingsHint": "Możesz zmienić domyślne przypomnienia w Ustawieniach",
       "cancel": "Anuluj",
       "add": "Dodaj subskrypcję",

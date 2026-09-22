@@ -263,6 +263,7 @@
       "reminderTypeEmail": "E-mail",
       "reminderUnitDays": "dias",
       "addReminder": "Adicionar lembrete",
+      "reminderScheduleHint": "Os lembretes são processados uma vez por dia, por isso o horário de entrega pode variar.",
       "reminderSettingsHint": "Pode alterar os lembretes padrão nos Ajustes",
       "cancel": "Cancelar",
       "add": "Adicionar Subscrição",

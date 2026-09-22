@@ -263,6 +263,7 @@
       "reminderTypeEmail": "Email",
       "reminderUnitDays": "days",
       "addReminder": "Add reminder",
+      "reminderScheduleHint": "Reminders are processed once per day, so the delivery time may vary.",
       "reminderSettingsHint": "You can change default reminders in Settings",
       "cancel": "Cancel",
       "add": "Add Subscription",

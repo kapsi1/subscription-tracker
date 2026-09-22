@@ -1,4 +1,5 @@
 import { getQueueToken } from '@nestjs/bullmq';
+import { CronExpression } from '@nestjs/schedule';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { DashboardService } from '../dashboard/dashboard.service';
 import { EmailService } from '../notifications/email/email.service';
@@ -124,6 +125,13 @@ describe('AlertsService', () => {
       await service.handleCron();
       expect(queueMock.add).not.toHaveBeenCalled();
     });
+  });
+
+  it('runs the reminder scheduler once per day', () => {
+    const schedule = Reflect.getMetadata('SCHEDULE_CRON_OPTIONS', service.handleCron);
+
+    expect(schedule.cronTime).toBe(CronExpression.EVERY_DAY_AT_MIDNIGHT);
+    expect(schedule.timeZone).toBe('UTC');
   });
 
   it('should NOT enqueue when billing date is in the past', async () => {

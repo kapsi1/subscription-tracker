@@ -263,6 +263,7 @@
       "reminderTypeEmail": "メール",
       "reminderUnitDays": "日",
       "addReminder": "リマインダーを追加",
+      "reminderScheduleHint": "リマインダーは1日1回処理されるため、配信時刻は前後する場合があります。",
       "reminderSettingsHint": "デフォルトのリマインダーは設定で変更できます",
       "cancel": "キャンセル",
       "add": "追加",

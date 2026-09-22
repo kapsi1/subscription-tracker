@@ -64,10 +64,7 @@ const makeRow = (overrides: Partial<ReminderRow> = {}): ReminderRow => ({
 
 describe('ReminderList', () => {
   it('renders reminder rows', () => {
-    const reminders = [
-      makeRow({ id: 'r1', value: 2 }),
-      makeRow({ id: 'r2', value: 5, unit: 'hours' }),
-    ];
+    const reminders = [makeRow({ id: 'r1', value: 2 }), makeRow({ id: 'r2', value: 5 })];
     const { container } = render(
       <ReminderList reminders={reminders} onChange={vi.fn()} context="settings" />,
     );
@@ -86,6 +83,12 @@ describe('ReminderList', () => {
     expect(newRows).toHaveLength(1);
     expect(newRows[0]).toMatchObject({ type: 'webpush', value: 1, unit: 'days' });
     expect(typeof newRows[0].id).toBe('string');
+  });
+
+  it('explains that reminders are processed daily', () => {
+    render(<ReminderList reminders={[]} onChange={vi.fn()} context="settings" />);
+
+    expect(screen.getByText('subscriptions.modal.reminderScheduleHint')).toBeTruthy();
   });
 
   it('calls onChange without the deleted row when trash is clicked', () => {

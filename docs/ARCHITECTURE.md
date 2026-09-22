@@ -87,7 +87,7 @@ A workspace package (`@subtracker/shared`) that provides TypeScript types and ut
 
 The alert system uses **BullMQ** (backed by Redis) with two moving parts:
 
-1. **Scheduler (cron)** – runs periodically, queries upcoming billing dates, and enqueues alert jobs for subscriptions that cross an alert threshold.
+1. **Scheduler (cron)** – runs once daily at midnight UTC, queries upcoming billing dates, and enqueues alert jobs for subscriptions that cross a day-based alert threshold.
 2. **Worker (processor)** – consumes jobs from the queue and dispatches email / web-push notifications. Implements idempotency to prevent duplicate sends and exponential backoff on failure.
 
 ## Data Model

@@ -151,7 +151,5 @@ enum AlertType {
 }
 
 enum ReminderUnit {
-  minutes
-  hours
   days
 }

@@ -114,6 +114,10 @@ export function ReminderList({
         </Button>
       )}
 
+      <p className="text-xs text-muted-foreground">
+        {t('subscriptions.modal.reminderScheduleHint')}
+      </p>
+
       {context === 'modal' && reminders.length > 0 && (
         <p className="text-xs text-muted-foreground">
           {t('subscriptions.modal.reminderSettingsHint')}
